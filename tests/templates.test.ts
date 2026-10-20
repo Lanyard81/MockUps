@@ -15,8 +15,8 @@ import {
 const s = () => useStore.getState();
 
 describe('official templates', () => {
-  it('has all 22 NSW and 7 SharePoint templates, in known groups, with unique ids', () => {
-    expect(OFFICIAL_TEMPLATES.filter((t) => t.kitId === 'nsw')).toHaveLength(22);
+  it('has all 23 NSW and 7 SharePoint templates, in known groups, with unique ids', () => {
+    expect(OFFICIAL_TEMPLATES.filter((t) => t.kitId === 'nsw')).toHaveLength(23);
     expect(OFFICIAL_TEMPLATES.filter((t) => t.kitId === 'sharepoint')).toHaveLength(7);
     expect(new Set(OFFICIAL_TEMPLATES.map((t) => t.id)).size).toBe(OFFICIAL_TEMPLATES.length);
     for (const t of OFFICIAL_TEMPLATES) expect(templateGroups(t.kitId)).toContain(t.group);

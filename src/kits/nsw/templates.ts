@@ -887,6 +887,113 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
         footer(),
       ),
   },
+  // ---- Application
+  {
+    id: 'application-work-dashboard',
+    name: 'Application: work dashboard',
+    group: 'Application',
+    description:
+      'A signed-in work overview in the style of a government case-management system: tasks, recent documents, favourites and upcoming meetings. Not an official NSW template.',
+    device: 'desktop',
+    width: 1440,
+    items: () =>
+      page(
+        top('masthead', 'light'),
+        top('header', 'default', {
+          text: { title: 'CabNet', description: 'Digital Cabinet System' },
+        }),
+        top('main-nav', 'default', {
+          text: {
+            item1: 'Home',
+            item2: 'Tasks',
+            item3: 'Documents',
+            item4: 'Agendas',
+            item5: 'Forward Agenda',
+            item6: 'Reports',
+          },
+        }),
+        sec(
+          { bg: 'white' },
+          row([9, 3], [h(1, 'Your work')], [btn('Create Document')]),
+          row(
+            [8, 4],
+            [
+              h(2, 'Your tasks (2)'),
+              c('list-item', 'default', {
+                text: {
+                  label: 'CAB-SUB-2026-0066 · Due in 2 days',
+                  title: 'Cyber security uplift: whole of government',
+                  copy: 'Close Stage 1 comments',
+                  date: 'Yours',
+                },
+                hide: ['image'],
+              }),
+              c('list-item', 'default', {
+                text: {
+                  label: 'ERC-SUB-2026-0055 · Due in 6 days',
+                  title: 'Energy rebate extension',
+                  copy: 'Approve the Draft',
+                  date: 'Yours',
+                },
+                hide: ['image'],
+              }),
+              h(2, 'Group tasks (1 overdue)'),
+              c('list-item', 'default', {
+                text: {
+                  label: 'ERC-SUB-2026-0072 · Overdue by 2 days',
+                  title: 'Public sector wages policy 2026-27',
+                  copy: 'Close Stage 2 comments',
+                  date: 'Unclaimed',
+                },
+                hide: ['image'],
+              }),
+              btn('Take it', 'dark-outline'),
+              h(2, 'Recent documents (19)'),
+              c('link-list', 'default', {
+                text: {
+                  title: 'Opened today',
+                  link1: 'ERC-SUB-2026-0070 Rail fleet replacement: funding variation',
+                  link2: 'ERC-SUB-2026-0072 Public sector wages policy 2026-27',
+                  link3: 'CAB-SUB-2026-0067 Electric vehicle charging network: stage three',
+                  link4: 'CAB-SUB-2026-0062 Housing supply reform: stage two',
+                },
+              }),
+              c('show-more', 'default'),
+              h(2, 'Favourites (7)'),
+              c('link-list', 'default', {
+                text: {
+                  title: 'Starred',
+                  link1: 'CAB-PRO-2026-0039 A Proposal was created',
+                  link2: 'ERC-PRO-2026-0078 A Proposal was created',
+                  link3: 'CAB-SUB-2026-0064 Amendments to the Environmental Planning Act',
+                  link4: 'LEGCO-SUB-2026-0074 Retail leases amendment bill',
+                },
+              }),
+            ],
+            [
+              h(2, 'Upcoming meetings'),
+              c('table', 'default', {
+                text: {
+                  caption: 'August 2026',
+                  h1: 'Date',
+                  h2: 'Meeting',
+                  h3: 'Time',
+                  r1c1: '12 Aug',
+                  r1c2: 'Cabinet',
+                  r1c3: '10:00 to 12:30',
+                  r2c1: '17 Aug',
+                  r2c2: 'Cabinet',
+                  r2c3: '10:00 to 12:30',
+                  r3c1: '18 Aug',
+                  r3c2: 'Legislation Committee',
+                  r3c3: 'Cancelled',
+                },
+              }),
+            ],
+          ),
+        ),
+      ),
+  },
   // ---- Kitchen sink
   {
     id: 'kitchen-sink-sticky',

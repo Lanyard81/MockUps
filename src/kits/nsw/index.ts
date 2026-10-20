@@ -166,6 +166,7 @@ export const nswKit: Kit = {
     'Maps',
     'Theming',
     'Landing pages',
+    'Application',
     'Kitchen sink',
   ],
   samples: SAMPLES.map((def) => ({
