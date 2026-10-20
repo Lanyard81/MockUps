@@ -1,23 +1,40 @@
 import { getComponent } from '../catalogue';
-import { depthOf, isWithin, parentOf, type Doc } from '../layout/ops';
+import { getKit } from '../kits';
+import type { KitSchema } from '../kits/types';
+import { depthOf, isWithin, parentOf, schemaOfFrame, type Doc } from '../layout/ops';
 import type { DragPayload, DropTarget, IndicatorRect } from '../store/types';
 import { getFrameElement, nodeRect, toFramePoint } from './registry';
 
 const EDGE = 12; // px from a section's top or bottom edge that counts as "between sections"
 const LINE = 4;
 
-/** Depth of what is being dragged, and a node to leave out of sibling lists. */
-function leafInfo(payload: DragPayload, doc: Doc): { depth: number; exclude?: string } | null {
+/**
+ * Depth of what is being dragged in a frame of this kit, and a node to leave out of sibling lists.
+ * Null when it can't go in that kit's frames (a component from another kit, a block it doesn't have).
+ */
+function leafInfo(
+  payload: DragPayload,
+  doc: Doc,
+  kitId: string,
+  schema: KitSchema,
+): { depth: number; exclude?: string } | null {
   switch (payload.kind) {
     case 'new-component': {
       const comp = getComponent(payload.componentId);
-      return comp ? { depth: comp.fullWidth ? 1 : 5 } : null;
+      if (!comp || !getKit(kitId).catalogue.components.some((c) => c.id === comp.id)) return null;
+      return { depth: comp.fullWidth ? 1 : schema.layers.length + 1 };
     }
-    case 'new-layout':
-      return { depth: { section: 1, container: 2, grid: 3 }[payload.block] };
+    case 'new-layout': {
+      const block = getKit(kitId).layoutBlocks.find(
+        (b) =>
+          b.kind === payload.block &&
+          (payload.columns === undefined || b.columns === payload.columns),
+      );
+      return block ? { depth: schema.layers.indexOf(block.layer) + 1 } : null;
+    }
     case 'move': {
       const node = doc.nodes[payload.nodeId];
-      return node ? { depth: depthOf(node), exclude: node.id } : null;
+      return node ? { depth: depthOf(node, schema), exclude: node.id } : null;
     }
     case 'template':
       return null; // templates drop onto whole frames or the canvas: see `frameAtPoint`
@@ -78,6 +95,7 @@ function ancestorsAndSelf(doc: Doc, id: string | null): string[] {
 /** Nearest descendant of `rootId` at `depth`, by distance from the pointer to its box. */
 function nearestDescendant(
   doc: Doc,
+  schema: KitSchema,
   idoc: Document,
   rootId: string,
   depth: number,
@@ -90,7 +108,7 @@ function nearestDescendant(
     if (id === exclude) return;
     const node = doc.nodes[id];
     if (!node) return;
-    if (depthOf(node) === depth && node.type !== 'component') {
+    if (depthOf(node, schema) === depth && node.type !== 'component') {
       const r = nodeRect(idoc, id);
       if (r) {
         const dx = Math.max(r.left - x, 0, x - r.right);
@@ -117,15 +135,15 @@ export function computeDropTarget(
   clientX: number,
   clientY: number,
 ): DropTarget | null {
-  const leaf = leafInfo(payload, doc);
-  if (!leaf) return null;
-
   // Which frame is under the pointer?
   const hit = frameAtPoint(doc, clientX, clientY);
   const frame = hit?.frame;
   const iframe = hit?.iframe;
   const idoc = iframe?.contentDocument;
   if (!frame || !iframe || !idoc) return null;
+  const schema = schemaOfFrame(doc, frame.id);
+  const leaf = leafInfo(payload, doc, frame.kitId, schema);
+  if (!leaf) return null;
 
   const { x, y } = toFramePoint(iframe, clientX, clientY);
   const frameWidth = iframe.offsetWidth;
@@ -181,15 +199,15 @@ export function computeDropTarget(
   let parentId: string | null =
     ancestorsAndSelf(doc, hitId).find((id) => {
       const n = doc.nodes[id];
-      return !!n && n.type !== 'component' && depthOf(n) === leaf.depth - 1;
+      return !!n && n.type !== 'component' && depthOf(n, schema) === leaf.depth - 1;
     }) ?? null;
 
   // The pointer is over something shallower (a section, a grid, the gap between columns):
   // pick the nearest container inside it.
   if (!parentId && hitId) {
     const hit = doc.nodes[hitId];
-    if (hit && hit.type !== 'component' && depthOf(hit) < leaf.depth - 1) {
-      parentId = nearestDescendant(doc, idoc, hitId, leaf.depth - 1, exclude, x, y);
+    if (hit && hit.type !== 'component' && depthOf(hit, schema) < leaf.depth - 1) {
+      parentId = nearestDescendant(doc, schema, idoc, hitId, leaf.depth - 1, exclude, x, y);
     }
   }
   if (!parentId) return wrapAtRoot();

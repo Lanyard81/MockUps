@@ -1,4 +1,4 @@
-import type { ComponentSource, VariantSource } from '../types';
+import type { ComponentSource, VariantSource } from '../../../../catalogue/types';
 import { icon, placeholderImage } from './helpers';
 
 const buttonStyles: [string, string, VariantSource['previewBg']?][] = [

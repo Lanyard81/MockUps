@@ -6,9 +6,11 @@ import {
   sec,
   top,
   type CompSpec,
-  type TemplateDef,
+  type NswTemplateDef,
   type TopItem,
-} from './build';
+} from './templateDsl';
+import { buildTree } from './templateDsl';
+import type { TemplateDef } from '../../templates/types';
 
 /**
  * The NSW Design System's page templates, rebuilt from catalogue components so that every part stays
@@ -107,7 +109,7 @@ const form = (): CompSpec[] => [
   btn('Submit'),
 ];
 
-export const OFFICIAL_TEMPLATES: TemplateDef[] = [
+export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
   // ---- Homepage
   {
     id: 'homepage-featured-list',
@@ -923,3 +925,15 @@ export const OFFICIAL_TEMPLATES: TemplateDef[] = [
       ),
   },
 ];
+
+/** The NSW templates in the kit's common shape. `NSW_TEMPLATE_DEFS` keeps the specs for the samples. */
+export const NSW_TEMPLATES: TemplateDef[] = NSW_TEMPLATE_DEFS.map((def) => ({
+  id: def.id,
+  name: def.name,
+  group: def.group,
+  description: def.description,
+  device: def.device,
+  width: def.width,
+  kitId: 'nsw',
+  build: (makeId) => buildTree(def.items(), makeId),
+}));

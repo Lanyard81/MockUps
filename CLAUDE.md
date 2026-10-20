@@ -7,7 +7,9 @@ NSW Mockup Builder: a Vite + React + TypeScript (strict) app where people drag r
 ```
 src/app/          App shell, toolbars, panels (React UI for the editor)
 src/canvas/       Viewport, device frames (iframes), input forwarding, selection, drop indicators
-src/catalogue/    Catalogue: sources/ (hand-written NSW markup), overrides.ts, generated/catalogue.json, thumbnails
+src/kits/         One folder per style kit (nsw/, sharepoint/): shell, catalogue (sources/, overrides.ts, generated/), layout schema and renderer, templates, samples. index.ts is the registry; types.ts the Kit interface
+src/catalogue/    Kit-agnostic catalogue API (getComponent, search), types, thumbnails
+src/templates/    Template types, using templates, saving your own
 src/store/        Zustand store, document actions, undo history, types
 src/layout/       Pure document-tree operations (insert, move, remove, clone, wrap) and tree -> HTML
 src/persistence/  Autosave, IndexedDB, file save/open
@@ -25,10 +27,9 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 
 1. **All document changes go through store actions** (`src/store/store.ts`). Components never mutate or `set` document state directly. Pure tree logic lives in `src/layout/` and is called by actions.
 2. **Never break undo.** Every document change is one history entry via `commit()`. A continuous gesture (drag, text edit session) is one entry: call `beginGesture()` once, then apply live updates. View changes (pan and zoom) are not history. History is capped at 100.
-3. **Real NSW markup only.** Catalogue snippets in `src/catalogue/sources/` use official classes only; `npm run catalogue` rejects any class not in the installed `main.css`. Commit the regenerated `generated/catalogue.json` whenever sources change. Use official NSW classes and markup unchanged. Never restyle or recreate NSW components with custom CSS. The only CSS injected into a frame is the plumbing in `src/canvas/nswAssets.ts` (`FRAME_CSS`) and editor affordances that don't alter component appearance.
-4. **Two worlds, no leaks.** Editor CSS (`--ed-*` tokens, `.btn`, `.frame`, etc.) lives in the host document. NSW CSS lives only inside frame iframes. Do not import NSW CSS into the host.
-5. **Untrusted content is sanitised.** Anything from saved files or pasted input goes through DOMPurify before rendering (see `renderFrameHtml`). Only the official NSW JS and the app's own code run in frames.
-6. **Single file must work from `file://`.** No runtime network requests, no dynamic `fetch` of app assets, no dynamic chunks. `scripts/finish-single.mjs` fails the build if the file loads anything external.
+3. **Each kit uses only its own markup.** NSW: real NSW markup only. Catalogue snippets in `src/kits/nsw/catalogue/sources/` use official classes only; `npm run catalogue` rejects any class not in the installed `main.css`. Commit the regenerated `generated/catalogue.json` whenever sources change. Use official NSW classes and markup unchanged. Never restyle or recreate NSW components with custom CSS. The only CSS injected into an NSW frame is the plumbing in `src/kits/nsw/shell.ts` (`FRAME_CSS`) and editor affordances that don't alter component appearance. The SharePoint kit is a lookalike (see `docs/SHAREPOINT-OOB.md`) and follows the same rule against its own CSS.
+
+3a. **Kits are self-contained.** Everything specific to a design system lives in its `src/kits/<id>/` folder. The editor core never imports from a kit folder directly: it goes through `getKit()`. Kit files import no UI or store code (a cycle). Adding a kit is a folder and a line in `src/kits/index.ts`. 4. **Two worlds, no leaks.** Editor CSS (`--ed-*` tokens, `.btn`, `.frame`, etc.) lives in the host document. NSW CSS lives only inside frame iframes. Do not import NSW CSS into the host. 5. **Untrusted content is sanitised.** Anything from saved files or pasted input goes through DOMPurify before rendering (see `renderFrameHtml`). Only the official NSW JS and the app's own code run in frames. 6. **Single file must work from `file://`.** No runtime network requests, no dynamic `fetch` of app assets, no dynamic chunks. `scripts/finish-single.mjs` fails the build if the file loads anything external.
 
 ## Conventions
 

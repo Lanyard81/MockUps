@@ -1,5 +1,6 @@
-import { equalSpans, type Spans } from '../layout/spans';
-import type { DeviceId, DocNode, MockupDoc } from '../store/types';
+import type { DeviceId, DocNode } from '../../store/types';
+import type { MakeId } from '../../templates/types';
+import { equalSpans, type Spans } from './spans';
 
 /**
  * A small language for writing templates as trees of real catalogue components, so every part of
@@ -10,8 +11,6 @@ import type { DeviceId, DocNode, MockupDoc } from '../store/types';
  *     sec({ bg: 'off-white' }, c('heading', 'h1', { text: { text: 'Hello' } }), row([6, 6], [c(...)], [c(...)])),
  *   )
  */
-export type MakeId = (prefix: string) => string;
-
 export interface CompSpec {
   kind: 'comp';
   componentId: string;
@@ -150,7 +149,7 @@ export function buildTree(items: TopItem[], makeId: MakeId): BuiltTree {
   return { root, nodes };
 }
 
-export interface TemplateDef {
+export interface NswTemplateDef {
   id: string;
   name: string;
   group: string;
@@ -158,14 +157,4 @@ export interface TemplateDef {
   device: DeviceId;
   width: number;
   items: () => TopItem[];
-}
-
-/** A template with real ids, ready to be put in a document. */
-export interface InstantiatedTemplate {
-  name: string;
-  device: DeviceId;
-  width: number;
-  root: string[];
-  nodes: Record<string, DocNode>;
-  images: MockupDoc['images'];
 }

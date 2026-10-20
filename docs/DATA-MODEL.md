@@ -4,15 +4,18 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 
 ```json
 {
-  "version": 1,
+  "version": 2,
   "id": "doc_x",
   "name": "Untitled mockup",
-  "nswVersion": "3.28.1",
+  "defaultKitId": "nsw",
+  "kitVersions": { "nsw": "3.28.1" },
+  "kitSettings": {},
   "view": { "x": 80, "y": 80, "zoom": 1 },
   "frames": [
     {
       "id": "f_1",
       "name": "Home",
+      "kitId": "nsw",
       "device": "iphone",
       "width": 393,
       "x": 0,
@@ -47,9 +50,9 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 
 ## Fields
 
-**Document**: `id`, `name`, `nswVersion` (the `nsw-design-system` version the mockup was made with), `view` (canvas pan and zoom, not part of undo), `frames`, `nodes`, `images`.
+**Document**: `id`, `name`, `defaultKitId` (the kit for the first frame and for new frames), `kitVersions` (the design-system version of each kit in use, e.g. the `nsw-design-system` version), `kitSettings` (document-wide settings per kit, such as a SharePoint theme), `view` (canvas pan and zoom, not part of undo), `frames`, `nodes`, `images`.
 
-**Frame**: `device` is `iphone | android | tablet | desktop | custom`; `width` is in CSS px (240–3000; setting it by hand switches `device` to `custom`); `x`, `y` are canvas world coordinates; `root` is the ordered list of top-level node ids: usually sections, or full-width components (masthead, header, footer and so on) that sit outside any section. Frame height is not stored: it comes from the content, with a minimum of the device screen height (iPhone 852, Android 915, Tablet 1180, Desktop 900, Custom 800).
+**Frame**: `kitId` is the style kit the frame is built with (`nsw`, `sharepoint`); `settings` (optional) are that kit's frame-level settings, such as a SharePoint site type, header and navigation. `device` is `iphone | android | tablet | desktop | custom`; `width` is in CSS px (240–3000; setting it by hand switches `device` to `custom`); `x`, `y` are canvas world coordinates; `root` is the ordered list of top-level node ids: usually sections, or full-width components (masthead, header, footer and so on) that sit outside any section. Frame height is not stored: it comes from the content, with a minimum of the device screen height (iPhone 852, Android 915, Tablet 1180, Desktop 900, Custom 800).
 
 **Node**: a flat map keyed by id. `type` is one of `section | container | grid | column | component`. Structure is `section > container > grid > column > component`; children are ordered id arrays. A node has exactly one parent. Deleting a node deletes its descendants.
 
@@ -65,7 +68,7 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 
 ## Tree rules
 
-Each node type has a depth, and a node's parent is always exactly one level shallower: frame root 0 › section 1 › container 2 › grid 3 › column 4 › component 5. Full-width components (masthead, header, footer, hero banner, global alert and so on) have depth 1 and live in the frame root beside sections. Columns can't be moved or deleted on their own (deleting empties them). Loading code must reject files that break these rules rather than render them.
+Each node type has a depth, and a node's parent is always exactly one level shallower. The layers come from the frame's kit (`KitSchema.layers`). NSW: frame root 0 › section 1 › container 2 › grid 3 › column 4 › component 5. SharePoint: frame root 0 › section 1 › column 2 › component 3. Full-width components (masthead, header, footer, hero banner, global alert and so on) have depth 1 and live in the frame root beside sections. Columns can't be moved or deleted on their own (deleting empties them). Loading code must reject files that break these rules rather than render them.
 
 ## Components
 
@@ -113,3 +116,11 @@ A `.mockup.json` is an envelope:
 Stored mockups are the same document, validated again each time they are loaded.
 
 `props.goto` (optional, a frame id) on a component with a link option makes the link a click-through to that frame. No version bump: it is an optional prop.
+
+## Versions and migration
+
+`version` is the document version (now **2**). Files are upgraded on load by `src/persistence/migrate.ts` before they are validated, so any earlier file opens.
+
+- **1 → 2** (style kits): every frame gets `kitId: "nsw"`; `defaultKitId: "nsw"`, `kitVersions: { nsw: <old nswVersion> }` and `kitSettings: {}` are added; `nswVersion` is removed.
+
+A frame whose `kitId` this build doesn't have is refused with a message (rather than shown with the wrong styles). Kit settings (`frame.settings`, `kitSettings`) are plain data: strings, numbers, booleans, lists and nested objects of limited size and depth; anything else is dropped on load. The envelope of a saved file (`fileVersion`) is unchanged.

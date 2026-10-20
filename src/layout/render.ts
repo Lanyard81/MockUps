@@ -1,47 +1,20 @@
 import DOMPurify from 'dompurify';
 import type { DocNode, MockupDoc } from '../store/types';
+import { getKit } from '../kits';
+import type { Kit } from '../kits/types';
 import { renderComponent } from './component';
-import { SECTION_BACKGROUNDS, SECTION_PADDINGS } from './sections';
-import { columnClasses } from './spans';
 
 type Nodes = Record<string, DocNode>;
 type Images = MockupDoc['images'];
 
-/** Layout nodes with nothing inside show a dashed hint in Edit mode only (see FRAME_CSS). */
-const emptyHint = (node: DocNode, label: string) =>
-  (node.children?.length ?? 0) === 0 ? ` data-empty="${label}"` : '';
-
-/** Render a node tree to NSW markup. Output is sanitised before it reaches a frame. */
-function renderNode(nodes: Nodes, images: Images, id: string): string {
+/** Render a node tree to the kit's markup. Output is sanitised before it reaches a frame. */
+function renderNode(nodes: Nodes, images: Images, id: string, kit: Kit): string {
   const node = nodes[id];
   if (!node || node.hidden) return '';
-  const kids = (node.children ?? []).map((c) => renderNode(nodes, images, c)).join('');
-  switch (node.type) {
-    case 'section': {
-      const bg =
-        SECTION_BACKGROUNDS.find((b) => b.id === node.props?.background) ?? SECTION_BACKGROUNDS[0];
-      const pad = SECTION_PADDINGS.find((p) => p.id === node.props?.padding)?.cls ?? '';
-      const cls = [
-        'nsw-section',
-        `nsw-section--${bg.id}`,
-        bg.invert ? 'nsw-section--invert' : '',
-        pad,
-      ]
-        .filter(Boolean)
-        .join(' ');
-      return `<section class="${cls}" data-node="${node.id}"${emptyHint(node, 'Empty section')}>${kids}</section>`;
-    }
-    case 'container': {
-      const flush = node.props?.flush === true ? ' nsw-container--flush' : '';
-      return `<div class="nsw-container${flush}" data-node="${node.id}"${emptyHint(node, 'Empty container')}>${kids}</div>`;
-    }
-    case 'grid':
-      return `<div class="nsw-grid" data-node="${node.id}"${emptyHint(node, 'Empty grid')}>${kids}</div>`;
-    case 'column':
-      return `<div class="${columnClasses(node.props)}" data-node="${node.id}"${emptyHint(node, 'Empty column')}>${kids}</div>`;
-    case 'component':
-      return `<div data-node="${node.id}">${renderComponent(node, images)}</div>`;
-  }
+  if (node.type === 'component')
+    return `<div data-node="${node.id}">${renderComponent(node, images)}</div>`;
+  const kids = (node.children ?? []).map((c) => renderNode(nodes, images, c, kit)).join('');
+  return kit.renderLayout(node, kids);
 }
 
 /** What survives sanitising: our own editor markers and the data attributes the NSW script reads. */
@@ -64,12 +37,25 @@ const SANITISE = {
   ],
 };
 
-export function renderFrameHtml(nodes: Nodes, root: string[], images: Images = {}): string {
-  const html = root.map((id) => renderNode(nodes, images, id)).join('');
+export function renderFrameHtml(
+  nodes: Nodes,
+  root: string[],
+  images: Images = {},
+  kitId?: string,
+  frameSettings: Record<string, unknown> = {},
+): string {
+  const kit = getKit(kitId);
+  const content = root.map((id) => renderNode(nodes, images, id, kit)).join('');
+  const html = kit.renderFrame ? kit.renderFrame(content, frameSettings) : content;
   return DOMPurify.sanitize(html, SANITISE);
 }
 
 /** Markup for one node and everything inside it (for "Copy HTML"). */
-export function renderNodeHtml(nodes: Nodes, id: string, images: Images = {}): string {
-  return DOMPurify.sanitize(renderNode(nodes, images, id), SANITISE);
+export function renderNodeHtml(
+  nodes: Nodes,
+  id: string,
+  images: Images = {},
+  kitId?: string,
+): string {
+  return DOMPurify.sanitize(renderNode(nodes, images, id, getKit(kitId)), SANITISE);
 }

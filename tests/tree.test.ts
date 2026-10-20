@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  appendChild,
-  buildContainer,
-  buildGrid,
-  buildSection,
-  cloneSubtrees,
-  collectIds,
-  removeSubtrees,
-} from '../src/layout/tree';
+import { buildContainer, buildGrid, buildSection } from '../src/kits/nsw/blocks';
+import { appendChild, cloneSubtrees, collectIds, removeSubtrees } from '../src/layout/tree';
 
 let n = 0;
 const makeId = (p: string) => `${p}_${++n}`;

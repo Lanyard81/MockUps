@@ -1,4 +1,4 @@
-import type { ComponentSource } from '../types';
+import type { ComponentSource } from '../../../../catalogue/types';
 import { content } from './content';
 import { feedback } from './feedback';
 import { forms } from './forms';

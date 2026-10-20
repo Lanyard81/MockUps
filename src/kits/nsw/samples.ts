@@ -1,5 +1,4 @@
-import { catalogue } from '../catalogue';
-import type { MockupDoc } from '../store/types';
+import type { MockupDoc } from '../../store/types';
 import {
   buildTree,
   c,
@@ -10,8 +9,9 @@ import {
   type RowSpec,
   type SectionSpec,
   type TopItem,
-} from './build';
-import { getOfficialTemplate } from './index';
+} from './templateDsl';
+import { NSW_TEMPLATE_DEFS } from './templates';
+import nswPkg from 'nsw-design-system/package.json';
 
 /**
  * The sample mockups that ship with the app (`public/samples/*.mockup.json`). They are built from the
@@ -27,7 +27,7 @@ export interface SampleDef {
   links: [number, string, number, number][];
 }
 
-const template = (id: string): TopItem[] => getOfficialTemplate(id)!.items();
+const template = (id: string): TopItem[] => NSW_TEMPLATE_DEFS.find((t) => t.id === id)!.items();
 
 const h = (level: 1 | 2 | 3, text: string) => c('heading', `h${level}`, { text: { text } });
 const p = (text: string) => c('paragraph', 'default', { text: { text } });
@@ -247,6 +247,7 @@ export function buildSample(def: SampleDef): MockupDoc {
     const frame = {
       id: frameIds[i]!,
       name: f.name,
+      kitId: 'nsw',
       device: f.device,
       width: f.width,
       x,
@@ -258,10 +259,12 @@ export function buildSample(def: SampleDef): MockupDoc {
   });
 
   return {
-    version: 1,
+    version: 2,
     id: `doc_sample_${def.id}`,
     name: def.name,
-    nswVersion: catalogue.nswVersion,
+    defaultKitId: 'nsw',
+    kitVersions: { nsw: nswPkg.version },
+    kitSettings: {},
     view: { x: 80, y: 80, zoom: 0.3 },
     frames,
     nodes,

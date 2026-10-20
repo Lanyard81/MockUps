@@ -6,7 +6,7 @@ import {
   uniquifyIds,
 } from '../src/layout/component';
 import { renderFrameHtml } from '../src/layout/render';
-import { columnClasses, effectiveSpan, equalSpans, readSpans } from '../src/layout/spans';
+import { columnClasses, effectiveSpan, equalSpans, readSpans } from '../src/kits/nsw/spans';
 import type { DocNode } from '../src/store/types';
 
 const node = (componentId: string, variant: string, extra: Partial<DocNode> = {}): DocNode => ({

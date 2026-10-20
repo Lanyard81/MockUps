@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  CATEGORIES,
   searchCatalogue,
   type CatalogueComponent,
   type CatalogueVariant,
@@ -8,6 +7,8 @@ import {
 } from '../catalogue';
 import { getThumbnail } from '../catalogue/thumbnails';
 import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
+import { getKit } from '../kits';
+import type { KitId, LayoutBlock } from '../kits/types';
 import { useStore } from '../store/store';
 import { PageParts } from './PageParts';
 
@@ -22,13 +23,18 @@ export function Library() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All');
   const target = useTargetFrame();
-  const results = useMemo(() => searchCatalogue(query, filter), [query, filter]);
-  const showLayoutBlocks = (filter === 'All' || filter === 'Layout') && query.trim() === '';
+  // The library shows the kit of the frame that "click to add" would use.
+  const kit = getKit(target?.kitId);
+  const results = useMemo(() => searchCatalogue(query, filter, kit.id), [query, filter, kit.id]);
+  const showLayoutBlocks =
+    (filter === 'All' || filter === kit.layoutCategory) && query.trim() === '';
 
-  const grouped = CATEGORIES.map((category) => ({
-    category,
-    items: results.filter((r) => r.component.category === category),
-  })).filter((g) => g.items.length > 0 || (g.category === 'Layout' && showLayoutBlocks));
+  const grouped = kit.categories
+    .map((category) => ({
+      category,
+      items: results.filter((r) => r.component.category === category),
+    }))
+    .filter((g) => g.items.length > 0 || (g.category === kit.layoutCategory && showLayoutBlocks));
 
   return (
     <aside className="library" aria-label="Component library">
@@ -42,7 +48,7 @@ export function Library() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="chips" role="group" aria-label="Category">
-          {(['All', ...CATEGORIES] as Filter[]).map((c) => (
+          {(['All', ...kit.categories] as Filter[]).map((c) => (
             <button
               key={c}
               className={`chip${filter === c ? ' is-active' : ''}`}
@@ -68,15 +74,17 @@ export function Library() {
         {grouped.map(({ category, items }) => (
           <section key={category} className="library__group" aria-label={category}>
             <h2 className="library__category">{category}</h2>
-            {category === 'Layout' && showLayoutBlocks && (
+            {category === kit.layoutCategory && showLayoutBlocks && (
               <>
-                <div className="component" data-testid="page-parts">
-                  <div className="component__head">
-                    <h3 className="component__name">Quick page parts</h3>
+                {kit.pageParts.length > 0 && (
+                  <div className="component" data-testid="page-parts">
+                    <div className="component__head">
+                      <h3 className="component__name">Quick page parts</h3>
+                    </div>
+                    <PageParts frameId={target?.id} kitId={kit.id} />
                   </div>
-                  <PageParts frameId={target?.id} />
-                </div>
-                <LayoutBlocks frameId={target?.id} />
+                )}
+                <LayoutBlocks frameId={target?.id} kitId={kit.id} />
               </>
             )}
             {items.map(({ component, variants }) => (
@@ -85,6 +93,7 @@ export function Library() {
                 component={component}
                 variants={variants}
                 frameId={target?.id}
+                kitId={kit.id}
               />
             ))}
           </section>
@@ -103,10 +112,12 @@ function ComponentGroup({
   component,
   variants,
   frameId,
+  kitId,
 }: {
   component: CatalogueComponent;
   variants: CatalogueVariant[];
   frameId?: string;
+  kitId: KitId;
 }) {
   return (
     <div className="component" data-testid={`component-${component.id}`}>
@@ -120,7 +131,7 @@ function ComponentGroup({
       </div>
       <div className={`tiles${component.fullWidth ? ' tiles--wide' : ''}`}>
         {variants.map((v) => (
-          <Tile key={v.id} component={component} variant={v} frameId={frameId} />
+          <Tile key={v.id} component={component} variant={v} frameId={frameId} kitId={kitId} />
         ))}
       </div>
     </div>
@@ -131,10 +142,12 @@ function Tile({
   component,
   variant,
   frameId,
+  kitId,
 }: {
   component: CatalogueComponent;
   variant: CatalogueVariant;
   frameId?: string;
+  kitId: KitId;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [src, setSrc] = useState<string | null>(null);
@@ -149,7 +162,7 @@ function Tile({
       (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
-        void getThumbnail(component.id, variant, component.fullWidth).then((url) => {
+        void getThumbnail(component.id, variant, component.fullWidth, kitId).then((url) => {
           if (cancelled) return;
           if (url) setSrc(url);
           else setFailed(true);
@@ -162,7 +175,7 @@ function Tile({
       cancelled = true;
       io.disconnect();
     };
-  }, [component, variant]);
+  }, [component, variant, kitId]);
 
   return (
     <button
@@ -197,87 +210,54 @@ function Tile({
   );
 }
 
-const GRID_ICONS: Record<number, number[]> = { 1: [12], 2: [6, 6], 3: [4, 4, 4], 4: [3, 3, 3, 3] };
-
-function BlockTile({
-  frameId,
-  title,
-  label,
-  block,
-  columns,
-  children,
-}: {
-  frameId?: string;
-  title: string;
-  label: string;
-  block: 'section' | 'container' | 'grid';
-  columns?: number;
-  children: React.ReactNode;
-}) {
+function BlockTile({ frameId, block }: { frameId?: string; block: LayoutBlock }) {
   return (
     <button
       className="tile"
       disabled={!frameId}
-      title={title}
-      onPointerDown={(e) => beginPendingDrag(e, { kind: 'new-layout', block, columns, label })}
+      title={block.title}
+      onPointerDown={(e) =>
+        beginPendingDrag(e, {
+          kind: 'new-layout',
+          block: block.kind,
+          columns: block.columns,
+          label: block.label,
+        })
+      }
       onClick={() => {
         if (consumeDragClick()) return;
-        if (frameId) useStore.getState().addLayoutBlock(frameId, block, columns);
+        if (frameId) useStore.getState().addLayoutBlock(frameId, block.kind, block.columns);
       }}
     >
-      <span className="tile__thumb tile__thumb--icon">{children}</span>
-      <span className="tile__label">{label}</span>
+      <span className="tile__thumb tile__thumb--icon">
+        <svg viewBox="0 0 64 40" aria-hidden="true">
+          {block.icon.map((r, i) => (
+            <rect
+              key={i}
+              x={r.x}
+              y={r.y}
+              width={r.width}
+              height={r.height}
+              rx={r.fill ? 1 : 2}
+              className={r.fill ? 'fill' : undefined}
+            />
+          ))}
+        </svg>
+      </span>
+      <span className="tile__label">{block.label}</span>
     </button>
   );
 }
 
-function LayoutBlocks({ frameId }: { frameId?: string }) {
+function LayoutBlocks({ frameId, kitId }: { frameId?: string; kitId: KitId }) {
   return (
     <div className="component" data-testid="layout-blocks">
       <div className="component__head">
         <h3 className="component__name">Layout blocks</h3>
       </div>
       <div className="tiles">
-        <BlockTile
-          frameId={frameId}
-          block="section"
-          label="Section"
-          title="Add a full-width section"
-        >
-          <svg viewBox="0 0 64 40" aria-hidden="true">
-            <rect x="2" y="6" width="60" height="28" rx="2" />
-            <rect x="12" y="14" width="40" height="12" rx="1" className="fill" />
-          </svg>
-        </BlockTile>
-        <BlockTile
-          frameId={frameId}
-          block="container"
-          label="Container"
-          title="Add a container (nsw-container)"
-        >
-          <svg viewBox="0 0 64 40" aria-hidden="true">
-            <rect x="14" y="4" width="36" height="32" rx="2" />
-            <rect x="20" y="12" width="24" height="6" rx="1" className="fill" />
-          </svg>
-        </BlockTile>
-        {[1, 2, 3, 4].map((n) => (
-          <BlockTile
-            key={n}
-            frameId={frameId}
-            block="grid"
-            columns={n}
-            label={`${n} column${n > 1 ? 's' : ''}`}
-            title={`Add a grid with ${n} column${n > 1 ? 's' : ''}`}
-          >
-            <svg viewBox="0 0 64 40" aria-hidden="true">
-              {GRID_ICONS[n]!.map((span, i, all) => {
-                const total = 56 - (all.length - 1) * 4;
-                const w = (total * span) / 12;
-                const x = 4 + all.slice(0, i).reduce((acc, sp) => acc + (total * sp) / 12 + 4, 0);
-                return <rect key={i} x={x} y="6" width={w} height="28" rx="2" className="fill" />;
-              })}
-            </svg>
-          </BlockTile>
+        {getKit(kitId).layoutBlocks.map((b) => (
+          <BlockTile key={`${b.kind}:${b.columns ?? ''}`} frameId={frameId} block={b} />
         ))}
       </div>
     </div>

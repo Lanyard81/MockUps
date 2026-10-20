@@ -94,3 +94,17 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 - [x] "Go to frame…" links, back button in Preview
 - [x] Links in HTML export
+
+# Style kits and a SharePoint kit
+
+Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The brief asked for S1 and S2 before Milestone 5; they were started after Milestone 8 instead (so S1 retrofitted kit awareness into Milestones 5–8). All milestones were then authorised in one go.
+
+## Milestone S1: Kit architecture
+
+- [x] `Kit` interface (`src/kits/types.ts`) and registry (`src/kits/index.ts`): shell, catalogue, layout schema, renderers, settings, templates, samples, export
+- [x] NSW moved into `src/kits/nsw/` with no visible change
+- [x] Layout rules read from the kit schema (`layout/ops.ts` stays the one place that applies them)
+- [x] Document version 2: `kitId` per frame, `defaultKitId`, `kitVersions`, `kitSettings`; v1 → v2 migration
+- [x] Properties panel builds kit settings from data (`SettingsPanel`)
+- [x] Catalogue generator and validator run per kit
+- [x] Tests: registry, schema-driven ops, migration, kit settings, store; all earlier tests pass (import paths and a `kitId` on test frames only)

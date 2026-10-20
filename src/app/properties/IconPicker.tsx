@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import icons from '../../catalogue/generated/icons.json';
-import { FONT_FACES } from '../../canvas/nswAssets';
+import icons from '../../kits/nsw/catalogue/generated/icons.json';
+import { FONT_FACES } from '../../kits/nsw/shell';
 
 const ALL_ICONS = icons as string[];
 const SHOWN = 240;

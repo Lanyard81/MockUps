@@ -1,4 +1,5 @@
-import type { Category, OptionDef } from './types';
+import type { OptionDef } from '../../../catalogue/types';
+import type { NswCategory } from '../categories';
 
 /**
  * Hand-curated data the markup can't express. Applied on top of `sources/` by
@@ -6,7 +7,7 @@ import type { Category, OptionDef } from './types';
  */
 export interface Override {
   /** Move to a different library category. */
-  category?: Category;
+  category?: NswCategory;
   /** Extra search terms. */
   keywords?: string[];
   /** Labels for `data-optional` parts, keyed by part key. Falls back to a capitalised key. */

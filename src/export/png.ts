@@ -42,7 +42,7 @@ export async function renderFramePng(frameId: string, scale: 1 | 2): Promise<Blo
       width,
       height,
       backgroundColor: '#ffffff',
-      fontEmbedCSS: await getFontEmbedCss(),
+      fontEmbedCSS: await getFontEmbedCss(frame.kitId),
     });
     if (!blob) throw new ExportError(`“${frame.name}” could not be rendered.`);
     return blob;
@@ -67,7 +67,7 @@ export async function renderThumbnail(frameId: string, targetWidth = 240): Promi
       width: frame.width,
       height: Math.min(Math.ceil(root.offsetHeight), Math.round(frame.width * 1.1)),
       backgroundColor: '#ffffff',
-      fontEmbedCSS: await getFontEmbedCss(),
+      fontEmbedCSS: await getFontEmbedCss(frame.kitId),
     });
     return url;
   } catch {

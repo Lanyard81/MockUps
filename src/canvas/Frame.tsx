@@ -4,7 +4,7 @@ import { renderFrameHtml } from '../layout/render';
 import { applyTextFit } from '../lib/textFit';
 import { useStore } from '../store/store';
 import { DEVICES, type Frame as FrameModel } from '../store/types';
-import { FRAME_SHELL } from './nswAssets';
+import { getKit } from '../kits';
 import { FrameOverlay } from './FrameOverlay';
 import { attachFrameInput } from './input';
 import { registerFrameElement } from './registry';
@@ -13,8 +13,6 @@ interface Props {
   frame: FrameModel;
   zoom: number;
 }
-
-type FrameWindow = Window & { NSW?: { initSite: () => void } };
 
 /** One device frame: a label above an iframe that renders real NSW markup. */
 export const Frame = memo(function Frame({ frame, zoom }: Props) {
@@ -28,14 +26,15 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   const images = useStore((s) => s.doc.images);
   const fitTargets = useMemo(() => collectFitTargets(nodes, frame.root), [nodes, frame.root]);
   const html = useMemo(
-    () => renderFrameHtml(nodes, frame.root, images),
-    [nodes, frame.root, images],
+    () => renderFrameHtml(nodes, frame.root, images, frame.kitId, frame.settings),
+    [nodes, frame.root, images, frame.kitId, frame.settings],
   );
   const height = useStore((s) => s.frameHeights[frame.id] ?? DEVICES[frame.device].screenHeight);
   const selected = useStore((s) => s.selectedFrameId === frame.id);
   const interactive = useStore((s) => !s.panning && s.drag === null);
   const mode = useStore((s) => s.mode);
   const store = useStore;
+  const kit = getKit(frame.kitId);
   const screenHeight = DEVICES[frame.device].screenHeight;
 
   useEffect(() => {
@@ -59,7 +58,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     doc.body.dataset.mode = mode;
     root.innerHTML = html;
     try {
-      (iframe.contentWindow as FrameWindow).NSW?.initSite();
+      if (iframe.contentWindow) kit.shell.init(iframe.contentWindow);
     } catch (err) {
       console.error('NSW.initSite failed', err);
     }
@@ -73,7 +72,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     const ro = new ResizeObserver(measure);
     ro.observe(root);
     return () => ro.disconnect();
-  }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store]);
+  }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store, kit]);
 
   useEffect(() => {
     if (renameRequest === frame.id) {
@@ -162,7 +161,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
           ref={iframeRef}
           className="frame__iframe"
           title={frame.name}
-          srcDoc={FRAME_SHELL}
+          srcDoc={kit.shell.document}
           onLoad={onLoad}
           style={{ pointerEvents: interactive ? 'auto' : 'none' }}
           data-mode={mode}

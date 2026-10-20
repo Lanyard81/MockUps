@@ -1,4 +1,4 @@
-import type { ComponentSource } from '../types';
+import type { ComponentSource } from '../../../../catalogue/types';
 
 /**
  * Basic typography. These are plain HTML elements styled by the NSW base styles, not named

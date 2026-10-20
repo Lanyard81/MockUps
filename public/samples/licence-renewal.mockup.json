@@ -3,10 +3,14 @@
  "fileVersion": 1,
  "savedAt": "2026-10-20T00:00:00.000Z",
  "doc": {
-  "version": 1,
+  "version": 2,
   "id": "doc_sample_licence-renewal",
   "name": "Licence renewal journey",
-  "nswVersion": "3.28.1",
+  "defaultKitId": "nsw",
+  "kitVersions": {
+   "nsw": "3.28.1"
+  },
+  "kitSettings": {},
   "view": {
    "x": 80,
    "y": 80,
@@ -16,6 +20,7 @@
    {
     "id": "f_licence-renewal_1",
     "name": "Home",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 0,
@@ -33,6 +38,7 @@
    {
     "id": "f_licence-renewal_2",
     "name": "Apply",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 1520,
@@ -48,6 +54,7 @@
    {
     "id": "f_licence-renewal_3",
     "name": "Done",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 3040,

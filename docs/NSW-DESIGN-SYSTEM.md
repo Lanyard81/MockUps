@@ -160,7 +160,7 @@ At `https://designsystem.nsw.gov.au/templates/`:
 
 ## Catalogue (Milestone 2)
 
-Source: `src/catalogue/sources/*.ts` (hand-written NSW markup) → `npm run catalogue` → `src/catalogue/generated/catalogue.json`. 49 entries (the 46 components plus Heading, Paragraph and List, which are plain HTML elements styled by NSW base styles) and 103 variants.
+Source: `src/kits/nsw/catalogue/sources/*.ts` (hand-written NSW markup) → `npm run catalogue` → `src/kits/nsw/catalogue/generated/catalogue.json`. 49 entries (the 46 components plus Heading, Paragraph and List, which are plain HTML elements styled by NSW base styles) and 103 variants.
 
 ### How the markup was checked
 

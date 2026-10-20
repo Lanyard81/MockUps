@@ -19,8 +19,17 @@ function fixture(): Doc {
   });
   return {
     frames: [
-      { id: 'f1', name: 'One', device: 'iphone', width: 393, x: 0, y: 0, root: ['sA', 'sB', 'm'] },
-      { id: 'f2', name: 'Two', device: 'iphone', width: 393, x: 500, y: 0, root: [] },
+      {
+        id: 'f1',
+        name: 'One',
+        kitId: 'nsw',
+        device: 'iphone',
+        width: 393,
+        x: 0,
+        y: 0,
+        root: ['sA', 'sB', 'm'],
+      },
+      { id: 'f2', name: 'Two', kitId: 'nsw', device: 'iphone', width: 393, x: 500, y: 0, root: [] },
     ],
     nodes: {
       sA: n('sA', 'section', ['cA']),

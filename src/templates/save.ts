@@ -37,6 +37,8 @@ export async function saveFrameAsTemplate(frameId: string, name: string): Promis
     name: label,
     device: frame.device,
     width: frame.width,
+    kitId: frame.kitId,
+    ...(frame.settings ? { settings: structuredClone(frame.settings) } : {}),
     root: [...frame.root],
     nodes,
     images: imagesUsedBy(nodes, s.doc.images),

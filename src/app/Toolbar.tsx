@@ -2,7 +2,7 @@ import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { DEVICES, type DeviceId } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
-import { SAMPLES } from '../templates/samples';
+import { KITS } from '../kits';
 import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
 import { Menu } from './Menu';
@@ -34,7 +34,7 @@ export function Toolbar() {
           items={[
             { label: 'New mockup', onSelect: () => s.getState().newDoc() },
             { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
-            ...SAMPLES.map((d, i) => ({
+            ...KITS.flatMap((k) => k.samples).map((d, i) => ({
               label: `Sample: ${d.name}`,
               separatorBefore: i === 0,
               onSelect: () => loadSample(d.id),

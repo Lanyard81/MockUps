@@ -65,7 +65,7 @@ npm run catalogue     # re-checks every snippet against the new CSS and JS, and 
 npm test && npm run test:e2e
 ```
 
-`npm run catalogue` fails and lists any class that no longer exists in the new version. Fix those snippets in `src/catalogue/sources/`, run it again, and commit `src/catalogue/generated/catalogue.json`. Frames load the CSS and JavaScript from the installed package, so upgrading the package upgrades every mockup. Check `docs/NSW-DESIGN-SYSTEM.md` for components that need attention after an upgrade.
+`npm run catalogue` fails and lists any class that no longer exists in the new version. Fix those snippets in `src/kits/nsw/catalogue/sources/`, run it again, and commit `src/kits/nsw/catalogue/generated/catalogue.json`. Frames load the CSS and JavaScript from the installed package, so upgrading the package upgrades every mockup. Check `docs/NSW-DESIGN-SYSTEM.md` for components that need attention after an upgrade.
 
 ## Documentation
 

@@ -2,12 +2,15 @@ import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { ComponentProps } from './properties/ComponentProps';
 import { FrameProps } from './properties/FrameProps';
-import { ColumnProps, ContainerProps, GridProps, SectionProps } from './properties/LayoutProps';
+import { getKit } from '../kits';
+import { KIT_PANELS } from './kitPanels';
+import { SettingsPanel } from './properties/SettingsPanel';
 
 /** Right-hand panel: options for whatever is selected. */
 export function Properties() {
   const frameId = useStore((s) => s.selectedFrameId);
   const node = useStore((s) => (s.selectedNodeId ? s.doc.nodes[s.selectedNodeId] : undefined));
+  const frameKit = useStore((s) => s.doc.frames.find((f) => f.id === s.selectedFrameId)?.kitId);
 
   let body: React.ReactNode;
   let title = 'Properties';
@@ -24,23 +27,11 @@ export function Properties() {
     title = 'Frame';
     body = <FrameProps frameId={frameId} />;
   } else {
-    title = nodeLabel(node);
-    switch (node.type) {
-      case 'section':
-        body = <SectionProps nodeId={node.id} />;
-        break;
-      case 'container':
-        body = <ContainerProps nodeId={node.id} />;
-        break;
-      case 'grid':
-        body = <GridProps nodeId={node.id} />;
-        break;
-      case 'column':
-        body = <ColumnProps nodeId={node.id} />;
-        break;
-      case 'component':
-        body = <ComponentProps nodeId={node.id} frameId={frameId} />;
-        break;
+    title = nodeLabel(node, frameKit);
+    if (node.type === 'component') {
+      body = <ComponentProps nodeId={node.id} frameId={frameId} />;
+    } else {
+      body = <LayoutNodeProps nodeId={node.id} frameId={frameId} />;
     }
   }
 
@@ -55,3 +46,30 @@ export function Properties() {
     </aside>
   );
 }
+
+/** Options for a section, column or other layout node: the kit's settings, and its custom panel if it has one. */
+function LayoutNodeProps({ nodeId, frameId }: { nodeId: string; frameId: string }) {
+  const node = useStore((s) => s.doc.nodes[nodeId]);
+  const frame = useStore((s) => s.doc.frames.find((f) => f.id === frameId));
+  const kit = getKit(frame?.kitId);
+  if (!node || node.type === 'component') return null;
+  const defs = kit.settings.node[node.type] ?? NO_DEFS;
+  const Panel = KIT_PANELS[kit.id]?.[node.type];
+  return (
+    <>
+      {defs.length > 0 && (
+        <SettingsPanel
+          defs={defs}
+          values={node.props ?? NO_VALUES}
+          frame={frame?.settings ?? NO_VALUES}
+          onChange={(key, value) => useStore.getState().setNodeProps(nodeId, { [key]: value })}
+        />
+      )}
+      {Panel && <Panel nodeId={nodeId} />}
+    </>
+  );
+}
+
+/** Stable empty values: a selector or prop must not be a fresh object each render. */
+const NO_DEFS: never[] = [];
+const NO_VALUES: Record<string, unknown> = {};

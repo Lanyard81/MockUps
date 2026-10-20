@@ -1,3 +1,4 @@
+import type { KitShell } from '../types';
 import nswCss from 'nsw-design-system/dist/css/main.css?raw';
 import nswJs from 'nsw-design-system/dist/js/main.js?raw';
 
@@ -44,3 +45,15 @@ export const FRAME_SHELL = `<!doctype html><html lang="en-AU"><head><meta charse
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>${FONT_CSS}</style><style>${nswCss}</style><style>${FRAME_CSS}</style></head>
 <body><div id="root"></div><script>${nswJs.replace(/<\/script/gi, '<\\/script')}</script></body></html>`;
+
+type NswWindow = Window & { NSW?: { initSite: () => void } };
+
+export const nswShell: KitShell = {
+  css: nswCss,
+  js: nswJs,
+  fontCss,
+  fonts: FONT_FACES,
+  frameCss: FRAME_CSS,
+  document: FRAME_SHELL,
+  init: (win) => (win as NswWindow).NSW?.initSite(),
+};

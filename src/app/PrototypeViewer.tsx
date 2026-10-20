@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FRAME_SHELL } from '../canvas/nswAssets';
+import { getKit } from '../kits';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
-
-type FrameWindow = Window & { NSW?: { initSite: () => void } };
 
 /**
  * Preview's click-through: a frame shown on its own, full height, where "go to frame" links open
@@ -22,9 +20,10 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
   const nodes = useStore((s) => s.doc.nodes);
   const images = useStore((s) => s.doc.images);
   const html = useMemo(
-    () => renderFrameHtml(nodes, frame.root, images),
-    [nodes, frame.root, images],
+    () => renderFrameHtml(nodes, frame.root, images, frame.kitId, frame.settings),
+    [nodes, frame.root, images, frame.kitId, frame.settings],
   );
+  const kit = getKit(frame.kitId);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [size, setSize] = useState({ w: window.innerWidth, h: window.innerHeight });
 
@@ -53,7 +52,7 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
     if (!iframe || !doc || !root) return;
     root.innerHTML = html;
     try {
-      (iframe.contentWindow as FrameWindow).NSW?.initSite();
+      if (iframe.contentWindow) kit.shell.init(iframe.contentWindow);
     } catch (err) {
       console.error('NSW.initSite failed', err);
     }
@@ -72,7 +71,7 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
       true,
     );
     doc.addEventListener('submit', (e) => e.preventDefault(), true);
-  }, [html]);
+  }, [html, kit]);
 
   // Scale down to fit the width of the window; never scale up.
   const scale = Math.min(1, size.w / frame.width);
@@ -102,7 +101,7 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
         <iframe
           ref={iframeRef}
           title={`Preview of ${frame.name}`}
-          srcDoc={FRAME_SHELL}
+          srcDoc={kit.shell.document}
           onLoad={onLoad}
           style={{
             width: frame.width,

@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
-import type { InstantiatedTemplate } from './build';
+import type { InstantiatedTemplate } from './types';
 import { getOfficialTemplate, instantiateOfficial, instantiateSaved } from './index';
 
 export type TemplateRef = { source: 'official' | 'mine'; templateId: string };

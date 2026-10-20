@@ -1,6 +1,8 @@
 import { getComponent } from '../catalogue';
+import { equalSpans } from '../kits/nsw/spans';
+import { DEFAULT_KIT_ID, getKit } from '../kits';
+import type { KitSchema } from '../kits/types';
 import type { DocNode, Frame, MockupDoc } from '../store/types';
-import { equalSpans } from './spans';
 import { collectIds, removeSubtrees } from './tree';
 
 /**
@@ -8,12 +10,15 @@ import { collectIds, removeSubtrees } from './tree';
  * rule about what may go where is unit-tested in tests/ops.test.ts.
  *
  * The tree is strictly layered. Each node type has a depth, and a node's parent is always one
- * level shallower:
+ * level shallower. Which layers exist comes from the frame's kit (`KitSchema.layers`); for NSW:
  *
  *   root (frame) 0 > section 1 > container 2 > grid 3 > column 4 > component 5
  *
  * Full-width components (masthead, header, footer, hero banner...) are the exception: they
  * have depth 1 and sit in the frame root beside sections.
+ *
+ * Functions that take a `schema` default to the NSW kit's; ones that take a document and a frame
+ * look the schema up from the frame.
  */
 export type Doc = Pick<MockupDoc, 'frames' | 'nodes'>;
 export type MakeId = (prefix: string) => string;
@@ -21,26 +26,41 @@ export type MakeId = (prefix: string) => string;
 export const isFullWidth = (n: DocNode): boolean =>
   n.type === 'component' && !!n.componentId && !!getComponent(n.componentId)?.fullWidth;
 
-export function depthOf(n: DocNode): number {
-  switch (n.type) {
-    case 'section':
-      return 1;
-    case 'container':
-      return 2;
-    case 'grid':
-      return 3;
-    case 'column':
-      return 4;
-    case 'component':
-      return isFullWidth(n) ? 1 : 5;
-  }
+const nswSchema = (): KitSchema => getKit(DEFAULT_KIT_ID).schema;
+
+/** The layout rules of a kit (NSW when the id is missing or unknown). */
+export const schemaOfKit = (kitId?: string | null): KitSchema => getKit(kitId).schema;
+
+/** The layout rules for a frame, from its kit (NSW when the frame has none). */
+export function schemaOfFrame(doc: Doc, frameId: string): KitSchema {
+  return getKit(doc.frames.find((f) => f.id === frameId)?.kitId).schema;
+}
+
+/** The layout rules that apply to a node already in the tree (0 layers if it isn't in one). */
+export function schemaOfNode(doc: Doc, id: string): KitSchema {
+  const frameId = frameOfNode(doc, id);
+  return frameId ? schemaOfFrame(doc, frameId) : nswSchema();
+}
+
+/** How deep a node sits: 0 is the frame root, then one per layer, and components below the last. */
+export function depthOf(n: DocNode, schema: KitSchema = nswSchema()): number {
+  if (n.type === 'component') return isFullWidth(n) ? 1 : schema.layers.length + 1;
+  const i = schema.layers.indexOf(n.type);
+  return i < 0 ? -1 : i + 1;
 }
 
 /** Can `parent` (null means the frame root) hold `child`? */
-export function canContain(parent: DocNode | null, child: DocNode): boolean {
-  if (!parent) return depthOf(child) === 1;
+export function canContain(
+  parent: DocNode | null,
+  child: DocNode,
+  schema: KitSchema = nswSchema(),
+): boolean {
+  const childDepth = depthOf(child, schema);
+  if (childDepth < 1) return false;
+  if (!parent) return childDepth === 1;
   if (parent.type === 'component') return false;
-  return depthOf(parent) === depthOf(child) - 1;
+  const parentDepth = depthOf(parent, schema);
+  return parentDepth > 0 && parentDepth === childDepth - 1;
 }
 
 /** Only these can be picked up and moved. Columns belong to their grid. */
@@ -185,8 +205,6 @@ export function moveAmongSiblings<T extends Doc>(doc: T, id: string, dir: -1 | 1
   return { ...doc, nodes: { ...doc.nodes, [parent.id]: { ...parent, children: next } } };
 }
 
-const CHAIN_TYPES = ['section', 'container', 'grid', 'column'] as const;
-
 /**
  * Create the missing layers between a start depth and a leaf, so a component dropped on empty
  * space gets a section, container, grid and column of its own. The leaf must already be in `nodes`
@@ -196,20 +214,16 @@ export function buildChain(
   makeId: MakeId,
   leaf: DocNode,
   startDepth: number,
+  schema: KitSchema = nswSchema(),
 ): { nodes: Record<string, DocNode>; topId: string } {
-  const leafDepth = depthOf(leaf);
+  const leafDepth = depthOf(leaf, schema);
   const nodes: Record<string, DocNode> = {};
   let childId = leaf.id;
   for (let depth = leafDepth - 1; depth >= startDepth; depth--) {
-    const type = CHAIN_TYPES[depth - 1]!;
+    const type = schema.layers[depth - 1]!;
     const id = makeId('n');
-    nodes[id] = {
-      id,
-      type,
-      children: [childId],
-      ...(type === 'section' ? { props: { background: 'white' } } : {}),
-      ...(type === 'column' ? { props: { spans: { base: 12, md: 12 } } } : {}),
-    };
+    const props = schema.defaultProps(type);
+    nodes[id] = { id, type, children: [childId], ...(props ? { props } : {}) };
     childId = id;
   }
   return { nodes, topId: childId };
@@ -236,21 +250,22 @@ export function resolveInsertion(
 ): Insertion {
   const frame = doc.frames.find((f) => f.id === frameId);
   if (!frame) throw new Error(`Missing frame ${frameId}`);
-  const leafDepth = depthOf(leaf);
+  const schema = schemaOfFrame(doc, frameId);
+  const leafDepth = depthOf(leaf, schema);
   let anchor = anchorId && frameOfNode(doc, anchorId) === frameId ? anchorId : null;
   anchor ??= frame.root[frame.root.length - 1] ?? null;
   if (!anchor) return { parentId: null, index: 0, chainFrom: leafDepth > 1 ? 1 : null };
 
   // Anchor is as deep as the leaf or deeper: go up to the leaf's level and insert after it.
   let cur = anchor;
-  if (depthOf(doc.nodes[cur]!) >= leafDepth) {
-    while (depthOf(doc.nodes[cur]!) > leafDepth) cur = parentOf(doc, cur)!.parentId!;
+  if (depthOf(doc.nodes[cur]!, schema) >= leafDepth) {
+    while (depthOf(doc.nodes[cur]!, schema) > leafDepth) cur = parentOf(doc, cur)!.parentId!;
     const p = parentOf(doc, cur)!;
     return { parentId: p.parentId, index: p.index + 1, chainFrom: null };
   }
 
   // Anchor is shallower: go down through last children until we reach the leaf's parent level.
-  while (depthOf(doc.nodes[cur]!) < leafDepth - 1) {
+  while (depthOf(doc.nodes[cur]!, schema) < leafDepth - 1) {
     const node = doc.nodes[cur]!;
     const last = node.children?.[node.children.length - 1];
     if (!last) {
@@ -259,7 +274,7 @@ export function resolveInsertion(
         const p = parentOf(doc, cur)!;
         return { parentId: null, index: p.index + 1, chainFrom: 1 };
       }
-      return { parentId: cur, index: 0, chainFrom: depthOf(node) + 1 };
+      return { parentId: cur, index: 0, chainFrom: depthOf(node, schema) + 1 };
     }
     cur = last;
   }
@@ -279,8 +294,9 @@ export function applyInsertion<T extends Doc>(
 ): T {
   const leaf = doc.nodes[leafId];
   if (!leaf) throw new Error(`Missing node ${leafId}`);
-  if (ins.chainFrom !== null && ins.chainFrom < depthOf(leaf)) {
-    const chain = buildChain(makeId, leaf, ins.chainFrom);
+  const schema = schemaOfFrame(doc, frameId);
+  if (ins.chainFrom !== null && ins.chainFrom < depthOf(leaf, schema)) {
+    const chain = buildChain(makeId, leaf, ins.chainFrom, schema);
     const withChain = { ...doc, nodes: { ...doc.nodes, ...chain.nodes } };
     return insertNode(withChain, frameId, ins.parentId, ins.index, chain.topId);
   }
@@ -300,14 +316,23 @@ export function extractSubtree(
 }
 
 /** Is it legal to move `id` into `parentId`? (Not into itself, not into its own descendants.) */
-export function canMoveInto(doc: Doc, id: string, parentId: string | null): boolean {
+export function canMoveInto(
+  doc: Doc,
+  id: string,
+  parentId: string | null,
+  /** The frame the move ends in; needed when `parentId` is null (the frame root). */
+  frameId?: string,
+): boolean {
   const node = doc.nodes[id];
   if (!node || !isDraggable(node)) return false;
+  const targetFrame =
+    parentId !== null ? frameOfNode(doc, parentId) : (frameId ?? frameOfNode(doc, id));
+  const schema = targetFrame ? schemaOfFrame(doc, targetFrame) : nswSchema();
   if (parentId !== null) {
     if (isWithin(doc, parentId, id)) return false;
-    return canContain(doc.nodes[parentId] ?? null, node);
+    return canContain(doc.nodes[parentId] ?? null, node, schema);
   }
-  return canContain(null, node);
+  return canContain(null, node, schema);
 }
 
 /**

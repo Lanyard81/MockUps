@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import nswPkg from 'nsw-design-system/package.json';
+import { DEFAULT_KIT_ID, getKit } from '../kits';
+import type { KitId } from '../kits/types';
 import { getComponent, hasVariant } from '../catalogue';
-import { readSpans, type BreakpointId } from '../layout/spans';
+import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
@@ -20,13 +21,7 @@ import {
   setGridColumnCount,
   type Insertion,
 } from '../layout/ops';
-import {
-  buildContainer,
-  buildGrid,
-  buildSection,
-  cloneSubtrees,
-  removeSubtrees,
-} from '../layout/tree';
+import { cloneSubtrees, removeSubtrees } from '../layout/tree';
 import {
   DEVICES,
   type Clipboard,
@@ -40,21 +35,39 @@ import {
   type Frame,
   type MockupDoc,
 } from './types';
-import type { InstantiatedTemplate } from '../templates/build';
+import type { InstantiatedTemplate } from '../templates/types';
 
 const HISTORY_LIMIT = 100;
 const FRAME_GAP = 80;
 
 export type Mode = 'edit' | 'preview';
 
+/** The design-system version of each kit in use, recorded in the document. */
+export function kitVersionsFor(ids: KitId[]): Record<KitId, string> {
+  return Object.fromEntries(ids.map((id) => [id, getKit(id).version]));
+}
+
 export function createDoc(): MockupDoc {
   return {
-    version: 1,
+    version: 2,
     id: newId('doc'),
     name: 'Untitled mockup',
-    nswVersion: nswPkg.version,
+    defaultKitId: DEFAULT_KIT_ID,
+    kitVersions: kitVersionsFor([DEFAULT_KIT_ID]),
+    kitSettings: {},
     view: { x: 80, y: 80, zoom: 1 },
-    frames: [{ id: newId('f'), name: 'Home', device: 'iphone', width: 393, x: 0, y: 0, root: [] }],
+    frames: [
+      {
+        id: newId('f'),
+        name: 'Home',
+        kitId: DEFAULT_KIT_ID,
+        device: 'iphone',
+        width: 393,
+        x: 0,
+        y: 0,
+        root: [],
+      },
+    ],
     nodes: {},
     images: {},
   };
@@ -156,7 +169,7 @@ interface Actions {
   setView: (view: View) => void;
   zoomToFit: () => void;
 
-  addFrame: (device: DeviceId) => void;
+  addFrame: (device: DeviceId, kitId?: KitId) => void;
   duplicateFrame: (id: string) => void;
   deleteFrame: (id: string) => void;
   renameFrame: (id: string, name: string) => void;
@@ -165,11 +178,7 @@ interface Actions {
   /** Add a catalogue component next to the selection (or at the end of the frame). */
   addComponent: (frameId: string, componentId: string, variantId?: string) => void;
   /** Add a layout block: a section, a container, or a grid of 1–4 columns. */
-  addLayoutBlock: (
-    frameId: string,
-    kind: 'section' | 'container' | 'grid',
-    columns?: number,
-  ) => void;
+  addLayoutBlock: (frameId: string, kind: string, columns?: number) => void;
   /** Drop a new component or layout block at an exact position. */
   dropNew: (payload: DragPayload, target: DropTarget) => void;
   /** Move an existing node to an exact position, possibly in another frame. */
@@ -208,7 +217,11 @@ interface Actions {
   /** Hide or show a layer on the canvas and in exports (Layers panel). */
   setHidden: (nodeId: string, hidden: boolean) => void;
   /** Quick page parts: the masthead and header at the top of a frame, or a footer at the bottom. */
-  addPageParts: (frameId: string, part: 'top' | 'footer') => void;
+  addPageParts: (frameId: string, part: string) => void;
+  /** Change a frame's kit settings (a value of `undefined` clears one). One undo step. */
+  setFrameSettings: (frameId: string, patch: Record<string, unknown>) => void;
+  /** Change a kit's document-wide settings, such as the SharePoint theme. One undo step. */
+  setKitSettings: (kitId: KitId, patch: Record<string, unknown>) => void;
   /** Alt+↑ / Alt+↓: swap with the previous or next sibling. */
   moveSelected: (dir: -1 | 1) => void;
 
@@ -260,11 +273,30 @@ function newComponentNode(componentId: string, variant: string): DocNode {
   };
 }
 
-function buildLayoutBlock(kind: 'section' | 'container' | 'grid', columns: number) {
-  if (kind === 'section') return buildSection(newId);
-  if (kind === 'container') return buildContainer(newId);
-  return buildGrid(newId, Math.min(4, Math.max(1, columns)));
+/** Build a layout block of the frame's kit (a section, a column grid...). Null if the kit has no such block. */
+function buildLayoutBlock(kitId: KitId | undefined, kind: string, columns: number) {
+  const blocks = getKit(kitId).layoutBlocks;
+  const block =
+    blocks.find((b) => b.kind === kind && b.columns === columns) ??
+    blocks.find((b) => b.kind === kind && b.columns === Math.min(4, Math.max(1, columns))) ??
+    blocks.find((b) => b.kind === kind);
+  return block ? block.build(newId) : null;
 }
+
+/** Merge a patch into a settings object; keys whose value is `undefined` are removed. */
+function applyPatch(
+  current: Record<string, unknown> | undefined,
+  patch: Record<string, unknown>,
+): Record<string, unknown> | undefined {
+  const next = { ...current, ...patch };
+  for (const k of Object.keys(next)) if (next[k] === undefined) delete next[k];
+  return Object.keys(next).length > 0 ? next : undefined;
+}
+
+const withKitVersion = (doc: MockupDoc, kitId: KitId): MockupDoc =>
+  doc.kitVersions[kitId]
+    ? doc
+    : { ...doc, kitVersions: { ...doc.kitVersions, [kitId]: getKit(kitId).version } };
 
 /** Add a new leaf next to the current selection (or the end of the frame) and select it. */
 function insertLeaf(s: Store, frameId: string, nodes: Record<string, DocNode>, leafId: string) {
@@ -341,6 +373,8 @@ export const useStore = create<Store>((set, get) => ({
       const frame: Frame = {
         id,
         name: template.name,
+        kitId: template.kitId,
+        ...(template.settings ? { settings: template.settings } : {}),
         device: template.device,
         width: template.width,
         x: Math.round(at?.x ?? right + FRAME_GAP),
@@ -349,7 +383,7 @@ export const useStore = create<Store>((set, get) => ({
       };
       return {
         ...commit(s, {
-          ...s.doc,
+          ...withKitVersion(s.doc, template.kitId),
           frames: [...s.doc.frames, frame],
           nodes: { ...s.doc.nodes, ...template.nodes },
           images: { ...s.doc.images, ...template.images },
@@ -368,7 +402,14 @@ export const useStore = create<Store>((set, get) => ({
       const kept = removeSubtrees(s.doc.nodes, frame.root);
       return {
         ...commit(s, {
-          ...updateFrame(s.doc, frameId, { root: template.root }),
+          ...withKitVersion(
+            updateFrame(s.doc, frameId, {
+              root: template.root,
+              kitId: template.kitId,
+              settings: template.settings,
+            }),
+            template.kitId,
+          ),
           nodes: { ...kept, ...template.nodes },
           images: { ...s.doc.images, ...template.images },
         }),
@@ -449,13 +490,15 @@ export const useStore = create<Store>((set, get) => ({
     get().setView(fitView(bounds, viewport.width, viewport.height));
   },
 
-  addFrame: (device) =>
+  addFrame: (device, kitId) =>
     set((s) => {
       const preset = DEVICES[device];
+      const kit = getKit(kitId ?? s.doc.defaultKitId).id;
       const right = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width));
       const frame: Frame = {
         id: newId('f'),
         name: `${preset.label} ${s.doc.frames.length + 1}`,
+        kitId: kit,
         device,
         width: preset.width,
         x: right + FRAME_GAP,
@@ -463,7 +506,7 @@ export const useStore = create<Store>((set, get) => ({
         root: [],
       };
       return {
-        ...commit(s, { ...s.doc, frames: [...s.doc.frames, frame] }),
+        ...commit(s, { ...withKitVersion(s.doc, kit), frames: [...s.doc.frames, frame] }),
         selectedFrameId: frame.id,
       };
     }),
@@ -539,8 +582,10 @@ export const useStore = create<Store>((set, get) => ({
 
   addLayoutBlock: (frameId, kind, columns = 1) =>
     set((s) => {
-      if (!s.doc.frames.some((f) => f.id === frameId)) return s;
-      const built = buildLayoutBlock(kind, columns);
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const built = buildLayoutBlock(frame.kitId, kind, columns);
+      if (!built) return s;
       return insertLeaf(s, frameId, built.nodes, built.rootId);
     }),
 
@@ -556,7 +601,12 @@ export const useStore = create<Store>((set, get) => ({
         nodes = { [leaf.id]: leaf };
         leafId = leaf.id;
       } else {
-        const built = buildLayoutBlock(payload.block, payload.columns ?? 1);
+        const built = buildLayoutBlock(
+          s.doc.frames.find((f) => f.id === target.frameId)?.kitId,
+          payload.block,
+          payload.columns ?? 1,
+        );
+        if (!built) return s;
         nodes = built.nodes;
         leafId = built.rootId;
       }
@@ -773,17 +823,28 @@ export const useStore = create<Store>((set, get) => ({
       return commit(s, replaceNode(s.doc, { ...node, hidden }));
     }),
 
+  setFrameSettings: (frameId, patch) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const settings = applyPatch(frame.settings, patch);
+      return commit(s, updateFrame(s.doc, frameId, { settings }));
+    }),
+
+  setKitSettings: (kitId, patch) =>
+    set((s) => {
+      const next = applyPatch(s.doc.kitSettings[kitId], patch);
+      return commit(s, { ...s.doc, kitSettings: { ...s.doc.kitSettings, [kitId]: next ?? {} } });
+    }),
+
   addPageParts: (frameId, part) =>
     set((s) => {
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
-      const specs =
-        part === 'top'
-          ? [
-              ['masthead', 'dark'],
-              ['header', 'default'],
-            ]
-          : [['footer', 'dark']];
+      const def = getKit(frame.kitId).pageParts.find((p) => p.id === part);
+      if (!def) return s;
+      const specs = def.components;
+      const atTop = def.position === 'top';
       let doc: MockupDoc = s.doc;
       const added: string[] = [];
       specs.forEach(([componentId, variant], i) => {
@@ -792,7 +853,7 @@ export const useStore = create<Store>((set, get) => ({
         doc = applyInsertion(
           { ...doc, nodes: { ...doc.nodes, [node.id]: node } },
           frameId,
-          { parentId: null, index: part === 'top' ? i : frame.root.length + i, chainFrom: null },
+          { parentId: null, index: atTop ? i : frame.root.length + i, chainFrom: null },
           node.id,
           newId,
         );

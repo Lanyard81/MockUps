@@ -19,7 +19,7 @@ import {
   setGridColumnCount,
   type Doc,
 } from '../src/layout/ops';
-import { buildSection } from '../src/layout/tree';
+import { buildSection } from '../src/kits/nsw/blocks';
 import type { DocNode } from '../src/store/types';
 
 let n = 0;
@@ -42,8 +42,17 @@ function fixture(): { doc: Doc; section: string; container: string; grid: string
   nodes[column] = { ...nodes[column]!, children: ['a', 'b'] };
   const doc: Doc = {
     frames: [
-      { id: 'f1', name: 'One', device: 'iphone', width: 393, x: 0, y: 0, root: [section] },
-      { id: 'f2', name: 'Two', device: 'iphone', width: 393, x: 500, y: 0, root: [] },
+      {
+        id: 'f1',
+        name: 'One',
+        kitId: 'nsw',
+        device: 'iphone',
+        width: 393,
+        x: 0,
+        y: 0,
+        root: [section],
+      },
+      { id: 'f2', name: 'Two', kitId: 'nsw', device: 'iphone', width: 393, x: 500, y: 0, root: [] },
     ],
     nodes,
   };
@@ -243,7 +252,9 @@ describe('choosing where a new node goes', () => {
 
   it('fills in missing layers inside an empty section', () => {
     const empty: Doc = {
-      frames: [{ id: 'f', name: 'F', device: 'iphone', width: 393, x: 0, y: 0, root: ['s'] }],
+      frames: [
+        { id: 'f', name: 'F', kitId: 'nsw', device: 'iphone', width: 393, x: 0, y: 0, root: ['s'] },
+      ],
       nodes: { s: { id: 's', type: 'section', children: [] } },
     };
     const ins = resolveInsertion(empty, 'f', 's', comp('x'));

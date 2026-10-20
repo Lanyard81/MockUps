@@ -3,10 +3,10 @@ import { getComponent } from '../src/catalogue';
 import { renderFrameHtml } from '../src/layout/render';
 import { cleanTree, parseMockupFile, serialiseMockupFile } from '../src/persistence/schema';
 import { createDoc, useStore } from '../src/store/store';
-import { SAMPLES, buildSample } from '../src/templates/samples';
+import { SAMPLES, buildSample } from '../src/kits/nsw/samples';
 import {
   OFFICIAL_TEMPLATES,
-  TEMPLATE_GROUPS,
+  templateGroups,
   getOfficialTemplate,
   instantiateOfficial,
   instantiateSaved,
@@ -18,7 +18,7 @@ describe('official templates', () => {
   it('has all 22, in known groups, with unique ids', () => {
     expect(OFFICIAL_TEMPLATES).toHaveLength(22);
     expect(new Set(OFFICIAL_TEMPLATES.map((t) => t.id)).size).toBe(22);
-    for (const t of OFFICIAL_TEMPLATES) expect(TEMPLATE_GROUPS).toContain(t.group);
+    for (const t of OFFICIAL_TEMPLATES) expect(templateGroups(t.kitId)).toContain(t.group);
   });
 
   for (const def of OFFICIAL_TEMPLATES) {

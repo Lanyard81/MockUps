@@ -206,3 +206,13 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Preview** shows a full-window viewer (`PrototypeViewer`) when a `data-goto` link is clicked: the target frame at full height (scaled down to the window width), with Back along the path taken, Close and Esc. Its state is UI-only (`prototype` in the store) and never enters history; leaving Preview closes it.
 - **HTML export** turns `data-goto` into relative links between the exported pages (already in `export/clean.ts`).
 - **Minimum zoom is now 10%** (was 25%) so a row of three desktop frames, as in the samples, fits on screen.
+
+## 043: Style kits (Milestone S1)
+
+- **A kit is a folder under `src/kits/`** and one line in `src/kits/index.ts`. It implements `Kit` (`src/kits/types.ts`): the frame shell (CSS, JavaScript, fonts, `init` hook), catalogue, categories, layout schema, layout renderer, layout blocks and page parts, settings (data-driven, like component options), templates, samples, and how it is exported. The editor core only talks to that interface.
+- **Layout rules are data.** `KitSchema.layers` lists the layout node types from the frame root down (NSW: section, container, grid, column; SharePoint: section, column), with components below. `layout/ops.ts` still applies the rules; functions take a `schema` (defaulting to NSW's, so old callers and tests are unchanged) or look it up from the frame's kit.
+- **Component ids are unique across kits** (the SharePoint kit prefixes its own with `sp-`), so a node's `componentId` finds its component whichever frame it is in, and `getComponent` needs no kit.
+- **Kits hold no UI or store imports** (that creates import cycles). Custom Properties panels that data can't express (the NSW grid's column widths) live in `app/kitPanels.ts`.
+- **Version 2 document, with a migration.** A frame that names a kit this build doesn't have is refused with a message rather than shown with the wrong styles.
+- **Scripts that import the app** (`npm run samples`) run through Vite (`scripts/vite-run.mjs`) so `?raw` CSS and `?url` fonts resolve; the catalogue generator imports only sources and overrides, so it uses plain `tsx`.
+- **`scripts/finish-single.mjs` ignores script bodies** (decision 041), so kit data containing CDN links for exported pages doesn't trip it.

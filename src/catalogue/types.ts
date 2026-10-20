@@ -1,14 +1,7 @@
-export const CATEGORIES = [
-  'Layout',
-  'Navigation',
-  'Content',
-  'Forms',
-  'Feedback',
-  'Media',
-] as const;
-export type Category = (typeof CATEGORIES)[number];
+/** A library filter tab. Each kit lists its own (see `Kit.categories`). */
+export type Category = string;
 
-/** A variant as hand-written in `sources/`. HTML is real NSW markup, with `data-edit` and `data-optional` markers. */
+/** A variant as hand-written in a kit's `sources/`. HTML is that kit's own markup, with `data-edit` and `data-optional` markers. */
 export interface VariantSource {
   id: string;
   label: string;
@@ -19,7 +12,7 @@ export interface VariantSource {
 
 export interface ComponentSource {
   id: string;
-  /** Slug of the page on designsystem.nsw.gov.au/components/<slug>/ */
+  /** Slug of the component's documentation page (NSW: designsystem.nsw.gov.au/components/<slug>/). */
   slug: string;
   name: string;
   category: Category;
@@ -85,6 +78,7 @@ export interface CatalogueComponent {
 }
 
 export interface Catalogue {
-  nswVersion: string;
+  /** The version of the design system the markup was written against. */
+  version: string;
   components: CatalogueComponent[];
 }

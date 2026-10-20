@@ -1,4 +1,4 @@
-import type { ComponentSource } from '../types';
+import type { ComponentSource } from '../../../../catalogue/types';
 import { LOGO_PLACEHOLDER, icon, placeholderImage } from './helpers';
 
 const heroImg = placeholderImage(960, 540, 'Hero image');

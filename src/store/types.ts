@@ -1,4 +1,5 @@
 import type { View } from '../lib/geometry';
+import type { KitId } from '../kits/types';
 
 export type DeviceId = 'iphone' | 'android' | 'tablet' | 'desktop' | 'custom';
 
@@ -37,6 +38,10 @@ export interface DocNode {
 export interface Frame {
   id: string;
   name: string;
+  /** The style kit this frame is built with (NSW, SharePoint...). */
+  kitId: KitId;
+  /** This frame's kit-specific settings (e.g. SharePoint site type, header and navigation). */
+  settings?: Record<string, unknown>;
   device: DeviceId;
   width: number;
   x: number;
@@ -46,10 +51,15 @@ export interface Frame {
 }
 
 export interface MockupDoc {
-  version: 1;
+  version: 2;
   id: string;
   name: string;
-  nswVersion: string;
+  /** The kit used for the first frame of the mockup, and a new frame's starting choice. */
+  defaultKitId: KitId;
+  /** The design-system version each kit's markup was written against, for kits in use. */
+  kitVersions: Record<KitId, string>;
+  /** Document-wide settings per kit (e.g. the SharePoint theme). */
+  kitSettings: Record<KitId, Record<string, unknown>>;
   view: View;
   frames: Frame[];
   nodes: Record<string, DocNode>;
@@ -62,7 +72,7 @@ export interface MockupDoc {
 /** What is being dragged. */
 export type DragPayload =
   | { kind: 'new-component'; componentId: string; variantId: string; label: string }
-  | { kind: 'new-layout'; block: 'section' | 'container' | 'grid'; columns?: number; label: string }
+  | { kind: 'new-layout'; block: string; columns?: number; label: string }
   | { kind: 'move'; nodeId: string; label: string }
   | { kind: 'template'; source: 'official' | 'mine'; templateId: string; label: string };
 
@@ -111,6 +121,9 @@ export interface SavedTemplate {
   createdAt: number;
   device: DeviceId;
   width: number;
+  /** The kit the frame was built with. Missing in older saves, which were all NSW. */
+  kitId?: KitId;
+  settings?: Record<string, unknown>;
   root: string[];
   nodes: Record<string, DocNode>;
   images: MockupDoc['images'];

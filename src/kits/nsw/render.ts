@@ -1,0 +1,37 @@
+import type { DocNode } from '../../store/types';
+import { SECTION_BACKGROUNDS, SECTION_PADDINGS } from './sections';
+import { columnClasses } from './spans';
+
+/** Layout nodes with nothing inside show a dashed hint in Edit mode only (see FRAME_CSS). */
+const emptyHint = (node: DocNode, label: string) =>
+  (node.children?.length ?? 0) === 0 ? ` data-empty="${label}"` : '';
+
+/** Markup for a section, container, grid or column, around its children's markup. */
+export function renderNswLayout(node: DocNode, kids: string): string {
+  switch (node.type) {
+    case 'section': {
+      const bg =
+        SECTION_BACKGROUNDS.find((b) => b.id === node.props?.background) ?? SECTION_BACKGROUNDS[0];
+      const pad = SECTION_PADDINGS.find((p) => p.id === node.props?.padding)?.cls ?? '';
+      const cls = [
+        'nsw-section',
+        `nsw-section--${bg.id}`,
+        bg.invert ? 'nsw-section--invert' : '',
+        pad,
+      ]
+        .filter(Boolean)
+        .join(' ');
+      return `<section class="${cls}" data-node="${node.id}"${emptyHint(node, 'Empty section')}>${kids}</section>`;
+    }
+    case 'container': {
+      const flush = node.props?.flush === true ? ' nsw-container--flush' : '';
+      return `<div class="nsw-container${flush}" data-node="${node.id}"${emptyHint(node, 'Empty container')}>${kids}</div>`;
+    }
+    case 'grid':
+      return `<div class="nsw-grid" data-node="${node.id}"${emptyHint(node, 'Empty grid')}>${kids}</div>`;
+    case 'column':
+      return `<div class="${columnClasses(node.props)}" data-node="${node.id}"${emptyHint(node, 'Empty column')}>${kids}</div>`;
+    default:
+      return kids;
+  }
+}

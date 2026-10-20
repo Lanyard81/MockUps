@@ -1,4 +1,7 @@
-import { canContain } from '../layout/ops';
+import { hasKit } from '../kits';
+import type { KitId } from '../kits/types';
+import { canContain, schemaOfKit } from '../layout/ops';
+import { DOC_VERSION, migrateDoc } from './migrate';
 import {
   DEVICES,
   type DeviceId,
@@ -123,7 +126,12 @@ function cleanImages(raw: unknown): MockupDoc['images'] {
  * Check a set of nodes against the frame roots that use them: every node must be real, used at most
  * once, and sit where the tree rules allow. Nodes nothing uses are dropped. Returns the cleaned nodes.
  */
-export function cleanTree(rawNodes: unknown, roots: string[][]): Record<string, DocNode> {
+export function cleanTree(
+  rawNodes: unknown,
+  roots: string[][],
+  /** The kit of each root list, in the same order (NSW when omitted). */
+  kitIds: (KitId | undefined)[] = [],
+): Record<string, DocNode> {
   if (!isObject(rawNodes)) throw new FileError('The file has no layout.');
   const keys = Object.keys(rawNodes).filter((k) => !FORBIDDEN_KEYS.has(k));
   if (keys.length > MAX_NODES)
@@ -132,23 +140,54 @@ export function cleanTree(rawNodes: unknown, roots: string[][]): Record<string, 
   for (const k of keys) nodes[k] = cleanNode(k, rawNodes[k]);
 
   const seen = new Set<string>();
-  const visit = (id: string, parent: DocNode | null) => {
+  const visit = (id: string, parent: DocNode | null, schema: ReturnType<typeof schemaOfKit>) => {
     const node = nodes[id];
     if (!node)
       throw new FileError('The file’s layout is damaged (it refers to a layer that is missing).');
     if (seen.has(id)) throw new FileError('The file’s layout is damaged (a layer is used twice).');
     seen.add(id);
-    if (!canContain(parent, node)) {
+    if (!canContain(parent, node, schema)) {
       throw new FileError(
         `The file’s layout breaks the rules (a ${node.type} can’t go inside ${parent ? `a ${parent.type}` : 'a frame'}).`,
       );
     }
-    for (const c of node.children ?? []) visit(c, node);
+    for (const c of node.children ?? []) visit(c, node, schema);
   };
-  for (const list of roots) for (const id of list) visit(id, null);
+  roots.forEach((list, i) => {
+    const schema = schemaOfKit(kitIds[i]);
+    for (const id of list) visit(id, null, schema);
+  });
 
   // Anything not reachable from a frame is leftover: drop it.
   return Object.fromEntries(Object.entries(nodes).filter(([id]) => seen.has(id)));
+}
+
+/**
+ * Kit settings are plain data (strings, numbers, booleans, lists and nested objects) of limited
+ * size and depth. Anything else, and any key used for prototype pollution, is dropped.
+ */
+export function cleanSettings(raw: unknown, depth = 0): Record<string, unknown> | undefined {
+  if (!isObject(raw) || depth > 5) return undefined;
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(raw).slice(0, 200)) {
+    if (FORBIDDEN_KEYS.has(k)) continue;
+    const clean = cleanSettingValue(v, depth + 1);
+    if (clean !== undefined) out[k] = clean;
+  }
+  return out;
+}
+
+function cleanSettingValue(v: unknown, depth: number): unknown {
+  if (typeof v === 'string') return v.slice(0, 2000);
+  if (typeof v === 'number') return Number.isFinite(v) ? v : undefined;
+  if (typeof v === 'boolean') return v;
+  if (Array.isArray(v) && depth <= 5)
+    return v
+      .slice(0, 200)
+      .map((x) => cleanSettingValue(x, depth + 1))
+      .filter((x) => x !== undefined);
+  if (isObject(v)) return cleanSettings(v, depth);
+  return undefined;
 }
 
 function cleanFrame(raw: unknown, index: number): Frame {
@@ -156,9 +195,17 @@ function cleanFrame(raw: unknown, index: number): Frame {
   const device = (
     typeof raw.device === 'string' && raw.device in DEVICES ? raw.device : 'custom'
   ) as DeviceId;
+  const kitId = str(raw.kitId, 40) ?? 'nsw';
+  if (!hasKit(kitId))
+    throw new FileError(
+      'This mockup uses a style kit this version of the app doesn’t have. Open it with the latest version.',
+    );
+  const settings = cleanSettings(raw.settings);
   return {
     id: str(raw.id, 100) || `f_${index}`,
     name: str(raw.name) || `Frame ${index + 1}`,
+    kitId,
+    ...(settings ? { settings } : {}),
     device,
     width: Math.round(clamp(num(raw.width, DEVICES[device].width), 240, 3000)),
     x: num(raw.x, 0),
@@ -170,13 +217,20 @@ function cleanFrame(raw: unknown, index: number): Frame {
 /** Turn untrusted data into a document, or throw a `FileError`. */
 export function validateDoc(raw: unknown): MockupDoc {
   if (!isObject(raw)) throw new FileError('This isn’t a mockup file.');
-  if (typeof raw.version === 'number' && raw.version > FILE_VERSION) {
+  if (typeof raw.version === 'number' && raw.version > DOC_VERSION) {
     throw new FileError(
       'This file was made with a newer version of the app. Open it with the latest version.',
     );
   }
-  if (raw.version !== FILE_VERSION)
+  if (typeof raw.version !== 'number')
     throw new FileError('This isn’t a mockup file (it has no version).');
+  const doc = migrateDoc(raw) as Record<string, unknown>;
+  if (doc.version !== DOC_VERSION)
+    throw new FileError('This isn’t a mockup file (it has an unknown version).');
+  return validateCurrent(doc);
+}
+
+function validateCurrent(raw: Record<string, unknown>): MockupDoc {
   if (!Array.isArray(raw.frames)) throw new FileError('This mockup has no frames.');
   if (raw.frames.length > MAX_FRAMES)
     throw new FileError('This mockup has too many frames to open.');
@@ -187,14 +241,29 @@ export function validateDoc(raw: unknown): MockupDoc {
   const nodes = cleanTree(
     raw.nodes,
     frames.map((f) => f.root),
+    frames.map((f) => f.kitId),
   );
   const view = isObject(raw.view) ? raw.view : {};
+  const defaultKitId = hasKit(str(raw.defaultKitId, 40) ?? '') ? str(raw.defaultKitId, 40)! : 'nsw';
+  const kitVersions: Record<string, string> = {};
+  if (isObject(raw.kitVersions))
+    for (const [k, v] of Object.entries(raw.kitVersions))
+      if (!FORBIDDEN_KEYS.has(k) && typeof v === 'string')
+        kitVersions[k.slice(0, 40)] = v.slice(0, 40);
+  const kitSettings: Record<string, Record<string, unknown>> = {};
+  if (isObject(raw.kitSettings))
+    for (const [k, v] of Object.entries(raw.kitSettings)) {
+      const clean = FORBIDDEN_KEYS.has(k) ? undefined : cleanSettings(v);
+      if (clean) kitSettings[k.slice(0, 40)] = clean;
+    }
 
   return {
-    version: 1,
+    version: DOC_VERSION,
     id: str(raw.id, 100) || `doc_${Date.now().toString(36)}`,
     name: str(raw.name) || 'Untitled mockup',
-    nswVersion: str(raw.nswVersion, 40) ?? '',
+    defaultKitId,
+    kitVersions,
+    kitSettings,
     view: { x: num(view.x, 80), y: num(view.y, 80), zoom: clamp(num(view.zoom, 1), 0.1, 4) },
     frames,
     nodes,
@@ -205,13 +274,15 @@ export function validateDoc(raw: unknown): MockupDoc {
 export function validateTemplate(raw: unknown): SavedTemplate {
   if (!isObject(raw)) throw new FileError('A saved template is damaged.');
   const frame = cleanFrame({ ...raw, id: 'template', name: raw.name }, 0);
-  const nodes = cleanTree(raw.nodes, [frame.root]);
+  const nodes = cleanTree(raw.nodes, [frame.root], [frame.kitId]);
   return {
     id: str(raw.id, 100) || `tpl_${Date.now().toString(36)}`,
     name: str(raw.name) || 'Untitled template',
     createdAt: num(raw.createdAt, Date.now()),
     device: frame.device,
     width: frame.width,
+    kitId: frame.kitId,
+    ...(frame.settings ? { settings: frame.settings } : {}),
     root: frame.root,
     nodes,
     images: cleanImages(raw.images),

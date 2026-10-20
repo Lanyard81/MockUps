@@ -3,10 +3,14 @@
  "fileVersion": 1,
  "savedAt": "2026-10-20T00:00:00.000Z",
  "doc": {
-  "version": 1,
+  "version": 2,
   "id": "doc_sample_events-and-news",
   "name": "Events and news",
-  "nswVersion": "3.28.1",
+  "defaultKitId": "nsw",
+  "kitVersions": {
+   "nsw": "3.28.1"
+  },
+  "kitSettings": {},
   "view": {
    "x": 80,
    "y": 80,
@@ -16,6 +20,7 @@
    {
     "id": "f_events-and-news_1",
     "name": "Events",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 0,
@@ -33,6 +38,7 @@
    {
     "id": "f_events-and-news_2",
     "name": "Article",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 1520,
@@ -49,6 +55,7 @@
    {
     "id": "f_events-and-news_3",
     "name": "Search",
+    "kitId": "nsw",
     "device": "desktop",
     "width": 1440,
     "x": 3040,

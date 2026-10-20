@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPageThumbnail } from '../catalogue/thumbnails';
 import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
+import { DEFAULT_KIT_ID, getKit } from '../kits';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
 import {
   OFFICIAL_TEMPLATES,
-  TEMPLATE_GROUPS,
+  templateGroups,
   instantiateOfficial,
   instantiateSaved,
 } from '../templates';
@@ -108,10 +109,10 @@ function OfficialTile({ id }: { id: string }) {
   // Rendered once per template: the ids are fixed so the cached thumbnail is found again.
   const html = useMemo(() => {
     const t = instantiateOfficial(def, stableIds());
-    return renderFrameHtml(t.nodes, t.root, t.images);
+    return renderFrameHtml(t.nodes, t.root, t.images, t.kitId, t.settings);
   }, [def]);
   const render = useMemo(
-    () => () => getPageThumbnail(`official:${def.id}`, html, def.width),
+    () => () => getPageThumbnail(`official:${def.id}`, html, def.width, 900, def.kitId),
     [def, html],
   );
   return (
@@ -131,8 +132,10 @@ function MineTile({ template }: { template: SavedTemplate }) {
       const t = instantiateSaved(template, stableIds());
       return getPageThumbnail(
         `mine:${template.id}`,
-        renderFrameHtml(t.nodes, t.root, t.images),
+        renderFrameHtml(t.nodes, t.root, t.images, t.kitId, t.settings),
         template.width,
+        900,
+        t.kitId,
       );
     },
     [template],
@@ -197,13 +200,27 @@ export function Templates() {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (text: string) => terms.every((t) => text.toLowerCase().includes(t));
 
-  const myMatches = mine.filter((t) => matches(`${t.name} my template`));
-  const groups = TEMPLATE_GROUPS.map((group) => ({
-    group,
-    items: OFFICIAL_TEMPLATES.filter(
-      (t) => t.group === group && matches(`${t.name} ${t.description} ${t.group}`),
-    ),
-  })).filter((g) => g.items.length > 0);
+  // Templates follow the kit of the selected frame, like the library does.
+  const kitId = useStore(
+    (s) =>
+      (s.doc.frames.find((f) => f.id === s.selectedFrameId) ?? s.doc.frames[0])?.kitId ??
+      DEFAULT_KIT_ID,
+  );
+  const kit = getKit(kitId);
+  const myMatches = mine.filter(
+    (t) => (t.kitId ?? DEFAULT_KIT_ID) === kit.id && matches(`${t.name} my template`),
+  );
+  const groups = templateGroups(kit.id)
+    .map((group) => ({
+      group,
+      items: OFFICIAL_TEMPLATES.filter(
+        (t) =>
+          t.kitId === kit.id &&
+          t.group === group &&
+          matches(`${t.name} ${t.description} ${t.group}`),
+      ),
+    }))
+    .filter((g) => g.items.length > 0);
 
   return (
     <div className="templates" data-testid="templates">

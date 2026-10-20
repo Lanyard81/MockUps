@@ -1,6 +1,7 @@
-import { FONT_FACES, fontCss } from '../canvas/nswAssets';
+import { getKit } from '../kits';
+import type { KitId } from '../kits/types';
 
-let promise: Promise<string> | null = null;
+const promises = new Map<KitId, Promise<string>>();
 
 const toDataUrl = (blob: Blob) =>
   new Promise<string>((resolve, reject) => {
@@ -15,21 +16,25 @@ const toDataUrl = (blob: Blob) =>
  * self-contained exports don't depend on any URL. (In the single-file build they already are data
  * URIs; on the web build they are fetched once.)
  */
-export function getFontEmbedCss(): Promise<string> {
-  promise ??= (async () => {
+export function getFontEmbedCss(kitId?: KitId): Promise<string> {
+  const { shell, id } = getKit(kitId);
+  const existing = promises.get(id);
+  if (existing) return existing;
+  const promise = (async () => {
     const dataUrls = new Map<string, string>();
     await Promise.all(
-      FONT_FACES.map(async (f) => {
+      shell.fonts.map(async (f) => {
         dataUrls.set(
           f.url,
           f.url.startsWith('data:') ? f.url : await toDataUrl(await (await fetch(f.url)).blob()),
         );
       }),
     );
-    return fontCss((u) => dataUrls.get(u) ?? u);
+    return shell.fontCss((u) => dataUrls.get(u) ?? u);
   })().catch((err) => {
-    promise = null; // let a later attempt try again
+    promises.delete(id); // let a later attempt try again
     throw err;
   });
+  promises.set(id, promise);
   return promise;
 }

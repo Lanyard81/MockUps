@@ -1,12 +1,18 @@
+import { getKit } from '../../kits';
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId } from '../../store/types';
 import { PageParts } from '../PageParts';
 import { CommitInput, Field, Section } from './controls';
+import { SettingsPanel } from './SettingsPanel';
+
+const NO_VALUES: Record<string, unknown> = {};
 
 export function FrameProps({ frameId }: { frameId: string }) {
   const frame = useStore((s) => s.doc.frames.find((f) => f.id === frameId));
+  const kitSettings = useStore((s) => s.doc.kitSettings[frame?.kitId ?? '']) ?? NO_VALUES;
   const st = useStore.getState;
   if (!frame) return null;
+  const kit = getKit(frame.kitId);
   return (
     <>
       <Section title="Frame">
@@ -47,12 +53,33 @@ export function FrameProps({ frameId }: { frameId: string }) {
           />
         </Field>
         <p className="prop-hint">
-          The width decides which NSW layout is used, just as on a real device.
+          The width decides which {kit.shortLabel} layout is used, just as on a real device.
         </p>
       </Section>
-      <Section title="Page parts" hint="Start a page with the standard NSW furniture.">
-        <PageParts frameId={frame.id} />
-      </Section>
+      {kit.pageParts.length > 0 && (
+        <Section
+          title="Page parts"
+          hint={`Start a page with the standard ${kit.shortLabel} furniture.`}
+        >
+          <PageParts frameId={frame.id} kitId={kit.id} />
+        </Section>
+      )}
+      {kit.settings.frame.length > 0 && (
+        <SettingsPanel
+          defs={kit.settings.frame}
+          values={frame.settings ?? NO_VALUES}
+          frame={frame.settings ?? NO_VALUES}
+          onChange={(key, value) => st().setFrameSettings(frame.id, { [key]: value })}
+        />
+      )}
+      {kit.settings.kit.length > 0 && (
+        <SettingsPanel
+          defs={kit.settings.kit}
+          values={kitSettings}
+          frame={frame.settings ?? NO_VALUES}
+          onChange={(key, value) => st().setKitSettings(kit.id, { [key]: value })}
+        />
+      )}
       <div className="prop-actions">
         <button
           className="btn"

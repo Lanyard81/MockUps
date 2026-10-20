@@ -1,6 +1,7 @@
 import { toPng } from 'html-to-image';
 import { get, set } from 'idb-keyval';
-import { FRAME_SHELL } from '../canvas/nswAssets';
+import { DEFAULT_KIT_ID, getKit } from '../kits';
+import type { KitId } from '../kits/types';
 import { getFontEmbedCss } from '../lib/fontData';
 import type { CatalogueVariant } from './types';
 
@@ -11,7 +12,7 @@ import type { CatalogueVariant } from './types';
  */
 
 const memory = new Map<string, string>();
-let hostPromise: Promise<HTMLIFrameElement> | null = null;
+const hosts = new Map<KitId, Promise<HTMLIFrameElement>>();
 let queue: Promise<unknown> = Promise.resolve();
 
 const hash = (s: string) => {
@@ -20,29 +21,33 @@ const hash = (s: string) => {
   return (h >>> 0).toString(36);
 };
 
-function getHost(): Promise<HTMLIFrameElement> {
-  hostPromise ??= new Promise((resolve) => {
+/** A hidden frame per kit, using that kit's own shell, so thumbnails use the kit's real CSS. */
+function getHost(kitId: KitId): Promise<HTMLIFrameElement> {
+  const existing = hosts.get(kitId);
+  if (existing) return existing;
+  const promise = new Promise<HTMLIFrameElement>((resolve) => {
     const iframe = document.createElement('iframe');
     iframe.title = 'Thumbnail renderer';
     iframe.setAttribute('aria-hidden', 'true');
     iframe.style.cssText =
       'position:fixed;left:-10000px;top:0;width:360px;height:900px;border:0;visibility:hidden;pointer-events:none';
     iframe.addEventListener('load', () => resolve(iframe), { once: true });
-    iframe.srcdoc = FRAME_SHELL;
+    iframe.srcdoc = getKit(kitId).shell.document;
     document.body.appendChild(iframe);
   });
-  return hostPromise;
+  hosts.set(kitId, promise);
+  return promise;
 }
 
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
 
-async function render(variant: CatalogueVariant, wide: boolean): Promise<string> {
-  const host = await getHost();
+async function render(variant: CatalogueVariant, wide: boolean, kitId: KitId): Promise<string> {
+  const host = await getHost(kitId);
   const doc = host.contentDocument!;
   host.style.width = wide ? '1100px' : '360px';
-  const inner = variant.previewBg
-    ? `<div class="nsw-section nsw-section--brand-dark nsw-section--invert" style="padding:16px 12px">${variant.html}</div>`
-    : variant.html;
+  const kit = getKit(kitId);
+  const inner =
+    variant.previewBg && kit.previewOnDark ? kit.previewOnDark(variant.html) : variant.html;
   const root = doc.getElementById('root')!;
   root.innerHTML = `<div id="thumb" style="background:#fff;padding:${variant.previewBg || wide ? 0 : 12}px">${inner}</div>`;
   await doc.fonts.ready;
@@ -52,7 +57,7 @@ async function render(variant: CatalogueVariant, wide: boolean): Promise<string>
   return toPng(el, {
     pixelRatio: 1,
     backgroundColor: '#ffffff',
-    fontEmbedCSS: await getFontEmbedCss(),
+    fontEmbedCSS: await getFontEmbedCss(kitId),
     width: el.offsetWidth,
     height: el.offsetHeight,
   });
@@ -63,6 +68,7 @@ export function getThumbnail(
   componentId: string,
   variant: CatalogueVariant,
   wide: boolean,
+  kitId: KitId = DEFAULT_KIT_ID,
 ): Promise<string | null> {
   const key = `thumb:${componentId}/${variant.id}:${wide ? 'w' : 'n'}:${hash(variant.html)}`;
   const hit = memory.get(key);
@@ -81,7 +87,7 @@ export function getThumbnail(
       /* storage unavailable: render instead */
     }
     try {
-      const url = await render(variant, wide);
+      const url = await render(variant, wide, kitId);
       memory.set(key, url);
       try {
         await set(key, url);
@@ -109,6 +115,7 @@ export function getPageThumbnail(
   html: string,
   width: number,
   maxHeight = 900,
+  kitId: KitId = DEFAULT_KIT_ID,
 ): Promise<string | null> {
   const full = `page:${key}:${width}:${hash(html)}`;
   const hit = htmlMemory.get(full);
@@ -127,7 +134,7 @@ export function getPageThumbnail(
       /* storage unavailable: render instead */
     }
     try {
-      const host = await getHost();
+      const host = await getHost(kitId);
       const doc = host.contentDocument!;
       host.style.width = `${width}px`;
       doc.getElementById('root')!.innerHTML =
@@ -139,7 +146,7 @@ export function getPageThumbnail(
       const url = await toPng(el, {
         pixelRatio: Math.min(1, 640 / width),
         backgroundColor: '#ffffff',
-        fontEmbedCSS: await getFontEmbedCss(),
+        fontEmbedCSS: await getFontEmbedCss(kitId),
         width: el.offsetWidth,
         height: Math.min(el.offsetHeight, maxHeight),
       });

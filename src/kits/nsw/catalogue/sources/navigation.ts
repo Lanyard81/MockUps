@@ -1,4 +1,4 @@
-import type { ComponentSource } from '../types';
+import type { ComponentSource } from '../../../../catalogue/types';
 import { icon } from './helpers';
 
 const items = (n: number, prefix: string) =>

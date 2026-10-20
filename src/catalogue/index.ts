@@ -1,19 +1,24 @@
-import data from './generated/catalogue.json';
-import {
-  CATEGORIES,
-  type Catalogue,
-  type CatalogueComponent,
-  type CatalogueVariant,
-  type Category,
-} from './types';
+import { DEFAULT_KIT_ID, KITS, getKit } from '../kits';
+import type { KitId } from '../kits/types';
+import type { Catalogue, CatalogueComponent, CatalogueVariant, Category } from './types';
 
-export const catalogue = data as Catalogue;
-export { CATEGORIES };
 export type { Category, CatalogueComponent, CatalogueVariant };
 
-const byId = new Map(catalogue.components.map((c) => [c.id, c]));
+/** The catalogue of one kit (NSW when no kit is given). */
+export const getCatalogue = (kitId: KitId = DEFAULT_KIT_ID): Catalogue => getKit(kitId).catalogue;
+
+/** The default (NSW) kit's catalogue, kept for callers that only deal with it. */
+export const catalogue: Catalogue = getCatalogue();
+
+// Component ids are unique across kits (the SharePoint kit prefixes its own), so a node's
+// `componentId` is enough to find it whichever frame it is in.
+const byId = new Map(KITS.flatMap((k) => k.catalogue.components.map((c) => [c.id, c] as const)));
 
 export const getComponent = (id: string): CatalogueComponent | undefined => byId.get(id);
+
+/** The kit a component belongs to, if it exists. */
+export const kitOfComponent = (id: string): KitId | undefined =>
+  KITS.find((k) => k.catalogue.components.some((c) => c.id === id))?.id;
 
 export function getVariant(componentId: string, variantId?: string): CatalogueVariant | undefined {
   const c = byId.get(componentId);
@@ -31,10 +36,14 @@ export interface SearchResult {
 }
 
 /** Instant filter over names, keywords, categories and variant labels. Empty query lists everything. */
-export function searchCatalogue(query: string, category: Category | 'All' = 'All'): SearchResult[] {
+export function searchCatalogue(
+  query: string,
+  category: Category | 'All' = 'All',
+  kitId: KitId = DEFAULT_KIT_ID,
+): SearchResult[] {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const results: SearchResult[] = [];
-  for (const component of catalogue.components) {
+  for (const component of getCatalogue(kitId).components) {
     if (category !== 'All' && component.category !== category) continue;
     if (terms.length === 0) {
       results.push({ component, variants: component.variants });

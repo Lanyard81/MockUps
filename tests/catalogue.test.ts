@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { catalogue, CATEGORIES, getVariant, searchCatalogue } from '../src/catalogue';
+import { catalogue, getVariant, searchCatalogue } from '../src/catalogue';
+import { NSW_CATEGORIES as CATEGORIES } from '../src/kits/nsw/categories';
 
 describe('catalogue', () => {
   it('covers the 46 design system components plus basic text blocks', () => {
