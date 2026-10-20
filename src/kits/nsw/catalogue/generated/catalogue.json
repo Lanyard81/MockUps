@@ -437,6 +437,11 @@
      "id": "default",
      "label": "Default",
      "html": "<nav class=\"nsw-main-nav\" id=\"main-nav\" aria-label=\"Main navigation\"><div class=\"nsw-main-nav__header\"><div class=\"nsw-main-nav__title\">Menu</div><button class=\"nsw-icon-button\" type=\"button\" aria-expanded=\"true\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close menu</span></button></div><ul class=\"nsw-main-nav__list\"><li><a href=\"#\"><span data-edit=\"item1\">Home</span></a></li><li><a href=\"#\"><span data-edit=\"item2\">Services</span></a></li><li><a href=\"#\"><span data-edit=\"item3\">Events</span></a></li><li><a href=\"#\"><span data-edit=\"item4\">News</span></a></li><li><a href=\"#\"><span data-edit=\"item5\">About us</span></a></li><li><a href=\"#\"><span data-edit=\"item6\">Contact</span></a></li></ul></nav>"
+    },
+    {
+     "id": "extended",
+     "label": "Eight items",
+     "html": "<nav class=\"nsw-main-nav\" id=\"main-nav\" aria-label=\"Main navigation\"><div class=\"nsw-main-nav__header\"><div class=\"nsw-main-nav__title\">Menu</div><button class=\"nsw-icon-button\" type=\"button\" aria-expanded=\"true\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close menu</span></button></div><ul class=\"nsw-main-nav__list\"><li><a href=\"#\"><span data-edit=\"item1\">Home</span></a></li><li><a href=\"#\"><span data-edit=\"item2\">Services</span></a></li><li><a href=\"#\"><span data-edit=\"item3\">Events</span></a></li><li><a href=\"#\"><span data-edit=\"item4\">News</span></a></li><li><a href=\"#\"><span data-edit=\"item5\">About us</span></a></li><li><a href=\"#\"><span data-edit=\"item6\">Contact</span></a></li><li><a href=\"#\"><span data-edit=\"item7\">Resources</span></a></li><li><a href=\"#\"><span data-edit=\"item8\">Help</span></a></li></ul></nav>"
     }
    ],
    "editable": [
@@ -1954,6 +1959,44 @@
     {
      "key": "helper",
      "label": "Helper text"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "calendar",
+   "slug": "date-picker",
+   "name": "Calendar",
+   "category": "Forms",
+   "keywords": [
+    "month",
+    "dates",
+    "meetings",
+    "diary"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "The date picker’s calendar, shown open and in place (August 2026). Dates are not clickable and the month does not change.",
+   "defaultVariant": "month",
+   "variants": [
+    {
+     "id": "month",
+     "label": "Month",
+     "html": "<div class=\"nsw-date-picker nsw-date-picker--is-visible\" style=\"position:static\" role=\"group\" aria-label=\"Calendar\"><header><div class=\"nsw-date-picker__title\"><span class=\"nsw-date-picker__title-label\" data-edit=\"month\">August 2026</span><nav><ul class=\"nsw-date-picker__title-nav\"><li><button class=\"nsw-icon-button nsw-date-picker__title-nav-btn\" type=\"button\" aria-label=\"Previous month\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">chevron_left</span></button></li><li><button class=\"nsw-icon-button nsw-date-picker__title-nav-btn\" type=\"button\" aria-label=\"Next month\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">chevron_right</span></button></li></ul></nav></div><ol class=\"nsw-date-picker__week\"><li><div class=\"nsw-date-picker__day\">Mo</div></li><li><div class=\"nsw-date-picker__day\">Tu</div></li><li><div class=\"nsw-date-picker__day\">We</div></li><li><div class=\"nsw-date-picker__day\">Th</div></li><li><div class=\"nsw-date-picker__day\">Fr</div></li><li><div class=\"nsw-date-picker__day\">Sa</div></li><li><div class=\"nsw-date-picker__day\">Su</div></li></ol></header><ol class=\"nsw-date-picker__dates\"><li></li><li></li><li></li><li></li><li></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">1</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">2</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">3</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">4</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">5</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">6</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">7</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">8</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">9</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">10</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">11</button></li><li><button class=\"nsw-date-picker__date nsw-date-picker__date--today\" type=\"button\" tabindex=\"-1\">12</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">13</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">14</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">15</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">16</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">17</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">18</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">19</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">20</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">21</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">22</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">23</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">24</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">25</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">26</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">27</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">28</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">29</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">30</button></li><li><button class=\"nsw-date-picker__date\" type=\"button\" tabindex=\"-1\">31</button></li></ol><div class=\"nsw-date-picker__buttongroup\" data-optional=\"buttons\"><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\">Cancel</button><button class=\"nsw-button nsw-button--dark\" type=\"button\">OK</button></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "month",
+     "default": "August 2026",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "buttons",
+     "label": "Cancel and OK buttons"
     }
    ],
    "options": []

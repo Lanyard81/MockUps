@@ -893,7 +893,7 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
     name: 'Application: work dashboard',
     group: 'Application',
     description:
-      'A signed-in work overview in the style of a government case-management system: tasks, recent documents, favourites and upcoming meetings. Not an official NSW template.',
+      'A signed-in work overview in the style of a government case-management system: tasks, recent documents, favourites and an upcoming-meetings calendar. Not an official NSW template.',
     device: 'desktop',
     width: 1440,
     items: () =>
@@ -902,7 +902,7 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
         top('header', 'default', {
           text: { title: 'CabNet', description: 'Digital Cabinet System' },
         }),
-        top('main-nav', 'default', {
+        top('main-nav', 'extended', {
           text: {
             item1: 'Home',
             item2: 'Tasks',
@@ -910,6 +910,8 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
             item4: 'Agendas',
             item5: 'Forward Agenda',
             item6: 'Reports',
+            item7: 'Agency administration',
+            item8: 'Administration',
           },
         }),
         sec(
@@ -928,6 +930,7 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
                 },
                 hide: ['image'],
               }),
+              btn('Give back', 'dark-outline'),
               c('list-item', 'default', {
                 text: {
                   label: 'ERC-SUB-2026-0055 · Due in 6 days',
@@ -937,6 +940,7 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
                 },
                 hide: ['image'],
               }),
+              btn('Give back', 'dark-outline'),
               h(2, 'Group tasks (1 overdue)'),
               c('list-item', 'default', {
                 text: {
@@ -972,6 +976,7 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
             ],
             [
               h(2, 'Upcoming meetings'),
+              c('calendar', 'month', { text: { month: 'August 2026' }, hide: ['buttons'] }),
               c('table', 'default', {
                 text: {
                   caption: 'August 2026',

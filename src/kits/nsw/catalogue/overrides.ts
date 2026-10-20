@@ -145,6 +145,10 @@ export const overrides: Record<string, Override> = {
     optionalLabels: { helper: 'Helper text' },
   },
   'date-input': { keywords: ['dob', 'birth', 'calendar'] },
+  calendar: {
+    keywords: ['month', 'dates', 'meetings', 'diary'],
+    optionalLabels: { buttons: 'Cancel and OK buttons' },
+  },
   'date-picker': { keywords: ['calendar', 'date'], optionalLabels: { helper: 'Helper text' } },
   'file-upload': { keywords: ['attach', 'upload', 'document'] },
   filters: { keywords: ['refine', 'facets', 'search results'] },

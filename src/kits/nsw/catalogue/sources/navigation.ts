@@ -30,6 +30,18 @@ export const navigation: ComponentSource[] = [
             .join('') +
           `</ul></nav>`,
       },
+      {
+        id: 'extended',
+        label: 'Eight items',
+        html:
+          `<nav class="nsw-main-nav" id="main-nav" aria-label="Main navigation"><div class="nsw-main-nav__header"><div class="nsw-main-nav__title">Menu</div>` +
+          `<button class="nsw-icon-button" type="button" aria-expanded="true">${icon('close')}<span class="sr-only">Close menu</span></button></div>` +
+          `<ul class="nsw-main-nav__list">` +
+          ['Home', 'Services', 'Events', 'News', 'About us', 'Contact', 'Resources', 'Help']
+            .map((t, i) => `<li><a href="#"><span data-edit="item${i + 1}">${t}</span></a></li>`)
+            .join('') +
+          `</ul></nav>`,
+      },
     ],
   },
   {

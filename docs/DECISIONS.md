@@ -267,3 +267,8 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Width suggestion.** A width within 5% of a device preset snaps to it. A width within 5% of double a preset is halved (a 2× capture). When both fit (a 786px-wide 2× iPhone is also near the 820px tablet) the closer reading wins. It is offered in a confirmation, never applied silently.
 - **Undo.** Adding, replacing, removing and each setting are one history entry. An opacity drag or a run of arrow-key presses is one entry (`beginGesture` once, then live updates); each separate key press after the key is released starts a new entry.
 - **Shortcut.** Show or hide is ⌘/Ctrl+Shift+R, as suggested in the brief. It overrides the browser's hard reload while the editor is focused (work is autosaved either way).
+
+## 050: Static calendar and an eight-item menu (work dashboard template)
+
+- **Calendar** is the Design System's own date-picker calendar markup (`nsw-date-picker`, its title, week, dates and button group classes, all checked against `main.css`), shown open and in place. The only addition is `style="position:static"` on the pop-up, which the Design System positions absolutely and hides until opened; it positions the box and does not restyle it. The Cancel/OK buttons are an optional part. Dates are not clickable and the month is fixed (August 2026, with the 12th as today); the month label is editable.
+- **Main navigation** gains an "Eight items" variant (the same markup with two more `<li>`), so a menu like Agency administration and Administration fits. The default variant is unchanged.

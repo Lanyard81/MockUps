@@ -128,6 +128,42 @@ export const forms: ComponentSource[] = [
     ],
   },
   {
+    id: 'calendar',
+    slug: 'date-picker',
+    name: 'Calendar',
+    category: 'Forms',
+    fidelity: 'static',
+    note: 'The date picker’s calendar, shown open and in place (August 2026). Dates are not clickable and the month does not change.',
+    variants: [
+      {
+        id: 'month',
+        label: 'Month',
+        // The picker's pop-up is positioned absolutely and hidden until opened; `position:static` and the
+        // visible class show it where it is placed. Its classes and structure are the official ones.
+        html:
+          `<div class="nsw-date-picker nsw-date-picker--is-visible" style="position:static" role="group" aria-label="Calendar">` +
+          `<header><div class="nsw-date-picker__title"><span class="nsw-date-picker__title-label" data-edit="month">August 2026</span>` +
+          `<nav><ul class="nsw-date-picker__title-nav"><li><button class="nsw-icon-button nsw-date-picker__title-nav-btn" type="button" aria-label="Previous month">${icon('chevron_left')}</button></li>` +
+          `<li><button class="nsw-icon-button nsw-date-picker__title-nav-btn" type="button" aria-label="Next month">${icon('chevron_right')}</button></li></ul></nav></div>` +
+          `<ol class="nsw-date-picker__week">` +
+          ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+            .map((d) => `<li><div class="nsw-date-picker__day">${d}</div></li>`)
+            .join('') +
+          `</ol></header>` +
+          `<ol class="nsw-date-picker__dates">` +
+          '<li></li><li></li><li></li><li></li><li></li>' +
+          Array.from({ length: 31 }, (_, i) => i + 1)
+            .map(
+              (d) =>
+                `<li><button class="nsw-date-picker__date${d === 12 ? ' nsw-date-picker__date--today' : ''}" type="button" tabindex="-1">${d}</button></li>`,
+            )
+            .join('') +
+          `</ol>` +
+          `<div class="nsw-date-picker__buttongroup" data-optional="buttons"><button class="nsw-button nsw-button--dark-outline-solid" type="button">Cancel</button><button class="nsw-button nsw-button--dark" type="button">OK</button></div></div>`,
+      },
+    ],
+  },
+  {
     id: 'file-upload',
     slug: 'file-upload',
     name: 'File upload',

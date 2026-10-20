@@ -3,8 +3,8 @@ import { catalogue, getVariant, searchCatalogue } from '../src/catalogue';
 import { NSW_CATEGORIES as CATEGORIES } from '../src/kits/nsw/categories';
 
 describe('catalogue', () => {
-  it('covers the 46 design system components plus basic text blocks', () => {
-    expect(catalogue.components.length).toBe(49);
+  it('covers the 46 design system components, a static calendar and basic text blocks', () => {
+    expect(catalogue.components.length).toBe(50);
     const slugs = new Set(catalogue.components.map((c) => c.slug));
     for (const slug of [
       'accordion',
