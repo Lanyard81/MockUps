@@ -102,3 +102,26 @@ export interface ContextMenuState {
   /** The text region that was right-clicked, so "Edit text" edits that one. */
   textKey?: string;
 }
+
+/** A frame saved as the user's own template (Milestone 7). */
+export interface SavedTemplate {
+  id: string;
+  name: string;
+  createdAt: number;
+  device: DeviceId;
+  width: number;
+  root: string[];
+  nodes: Record<string, DocNode>;
+  images: MockupDoc['images'];
+  /** Small PNG data URL for the Templates tab. */
+  thumbnail?: string;
+}
+
+/** A "Are you sure?" dialog, asked by something that can't be undone. */
+export interface ConfirmRequest {
+  title: string;
+  body: string;
+  confirmLabel: string;
+  danger?: boolean;
+  onConfirm: () => void;
+}

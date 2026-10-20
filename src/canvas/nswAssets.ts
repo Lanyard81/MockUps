@@ -1,5 +1,9 @@
 import nswCss from 'nsw-design-system/dist/css/main.css?raw';
 import nswJs from 'nsw-design-system/dist/js/main.js?raw';
+
+/** The real NSW Design System CSS and JavaScript, as text (for frames and for exports). */
+export const NSW_CSS: string = nswCss;
+export const NSW_JS: string = nswJs;
 import publicSans400 from '@fontsource/public-sans/files/public-sans-latin-400-normal.woff2?url';
 import publicSans400i from '@fontsource/public-sans/files/public-sans-latin-400-italic.woff2?url';
 import publicSans700 from '@fontsource/public-sans/files/public-sans-latin-700-normal.woff2?url';

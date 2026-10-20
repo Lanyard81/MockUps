@@ -4,10 +4,23 @@ interface Item {
   label: string;
   hint?: string;
   onSelect: () => void;
+  disabled?: boolean;
+  separatorBefore?: boolean;
 }
 
 /** A small button-with-dropdown, closed by outside click or Esc. */
-export function Menu({ label, items, icon }: { label: ReactNode; items: Item[]; icon?: string }) {
+export function Menu({
+  label,
+  items,
+  icon,
+  plain,
+}: {
+  label: ReactNode;
+  items: Item[];
+  icon?: string;
+  /** A quiet button rather than the blue call to action. */
+  plain?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,7 +41,7 @@ export function Menu({ label, items, icon }: { label: ReactNode; items: Item[]; 
   return (
     <div className="menu" ref={ref}>
       <button
-        className="btn btn--primary"
+        className={`btn${plain ? '' : ' btn--primary'}`}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
@@ -39,18 +52,21 @@ export function Menu({ label, items, icon }: { label: ReactNode; items: Item[]; 
       {open && (
         <div className="menu__list" role="menu">
           {items.map((item) => (
-            <button
-              key={item.label}
-              role="menuitem"
-              className="menu__item"
-              onClick={() => {
-                setOpen(false);
-                item.onSelect();
-              }}
-            >
-              <span>{item.label}</span>
-              {item.hint && <span className="menu__hint">{item.hint}</span>}
-            </button>
+            <div key={item.label} role="none">
+              {item.separatorBefore && <div className="context-menu__sep" role="separator" />}
+              <button
+                role="menuitem"
+                className="menu__item"
+                disabled={item.disabled}
+                onClick={() => {
+                  setOpen(false);
+                  item.onSelect();
+                }}
+              >
+                <span>{item.label}</span>
+                {item.hint && <span className="menu__hint">{item.hint}</span>}
+              </button>
+            </div>
           ))}
         </div>
       )}

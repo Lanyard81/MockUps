@@ -4,7 +4,7 @@ A browser-based tool for making screen mockups from the official [NSW Government
 
 **Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
 
-> Status: Milestones 0–5 are done (scaffolding, canvas and device frames, component library, drag and drop, text and property editing, layers, shortcuts and polish). Saving, export and templates are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
+> Status: Milestones 0–6 are done (scaffolding, canvas and device frames, component library, drag and drop, editing, layers and polish, saving and export). Templates and click-through prototypes are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
 
 ## Run it locally
 
@@ -28,6 +28,14 @@ Other scripts:
 | `npm run build:single` | Single self-contained file at `dist-single/nsw-mockup-builder.html` |
 
 Playwright needs a Chromium. Run `npx playwright install chromium`, or point `PW_CHROMIUM` at an existing binary.
+
+## Saving and sharing
+
+- **Autosave:** work is saved in your browser as you go ("Saved" beside the mockup name). **File → My mockups…** lists everything you've made.
+- **Files:** **File → Save to file** makes a `.mockup.json` with images inside, which you can open on any computer with **Open file** (or by dropping it on the editor).
+- **Export:** **File → Export…** makes PNGs (1× or 2×, full height) or clickable HTML pages built with the real NSW Design System, either self-contained (works offline) or linking to NSW. **Copy HTML of selection** gives developers clean markup.
+
+If your browser won't keep data for the page (private windows, some `file://` setups) a banner says so; use **Save to file** to keep your work.
 
 ## The single-file version
 

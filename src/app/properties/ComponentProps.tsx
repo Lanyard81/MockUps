@@ -1,6 +1,7 @@
 import { getComponent } from '../../catalogue';
 import type { OptionDef } from '../../catalogue/types';
 import { getFrameElement } from '../../canvas/registry';
+import { copySelectionHtml } from '../../export/copy';
 import { describeVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
 import { useStore } from '../../store/store';
@@ -212,6 +213,13 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
           title="Duplicate (Ctrl/⌘ D)"
         >
           Duplicate
+        </button>
+        <button
+          className="btn"
+          onClick={() => void copySelectionHtml(nodeId)}
+          title="Copy the HTML for developers"
+        >
+          Copy HTML
         </button>
         <button
           className="btn btn--danger"

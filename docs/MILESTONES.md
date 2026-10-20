@@ -73,12 +73,14 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 6: Saving, export and the single-file build
 
-- [ ] Autosave to IndexedDB, restore on load
-- [ ] My mockups list
-- [ ] Save and open `.mockup.json` with embedded images
-- [ ] Export: PNG, HTML (CDN or self-contained), copy HTML
-- [ ] Single-file offline test including saving; `file://` storage banner
-- [ ] Pages deployment confirmed, live link in README
+- [x] Autosave to IndexedDB (debounced, with the camera position), restored on load; all storage wrapped in try/catch
+- [x] My mockups: list with thumbnails; new, open, rename, duplicate, delete (with confirmation)
+- [x] Save and open `.mockup.json` with images embedded (and the user's templates); strict validation of anything opened
+- [x] Export: PNG of a frame or all frames at 1× or 2× at full height; HTML pages (CDN or fully self-contained; several frames give a zip with an index page); Copy HTML of a component or section
+- [x] Single file works fully offline from disk, including autosave, reload and Save to file (Playwright test)
+- [x] Storage banner when the browser won't keep data, with Save to file
+- [ ] Storage under `file://` checked in Chrome only (Edge and Safari can't be run from this build environment; the banner covers them if storage is refused)
+- [x] GitHub Pages deployment: the `deploy-pages` job succeeds on every green push to `main` (checked in the Actions history); the live link is in the README
 
 ## Milestone 7: Templates
 

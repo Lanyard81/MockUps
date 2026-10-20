@@ -1,6 +1,9 @@
 import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { DEVICES, type DeviceId } from '../store/types';
+import { copySelectionHtml } from '../export/copy';
+import { pickMockupFile, saveToFile } from '../persistence/file';
+import { DocName } from './DocName';
 import { Menu } from './Menu';
 
 const ZOOM_PRESETS = [25, 50, 75, 100, 150, 200, 300, 400];
@@ -12,7 +15,7 @@ export function Toolbar() {
   const canUndo = useStore((s) => s.past.length > 0);
   const canRedo = useStore((s) => s.future.length > 0);
   const zoom = useStore((s) => s.doc.view.zoom);
-  const docName = useStore((s) => s.doc.name);
+  const hasSelection = useStore((s) => s.selectedNodeId !== null);
   const s = useStore;
   const pct = Math.round(zoom * 100);
   const options = ZOOM_PRESETS.includes(pct)
@@ -23,7 +26,28 @@ export function Toolbar() {
     <header className="toolbar">
       <div className="toolbar__group">
         <strong className="toolbar__title">NSW Mockup Builder</strong>
-        <span className="toolbar__doc">{docName}</span>
+        <DocName />
+        <Menu
+          plain
+          label="File"
+          items={[
+            { label: 'New mockup', onSelect: () => s.getState().newDoc() },
+            { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
+            { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
+            { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
+            {
+              label: 'Export…',
+              hint: 'PNG, HTML',
+              separatorBefore: true,
+              onSelect: () => s.getState().setDialog('export'),
+            },
+            {
+              label: 'Copy HTML of selection',
+              disabled: !hasSelection,
+              onSelect: () => void copySelectionHtml(),
+            },
+          ]}
+        />
       </div>
 
       <div className="toolbar__group">

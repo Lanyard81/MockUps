@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const file = resolve('dist-single/nsw-mockup-builder.html');
@@ -39,5 +39,30 @@ test('single file works from disk with no network', async ({ page, context }) =>
   await page.getByRole('button', { name: 'Add frame' }).click();
   await page.getByRole('menuitem', { name: /Android/ }).click();
   await expect(page.locator('.frame')).toHaveCount(2);
+  expect(requests).toEqual([]);
+
+  // Build a simple screen, let it save by itself, then reload: it comes back, and storage works under file://.
+  await home.locator('[data-edit="label"]').first().dblclick();
+  await page.keyboard.type('Apply online');
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('save-status')).toHaveText('Saved');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.reload();
+  await expect(
+    page.frameLocator('iframe[title="Home"]').locator('[data-edit="label"]').first(),
+  ).toHaveText('Apply online');
+  await expect(page.locator('.frame')).toHaveCount(2);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+
+  // ...and it can be saved as a file, also offline.
+  await page.getByRole('button', { name: 'File' }).click();
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('menuitem', { name: /Save to file/ }).click(),
+  ]);
+  expect(download.suggestedFilename()).toMatch(/\.mockup\.json$/);
+  const saved = JSON.parse(readFileSync(await download.path(), 'utf8'));
+  expect(saved.doc.frames).toHaveLength(2);
+  expect(JSON.stringify(saved.doc.nodes)).toContain('Apply online');
   expect(requests).toEqual([]);
 });

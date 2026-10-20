@@ -2,14 +2,19 @@ import { useEffect } from 'react';
 import { DragGhost } from '../canvas/DragGhost';
 import { Viewport } from '../canvas/Viewport';
 import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
+import { openMockupFile } from '../persistence/file';
 import { useStore } from '../store/store';
+import { ConfirmDialog } from './ConfirmDialog';
 import { ContextMenu } from './ContextMenu';
+import { ExportDialog } from './ExportDialog';
 import { LeftPanel } from './LeftPanel';
+import { MyMockups } from './MyMockups';
 import { Properties } from './Properties';
 import { ShortcutsSheet } from './ShortcutsSheet';
+import { StorageBanner } from './StorageBanner';
 import { Toast } from './Toast';
-import { Tour } from './Tour';
 import { Toolbar } from './Toolbar';
+import { Tour } from './Tour';
 
 export function App() {
   useEffect(() => {
@@ -22,38 +27,50 @@ export function App() {
     const stopFileDrop = (e: DragEvent) => {
       if (e.dataTransfer?.types.includes('Files')) e.preventDefault();
     };
+    // ...and a mockup file dropped on the editor is opened.
+    const openDropped = (e: DragEvent) => {
+      stopFileDrop(e);
+      const file = [...(e.dataTransfer?.files ?? [])].find((f) => /\.json$/i.test(f.name));
+      if (file) void openMockupFile(file);
+    };
     window.addEventListener('dragover', stopFileDrop);
-    window.addEventListener('drop', stopFileDrop);
+    window.addEventListener('drop', openDropped);
     return () => {
       window.removeEventListener('dragover', stopFileDrop);
-      window.removeEventListener('drop', stopFileDrop);
+      window.removeEventListener('drop', openDropped);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('blur', reset);
     };
   }, []);
 
-  // Fit the frames into view once they have been measured on load.
+  // Fit the frames into view once they have been measured (on load, and after opening a mockup).
   useEffect(() => {
-    const unsubscribe = useStore.subscribe((state) => {
-      if (state.doc.frames.every((f) => f.id in state.frameHeights)) {
-        unsubscribe();
-        state.zoomToFit();
+    const check = (state: ReturnType<typeof useStore.getState>) => {
+      if (state.fitRequested && state.doc.frames.every((f) => f.id in state.frameHeights)) {
+        // Clear the request first: zooming updates the store, which calls this check again.
+        state.clearFitRequest();
         state.markFitted();
+        state.zoomToFit();
       }
-    });
-    return unsubscribe;
+    };
+    check(useStore.getState());
+    return useStore.subscribe(check);
   }, []);
 
   return (
     <div className="app">
       <Toolbar />
+      <StorageBanner />
       <LeftPanel />
       <Viewport />
       <Properties />
       <DragGhost />
       <ContextMenu />
       <ShortcutsSheet />
+      <MyMockups />
+      <ExportDialog />
+      <ConfirmDialog />
       <Tour />
       <Toast />
     </div>

@@ -44,23 +44,32 @@ function renderNode(nodes: Nodes, images: Images, id: string): string {
   }
 }
 
+/** What survives sanitising: our own editor markers and the data attributes the NSW script reads. */
+const SANITISE = {
+  ADD_TAGS: ['iframe'],
+  ADD_ATTR: [
+    'data-node',
+    'data-empty',
+    'data-edit',
+    'data-optional',
+    'data-image',
+    'data-multiline',
+    'data-goto',
+    'data-tooltip-content',
+    'data-popover-id',
+    'data-popover-position',
+    'data-anchor',
+    'focusable',
+    'allowfullscreen',
+  ],
+};
+
 export function renderFrameHtml(nodes: Nodes, root: string[], images: Images = {}): string {
   const html = root.map((id) => renderNode(nodes, images, id)).join('');
-  return DOMPurify.sanitize(html, {
-    ADD_TAGS: ['iframe'],
-    ADD_ATTR: [
-      'data-node',
-      'data-empty',
-      'data-edit',
-      'data-optional',
-      'data-image',
-      'data-multiline',
-      'data-tooltip-content',
-      'data-popover-id',
-      'data-popover-position',
-      'data-anchor',
-      'focusable',
-      'allowfullscreen',
-    ],
-  });
+  return DOMPurify.sanitize(html, SANITISE);
+}
+
+/** Markup for one node and everything inside it (for "Copy HTML"). */
+export function renderNodeHtml(nodes: Nodes, id: string, images: Images = {}): string {
+  return DOMPurify.sanitize(renderNode(nodes, images, id), SANITISE);
 }

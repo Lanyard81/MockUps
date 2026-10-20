@@ -205,7 +205,7 @@ test.describe('right-click menu', () => {
     await home(page).locator('h1').click({ button: 'right' });
     await expect(menu).toBeVisible();
     await expect(menu.getByRole('menuitem', { name: /^Paste/ })).toBeDisabled();
-    await menu.getByRole('menuitem', { name: /^Copy/ }).click();
+    await menu.getByRole('menuitem', { name: /^Copy(?! HTML)/ }).click();
     await expect(menu).toHaveCount(0);
 
     await home(page).locator('h1').click({ button: 'right' });

@@ -1,6 +1,7 @@
 import { toPng } from 'html-to-image';
 import { get, set } from 'idb-keyval';
-import { FONT_FACES, FRAME_SHELL, fontCss } from '../canvas/nswAssets';
+import { FRAME_SHELL } from '../canvas/nswAssets';
+import { getFontEmbedCss } from '../lib/fontData';
 import type { CatalogueVariant } from './types';
 
 /**
@@ -11,7 +12,6 @@ import type { CatalogueVariant } from './types';
 
 const memory = new Map<string, string>();
 let hostPromise: Promise<HTMLIFrameElement> | null = null;
-let fontCssPromise: Promise<string> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
 
 const hash = (s: string) => {
@@ -34,26 +34,6 @@ function getHost(): Promise<HTMLIFrameElement> {
   return hostPromise;
 }
 
-/** Fonts as data URIs, so the image is self-contained (html-to-image can't reach frame fonts itself). */
-function getFontCss(): Promise<string> {
-  fontCssPromise ??= (async () => {
-    const dataUrls = new Map<string, string>();
-    await Promise.all(
-      FONT_FACES.map(async (f) => {
-        const blob = await (await fetch(f.url)).blob();
-        const url = await new Promise<string>((res) => {
-          const r = new FileReader();
-          r.onload = () => res(String(r.result));
-          r.readAsDataURL(blob);
-        });
-        dataUrls.set(f.url, url);
-      }),
-    );
-    return fontCss((u) => dataUrls.get(u) ?? u);
-  })();
-  return fontCssPromise;
-}
-
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
 
 async function render(variant: CatalogueVariant, wide: boolean): Promise<string> {
@@ -72,7 +52,7 @@ async function render(variant: CatalogueVariant, wide: boolean): Promise<string>
   return toPng(el, {
     pixelRatio: 1,
     backgroundColor: '#ffffff',
-    fontEmbedCSS: await getFontCss(),
+    fontEmbedCSS: await getFontEmbedCss(),
     width: el.offsetWidth,
     height: el.offsetHeight,
   });

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { startFirstTextEdit, startTextEdit } from '../canvas/textEdit';
+import { copySelectionHtml } from '../export/copy';
 import { getComponent } from '../catalogue';
 import { parentOf } from '../layout/ops';
 import { useStore } from '../store/store';
@@ -100,6 +101,7 @@ export function ContextMenu() {
         disabled: !clipboard,
         onSelect: () => st().pasteClipboard(),
       },
+      { label: 'Copy HTML', onSelect: () => void copySelectionHtml(nodeId) },
       {
         label: 'Move up',
         shortcut: `${ALT}↑`,

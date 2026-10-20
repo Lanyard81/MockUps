@@ -165,3 +165,26 @@ The tour stores `nswmb.tourDone` in `localStorage` (wrapped in try/catch). If st
 ## 034: `name` and `hidden` are on every node
 
 A layer's custom name (`name`) is used everywhere a node is labelled (Layers, breadcrumb, selection label, drag ghost). `hidden` removes a node from the canvas and from exports but keeps it in Layers. Hidden nodes still count for positions when dropping, because their place in the list is unchanged.
+
+## 035: What is saved where
+
+Each mockup is one IndexedDB record (`mockup:<id>`: the whole document, images included) plus a small index (`mockups`: name, time, frame count, thumbnail) and a pointer to the one to reopen (`lastMockup`). Autosave runs 700ms after the last change and also when the tab is hidden; the thumbnail is refreshed after 2.5s of quiet. Stored mockups are validated again on load, because stored data can be old or damaged. The app waits (at most 1.5s) for the last mockup before the first paint, so a reload doesn't flash an empty frame.
+
+## 036: Opening a file always makes a new mockup
+
+A file gets a fresh id when opened, so opening it never overwrites a mockup of the same name already saved in the browser. The price is that opening the same file twice makes two copies.
+
+## 037: Files and stored data are untrusted
+
+`persistence/schema.ts` rebuilds a document field by field from whatever it is given: size and count limits, a reviver that refuses `__proto__`/`constructor`/`prototype` at any depth, only real `data:image/…` URLs for images, clamped numbers, and the tree rules from `layout/ops.ts` (a layout that breaks them is refused with a message, not repaired, because a repair could hide data loss). Layers nothing refers to are dropped. Text is only ever set as text, and the rendered markup goes through DOMPurify (an unsafe `javascript:` link is removed). Unknown components are kept and shown as placeholders, so files from newer versions of the catalogue still open.
+
+## 038: Export
+
+- **PNG** captures the live frame (so it matches the canvas, including shrink-to-fit) with the editor's hints switched off, at its full height. Very large captures (over 16,000px a side or 120 megapixels) are refused with a message rather than failing silently.
+- **HTML** is rendered from the document, not from the live frame, so the NSW script starts clean. Editor markers are removed. Self-contained pages inline the NSW CSS, JavaScript and fonts (about 1 MB). Several frames become a zip: a page each, an index page, and (self-contained) shared `assets/nsw.css` and `assets/nsw.js`. The CDN version is pinned to the installed NSW version. Shrink-to-fit is not part of HTML export (it is a design aid, measured in the editor).
+- **Copy HTML** unwraps the editor's wrapper divs and indents the result. Page exports keep the wrappers, so spacing is identical to the canvas.
+- A small ZIP writer (no compression, `export/zip.ts`) avoids a dependency.
+
+## 039: Startup bugs found by the end-to-end tests
+
+The first version of "fit on load and after opening a mockup" zoomed inside a store subscriber before clearing its own request, so each zoom re-entered the subscriber until the stack overflowed and the page stayed blank. Rule: a store subscriber that changes the store must make its own condition false first.

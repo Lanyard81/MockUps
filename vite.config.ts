@@ -14,5 +14,9 @@ export default defineConfig({
     // Fonts must inline so the single file works from disk.
     assetsInlineLimit: single ? 100_000_000 : 4096,
   },
-  test: { include: ['tests/**/*.test.ts'], environment: 'jsdom' },
+  test: {
+    include: ['tests/**/*.test.ts'],
+    environment: 'jsdom',
+    css: { include: [/nsw-design-system.*\.css/] },
+  },
 });

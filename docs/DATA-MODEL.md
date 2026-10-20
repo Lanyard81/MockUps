@@ -94,6 +94,20 @@ Each node type has a depth, and a node's parent is always exactly one level shal
 
 A grid's column count is its number of column children (1–6).
 
-## Current limitations
+## Files
 
-Saved files are not yet implemented (Milestone 6).
+A `.mockup.json` is an envelope:
+
+```json
+{
+  "app": "nsw-mockup-builder",
+  "fileVersion": 1,
+  "savedAt": "2026-10-20T00:00:00.000Z",
+  "doc": { "version": 1, "...": "..." },
+  "templates": []
+}
+```
+
+`doc` is the document above, with images embedded as data URLs. `templates` are the user's saved templates (`SavedTemplate` in `src/store/types.ts`: a name, a device and width, the `root` ids and `nodes`, and its images). A bare document with no envelope also opens. Everything is validated on the way in (see `DECISIONS.md` 037): a file that breaks the layout rules, is too large, comes from a newer version, or contains anything other than real image data URLs is refused or repaired as described there.
+
+Stored mockups are the same document, validated again each time they are loaded.

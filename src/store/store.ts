@@ -33,6 +33,7 @@ import {
   type DeviceId,
   type DocNode,
   type DragPayload,
+  type ConfirmRequest,
   type ContextMenuState,
   type DropTarget,
   type Placement,
@@ -76,6 +77,15 @@ interface State {
   /** Text elements per frame that are truncated by "shrink to fit" (UI only). */
   fitWarnings: Record<string, FitWarning[]>;
   contextMenu: ContextMenuState | null;
+  /** Autosave progress, shown beside the document name. */
+  saveState: 'saved' | 'saving' | 'error';
+  /** Can this page keep data between visits? Null until checked. */
+  storageOk: boolean | null;
+  /** The open dialog, if any. */
+  dialog: 'mockups' | 'export' | null;
+  confirm: ConfirmRequest | null;
+  /** Zoom to fit as soon as every frame has been measured (after opening a mockup). */
+  fitRequested: boolean;
   /** The keyboard shortcuts sheet is open. */
   helpOpen: boolean;
   /** A short message for the user (errors from uploads and the like). */
@@ -106,6 +116,15 @@ interface Actions {
   setEditing: (editing: State['editing']) => void;
   setNotice: (notice: string | null) => void;
   openContextMenu: (menu: ContextMenuState | null) => void;
+  setSaveState: (state: State['saveState']) => void;
+  setStorageOk: (ok: boolean) => void;
+  setDialog: (dialog: State['dialog']) => void;
+  requestConfirm: (request: ConfirmRequest | null) => void;
+  clearFitRequest: () => void;
+  /** Replace the whole document (opening a mockup or file). Starts a fresh undo history. */
+  loadDoc: (doc: MockupDoc) => void;
+  newDoc: () => void;
+  renameDoc: (name: string) => void;
   setHelpOpen: (open: boolean) => void;
   setFitWarnings: (frameId: string, warnings: FitWarning[]) => void;
   setFrameHeight: (id: string, height: number) => void;
@@ -252,6 +271,11 @@ export const useStore = create<Store>((set, get) => ({
   editing: null,
   notice: null,
   contextMenu: null,
+  saveState: 'saved',
+  storageOk: null,
+  dialog: null,
+  confirm: null,
+  fitRequested: true,
   helpOpen: false,
   fitWarnings: {},
   clipboard: null,
@@ -281,6 +305,34 @@ export const useStore = create<Store>((set, get) => ({
   setEditing: (editing) => set({ editing }),
   setNotice: (notice) => set({ notice }),
   openContextMenu: (contextMenu) => set({ contextMenu }),
+  setSaveState: (saveState) => set({ saveState }),
+  setStorageOk: (storageOk) => set({ storageOk }),
+  setDialog: (dialog) => set({ dialog }),
+  requestConfirm: (confirm) => set({ confirm }),
+  clearFitRequest: () => set({ fitRequested: false }),
+  loadDoc: (doc) =>
+    set({
+      doc,
+      past: [],
+      future: [],
+      selectedFrameId: null,
+      selectedNodeId: null,
+      hover: null,
+      drag: null,
+      dropTarget: null,
+      editing: null,
+      contextMenu: null,
+      clipboard: null,
+      fitWarnings: {},
+      fitRequested: true,
+      saveState: 'saved',
+    }),
+  newDoc: () => get().loadDoc(createDoc()),
+  renameDoc: (name) =>
+    set((s) => {
+      const next = name.trim().slice(0, 200);
+      return next && next !== s.doc.name ? commit(s, { ...s.doc, name: next }) : s;
+    }),
   setHelpOpen: (helpOpen) => set({ helpOpen }),
   setFitWarnings: (frameId, warnings) =>
     set((s) => {
