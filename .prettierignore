@@ -2,7 +2,7 @@ dist
 dist-single
 node_modules
 package-lock.json
-src/catalogue/generated
+src/kits/*/catalogue/generated
 docs/BUILD-PROMPT.md
 docs/NSW-DESIGN-SYSTEM.md
 docs/SHAREPOINT-OOB.md
