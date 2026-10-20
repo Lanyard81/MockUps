@@ -172,6 +172,16 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Undoable (an opacity drag is one step); works in the single-file build
 - [x] Tests: migration, validation, width detection, actions and undo (Vitest); paste, panel, opacity, placements, shortcut, drop, export unchanged, Preview, reload (Playwright)
 
-## Milestone R2: Page specs (not started)
+## Milestone R2: Page specs (AI-ready format and importer)
+
+- [x] `.page.json` format: a compact nested spec (`format: "mockup-page-spec"`, kit, name, device, settings, page) for one page or a list (`pages`); each kit defines its own section, row and column shapes
+- [x] Shared with the templates: NSW specs build through the template DSL (`buildTree`), SharePoint specs through `buildPage`
+- [x] `npm run page-spec-docs` generates `docs/PAGE-SPEC.md` (instruction to paste into Claude, then per kit every component with variants, text keys, options and optional parts, the shapes, settings, rules and a worked example); CI fails if it is out of date
+- [x] File → "Copy page spec instructions" (per kit) copies the instruction and that kit's reference
+- [x] Import: File → Import page spec… (paste or choose a file), drop a `.page.json` on the editor, or paste JSON (⌘/Ctrl+V, detected by its `format`); each page becomes a new, selected frame to the right of the others; one undo step
+- [x] Untrusted: `safeJsonParse`, field-by-field checks against the catalogue and settings definitions, size limits, text and links cleaned, the tree built by the kit's own rules
+- [x] Forgiving and honest: unknown components become labelled placeholders, unknown variants the default, unknown text keys, options and settings are dropped, items in a place the rules disallow move to the nearest valid place; a report (summary line, expandable details) after import and in the frame's Properties until dismissed
+- [x] Export: Copy as page spec / Download (.page.json) from the frame menu and Properties; round trip frame to spec to frame gives the same tree (tested on every template)
+- [x] Tests: spec to document for both kits, every forgiving rule, round trip, hostile input, docs up to date (Vitest); import by dialog, paste and drop, the report, undo, export and instructions (Playwright)
 
 ## Milestone R3: Import from screenshot (optional, not started)

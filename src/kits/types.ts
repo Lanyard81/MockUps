@@ -245,6 +245,56 @@ export interface BuildNotesTools {
   ) => import('../catalogue/types').OptionDef[];
 }
 
+/** One component of a page spec after it has been checked: ready to become a node. */
+export interface PageSpecComponent {
+  componentId: string;
+  variant?: string;
+  text?: Record<string, string>;
+  props?: Record<string, unknown>;
+  /** Optional parts to hide, by key. */
+  hide?: string[];
+  textFit?: Record<string, 'natural' | 'shrink'>;
+  hidden?: boolean;
+  name?: string;
+}
+
+/** What a kit's page-spec converter gets: checked components and settings, and a way to report. */
+export interface PageSpecContext {
+  makeId: (prefix: string) => string;
+  /** Check one raw component entry. Null if it isn't one; unknown or foreign components become the kit's placeholder. */
+  component: (raw: unknown) => PageSpecComponent | null;
+  isFullWidth: (componentId: string) => boolean;
+  /** Check the settings of a layout node (a section, a container) against the kit's setting definitions. `text` holds settings kept as node text. */
+  layerProps: (
+    type: LayerType,
+    raw: unknown,
+    topLevel?: DocNode[],
+  ) => { props: Record<string, unknown>; text: Record<string, string> };
+  /** The page's checked frame settings. */
+  frame: Record<string, unknown>;
+  /** Something the person should know ("a section's layout was changed"). */
+  note: (text: string) => void;
+  /** Count an item moved to the nearest place the rules allow. */
+  moved: () => void;
+}
+
+/** How a kit reads and writes page specs (Milestone R2). The generic parts live in `src/pagespec/`. */
+export interface KitPageSpec {
+  /** Build the tree for a spec's `page` list. Never throws on odd input: it repairs and reports. */
+  build: (
+    blocks: unknown[],
+    ctx: PageSpecContext,
+  ) => { root: string[]; nodes: Record<string, DocNode> };
+  /** The spec's `page` list for a frame. */
+  read: (frame: Frame, nodes: Record<string, DocNode>) => unknown[];
+  /** The component standing in for one the spec names but the kit doesn't have. */
+  placeholder: (name: string) => PageSpecComponent;
+  /** Component properties that aren't options (e.g. chart data), checked here. */
+  extraProps?: (componentId: string, raw: Record<string, unknown>) => Record<string, unknown>;
+  /** For the generated reference: the section and row shapes, the rules, and a worked example. */
+  docs: { shapes: string; rules: string[]; example: unknown };
+}
+
 export interface Kit {
   id: KitId;
   name: string;
@@ -293,6 +343,7 @@ export interface Kit {
   };
   /** Values frame settings have when unset, for lists a user edits in place (a default menu...). */
   frameDefaults?: (settings: Record<string, unknown> | undefined) => Record<string, unknown>;
+  pageSpec: KitPageSpec;
   templates: TemplateDef[];
   templateGroups: readonly string[];
   samples: KitSample[];

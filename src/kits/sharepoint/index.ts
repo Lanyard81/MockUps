@@ -8,6 +8,7 @@ import { SP_CATEGORIES } from './categories';
 import { chartMarkup, readChart } from './charts';
 import { renderSpFrame, renderSpLayout } from './render';
 import { SECTION_LAYOUTS } from './sections';
+import { sharepointPageSpec } from './pageSpec';
 import { FRAME_SETTINGS, KIT_SETTINGS, SECTION_SETTINGS } from './settings';
 import { spShell } from './shell';
 import { defaultNav, readSite } from './site';
@@ -81,6 +82,7 @@ export const sharepointKit: Kit = {
     kit: KIT_SETTINGS,
   },
   frameDefaults: (settings) => ({ navItems: defaultNav(settings) }),
+  pageSpec: sharepointPageSpec,
   templates: SP_TEMPLATES,
   templateGroups: ['Home pages', 'Pages'],
   samples: [],

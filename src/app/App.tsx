@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { DragGhost } from '../canvas/DragGhost';
 import { Viewport } from '../canvas/Viewport';
 import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
+import { looksLikePageSpec } from '../pagespec';
 import { openMockupFile } from '../persistence/file';
 import { useStore } from '../store/store';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -18,6 +19,8 @@ import { StorageBanner } from './StorageBanner';
 import { Toast } from './Toast';
 import { Toolbar } from './Toolbar';
 import { Tour } from './Tour';
+import { ImportPageSpecDialog } from './ImportPageSpecDialog';
+import { ImportSummary } from './ImportSummary';
 import { addReferenceFromFile, isReferenceFile } from './referenceUpload';
 
 export function App() {
@@ -42,6 +45,13 @@ export function App() {
       const t = e.target as HTMLElement | null;
       if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
       const s = useStore.getState();
+      // Pasted page spec JSON (recognised by its format field) is imported as new frames.
+      const pasted = e.clipboardData?.getData('text/plain') ?? '';
+      if (looksLikePageSpec(pasted)) {
+        e.preventDefault();
+        s.importPageSpecText(pasted);
+        return;
+      }
       if (!s.selectedFrameId || s.selectedNodeId) return;
       const file = [...(e.clipboardData?.files ?? [])].find(isReferenceFile);
       if (!file) return;
@@ -90,6 +100,8 @@ export function App() {
       <SaveTemplateDialog />
       <PrototypeViewer />
       <ConversionSummary />
+      <ImportPageSpecDialog />
+      <ImportSummary />
       <ConfirmDialog />
       <Tour />
       <Toast />

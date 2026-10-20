@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { startFirstTextEdit, startTextEdit } from '../canvas/textEdit';
+import { copyFrameSpec, downloadFrameSpec } from '../export/pageSpec';
 import { copyBuildNotes, downloadBuildNotes } from '../export/buildNotes';
 import { copySelectionHtml } from '../export/copy';
 import { getKit } from '../kits';
@@ -179,6 +180,12 @@ export function ContextMenu() {
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
         onSelect: () => st().convertFrame(frameId, id),
       })),
+      {
+        label: 'Copy as page spec',
+        separatorBefore: true,
+        onSelect: () => void copyFrameSpec(frameId),
+      },
+      { label: 'Download page spec (.page.json)', onSelect: () => downloadFrameSpec(frameId) },
       ...(frameKit.buildNotes
         ? [
             {

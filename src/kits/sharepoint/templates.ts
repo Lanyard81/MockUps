@@ -237,7 +237,7 @@ export const SP_TEMPLATES: TemplateDef[] = [
           [
             wp('sp-people', 'descriptive', {
               text: { title: 'Contact us' },
-              hide: ['person4', 'person5', 'person6'],
+              hide: ['person5', 'person6'],
             }),
           ],
         ),

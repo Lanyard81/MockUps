@@ -5,6 +5,7 @@ import { copySelectionHtml } from '../export/copy';
 import { KITS, getKit } from '../kits';
 import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
+import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
 
 const ZOOM_PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
@@ -41,6 +42,17 @@ export function Toolbar() {
             })),
             { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
             { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
+            {
+              label: 'Import page spec…',
+              hint: '.page.json',
+              separatorBefore: true,
+              onSelect: () => s.getState().setDialog('importSpec'),
+            },
+            ...KITS.map((k) => ({
+              label: `Copy page spec instructions (${k.shortLabel})`,
+              hint: 'for a Claude chat',
+              onSelect: () => void copyPageSpecInstructions(k.id),
+            })),
             {
               label: 'Export…',
               hint: 'PNG, HTML',

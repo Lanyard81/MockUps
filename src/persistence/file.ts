@@ -3,6 +3,7 @@ import { newId } from '../lib/ids';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
 import { KITS } from '../kits';
+import { looksLikePageSpec } from '../pagespec';
 import { FileError, parseMockupFile, serialiseMockupFile } from './schema';
 
 /** Save the open mockup (images embedded) and the user's templates as one portable file. */
@@ -20,7 +21,10 @@ export function saveToFile() {
 export async function openMockupFile(file: File): Promise<boolean> {
   const s = useStore.getState();
   try {
-    const { doc, templates } = parseMockupFile(await file.text());
+    const text = await file.text();
+    // A page spec (.page.json) isn't a mockup: it becomes new frames in the current one.
+    if (looksLikePageSpec(text)) return s.importPageSpecText(text);
+    const { doc, templates } = parseMockupFile(text);
     s.loadDoc({ ...doc, id: newId('doc') });
     const added = useTemplates.getState().merge(templates);
     s.setNotice(

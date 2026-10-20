@@ -8,6 +8,7 @@ import { renderNswLayout } from './render';
 import { SECTION_BACKGROUNDS, SECTION_PADDINGS } from './sections';
 import { nswShell } from './shell';
 import { SAMPLES, buildSample } from './samples';
+import { nswPageSpec } from './pageSpec';
 import { NSW_TEMPLATES } from './templates';
 import type { Kit, LayoutBlock } from '../types';
 
@@ -158,6 +159,7 @@ export const nswKit: Kit = {
     frame: [],
     kit: [],
   },
+  pageSpec: nswPageSpec,
   templates: NSW_TEMPLATES,
   templateGroups: [
     'Homepage',

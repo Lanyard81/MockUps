@@ -1800,3 +1800,17 @@ kbd {
   grid-template-columns: 1fr 1fr;
   gap: var(--ed-space-2, 8px);
 }
+
+.import-spec__text {
+  width: 100%;
+  font:
+    12px/1.4 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  resize: vertical;
+}
+.import-report__details summary {
+  cursor: pointer;
+  margin: 4px 0;
+}

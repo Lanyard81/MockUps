@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { copyFrameSpec, downloadFrameSpec } from '../../export/pageSpec';
 import { copyBuildNotes, downloadBuildNotes } from '../../export/buildNotes';
 import { getKit } from '../../kits';
 import { conversionTargets } from '../../layout/convert';
@@ -6,6 +7,7 @@ import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
 import { KIT_PANELS } from '../kitPanels';
 import { PageParts } from '../PageParts';
+import { ImportReportView } from '../ImportReportView';
 import { ReferenceProps } from './ReferenceProps';
 import { CommitInput, Field, Section } from './controls';
 import { SettingsPanel } from './SettingsPanel';
@@ -20,6 +22,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
     () => (frame?.root ?? []).map((id) => nodes[id]).filter((n): n is DocNode => !!n),
     [frame?.root, nodes],
   );
+  const importReport = useStore((s) => s.importReports[frameId]);
   const st = useStore.getState;
   if (!frame) return null;
   const kit = getKit(frame.kitId);
@@ -73,6 +76,19 @@ export function FrameProps({ frameId }: { frameId: string }) {
           The width decides which {kit.shortLabel} layout is used, just as on a real device.
         </p>
       </Section>
+      {importReport && (
+        <Section
+          title="Import report"
+          hint="From the page spec this frame was made from. Check the placeholders."
+        >
+          <ImportReportView report={importReport} />
+          <div className="prop-actions">
+            <button className="btn" onClick={() => st().dismissImportReport(frame.id)}>
+              Dismiss report
+            </button>
+          </div>
+        </Section>
+      )}
       <ReferenceProps frameId={frame.id} />
       {kit.pageParts.length > 0 && (
         <Section
@@ -118,6 +134,19 @@ export function FrameProps({ frameId }: { frameId: string }) {
           </div>
         </Section>
       )}
+      <Section
+        title="Page spec"
+        hint="The page as compact JSON: paste it into a Claude chat to change it, then import the answer (File, Import page spec)."
+      >
+        <div className="prop-actions">
+          <button className="btn" onClick={() => void copyFrameSpec(frame.id)}>
+            Copy as page spec
+          </button>
+          <button className="btn" onClick={() => downloadFrameSpec(frame.id)}>
+            Download (.page.json)
+          </button>
+        </div>
+      </Section>
       {kit.buildNotes && (
         <Section
           title={kit.buildNotes.label}

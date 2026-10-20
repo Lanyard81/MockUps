@@ -16,6 +16,9 @@ export interface WebPart {
   text?: Record<string, string>;
   props?: Record<string, unknown>;
   hide?: string[];
+  textFit?: Record<string, 'natural' | 'shrink'>;
+  hidden?: boolean;
+  name?: string;
 }
 
 export const wp = (
@@ -73,6 +76,9 @@ export function buildPage(
             ...(p.hide?.length ? { hiddenParts: p.hide } : {}),
           },
           ...(p.text ? { text: p.text } : {}),
+          ...(p.textFit ? { textFit: p.textFit } : {}),
+          ...(p.hidden ? { hidden: true } : {}),
+          ...(p.name ? { name: p.name } : {}),
         };
         return id;
       });

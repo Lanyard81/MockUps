@@ -20,6 +20,8 @@ export interface CompSpec {
   /** Optional parts to hide, by key. */
   hide?: string[];
   name?: string;
+  textFit?: Record<string, 'natural' | 'shrink'>;
+  hidden?: boolean;
 }
 
 export interface RowSpec {
@@ -48,6 +50,8 @@ interface CompOptions {
   props?: Record<string, unknown>;
   hide?: string[];
   name?: string;
+  textFit?: Record<string, 'natural' | 'shrink'>;
+  hidden?: boolean;
 }
 
 export const c = (componentId: string, variant?: string, o: CompOptions = {}): CompSpec => ({
@@ -103,8 +107,8 @@ export function buildTree(items: TopItem[], makeId: MakeId): BuiltTree {
       ...(s.variant ? { variant: s.variant } : {}),
       props,
       text: { ...s.text },
-      textFit: {},
-      hidden: false,
+      textFit: { ...s.textFit },
+      hidden: s.hidden === true,
       ...(s.name ? { name: s.name } : {}),
     });
   };

@@ -11,6 +11,7 @@ src/kits/         One folder per style kit (nsw/, sharepoint/): shell, catalogue
 src/catalogue/    Kit-agnostic catalogue API (getComponent, search), types, thumbnails
 src/templates/    Template types, using templates, saving your own
 src/store/        Zustand store, document actions, undo history, types
+src/pagespec/     Page specs: import, export, checking, and the generated reference (docs.ts); kits supply their own converter (kits/*/pageSpec.ts)
 src/layout/       Pure document-tree operations (insert, move, remove, clone, wrap) and tree -> HTML
 src/persistence/  Autosave, IndexedDB, file save/open
 src/export/       PNG, HTML and JSON export
@@ -43,6 +44,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 - Zustand selectors must return stable values: never `?? []` or `?? {}` inside `useStore(...)` (React error 185, the app freezes). Use module-level constants.
 - Text editing is the only place a frame's DOM is edited in place (`canvas/textEdit.ts`); it commits once through `setText`. Everything else renders from the document.
 - Layer and canvas moves share one rule set and one store action (`moveNode`); Layers placements come from `layout/layers.ts`. The right-click menu, shortcuts and panel buttons call the same store actions: never add a second implementation of an action.
+- After changing a kit's catalogue, settings or page-spec shapes, run `npm run page-spec-docs` and commit `docs/PAGE-SPEC.md` (CI checks it).
 - Any new key that does something must be added to `app/shortcutList.ts` (the `?` sheet) and, if it's an item action, to `ContextMenu.tsx`.
 - Component options are data (`overrides.ts` `options`, applied in `layout/component.ts`). Add an option there, not in the panel.
 

@@ -9,6 +9,12 @@ import { getComponent, hasVariant } from '../catalogue';
 import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
+import {
+  importPageSpec,
+  type ImportedPage,
+  type ImportSummary,
+  type PageImportReport,
+} from '../pagespec';
 import { DEFAULT_REFERENCE } from '../lib/reference';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
 import {
@@ -123,7 +129,7 @@ interface State {
   /** Can this page keep data between visits? Null until checked. */
   storageOk: boolean | null;
   /** The open dialog, if any. */
-  dialog: 'mockups' | 'export' | 'saveTemplate' | null;
+  dialog: 'mockups' | 'export' | 'saveTemplate' | 'importSpec' | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
   /** Which tab of the left panel is showing. */
@@ -132,6 +138,10 @@ interface State {
   newFrameKitId: KitId;
   /** The summary of the last frame conversion, shown until dismissed (UI only). */
   conversionReport: (ConversionReport & { newFrameName: string }) | null;
+  /** What each imported frame's page spec did, until dismissed (not saved). */
+  importReports: Record<string, PageImportReport>;
+  /** The report of the import just done, shown once. */
+  importSummary: ImportSummary | null;
   /** A kit the user switched the library to for one frame (otherwise the library follows the selected frame's kit). */
   libraryKit: { kitId: KitId; frameId: string | null } | null;
   /** While dragging a template: the frame it is over (it would replace its content), or just the canvas. */
@@ -179,6 +189,10 @@ interface Actions {
   /** Convert a frame into another kit as a new frame beside it (one undo step; the original is untouched). */
   convertFrame: (frameId: string, targetKitId: KitId) => void;
   dismissConversionReport: () => void;
+  /** Add the pages of a page spec (a `.page.json` or pasted JSON) as new frames, in one undo step. False, with a notice, if it can't be read. */
+  importPageSpecText: (text: string) => boolean;
+  dismissImportReport: (frameId: string) => void;
+  dismissImportSummary: () => void;
   setLibraryKit: (kitId: KitId | null) => void;
   setTemplateDrop: (drop: State['templateDrop']) => void;
   /** Put a template on the canvas as a new frame (undoable). Returns the frame's id. */
@@ -408,6 +422,8 @@ export const useStore = create<Store>((set, get) => ({
   newFrameKitId: readLastKit(),
   libraryKit: null,
   conversionReport: null,
+  importReports: {},
+  importSummary: null,
   templateDrop: null,
   confirm: null,
   fitRequested: true,
@@ -462,6 +478,63 @@ export const useStore = create<Store>((set, get) => ({
       };
     }),
   dismissConversionReport: () => set({ conversionReport: null }),
+  importPageSpecText: (text) => {
+    let pages: ImportedPage[];
+    try {
+      pages = importPageSpec(text, get().doc.defaultKitId);
+    } catch (err) {
+      set({ notice: err instanceof Error ? err.message : 'That page spec could not be imported.' });
+      return false;
+    }
+    set((s) => {
+      let x = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width)) + FRAME_GAP;
+      const y = s.doc.frames[0]?.y ?? 0;
+      const frames: Frame[] = [];
+      const reports: Record<string, PageImportReport> = {};
+      const summary: ImportSummary = { pages: [] };
+      let doc = s.doc;
+      let nodes = s.doc.nodes;
+      const taken = new Set(s.doc.frames.map((f) => f.name));
+      for (const p of pages) {
+        // Frame names identify frames to people, so an imported page never reuses one.
+        let name = p.name;
+        for (let n = 2; taken.has(name); n++) name = `${p.name} ${n}`;
+        taken.add(name);
+        const frame: Frame = {
+          id: newId('f'),
+          name,
+          kitId: p.kitId,
+          ...(p.settings ? { settings: p.settings } : {}),
+          device: p.device,
+          width: p.width,
+          x: Math.round(x),
+          y: Math.round(y),
+          root: p.root,
+        };
+        x += p.width + FRAME_GAP;
+        frames.push(frame);
+        nodes = { ...nodes, ...p.nodes };
+        reports[frame.id] = { ...p.report, frameName: name };
+        summary.pages.push({ ...p.report, frameName: name, frameId: frame.id });
+        doc = withKitVersion(doc, p.kitId);
+      }
+      return {
+        ...commit(s, { ...doc, frames: [...s.doc.frames, ...frames], nodes }),
+        selectedFrameId: frames[frames.length - 1]?.id ?? s.selectedFrameId,
+        selectedNodeId: null,
+        importReports: { ...s.importReports, ...reports },
+        importSummary: summary,
+        fitRequested: true,
+      };
+    });
+    return true;
+  },
+  dismissImportReport: (frameId) =>
+    set((s) => {
+      const { [frameId]: _gone, ...rest } = s.importReports; // eslint-disable-line @typescript-eslint/no-unused-vars
+      return { importReports: rest };
+    }),
+  dismissImportSummary: () => set({ importSummary: null }),
   setNewFrameKit: (kitId) => {
     const id = getKit(kitId).id;
     writeLastKit(id);
@@ -1128,6 +1201,9 @@ export const useStore = create<Store>((set, get) => ({
         doc: { ...prev, view: s.doc.view },
         past: s.past.slice(0, -1),
         future: [s.doc, ...s.future],
+        importReports: Object.fromEntries(
+          Object.entries(s.importReports).filter(([id]) => prev.frames.some((f) => f.id === id)),
+        ),
         ...validSelection(prev, s),
       };
     }),
