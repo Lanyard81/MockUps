@@ -4,16 +4,36 @@ import { getComponent } from '../catalogue';
 import { newId } from '../lib/ids';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
 import {
-  appendChild,
+  applyInsertion,
+  clearChildren,
+  detachNode,
+  extractSubtree,
+  frameOfNode,
+  isDraggable,
+  moveAmongSiblings,
+  parentOf,
+  canMoveInto,
+  removeNode,
+  resolveInsertion,
+  type Insertion,
+} from '../layout/ops';
+import {
   buildContainer,
   buildGrid,
   buildSection,
   cloneSubtrees,
-  findAppendColumn,
-  lastOfType,
   removeSubtrees,
 } from '../layout/tree';
-import { DEVICES, type DeviceId, type Frame, type MockupDoc } from './types';
+import {
+  DEVICES,
+  type Clipboard,
+  type DeviceId,
+  type DocNode,
+  type DragPayload,
+  type DropTarget,
+  type Frame,
+  type MockupDoc,
+} from './types';
 
 const HISTORY_LIMIT = 100;
 const FRAME_GAP = 80;
@@ -39,6 +59,15 @@ interface State {
   future: MockupDoc[];
   mode: Mode;
   selectedFrameId: string | null;
+  /** The selected node inside `selectedFrameId`, or null when only the frame is selected. */
+  selectedNodeId: string | null;
+  /** Node under the pointer in Edit mode (for the hover outline). */
+  hover: { frameId: string; nodeId: string } | null;
+  /** What is being dragged, and where it would drop. Null when no drag is in progress. */
+  drag: DragPayload | null;
+  dropTarget: DropTarget | null;
+  /** Copied subtree, shared between frames. */
+  clipboard: Clipboard | null;
   /** Measured content heights per frame (UI only, not saved). */
   frameHeights: Record<string, number>;
   /** Viewport size, used by "Zoom to fit". */
@@ -54,6 +83,12 @@ interface State {
 interface Actions {
   setMode: (mode: Mode) => void;
   selectFrame: (id: string | null) => void;
+  selectNode: (frameId: string, nodeId: string | null) => void;
+  /** Esc: select the parent, then the frame, then nothing. */
+  selectParent: () => void;
+  setHover: (hover: { frameId: string; nodeId: string } | null) => void;
+  setDrag: (drag: DragPayload | null) => void;
+  setDropTarget: (target: DropTarget | null) => void;
   setFrameHeight: (id: string, height: number) => void;
   setViewport: (width: number, height: number) => void;
   setPanning: (panning: boolean) => void;
@@ -69,7 +104,7 @@ interface Actions {
   renameFrame: (id: string, name: string) => void;
   setFrameDevice: (id: string, device: DeviceId) => void;
   setFrameWidth: (id: string, width: number) => void;
-  /** Add a catalogue component to a frame, stacking it under the previous content. */
+  /** Add a catalogue component next to the selection (or at the end of the frame). */
   addComponent: (frameId: string, componentId: string, variantId?: string) => void;
   /** Add a layout block: a section, a container, or a grid of 1–4 columns. */
   addLayoutBlock: (
@@ -77,6 +112,16 @@ interface Actions {
     kind: 'section' | 'container' | 'grid',
     columns?: number,
   ) => void;
+  /** Drop a new component or layout block at an exact position. */
+  dropNew: (payload: DragPayload, target: DropTarget) => void;
+  /** Move an existing node to an exact position, possibly in another frame. */
+  moveNode: (nodeId: string, target: DropTarget) => void;
+  deleteNode: (nodeId: string) => void;
+  duplicateNode: (nodeId: string) => void;
+  copyNode: (nodeId: string) => void;
+  pasteClipboard: () => void;
+  /** Alt+↑ / Alt+↓: swap with the previous or next sibling. */
+  moveSelected: (dir: -1 | 1) => void;
 
   /** Call once at the start of a continuous gesture (e.g. a drag) so it is one undo entry. */
   beginGesture: () => void;
@@ -98,12 +143,58 @@ const updateFrame = (doc: MockupDoc, id: string, patch: Partial<Frame>): MockupD
   frames: doc.frames.map((f) => (f.id === id ? { ...f, ...patch } : f)),
 });
 
+/** After undo or redo, drop a selection that no longer exists in the restored document. */
+function validSelection(doc: MockupDoc, s: Store) {
+  const frameOk = doc.frames.some((f) => f.id === s.selectedFrameId);
+  const nodeOk = !!s.selectedNodeId && !!doc.nodes[s.selectedNodeId];
+  return {
+    selectedFrameId: frameOk ? s.selectedFrameId : null,
+    selectedNodeId: frameOk && nodeOk ? s.selectedNodeId : null,
+  };
+}
+
+function newComponentNode(componentId: string, variant: string): DocNode {
+  return {
+    id: newId('n'),
+    type: 'component',
+    componentId,
+    variant,
+    props: {},
+    text: {},
+    textFit: {},
+    hidden: false,
+  };
+}
+
+function buildLayoutBlock(kind: 'section' | 'container' | 'grid', columns: number) {
+  if (kind === 'section') return buildSection(newId);
+  if (kind === 'container') return buildContainer(newId);
+  return buildGrid(newId, Math.min(4, Math.max(1, columns)));
+}
+
+/** Add a new leaf next to the current selection (or the end of the frame) and select it. */
+function insertLeaf(s: Store, frameId: string, nodes: Record<string, DocNode>, leafId: string) {
+  const doc0 = { ...s.doc, nodes: { ...s.doc.nodes, ...nodes } };
+  const anchor = s.selectedFrameId === frameId ? s.selectedNodeId : null;
+  const ins: Insertion = resolveInsertion(doc0, frameId, anchor, doc0.nodes[leafId]!);
+  return {
+    ...commit(s, applyInsertion(doc0, frameId, ins, leafId, newId)),
+    selectedFrameId: frameId,
+    selectedNodeId: leafId,
+  };
+}
+
 export const useStore = create<Store>((set, get) => ({
   doc: createDoc(),
   past: [],
   future: [],
   mode: 'edit',
   selectedFrameId: null,
+  selectedNodeId: null,
+  hover: null,
+  drag: null,
+  dropTarget: null,
+  clipboard: null,
   frameHeights: {},
   viewport: { width: 1000, height: 700 },
   panning: false,
@@ -111,7 +202,22 @@ export const useStore = create<Store>((set, get) => ({
   renameRequest: null,
 
   setMode: (mode) => set({ mode }),
-  selectFrame: (id) => set({ selectedFrameId: id }),
+  selectFrame: (id) => set({ selectedFrameId: id, selectedNodeId: null }),
+  selectNode: (frameId, nodeId) => set({ selectedFrameId: frameId, selectedNodeId: nodeId }),
+  selectParent: () =>
+    set((s) => {
+      if (s.selectedNodeId) {
+        const p = parentOf(s.doc, s.selectedNodeId);
+        return { selectedNodeId: p?.parentId ?? null };
+      }
+      return { selectedFrameId: null };
+    }),
+  setHover: (hover) =>
+    set((s) =>
+      s.hover?.nodeId === hover?.nodeId && s.hover?.frameId === hover?.frameId ? s : { hover },
+    ),
+  setDrag: (drag) => set({ drag, dropTarget: null, hover: null }),
+  setDropTarget: (dropTarget) => set({ dropTarget }),
   setFrameHeight: (id, height) =>
     set((s) =>
       s.frameHeights[id] === height ? s : { frameHeights: { ...s.frameHeights, [id]: height } },
@@ -190,6 +296,7 @@ export const useStore = create<Store>((set, get) => ({
           nodes: removeSubtrees(s.doc.nodes, src.root),
         }),
         selectedFrameId: s.selectedFrameId === id ? null : s.selectedFrameId,
+        selectedNodeId: s.selectedFrameId === id ? null : s.selectedNodeId,
       };
     }),
 
@@ -219,93 +326,125 @@ export const useStore = create<Store>((set, get) => ({
 
   addComponent: (frameId, componentId, variantId) =>
     set((s) => {
-      const frame = s.doc.frames.find((f) => f.id === frameId);
       const comp = getComponent(componentId);
-      if (!frame || !comp) return s;
-      const id = newId('n');
-      let nodes: MockupDoc['nodes'] = {
-        ...s.doc.nodes,
-        [id]: {
-          id,
-          type: 'component',
-          componentId,
-          variant: variantId ?? comp.defaultVariant,
-          props: {},
-          text: {},
-          textFit: {},
-          hidden: false,
-        },
-      };
-      let root = frame.root;
-      const column = comp.fullWidth ? undefined : findAppendColumn(nodes, root);
-      if (comp.fullWidth) {
-        root = [...root, id];
-      } else if (column) {
-        nodes = appendChild(nodes, column, id);
-      } else {
-        const built = buildSection(newId);
-        const container = lastOfType(built.nodes, built.nodes[built.rootId]?.children, 'container');
-        const grid = lastOfType(
-          built.nodes,
-          container ? built.nodes[container]?.children : undefined,
-          'grid',
-        );
-        const colId = lastOfType(
-          built.nodes,
-          grid ? built.nodes[grid]?.children : undefined,
-          'column',
-        );
-        nodes = appendChild({ ...nodes, ...built.nodes }, colId!, id);
-        root = [...root, built.rootId];
-      }
-      return {
-        ...commit(s, { ...updateFrame(s.doc, frameId, { root }), nodes }),
-        selectedFrameId: frameId,
-      };
+      if (!s.doc.frames.some((f) => f.id === frameId) || !comp) return s;
+      const leaf = newComponentNode(componentId, variantId ?? comp.defaultVariant);
+      return insertLeaf(s, frameId, { [leaf.id]: leaf }, leaf.id);
     }),
 
   addLayoutBlock: (frameId, kind, columns = 1) =>
     set((s) => {
-      const frame = s.doc.frames.find((f) => f.id === frameId);
-      if (!frame) return s;
-      const count = Math.min(4, Math.max(1, columns));
-      let nodes = s.doc.nodes;
-      let root = frame.root;
-      const lastRoot = root[root.length - 1];
-      const section = lastRoot && nodes[lastRoot]?.type === 'section' ? lastRoot : undefined;
-      if (kind === 'container' && section) {
-        const built = buildContainer(newId);
-        nodes = appendChild({ ...nodes, ...built.nodes }, section, built.rootId);
-      } else if (kind === 'grid' && section) {
-        const container = lastOfType(nodes, nodes[section]?.children, 'container');
-        const built = buildGrid(newId, count);
-        if (container) {
-          nodes = appendChild({ ...nodes, ...built.nodes }, container, built.rootId);
-        } else {
-          const c = newId('n');
-          nodes = appendChild(
-            {
-              ...nodes,
-              ...built.nodes,
-              [c]: { id: c, type: 'container', children: [built.rootId] },
-            },
-            section,
-            c,
-          );
-        }
+      if (!s.doc.frames.some((f) => f.id === frameId)) return s;
+      const built = buildLayoutBlock(kind, columns);
+      return insertLeaf(s, frameId, built.nodes, built.rootId);
+    }),
+
+  dropNew: (payload, target) =>
+    set((s) => {
+      if (payload.kind === 'move') return s;
+      let nodes: Record<string, DocNode>;
+      let leafId: string;
+      if (payload.kind === 'new-component') {
+        const comp = getComponent(payload.componentId);
+        if (!comp) return s;
+        const leaf = newComponentNode(payload.componentId, payload.variantId);
+        nodes = { [leaf.id]: leaf };
+        leafId = leaf.id;
       } else {
-        // A section, or no section to put the block in yet: start a new one, so a beginner
-        // never has to think about sections.
-        const spans = kind === 'grid' ? Array<number>(count).fill(12 / count) : [12];
-        const built = buildSection(newId, 'white', spans);
-        nodes = { ...nodes, ...built.nodes };
-        root = [...root, built.rootId];
+        const built = buildLayoutBlock(payload.block, payload.columns ?? 1);
+        nodes = built.nodes;
+        leafId = built.rootId;
       }
+      const doc = applyInsertion(
+        { ...s.doc, nodes: { ...s.doc.nodes, ...nodes } },
+        target.frameId,
+        target,
+        leafId,
+        newId,
+      );
+      return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: leafId };
+    }),
+
+  moveNode: (nodeId, target) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || !isDraggable(node)) return s;
+      // A drop that lands where the node already is changes nothing, so it makes no history entry.
+      const from = parentOf(s.doc, nodeId);
+      if (
+        from &&
+        from.parentId === target.parentId &&
+        from.index === target.index &&
+        target.chainFrom === null &&
+        frameOfNode(s.doc, nodeId) === target.frameId
+      )
+        return s;
+      if (target.parentId !== null && !canMoveInto(s.doc, nodeId, target.parentId)) return s;
+      const doc = applyInsertion(detachNode(s.doc, nodeId), target.frameId, target, nodeId, newId);
+      return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: nodeId };
+    }),
+
+  deleteNode: (nodeId) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node) return s;
+      const parent = parentOf(s.doc, nodeId);
+      // Deleting a column would break its grid, so it just empties the column.
+      const doc = node.type === 'column' ? clearChildren(s.doc, nodeId) : removeNode(s.doc, nodeId);
+      if (doc === s.doc) return s;
       return {
-        ...commit(s, { ...updateFrame(s.doc, frameId, { root }), nodes }),
-        selectedFrameId: frameId,
+        ...commit(s, doc),
+        selectedNodeId: node.type === 'column' ? nodeId : (parent?.parentId ?? null),
       };
     }),
+
+  duplicateNode: (nodeId) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      const loc = parentOf(s.doc, nodeId);
+      const frameId = frameOfNode(s.doc, nodeId);
+      if (!node || !loc || !frameId || !isDraggable(node)) return s;
+      const copy = cloneSubtrees(s.doc.nodes, [nodeId], newId);
+      const doc = applyInsertion(
+        { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } },
+        frameId,
+        { parentId: loc.parentId, index: loc.index + 1, chainFrom: null },
+        copy.roots[0]!,
+        newId,
+      );
+      return { ...commit(s, doc), selectedNodeId: copy.roots[0]! };
+    }),
+
+  copyNode: (nodeId) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || !isDraggable(node)) return s;
+      return { clipboard: extractSubtree(s.doc, nodeId) };
+    }),
+
+  pasteClipboard: () =>
+    set((s) => {
+      const clip = s.clipboard;
+      const frameId = s.selectedFrameId ?? s.doc.frames[0]?.id;
+      if (!clip || !frameId) return s;
+      const copy = cloneSubtrees(clip.nodes, [clip.rootId], newId);
+      const leafId = copy.roots[0]!;
+      const doc0 = { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } };
+      const ins = resolveInsertion(doc0, frameId, s.selectedNodeId, doc0.nodes[leafId]!);
+      return {
+        ...commit(s, applyInsertion(doc0, frameId, ins, leafId, newId)),
+        selectedFrameId: frameId,
+        selectedNodeId: leafId,
+      };
+    }),
+
+  moveSelected: (dir) =>
+    set((s) => {
+      if (!s.selectedNodeId) return s;
+      const doc = moveAmongSiblings(s.doc, s.selectedNodeId, dir);
+      return doc === s.doc ? s : commit(s, doc);
+    }),
+
   beginGesture: () => set((s) => commit(s, s.doc)),
   moveFrameLive: (id, x, y) =>
     set((s) => ({ doc: updateFrame(s.doc, id, { x: Math.round(x), y: Math.round(y) }) })),
@@ -319,9 +458,7 @@ export const useStore = create<Store>((set, get) => ({
         doc: { ...prev, view: s.doc.view },
         past: s.past.slice(0, -1),
         future: [s.doc, ...s.future],
-        selectedFrameId: prev.frames.some((f) => f.id === s.selectedFrameId)
-          ? s.selectedFrameId
-          : null,
+        ...validSelection(prev, s),
       };
     }),
   redo: () =>

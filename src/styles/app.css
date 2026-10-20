@@ -537,3 +537,194 @@ select {
     grid-template-columns: 248px 1fr;
   }
 }
+
+/* Selection, hover and drop chrome. Drawn over frames, in the editor document. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ov-hover,
+.ov-select {
+  position: absolute;
+  display: none;
+  box-sizing: border-box;
+}
+.ov-hover {
+  outline: calc(1.5px * var(--inv-zoom, 1)) dashed var(--ed-accent);
+  outline-offset: calc(-1px * var(--inv-zoom, 1));
+  background: rgb(31 95 209 / 0.05);
+}
+.ov-select {
+  outline: calc(2px * var(--inv-zoom, 1)) solid var(--ed-accent);
+  outline-offset: calc(-1px * var(--inv-zoom, 1));
+}
+.ov-chip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  /* Inside the selection, so it never covers a neighbour that the user may want to click. */
+  border-radius: 0 0 4px 0;
+  background: var(--ed-accent);
+  color: #fff;
+  font: 600 12px/22px var(--ed-font);
+  white-space: nowrap;
+  transform: scale(var(--inv-zoom, 1));
+  transform-origin: 0 0;
+  /* The label never blocks clicks on the item underneath; only the grip is a handle. */
+  pointer-events: none;
+  user-select: none;
+}
+.ov-chip__grip {
+  display: inline-block;
+  margin: 0 2px 0 -8px;
+  padding: 0 4px 0 8px;
+  height: 22px;
+  pointer-events: auto;
+  cursor: grab;
+  opacity: 0.9;
+}
+.ov-chip__grip:active {
+  cursor: grabbing;
+}
+.ov-drop-parent {
+  position: absolute;
+  outline: calc(2px * var(--inv-zoom, 1)) dashed var(--ed-accent);
+  outline-offset: calc(-1px * var(--inv-zoom, 1));
+  background: rgb(31 95 209 / 0.07);
+}
+.ov-drop {
+  position: absolute;
+  z-index: 2;
+}
+.ov-drop--line {
+  background: var(--ed-accent);
+  border-radius: 2px;
+  min-height: calc(4px * var(--inv-zoom, 1));
+  box-shadow: 0 0 0 calc(2px * var(--inv-zoom, 1)) rgb(255 255 255 / 0.85);
+}
+.ov-drop--line::before,
+.ov-drop--line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(12px * var(--inv-zoom, 1));
+  height: calc(12px * var(--inv-zoom, 1));
+  margin-top: calc(-6px * var(--inv-zoom, 1));
+  border-radius: 50%;
+  background: var(--ed-accent);
+}
+.ov-drop--line::before {
+  left: calc(-6px * var(--inv-zoom, 1));
+}
+.ov-drop--line::after {
+  right: calc(-6px * var(--inv-zoom, 1));
+}
+.ov-drop--box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: calc(2px * var(--inv-zoom, 1)) solid var(--ed-accent);
+  background: rgb(31 95 209 / 0.14);
+}
+.ov-drop--box span {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--ed-accent);
+  color: #fff;
+  font: 600 12px/1.4 var(--ed-font);
+  transform: scale(var(--inv-zoom, 1));
+}
+
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--ed-border-strong);
+  border-radius: var(--ed-radius);
+  background: var(--ed-surface);
+  color: var(--ed-text);
+  font-weight: 600;
+  pointer-events: none;
+  opacity: 0.95;
+  white-space: nowrap;
+}
+.drag-ghost.is-valid {
+  border-color: var(--ed-accent);
+}
+.drag-ghost__icon {
+  color: var(--ed-accent);
+}
+.drag-ghost__hint {
+  color: var(--ed-text-muted);
+  font-weight: 400;
+}
+body.is-dragging,
+body.is-dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+body.is-dragging .viewport--nodrop,
+body.is-dragging .viewport--nodrop * {
+  cursor: no-drop !important;
+}
+.tile {
+  touch-action: none;
+  user-select: none;
+}
+
+.breadcrumb {
+  position: absolute;
+  top: var(--ed-space-3);
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  max-width: calc(100% - 32px);
+  padding: 2px 6px;
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius);
+  background: var(--ed-surface);
+  transform: translateX(-50%);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.breadcrumb__part {
+  display: inline-flex;
+  align-items: center;
+}
+.breadcrumb__sep {
+  color: var(--ed-text-muted);
+  padding: 0 2px;
+}
+.breadcrumb__crumb {
+  height: 26px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--ed-radius-sm);
+  background: transparent;
+  color: var(--ed-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.breadcrumb__crumb:hover {
+  background: var(--ed-accent-soft);
+  color: var(--ed-text);
+}
+.breadcrumb__crumb.is-current {
+  color: var(--ed-accent);
+  font-weight: 600;
+}
+.frame__empty {
+  pointer-events: none;
+}

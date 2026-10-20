@@ -25,6 +25,7 @@ const FONT_CSS = fontCss();
 // Only frame plumbing lives here. No NSW component is restyled.
 const FRAME_CSS = `html{overflow:hidden}body{margin:0}#root{display:flow-root}
 body[data-mode="edit"] [data-empty]{min-height:64px;outline:1px dashed #8a8f98;outline-offset:-1px}
+body[data-mode="edit"]{user-select:none;-webkit-user-select:none}
 body[data-mode="edit"] [data-empty]::before{content:attr(data-empty);display:block;padding:8px 12px;color:#6d675c;font:12px/1.4 system-ui,sans-serif}`;
 
 /**

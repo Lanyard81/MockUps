@@ -6,7 +6,6 @@ import {
   buildSection,
   cloneSubtrees,
   collectIds,
-  findAppendColumn,
   removeSubtrees,
 } from '../src/layout/tree';
 
@@ -51,15 +50,8 @@ describe('tree', () => {
     expect(c.nodes[c.rootId]!.type).toBe('container');
   });
 
-  it('appends to the last column of the last section, and nowhere when the frame is empty', () => {
-    expect(findAppendColumn({}, [])).toBeUndefined();
-    const col = findAppendColumn(nodes, root);
-    const lastCol = nodes[nodes[nodes[built.rootId]!.children![0]!]!.children![0]!]!.children![1];
-    expect(col).toBe(lastCol);
-  });
-
   it('appendChild does not mutate the original', () => {
-    const col = findAppendColumn(nodes, root)!;
+    const col = nodes[nodes[nodes[built.rootId]!.children![0]!]!.children![0]!]!.children![1]!;
     const next = appendChild(nodes, col, 'x');
     expect(next[col]!.children).toEqual(['x']);
     expect(nodes[col]!.children).toEqual([]);

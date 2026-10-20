@@ -103,30 +103,6 @@ export function buildContainer(makeId: MakeId): BuiltTree {
   };
 }
 
-export function lastOfType(
-  nodes: Nodes,
-  ids: string[] | undefined,
-  type: DocNode['type'],
-): string | undefined {
-  for (let i = (ids?.length ?? 0) - 1; i >= 0; i--) {
-    const id = ids![i]!;
-    if (nodes[id]?.type === type) return id;
-  }
-  return undefined;
-}
-
-/**
- * Where a new component should go so page content stacks naturally: the last column of the
- * last grid of the last container of the frame's last section. Undefined when there is none.
- */
-export function findAppendColumn(nodes: Nodes, root: string[]): string | undefined {
-  const section = lastOfType(nodes, root, 'section');
-  if (!section || root[root.length - 1] !== section) return undefined;
-  const container = lastOfType(nodes, nodes[section]?.children, 'container');
-  const grid = lastOfType(nodes, container ? nodes[container]?.children : undefined, 'grid');
-  return lastOfType(nodes, grid ? nodes[grid]?.children : undefined, 'column');
-}
-
 /** Immutably append `childId` to the children of `parentId`. */
 export function appendChild(nodes: Nodes, parentId: string, childId: string): Nodes {
   const parent = nodes[parentId];

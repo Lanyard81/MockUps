@@ -87,3 +87,29 @@ Empty sections, containers, grids and columns get a dashed outline and label in 
 - Duplicate element ids: several form components use fixed ids (`f-text`, `main-nav` and so on). Adding the same component twice repeats an id. To be made unique at render time (Milestone 4).
 - Only the first `#main-nav` is wired by the NSW script.
 - The NSW Government waratah logo is not in the package: the header uses a labelled placeholder.
+
+## 016: Layered tree with explicit depths
+
+Every node has a depth (section 1, container 2, grid 3, column 4, component 5; full-width components are 1). A node's parent is always one level shallower, so `canContain` is one comparison. New content that lands on a shallower level gets the missing layers created around it (`buildChain`), which is how "drop on empty space makes a section" works. All of this is pure code in `src/layout/ops.ts`.
+
+## 017: Where new content goes (click, paste)
+
+`resolveInsertion` takes an anchor (the selection, else the last thing in the frame). If the anchor is as deep as the new node or deeper, the new node goes after the ancestor at its level. If shallower, it goes into the last child at each level down. Click-to-add and paste therefore stack content like a page, and follow the selection.
+
+## 018: Drag is pointer events on the window, with a drop target computed from geometry
+
+`canvas/drag.ts` runs one drag loop: pointer moves update a ghost label directly and recalculate the drop target at most once per animation frame (`canvas/dropTarget.ts`, which hit-tests inside the frame with `elementFromPoint` and compares sibling rectangles). The document is not touched until release, when a single store action (`dropNew` or `moveNode`) makes the drag one undo step. While dragging, frames ignore the pointer.
+
+**Browser behaviour to remember:** a press that begins inside an iframe keeps sending moves and the release to that iframe's document, even after the pointer leaves it. A drag started in a frame therefore listens on the frame's document as well as the window (converting coordinates back to screen space).
+
+## 019: Selection chrome is drawn outside the frame
+
+Hover, selection and drop indicators are absolutely positioned elements in the editor document over each frame (`FrameOverlay`). They never touch frame content, so they can't change how a mockup looks. Boxes are placed straight on the DOM (no React re-render per move). The selection label sits inside the box's top-left corner so it never covers a neighbour; only its grip is a drag handle.
+
+## 020: Sanitising only when document nodes change
+
+`renderFrameHtml` (which runs DOMPurify) is memoised on `doc.nodes` and the frame's `root`, so hover, selection and drag updates cause no re-sanitising or DOM writes inside frames. An edit still re-sanitises every frame; the unchanged ones skip the DOM write because their HTML string is identical. A per-frame subtree cache is the next step if this shows up with 10+ big frames.
+
+## 021: Edit-mode press = select, move = drag
+
+In Edit mode a press inside a frame records the item under the pointer. Release without moving selects it. Moving more than 4px picks it up, or picks up the current selection if the press was inside it (so a section chosen from the breadcrumb can be dragged by grabbing inside it). Columns are selectable but not draggable. Deleting a column only empties it, because a grid keeps its columns.

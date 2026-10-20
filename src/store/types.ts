@@ -53,3 +53,33 @@ export interface MockupDoc {
   nodes: Record<string, DocNode>;
   images: Record<string, { dataUrl: string; alt: string }>;
 }
+
+// ---- UI-only types (never saved) ----
+
+/** What is being dragged. */
+export type DragPayload =
+  | { kind: 'new-component'; componentId: string; variantId: string; label: string }
+  | { kind: 'new-layout'; block: 'section' | 'container' | 'grid'; columns?: number; label: string }
+  | { kind: 'move'; nodeId: string; label: string };
+
+export interface IndicatorRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** Where a drop would land, with the geometry to draw it (in frame coordinates). */
+export interface DropTarget {
+  frameId: string;
+  parentId: string | null;
+  index: number;
+  chainFrom: number | null;
+  /** A line between items, or a box over an empty container. */
+  indicator: { kind: 'line' | 'box'; rect: IndicatorRect; parent?: IndicatorRect };
+}
+
+export interface Clipboard {
+  nodes: Record<string, DocNode>;
+  rootId: string;
+}

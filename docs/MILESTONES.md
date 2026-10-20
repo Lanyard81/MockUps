@@ -37,12 +37,14 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 3: Drag, drop and the layout model
 
-- [ ] Drag from library with ghost preview and drop indicator
-- [ ] Auto-create a section when dropping into empty space
-- [ ] Reorder and move items between columns, sections and frames
-- [ ] Selection with hover outlines, breadcrumb, Esc to select parent
-- [ ] Delete, duplicate, copy/paste, Alt+↑/↓
-- [ ] Undo/redo for every tree change (one drag = one entry)
+- [x] Drag from the library (components and layout blocks) with a ghost label and a drop indicator
+- [x] Drop indicator: a line between items, a highlighted empty column, and the target container outlined
+- [x] Dropping into empty space (below content, between sections, or an empty frame) creates a section automatically
+- [x] Drag existing items to reorder, move between columns and sections, or move to another frame
+- [x] Click to select; hover outlines; breadcrumb Frame › Section › Grid › Column › Component; Esc selects the parent, then the frame, then nothing
+- [x] Delete/Backspace, ⌘/Ctrl+D, copy and paste (within and between frames), Alt+↑/↓
+- [x] Undo/redo for every tree change; one drag is one history entry; Esc cancels a drag
+- [x] Tests: tree operations and store actions (Vitest); drag, select and shortcuts (Playwright)
 
 ## Milestone 4: Editing text and properties
 

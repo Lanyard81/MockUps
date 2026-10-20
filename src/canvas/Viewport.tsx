@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { clampZoom, zoomAt } from '../lib/geometry';
 import { useStore } from '../store/store';
+import { Breadcrumb } from './Breadcrumb';
 import { Frame } from './Frame';
 import { setCanvasHandlers, type ForwardedWheel } from './input';
 
@@ -13,6 +14,8 @@ export function Viewport() {
   const frames = useStore((s) => s.doc.frames);
   const panning = useStore((s) => s.panning);
   const fitted = useStore((s) => s.fitted);
+  const dragging = useStore((s) => s.drag !== null);
+  const droppable = useStore((s) => s.dropTarget !== null);
 
   // Track the viewport size so "Zoom to fit" knows how much room there is.
   useEffect(() => {
@@ -96,7 +99,7 @@ export function Viewport() {
   return (
     <div
       ref={ref}
-      className={`viewport${panning ? ' viewport--panning' : ''}`}
+      className={`viewport${panning ? ' viewport--panning' : ''}${dragging ? (droppable ? ' viewport--drop' : ' viewport--nodrop') : ''}`}
       onPointerDown={onPointerDown}
       onAuxClick={(e) => e.preventDefault()}
       data-testid="viewport"
@@ -128,6 +131,7 @@ export function Viewport() {
           </p>
         </div>
       )}
+      <Breadcrumb />
       <div className="canvas-hint">
         Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a frame name to move it
       </div>

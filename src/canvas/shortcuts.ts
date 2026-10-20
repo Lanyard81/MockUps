@@ -30,9 +30,19 @@ export function handleKeyDown(e: KeyboardEvent) {
   } else if (mod && key === 'y') {
     e.preventDefault();
     s.redo();
-  } else if (mod && key === 'd' && s.selectedFrameId) {
+  } else if (mod && key === 'd' && (s.selectedNodeId || s.selectedFrameId)) {
     e.preventDefault();
-    s.duplicateFrame(s.selectedFrameId);
+    if (s.selectedNodeId) s.duplicateNode(s.selectedNodeId);
+    else if (s.selectedFrameId) s.duplicateFrame(s.selectedFrameId);
+  } else if (mod && key === 'c' && s.selectedNodeId) {
+    e.preventDefault();
+    s.copyNode(s.selectedNodeId);
+  } else if (mod && key === 'v' && s.clipboard) {
+    e.preventDefault();
+    s.pasteClipboard();
+  } else if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && s.selectedNodeId) {
+    e.preventDefault();
+    s.moveSelected(e.key === 'ArrowUp' ? -1 : 1);
   } else if (mod && (key === '=' || key === '+')) {
     e.preventDefault();
     s.setView(zoomStep(s.doc.view, 1.25, s.viewport));
@@ -42,11 +52,12 @@ export function handleKeyDown(e: KeyboardEvent) {
   } else if (mod && key === '0') {
     e.preventDefault();
     s.zoomToFit();
-  } else if ((key === 'delete' || key === 'backspace') && s.selectedFrameId) {
+  } else if ((key === 'delete' || key === 'backspace') && (s.selectedNodeId || s.selectedFrameId)) {
     e.preventDefault();
-    s.deleteFrame(s.selectedFrameId);
+    if (s.selectedNodeId) s.deleteNode(s.selectedNodeId);
+    else if (s.selectedFrameId) s.deleteFrame(s.selectedFrameId);
   } else if (key === 'escape') {
-    s.selectFrame(null);
+    s.selectParent();
   }
 }
 

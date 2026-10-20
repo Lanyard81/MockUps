@@ -7,6 +7,7 @@ import {
   type Category,
 } from '../catalogue';
 import { getThumbnail } from '../catalogue/thumbnails';
+import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
 import { useStore } from '../store/store';
 
 type Filter = Category | 'All';
@@ -158,7 +159,18 @@ function Tile({
       className="tile"
       disabled={!frameId}
       title={`Add “${component.name} – ${variant.label}”`}
-      onClick={() => frameId && useStore.getState().addComponent(frameId, component.id, variant.id)}
+      onPointerDown={(e) =>
+        beginPendingDrag(e, {
+          kind: 'new-component',
+          componentId: component.id,
+          variantId: variant.id,
+          label: `${component.name} · ${variant.label}`,
+        })
+      }
+      onClick={() => {
+        if (consumeDragClick()) return;
+        if (frameId) useStore.getState().addComponent(frameId, component.id, variant.id);
+      }}
     >
       <span className="tile__thumb">
         {src ? (
@@ -176,65 +188,85 @@ function Tile({
 
 const GRID_ICONS: Record<number, number[]> = { 1: [12], 2: [6, 6], 3: [4, 4, 4], 4: [3, 3, 3, 3] };
 
+function BlockTile({
+  frameId,
+  title,
+  label,
+  block,
+  columns,
+  children,
+}: {
+  frameId?: string;
+  title: string;
+  label: string;
+  block: 'section' | 'container' | 'grid';
+  columns?: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      className="tile"
+      disabled={!frameId}
+      title={title}
+      onPointerDown={(e) => beginPendingDrag(e, { kind: 'new-layout', block, columns, label })}
+      onClick={() => {
+        if (consumeDragClick()) return;
+        if (frameId) useStore.getState().addLayoutBlock(frameId, block, columns);
+      }}
+    >
+      <span className="tile__thumb tile__thumb--icon">{children}</span>
+      <span className="tile__label">{label}</span>
+    </button>
+  );
+}
+
 function LayoutBlocks({ frameId }: { frameId?: string }) {
-  const add = (kind: 'section' | 'container' | 'grid', columns?: number) =>
-    frameId && useStore.getState().addLayoutBlock(frameId, kind, columns);
   return (
     <div className="component" data-testid="layout-blocks">
       <div className="component__head">
         <h3 className="component__name">Layout blocks</h3>
       </div>
       <div className="tiles">
-        <button
-          className="tile"
-          disabled={!frameId}
-          onClick={() => add('section')}
+        <BlockTile
+          frameId={frameId}
+          block="section"
+          label="Section"
           title="Add a full-width section"
         >
-          <span className="tile__thumb tile__thumb--icon">
-            <svg viewBox="0 0 64 40" aria-hidden="true">
-              <rect x="2" y="6" width="60" height="28" rx="2" />
-              <rect x="12" y="14" width="40" height="12" rx="1" className="fill" />
-            </svg>
-          </span>
-          <span className="tile__label">Section</span>
-        </button>
-        <button
-          className="tile"
-          disabled={!frameId}
-          onClick={() => add('container')}
+          <svg viewBox="0 0 64 40" aria-hidden="true">
+            <rect x="2" y="6" width="60" height="28" rx="2" />
+            <rect x="12" y="14" width="40" height="12" rx="1" className="fill" />
+          </svg>
+        </BlockTile>
+        <BlockTile
+          frameId={frameId}
+          block="container"
+          label="Container"
           title="Add a container (nsw-container)"
         >
-          <span className="tile__thumb tile__thumb--icon">
-            <svg viewBox="0 0 64 40" aria-hidden="true">
-              <rect x="14" y="4" width="36" height="32" rx="2" />
-              <rect x="20" y="12" width="24" height="6" rx="1" className="fill" />
-            </svg>
-          </span>
-          <span className="tile__label">Container</span>
-        </button>
+          <svg viewBox="0 0 64 40" aria-hidden="true">
+            <rect x="14" y="4" width="36" height="32" rx="2" />
+            <rect x="20" y="12" width="24" height="6" rx="1" className="fill" />
+          </svg>
+        </BlockTile>
         {[1, 2, 3, 4].map((n) => (
-          <button
+          <BlockTile
             key={n}
-            className="tile"
-            disabled={!frameId}
-            onClick={() => add('grid', n)}
+            frameId={frameId}
+            block="grid"
+            columns={n}
+            label={`${n} column${n > 1 ? 's' : ''}`}
             title={`Add a grid with ${n} column${n > 1 ? 's' : ''}`}
           >
-            <span className="tile__thumb tile__thumb--icon">
-              <svg viewBox="0 0 64 40" aria-hidden="true">
-                {GRID_ICONS[n]!.map((span, i, all) => {
-                  const total = 56 - (all.length - 1) * 4;
-                  const w = (total * span) / 12;
-                  const x = 4 + all.slice(0, i).reduce((acc, sp) => acc + (total * sp) / 12 + 4, 0);
-                  return <rect key={i} x={x} y="6" width={w} height="28" rx="2" className="fill" />;
-                })}
-              </svg>
-            </span>
-            <span className="tile__label">
-              {n} column{n > 1 ? 's' : ''}
-            </span>
-          </button>
+            <svg viewBox="0 0 64 40" aria-hidden="true">
+              {GRID_ICONS[n]!.map((span, i, all) => {
+                const total = 56 - (all.length - 1) * 4;
+                const w = (total * span) / 12;
+                const x = 4 + all.slice(0, i).reduce((acc, sp) => acc + (total * sp) / 12 + 4, 0);
+                return <rect key={i} x={x} y="6" width={w} height="28" rx="2" className="fill" />;
+              })}
+            </svg>
+          </BlockTile>
         ))}
       </div>
     </div>

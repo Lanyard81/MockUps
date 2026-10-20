@@ -1,9 +1,11 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
 import { DEVICES, type Frame as FrameModel } from '../store/types';
 import { FRAME_SHELL } from './nswAssets';
+import { FrameOverlay } from './FrameOverlay';
 import { attachFrameInput } from './input';
+import { registerFrameElement } from './registry';
 
 interface Props {
   frame: FrameModel;
@@ -18,13 +20,21 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   const [ready, setReady] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const renameRequest = useStore((s) => s.renameRequest);
-  const html = useStore((s) => renderFrameHtml(s.doc.nodes, frame.root));
+  // Sanitising is the costly part of rendering, so only redo it when the document nodes change,
+  // not on every store update (hover, selection and drag state change constantly).
+  const nodes = useStore((s) => s.doc.nodes);
+  const html = useMemo(() => renderFrameHtml(nodes, frame.root), [nodes, frame.root]);
   const height = useStore((s) => s.frameHeights[frame.id] ?? DEVICES[frame.device].screenHeight);
   const selected = useStore((s) => s.selectedFrameId === frame.id);
-  const interactive = useStore((s) => !s.panning);
+  const interactive = useStore((s) => !s.panning && s.drag === null);
   const mode = useStore((s) => s.mode);
   const store = useStore;
   const screenHeight = DEVICES[frame.device].screenHeight;
+
+  useEffect(() => {
+    registerFrameElement(frame.id, iframeRef.current);
+    return () => registerFrameElement(frame.id, null);
+  }, [frame.id]);
 
   const onLoad = useCallback(() => {
     const doc = iframeRef.current?.contentDocument;
@@ -139,6 +149,10 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
           style={{ pointerEvents: interactive ? 'auto' : 'none' }}
           data-mode={mode}
         />
+        <FrameOverlay
+          frameId={frame.id}
+          layoutKey={`${html.length}:${height}:${frame.width}:${ready}`}
+        />
         {height > screenHeight && (
           <div className="frame__fold" style={{ top: screenHeight }}>
             <span>Fold · {screenHeight}px</span>
@@ -147,7 +161,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         {frame.root.length === 0 && ready && (
           <div className="frame__empty">
             <strong>This frame is empty</strong>
-            <span>Click a component in the library to add it here.</span>
+            <span>Drag a component here from the library, or click one to add it.</span>
           </div>
         )}
       </div>

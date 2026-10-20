@@ -1,4 +1,7 @@
+import { isDraggable, isWithin } from '../layout/ops';
+import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
+import { DRAG_THRESHOLD, startDrag } from './drag';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
 
 export interface ForwardedWheel {
@@ -59,15 +62,74 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     }
   });
 
+  const nodeIdAt = (target: EventTarget | null) =>
+    (target as Element | null)?.closest?.('[data-node]')?.getAttribute('data-node') ?? null;
+
+  // Edit mode: hover outlines.
+  doc.addEventListener('pointermove', (e) => {
+    const s = useStore.getState();
+    if (s.mode !== 'edit' || s.drag) return;
+    const id = nodeIdAt(e.target);
+    s.setHover(id ? { frameId, nodeId: id } : null);
+  });
+  doc.documentElement.addEventListener('pointerleave', () => useStore.getState().setHover(null));
+
+  // Edit mode: press selects; press and move picks the thing up.
+  doc.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    const s0 = useStore.getState();
+    if (s0.mode !== 'edit') return;
+    e.preventDefault();
+    // preventDefault also stops the usual blur, so release keyboard focus from any editor input.
+    (iframe.ownerDocument.activeElement as HTMLElement | null)?.blur?.();
+    iframe.ownerDocument.defaultView?.focus();
+    const id = nodeIdAt(e.target);
+    const origin = toScreen(e.clientX, e.clientY);
+
+    // Grabbing inside the selected item moves the selection (so a section can be dragged once picked
+    // from the breadcrumb); otherwise the innermost item under the pointer moves.
+    const sel = s0.selectedFrameId === frameId ? s0.selectedNodeId : null;
+    const dragId = id && sel && isWithin(s0.doc, id, sel) ? sel : id;
+    const node = dragId ? s0.doc.nodes[dragId] : undefined;
+    const canDrag = !!node && isDraggable(node);
+
+    let started = false;
+    const cleanup = () => {
+      doc.removeEventListener('pointermove', move);
+      doc.removeEventListener('pointerup', up);
+      doc.removeEventListener('pointercancel', cleanup);
+    };
+    const move = (ev: PointerEvent) => {
+      const p = toScreen(ev.clientX, ev.clientY);
+      if (started || !canDrag || Math.hypot(p.x - origin.x, p.y - origin.y) < DRAG_THRESHOLD)
+        return;
+      started = true;
+      cleanup();
+
+      useStore.getState().selectNode(frameId, dragId);
+      startDrag(
+        { kind: 'move', nodeId: dragId!, label: nodeLabel(node) },
+        { clientX: p.x, clientY: p.y },
+        iframe,
+      );
+    };
+    const up = () => {
+      cleanup();
+      if (!started) useStore.getState().selectNode(frameId, id);
+    };
+    doc.addEventListener('pointermove', move);
+    doc.addEventListener('pointerup', up);
+    doc.addEventListener('pointercancel', cleanup);
+  });
+
   doc.addEventListener(
     'click',
     (e) => {
       const store = useStore.getState();
       if (store.mode === 'edit') {
-        // Edit mode: nothing in the mockup runs; clicks select.
+        // Edit mode: nothing in the mockup runs. Selection is handled on pointer down.
         e.preventDefault();
         e.stopPropagation();
-        store.selectFrame(frameId);
         return;
       }
       // Preview mode: components are live, but links must not navigate the frame away.

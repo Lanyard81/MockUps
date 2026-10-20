@@ -63,6 +63,10 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 
 **Images**: keyed by `img_…` id, deduplicated by content. Saved files embed `dataUrl`; in the browser they are also kept in IndexedDB.
 
+## Tree rules
+
+Each node type has a depth, and a node's parent is always exactly one level shallower: frame root 0 › section 1 › container 2 › grid 3 › column 4 › component 5. Full-width components (masthead, header, footer, hero banner, global alert and so on) have depth 1 and live in the frame root beside sections. Columns can't be moved or deleted on their own (deleting empties them). Loading code must reject files that break these rules rather than render them.
+
 ## Components
 
 `componentId` is a catalogue id (`button`, `card`, `hero-banner` and so on, see `src/catalogue/sources/`). `variant` is a variant id from that component (`dark`, `dark-outline`, `headline`). If `variant` is missing, the component's default variant is used. A node whose `componentId` is not in the catalogue renders as an "Unknown component" placeholder, so files from newer versions open without crashing.

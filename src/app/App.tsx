@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { DragGhost } from '../canvas/DragGhost';
 import { Viewport } from '../canvas/Viewport';
 import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
@@ -38,6 +39,7 @@ export function App() {
       <FrameBar />
       <Library />
       <Viewport />
+      <DragGhost />
     </div>
   );
 }

@@ -21,6 +21,8 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 
 ## Rules that must not be broken
 
+0. **Tree rules live in `src/layout/ops.ts`.** Pure functions only; test every new rule in `tests/ops.test.ts`. UI code asks `canContain` / `resolveInsertion` and never reimplements them.
+
 1. **All document changes go through store actions** (`src/store/store.ts`). Components never mutate or `set` document state directly. Pure tree logic lives in `src/layout/` and is called by actions.
 2. **Never break undo.** Every document change is one history entry via `commit()`. A continuous gesture (drag, text edit session) is one entry: call `beginGesture()` once, then apply live updates. View changes (pan and zoom) are not history. History is capped at 100.
 3. **Real NSW markup only.** Catalogue snippets in `src/catalogue/sources/` use official classes only; `npm run catalogue` rejects any class not in the installed `main.css`. Commit the regenerated `generated/catalogue.json` whenever sources change. Use official NSW classes and markup unchanged. Never restyle or recreate NSW components with custom CSS. The only CSS injected into a frame is the plumbing in `src/canvas/nswAssets.ts` (`FRAME_CSS`) and editor affordances that don't alter component appearance.
@@ -35,7 +37,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 - Ids: `newId('prefix')` from `src/lib/ids.ts` (prefixes: `doc`, `f` frame, `n` node, `img`).
 - Editor design: warm, flat, neutral. Colours, radii and spacing are CSS custom properties on `:root` in `src/styles/theme.css`. No glassmorphism or heavy shadows.
 - Each dependency is recorded with its reason in `docs/DECISIONS.md`.
-- Drag and drop uses plain pointer events (no DnD library). Use `requestAnimationFrame` for drag updates and avoid re-rendering whole frames per change.
+- Drag and drop uses plain pointer events (no DnD library). Hover, selection and drop state are UI-only store fields: they must never enter history or cause frames to re-render. A press that begins in an iframe keeps its events there, so drag code listens on the source frame's document too. Use `requestAnimationFrame` for drag updates and avoid re-rendering whole frames per change.
 
 ## Document model
 
