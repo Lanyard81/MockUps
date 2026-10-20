@@ -1,1 +1,65 @@
-# MockUps
+# NSW Mockup Builder
+
+A browser-based tool for making screen mockups from the official [NSW Government Design System](https://designsystem.nsw.gov.au). Drag real NSW components onto device frames, edit their text and options, then save and share the screens.
+
+**Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
+
+> Status: Milestones 0 and 1 are done (project scaffolding, canvas and device frames). The component library, drag and drop and editing arrive in later milestones. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
+
+## Run it locally
+
+You need Node.js 22 or later.
+
+```bash
+npm install
+npm run dev        # http://localhost:5173/MockUps/
+```
+
+Other scripts:
+
+| Script                 | What it does                                                        |
+| ---------------------- | ------------------------------------------------------------------- |
+| `npm run lint`         | ESLint                                                              |
+| `npm run format`       | Prettier (write). `format:check` only checks                        |
+| `npm run typecheck`    | TypeScript in strict mode                                           |
+| `npm test`             | Vitest unit tests                                                   |
+| `npm run test:e2e`     | Playwright end-to-end tests (builds the site first)                 |
+| `npm run build`        | GitHub Pages build into `dist/`                                     |
+| `npm run build:single` | Single self-contained file at `dist-single/nsw-mockup-builder.html` |
+
+Playwright needs a Chromium. Run `npx playwright install chromium`, or point `PW_CHROMIUM` at an existing binary.
+
+## The single-file version
+
+`npm run build:single` produces `dist-single/nsw-mockup-builder.html`. The app, NSW CSS and JavaScript, fonts and icons are all inlined, so you can open it straight from disk with no internet connection. Every push to `main` uploads it as a build artifact in GitHub Actions, and pushing a version tag (for example `v0.1.0`) attaches it to a GitHub Release.
+
+## Deploying
+
+CI (`.github/workflows/ci.yml`) runs lint, formatting, type-check, unit tests and end-to-end tests, then deploys to GitHub Pages from `main`.
+
+One-off setup: in the repository go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+
+Vite's `base` is `/MockUps/` (the repository name). If you rename the repository, update the default in `vite.config.ts` and `playwright.config.ts`. The deploy job sets it automatically from the repository name.
+
+## Updating the NSW Design System
+
+```bash
+npm install nsw-design-system@latest
+npm run catalogue     # regenerates the component catalogue (from Milestone 2)
+npm test && npm run test:e2e
+```
+
+Frames load the CSS and JavaScript from the installed package, so upgrading the package upgrades every mockup. Check `docs/NSW-DESIGN-SYSTEM.md` for components that need attention after an upgrade.
+
+## Documentation
+
+- [`CLAUDE.md`](CLAUDE.md): conventions for working on this repository
+- [`docs/MILESTONES.md`](docs/MILESTONES.md): the plan and progress
+- [`docs/DECISIONS.md`](docs/DECISIONS.md): architecture decisions and dependencies
+- [`docs/DATA-MODEL.md`](docs/DATA-MODEL.md): the mockup JSON format
+- [`docs/NSW-DESIGN-SYSTEM.md`](docs/NSW-DESIGN-SYSTEM.md): notes on the design system
+- [`docs/BUILD-PROMPT.md`](docs/BUILD-PROMPT.md): the original build brief
+
+## Licence
+
+MIT. Includes the NSW Design System (MIT), Public Sans (SIL OFL) and Material Icons (Apache 2.0). See [`LICENSE`](LICENSE).

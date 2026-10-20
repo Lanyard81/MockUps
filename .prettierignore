@@ -1,0 +1,7 @@
+dist
+dist-single
+node_modules
+package-lock.json
+src/catalogue/generated
+docs/BUILD-PROMPT.md
+docs/NSW-DESIGN-SYSTEM.md

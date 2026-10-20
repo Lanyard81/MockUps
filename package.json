@@ -1,0 +1,50 @@
+{
+  "name": "nsw-mockup-builder",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser-based mockup tool built from the official NSW Design System",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:single": "tsc --noEmit && SINGLE=1 vite build && node scripts/finish-single.mjs",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "catalogue": "tsx scripts/generate-catalogue.ts"
+  },
+  "dependencies": {
+    "@fontsource/public-sans": "^5.3.0",
+    "dompurify": "^3.4.17",
+    "html-to-image": "^1.11.13",
+    "idb-keyval": "^6.3.0",
+    "material-icons": "^1.13.14",
+    "nsw-design-system": "^3.28.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vite": "^8.3.4",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.0.5"
+  }
+}

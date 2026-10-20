@@ -1,0 +1,32 @@
+/* Editor theme tokens. These style the editor UI only; NSW styles live inside frames. */
+:root {
+  --ed-bg: #f6f4f0;
+  --ed-surface: #fffefb;
+  --ed-surface-2: #efece6;
+  --ed-canvas: #e9e5de;
+  --ed-canvas-dot: #d3cdc2;
+  --ed-border: #ddd8cd;
+  --ed-border-strong: #c4bdae;
+  --ed-text: #2b2823;
+  --ed-text-muted: #6d675c;
+  --ed-accent: #1f5fd1;
+  --ed-accent-soft: #dfe9fb;
+  --ed-danger: #b3321f;
+  --ed-danger-soft: #f9e4df;
+  --ed-focus: #1f5fd1;
+
+  --ed-radius-sm: 4px;
+  --ed-radius: 8px;
+  --ed-radius-lg: 12px;
+
+  --ed-space-1: 4px;
+  --ed-space-2: 8px;
+  --ed-space-3: 12px;
+  --ed-space-4: 16px;
+  --ed-space-5: 24px;
+
+  --ed-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ed-font-size: 13px;
+  --ed-toolbar-h: 52px;
+  --ed-framebar-h: 48px;
+}

@@ -1,0 +1,120 @@
+import { zoomStep } from '../canvas/shortcuts';
+import { useStore } from '../store/store';
+import { DEVICES, type DeviceId } from '../store/types';
+import { Menu } from './Menu';
+
+const ZOOM_PRESETS = [25, 50, 75, 100, 150, 200, 300, 400];
+const ADDABLE: DeviceId[] = ['iphone', 'android', 'tablet', 'desktop', 'custom'];
+
+export function Toolbar() {
+  const mode = useStore((s) => s.mode);
+  const setMode = useStore((s) => s.setMode);
+  const canUndo = useStore((s) => s.past.length > 0);
+  const canRedo = useStore((s) => s.future.length > 0);
+  const zoom = useStore((s) => s.doc.view.zoom);
+  const docName = useStore((s) => s.doc.name);
+  const s = useStore;
+  const pct = Math.round(zoom * 100);
+  const options = ZOOM_PRESETS.includes(pct)
+    ? ZOOM_PRESETS
+    : [...ZOOM_PRESETS, pct].sort((a, b) => a - b);
+
+  return (
+    <header className="toolbar">
+      <div className="toolbar__group">
+        <strong className="toolbar__title">NSW Mockup Builder</strong>
+        <span className="toolbar__doc">{docName}</span>
+      </div>
+
+      <div className="toolbar__group">
+        <Menu
+          icon="+"
+          label="Add frame"
+          items={ADDABLE.map((d) => ({
+            label: DEVICES[d].label,
+            hint: d === 'custom' ? 'any width' : `${DEVICES[d].width}px`,
+            onSelect: () => s.getState().addFrame(d),
+          }))}
+        />
+        <button
+          className="btn"
+          disabled={!canUndo}
+          onClick={() => s.getState().undo()}
+          title="Undo (Ctrl/⌘ Z)"
+        >
+          Undo
+        </button>
+        <button
+          className="btn"
+          disabled={!canRedo}
+          onClick={() => s.getState().redo()}
+          title="Redo (Ctrl/⌘ Shift Z)"
+        >
+          Redo
+        </button>
+      </div>
+
+      <div className="segmented" role="group" aria-label="Mode">
+        <button
+          className={mode === 'edit' ? 'is-active' : ''}
+          aria-pressed={mode === 'edit'}
+          onClick={() => setMode('edit')}
+          title="Edit: clicks select things"
+        >
+          Edit
+        </button>
+        <button
+          className={mode === 'preview' ? 'is-active' : ''}
+          aria-pressed={mode === 'preview'}
+          onClick={() => setMode('preview')}
+          title="Preview: components behave live"
+        >
+          Preview
+        </button>
+      </div>
+
+      <div className="toolbar__group zoom">
+        <button
+          className="btn btn--icon"
+          aria-label="Zoom out"
+          onClick={() =>
+            s.getState().setView(zoomStep(s.getState().doc.view, 0.8, s.getState().viewport))
+          }
+        >
+          −
+        </button>
+        <select
+          aria-label="Zoom level"
+          value={pct}
+          onChange={(e) => {
+            const st = s.getState();
+            const centre = { x: st.viewport.width / 2, y: st.viewport.height / 2 };
+            const v = st.doc.view;
+            const next = Number(e.target.value) / 100;
+            const wx = (centre.x - v.x) / v.zoom;
+            const wy = (centre.y - v.y) / v.zoom;
+            st.setView({ zoom: next, x: centre.x - wx * next, y: centre.y - wy * next });
+          }}
+        >
+          {options.map((p) => (
+            <option key={p} value={p}>
+              {p}%
+            </option>
+          ))}
+        </select>
+        <button
+          className="btn btn--icon"
+          aria-label="Zoom in"
+          onClick={() =>
+            s.getState().setView(zoomStep(s.getState().doc.view, 1.25, s.getState().viewport))
+          }
+        >
+          +
+        </button>
+        <button className="btn" onClick={() => s.getState().zoomToFit()}>
+          Zoom to fit
+        </button>
+      </div>
+    </header>
+  );
+}

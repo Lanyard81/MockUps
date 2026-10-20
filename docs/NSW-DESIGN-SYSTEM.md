@@ -145,3 +145,16 @@ At `https://designsystem.nsw.gov.au/templates/`:
 - **Theming**: content only, full page, partial
 - **Landing pages**: events, featured list, hero banner
 - **Kitchen sink**: sticky elements
+
+## Findings from the package (v3.28.1, checked 20 October 2026)
+
+- **Package contents**: `dist/css/main.css` (290 kB), `dist/css/core.css`, `dist/js/main.js` (UMD, 333 kB), plus `src/**/*.scss` and `src/**/*.js`. **There are no component templates, HTML or JSON data in the npm package.** Each `src/components/<slug>/` folder holds only SCSS (and JS for interactive components).
+- **Milestone 2 consequence**: the catalogue generator can't read markup from the package, as the brief assumed. Options: (a) read the upstream repository's component templates at generation time (not reachable from the build sandbox: `raw.githubusercontent.com` returned 404 for the guessed path and the docs site is blocked, so the exact upstream path is unverified); (b) scrape demo markup from the docs site; (c) hand-author the markup in `catalogue/overrides.ts`, validated against the package's SCSS class names (every class in a snippet must exist in `main.css`). See `DECISIONS.md` 009.
+- **Global**: `window.NSW` is exposed by the UMD build. `NSW.initSite()` queries the whole document for `.js-accordion`, `.js-accordion-details`, `.js-tabs` and so on. Component classes are also exported (`NSW.Accordion`, `NSW.Tabs`, `NSW.Dialog`, ...).
+- **Fonts**: `main.css` references the font family names only. Public Sans and Material Icons must be supplied separately. The app bundles woff2 files (see `DECISIONS.md` 002).
+- **Classes confirmed in `main.css`**:
+  - Buttons: `nsw-button` with `--dark`, `--dark-outline`, `--dark-outline-solid`, `--light`, `--light-outline`, `--white`, `--white-outline`, `--danger`, `--info`, plus `--small`, `--flex`, `--full-width`. (There is no `--primary`.)
+  - Sections: `nsw-section` with `--white`, `--off-white`, `--brand-dark`, `--brand-light`, `--brand-supplementary`, `--black`, `--grey-*`, `--box`, `--image`, `--invert`, `--half-padding`, `--no-padding`.
+  - Layout: `nsw-container`, `nsw-container--flush`, `nsw-grid`, `nsw-col`, `nsw-col-1` to `nsw-col-12`.
+  - Accordion: the `<details>` variant uses `.js-accordion-details` with `details.nsw-accordion__item > summary.nsw-accordion__title` and `.nsw-accordion__content-wrap > .nsw-accordion__content`.
+- **Components that can't be generated yet**: none attempted (Milestone 2).
