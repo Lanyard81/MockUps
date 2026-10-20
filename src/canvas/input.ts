@@ -187,6 +187,12 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
         return;
       }
       // Preview mode: components are live, but links must not navigate the frame away.
+      const target = (e.target as Element | null)?.closest?.('[data-goto]');
+      if (target) {
+        e.preventDefault();
+        store.openPrototype(target.getAttribute('data-goto')!);
+        return;
+      }
       const a = (e.target as Element | null)?.closest?.('a[href]');
       if (a && !a.getAttribute('href')?.startsWith('#')) e.preventDefault();
     },

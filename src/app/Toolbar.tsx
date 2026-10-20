@@ -7,7 +7,7 @@ import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
 import { Menu } from './Menu';
 
-const ZOOM_PRESETS = [25, 50, 75, 100, 150, 200, 300, 400];
+const ZOOM_PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
 const ADDABLE: DeviceId[] = ['iphone', 'android', 'tablet', 'desktop', 'custom'];
 
 export function Toolbar() {

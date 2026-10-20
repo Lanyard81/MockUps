@@ -89,3 +89,21 @@ test('an empty frame offers templates and the File menu opens samples', async ({
   await page.getByRole('menuitem', { name: /Sample: Licence renewal/ }).click();
   await expect(frames(page)).toHaveCount(3);
 });
+
+test('Preview follows go-to-frame links in a sample, with Back and Close', async ({ page }) => {
+  await page.getByRole('button', { name: 'File' }).click();
+  await page.getByRole('menuitem', { name: /Sample: Licence renewal/ }).click();
+  await page.getByRole('button', { name: 'Preview', exact: true }).click();
+  const first = page.frameLocator('iframe.frame__iframe').first();
+  await first.locator('[data-goto]').first().click();
+  const viewer = page.getByRole('dialog', { name: /^Preview:/ });
+  await expect(viewer).toBeVisible();
+  const firstTitle = await viewer.locator('.prototype__title').innerText();
+  const inner = viewer.frameLocator('iframe');
+  await inner.locator('[data-goto]').first().click();
+  await expect(viewer.locator('.prototype__title')).not.toHaveText(firstTitle);
+  await viewer.getByRole('button', { name: /Back/ }).click();
+  await expect(viewer.locator('.prototype__title')).toHaveText(firstTitle);
+  await page.keyboard.press('Escape');
+  await expect(viewer).toHaveCount(0);
+});

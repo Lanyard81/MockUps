@@ -17,6 +17,13 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
     ],
   },
   {
+    title: 'Preview',
+    items: [
+      { keys: 'Click a link', action: 'Follow a “go to frame” link (set in Properties)' },
+      { keys: 'Esc', action: 'Close the click-through' },
+    ],
+  },
+  {
     title: 'Select and edit',
     items: [
       { keys: 'Click', action: 'Select what is under the pointer' },

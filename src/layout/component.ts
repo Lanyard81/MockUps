@@ -45,7 +45,19 @@ function retag(el: Element, tag: string): Element {
   return next;
 }
 
-function applyOption(root: ParentNode, opt: OptionDef, value: unknown) {
+function applyOption(root: ParentNode, opt: OptionDef, value: unknown, goto?: unknown) {
+  if (opt.type === 'href' && typeof goto === 'string' && goto) {
+    // A "go to frame" link: a real link in the markup, followed by Preview and by HTML export.
+    let el = root.querySelector(opt.selector);
+    if (el?.tagName === 'BUTTON') {
+      el = retag(el, 'a');
+      el.removeAttribute('type');
+      el.removeAttribute('disabled');
+    }
+    el?.setAttribute('href', '#');
+    el?.setAttribute('data-goto', goto);
+    return;
+  }
   if (value === undefined || value === null || value === false || value === '') return;
   const els = Array.from(root.querySelectorAll(opt.selector));
   switch (opt.type) {
@@ -153,7 +165,7 @@ export function renderComponent(node: DocNode, images: Images): string {
   const props = asRecord(node.props);
 
   // Options first: some retag elements, and the rest of the steps look elements up afterwards.
-  for (const opt of comp.options) applyOption(root, opt, props[opt.key]);
+  for (const opt of comp.options) applyOption(root, opt, props[opt.key], props.goto);
 
   const hidden = Array.isArray(props.hiddenParts) ? props.hiddenParts.map(String) : [];
   for (const key of hidden)

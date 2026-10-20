@@ -12,6 +12,54 @@ import { CommitInput, Field, Section, Toggle, titleCase } from './controls';
 /** A stable empty list: a selector must not return a fresh array each time, or React loops forever. */
 const NO_KEYS: string[] = [];
 
+/** A link's destination: another frame in this mockup (click-through in Preview) or an address. */
+function LinkControl({
+  nodeId,
+  opt,
+  value,
+  set,
+}: {
+  nodeId: string;
+  opt: OptionDef;
+  value: unknown;
+  set: (v: unknown) => void;
+}) {
+  const goto = useStore((s) => s.doc.nodes[nodeId]?.props?.goto);
+  const frames = useStore((s) => s.doc.frames);
+  const target = typeof goto === 'string' ? goto : '';
+  const exists = frames.some((f) => f.id === target);
+  return (
+    <>
+      <Field label="Go to frame">
+        <select
+          aria-label="Go to frame"
+          value={exists ? target : ''}
+          onChange={(e) =>
+            useStore.getState().setNodeProps(nodeId, { goto: e.target.value || undefined })
+          }
+        >
+          <option value="">None (use the address)</option>
+          {frames.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.name}
+            </option>
+          ))}
+        </select>
+      </Field>
+      {!exists && (
+        <Field label={opt.label}>
+          <CommitInput
+            label={opt.label}
+            value={typeof value === 'string' ? value : ''}
+            placeholder="https://… or #"
+            onCommit={(v) => set(v.trim() || undefined)}
+          />
+        </Field>
+      )}
+    </>
+  );
+}
+
 function OptionControl({ nodeId, opt }: { nodeId: string; opt: OptionDef }) {
   const value = useStore((s) => s.doc.nodes[nodeId]?.props?.[opt.key]);
   const set = (v: unknown) => useStore.getState().setNodeProps(nodeId, { [opt.key]: v });
@@ -26,16 +74,7 @@ function OptionControl({ nodeId, opt }: { nodeId: string; opt: OptionDef }) {
         />
       );
     case 'href':
-      return (
-        <Field label={opt.label}>
-          <CommitInput
-            label={opt.label}
-            value={typeof value === 'string' ? value : ''}
-            placeholder="https://… or #"
-            onCommit={(v) => set(v.trim() || undefined)}
-          />
-        </Field>
-      );
+      return <LinkControl nodeId={nodeId} opt={opt} value={value} set={set} />;
     case 'headingLevel':
       return (
         <Field label={opt.label}>

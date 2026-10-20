@@ -1665,3 +1665,36 @@ kbd {
   gap: var(--ed-space-2);
   margin-top: var(--ed-space-2);
 }
+
+/* Preview click-through */
+.prototype {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--ed-canvas);
+}
+.prototype__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ed-space-3);
+  height: 52px;
+  padding: 0 var(--ed-space-4);
+  background: var(--ed-surface);
+  border-bottom: 1px solid var(--ed-border);
+}
+.prototype__title {
+  font-weight: 600;
+}
+.prototype__stage {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+.prototype__stage iframe {
+  border: 0;
+  background: #fff;
+  flex: none;
+}

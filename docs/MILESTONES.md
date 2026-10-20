@@ -90,7 +90,7 @@ Tick items as they are completed. Work stops after each milestone until the user
 - [x] Save as template; my templates
 - [x] Sample mockups
 
-## Milestone 8 (optional, confirm first): Click-through prototypes
+## Milestone 8 (done): Click-through prototypes
 
-- [ ] "Go to frame…" links, back button in Preview
-- [ ] Links in HTML export
+- [x] "Go to frame…" links, back button in Preview
+- [x] Links in HTML export

@@ -95,6 +95,8 @@ interface State {
   fitRequested: boolean;
   /** The keyboard shortcuts sheet is open. */
   helpOpen: boolean;
+  /** Preview's click-through: the frames visited, last is showing. Null when closed. UI-only. */
+  prototype: string[] | null;
   /** A short message for the user (errors from uploads and the like). */
   notice: string | null;
   /** Copied subtree, shared between frames. */
@@ -139,6 +141,11 @@ interface Actions {
   newDoc: () => void;
   renameDoc: (name: string) => void;
   setHelpOpen: (open: boolean) => void;
+  /** Open the click-through viewer on a frame, step to another, go back, or close. */
+  openPrototype: (frameId: string) => void;
+  prototypeGo: (frameId: string) => void;
+  prototypeBack: () => void;
+  closePrototype: () => void;
   setFitWarnings: (frameId: string, warnings: FitWarning[]) => void;
   setFrameHeight: (id: string, height: number) => void;
   setViewport: (width: number, height: number) => void;
@@ -293,6 +300,7 @@ export const useStore = create<Store>((set, get) => ({
   confirm: null,
   fitRequested: true,
   helpOpen: false,
+  prototype: null,
   fitWarnings: {},
   clipboard: null,
   frameHeights: {},
@@ -301,7 +309,7 @@ export const useStore = create<Store>((set, get) => ({
   fitted: false,
   renameRequest: null,
 
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) => set({ mode, prototype: null }),
   selectFrame: (id) => set({ selectedFrameId: id, selectedNodeId: null }),
   selectNode: (frameId, nodeId) => set({ selectedFrameId: frameId, selectedNodeId: nodeId }),
   selectParent: () =>
@@ -394,6 +402,19 @@ export const useStore = create<Store>((set, get) => ({
       return next && next !== s.doc.name ? commit(s, { ...s.doc, name: next }) : s;
     }),
   setHelpOpen: (helpOpen) => set({ helpOpen }),
+  openPrototype: (frameId) =>
+    set((s) => (s.doc.frames.some((f) => f.id === frameId) ? { prototype: [frameId] } : s)),
+  prototypeGo: (frameId) =>
+    set((s) =>
+      s.prototype && s.doc.frames.some((f) => f.id === frameId)
+        ? { prototype: [...s.prototype, frameId] }
+        : s,
+    ),
+  prototypeBack: () =>
+    set((s) =>
+      s.prototype && s.prototype.length > 1 ? { prototype: s.prototype.slice(0, -1) } : s,
+    ),
+  closePrototype: () => set({ prototype: null }),
   setFitWarnings: (frameId, warnings) =>
     set((s) => {
       const prev = s.fitWarnings[frameId] ?? [];

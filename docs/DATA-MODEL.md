@@ -111,3 +111,5 @@ A `.mockup.json` is an envelope:
 `doc` is the document above, with images embedded as data URLs. `templates` are the user's saved templates (`SavedTemplate` in `src/store/types.ts`: a name, a device and width, the `root` ids and `nodes`, and its images). A bare document with no envelope also opens. Everything is validated on the way in (see `DECISIONS.md` 037): a file that breaks the layout rules, is too large, comes from a newer version, or contains anything other than real image data URLs is refused or repaired as described there.
 
 Stored mockups are the same document, validated again each time they are loaded.
+
+`props.goto` (optional, a frame id) on a component with a link option makes the link a click-through to that frame. No version bump: it is an optional prop.

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { clampZoom, fitView, unionRects, zoomAt } from '../src/lib/geometry';
 
 describe('geometry', () => {
-  it('clamps zoom to 25%–400%', () => {
-    expect(clampZoom(0.01)).toBe(0.25);
+  it('clamps zoom to 10%–400%', () => {
+    expect(clampZoom(0.01)).toBe(0.1);
     expect(clampZoom(99)).toBe(4);
     expect(clampZoom(1.5)).toBe(1.5);
   });

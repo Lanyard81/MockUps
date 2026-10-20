@@ -199,3 +199,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 ## 041: Single-file check ignores script bodies
 
 `finish-single.mjs` now blanks the contents of `<script>` elements before looking for external `<link>`, `<script>`, `<img>` and `url()` references. The app's own code contains markup strings (the CDN HTML export writes Google Fonts links into exported pages) that are never loaded by the app itself. Tags in the page, script `src` attributes and CSS `url()` are still checked, and the e2e test opens the file from disk offline.
+
+## 042: Click-through prototypes
+
+- **A link's destination** is `props.goto` (a frame id) on any component with a link option. It is rendered as a real `<a href="#" data-goto="…">`, so the markup is still official NSW. Setting it is the same undoable property change as any other. A link to a frame that has been deleted does nothing in Preview and exports as `#`.
+- **Preview** shows a full-window viewer (`PrototypeViewer`) when a `data-goto` link is clicked: the target frame at full height (scaled down to the window width), with Back along the path taken, Close and Esc. Its state is UI-only (`prototype` in the store) and never enters history; leaving Preview closes it.
+- **HTML export** turns `data-goto` into relative links between the exported pages (already in `export/clean.ts`).
+- **Minimum zoom is now 10%** (was 25%) so a row of three desktop frames, as in the samples, fits on screen.

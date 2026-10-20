@@ -195,7 +195,7 @@ export function validateDoc(raw: unknown): MockupDoc {
     id: str(raw.id, 100) || `doc_${Date.now().toString(36)}`,
     name: str(raw.name) || 'Untitled mockup',
     nswVersion: str(raw.nswVersion, 40) ?? '',
-    view: { x: num(view.x, 80), y: num(view.y, 80), zoom: clamp(num(view.zoom, 1), 0.25, 4) },
+    view: { x: num(view.x, 80), y: num(view.y, 80), zoom: clamp(num(view.zoom, 1), 0.1, 4) },
     frames,
     nodes,
     images: cleanImages(raw.images),
