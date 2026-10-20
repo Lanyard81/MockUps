@@ -3,7 +3,7 @@ import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { DRAG_THRESHOLD, startDrag } from './drag';
 import { setImageFromFile } from '../app/imageUpload';
-import { startTextEdit } from './textEdit';
+import { startSettingEdit, startTextEdit } from './textEdit';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
 
 export interface ForwardedWheel {
@@ -170,6 +170,12 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
   doc.addEventListener('dblclick', (e) => {
     if (useStore.getState().mode !== 'edit') return;
     const target = e.target as Element | null;
+    // A piece of the kit's page chrome (site title, menu item, footer link, page title).
+    const settingPath = target?.closest?.('[data-setting-edit]')?.getAttribute('data-setting-edit');
+    if (settingPath) {
+      startSettingEdit(frameId, settingPath);
+      return;
+    }
     const textRegion = target?.closest?.('[data-edit]');
     const id = nodeIdAt(target);
     const key = textRegion?.getAttribute('data-edit');

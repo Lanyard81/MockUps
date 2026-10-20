@@ -119,3 +119,37 @@ describe('HTML export', () => {
     expect(files[3]!.data).toContain('.nsw-button');
   });
 });
+
+describe('exporting a SharePoint frame', () => {
+  it('is self-contained, carries the kit’s script, has no editor markers, and falls back to inline when asked for a CDN version', async () => {
+    useStore.setState({ doc: createDoc('sharepoint'), past: [], future: [] });
+    const doc = s().doc;
+    for (const mode of ['inline', 'cdn'] as const) {
+      const [page] = await exportHtmlFiles(doc, [doc.frames[0]!], mode);
+      expect(page!.data).toContain('.sp-site{');
+      expect(page!.data).toContain('window.SPK');
+      expect(page!.data).toContain('<footer class="sp-footer');
+      expect(page!.data).not.toMatch(/data-setting-edit|data-node|data-layout|data-variant/);
+      expect(page!.data).not.toMatch(/<link[^>]+href=/);
+      expect(page!.data).not.toContain('nsw-'); // none of the NSW kit leaks in
+    }
+  });
+
+  it('shared assets are written per kit', async () => {
+    useStore.setState({ doc: createDoc(), past: [], future: [] });
+    s().addFrame('desktop', 'sharepoint');
+    const doc = s().doc;
+    const files = await exportHtmlFiles(doc, doc.frames, 'shared');
+    const names = files.map((f) => f.name);
+    expect(names).toEqual(
+      expect.arrayContaining([
+        'assets/nsw.css',
+        'assets/nsw.js',
+        'assets/sharepoint.css',
+        'assets/sharepoint.js',
+      ]),
+    );
+    const page = files.find((f) => f.name.startsWith('desktop'))!;
+    expect(page.data).toContain('assets/sharepoint.css');
+  });
+});

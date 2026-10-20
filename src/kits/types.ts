@@ -51,7 +51,8 @@ export interface KitShell {
 export type SettingDef = (
   | {
       type: 'swatches';
-      options: readonly SettingOption<{ swatch: string }>[];
+      /** `swatch` is a CSS background; it may depend on the settings (e.g. theme colours). */
+      options: readonly SettingOption<{ swatch: string | ((ctx: SettingContext) => string) }>[];
       /** Keep the default value in the document instead of clearing it. */
       keepDefault?: boolean;
     }
@@ -68,6 +69,10 @@ export type SettingDef = (
   group: string;
   hint?: string;
   default?: string | number | boolean;
+  /** The value to show, when it isn't simply the stored one (e.g. a team site always uses the cascading menu). */
+  current?: (ctx: SettingContext) => unknown;
+  /** Where the value is kept: the node's `props` (default) or its `text` (editable in place). */
+  store?: 'props' | 'text';
   /**
    * Hidden or disabled when this returns a reason (a short sentence), so the panel never offers
    * something the kit can't do in that context.
@@ -93,6 +98,10 @@ export interface SettingContext {
   kit: Record<string, unknown>;
   /** The top-level nodes of the frame, for page-wide rules (one vertical section per page, ...). */
   topLevel: DocNode[];
+  /** The node being edited, if the settings are for one. */
+  nodeId?: string;
+  /** The section the node is in (or is), for settings that depend on it. */
+  section?: DocNode;
 }
 
 /** What a kit needs to draw layout nodes and page chrome. */
@@ -116,7 +125,7 @@ export interface SectionLayout {
 
 export interface KitSettings {
   /** Settings per node type (section, container, ...). */
-  node: Partial<Record<LayerType, SettingDef[]>>;
+  node: Partial<Record<NodeType, SettingDef[]>>;
   /** Frame-level settings (e.g. SharePoint site type, header and navigation). */
   frame: SettingDef[];
   /** Document-level settings for this kit (e.g. the SharePoint theme). */
@@ -139,6 +148,8 @@ export interface LayoutBlock {
   title: string;
   /** Where in the tree the block's top node belongs. */
   layer: LayerType;
+  /** A reason this block can't be added to the frame right now (e.g. full-width sections on a team site), or null. */
+  unavailable?: (ctx: Omit<SettingContext, 'values'>) => string | null;
   /** Shapes for the tile's icon, in a 64×40 box. `fill` shapes are drawn solid. */
   icon: { x: number; y: number; width: number; height: number; fill?: boolean }[];
   build: (makeId: (prefix: string) => string) => { nodes: Record<string, DocNode>; rootId: string };
@@ -196,6 +207,8 @@ export interface Kit {
     init: string;
   };
   settings: KitSettings;
+  /** Values frame settings have when unset, for lists a user edits in place (a default menu...). */
+  frameDefaults?: (settings: Record<string, unknown> | undefined) => Record<string, unknown>;
   templates: TemplateDef[];
   templateGroups: readonly string[];
   samples: KitSample[];

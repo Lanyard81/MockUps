@@ -8,8 +8,13 @@ import type { DocNode, MockupDoc } from '../store/types';
 function imagesUsedBy(
   nodes: Record<string, DocNode>,
   images: MockupDoc['images'],
+  settings?: Record<string, unknown>,
 ): MockupDoc['images'] {
   const used: MockupDoc['images'] = {};
+  // Pictures a frame's kit settings use (a SharePoint header image or logo).
+  for (const v of Object.values(settings ?? {})) {
+    if (typeof v === 'string' && v.startsWith('img_') && images[v]) used[v] = images[v]!;
+  }
   for (const node of Object.values(nodes)) {
     const slots = (node.props?.images ?? {}) as Record<string, { imageId?: string }>;
     for (const slot of Object.values(slots)) {
@@ -41,7 +46,7 @@ export async function saveFrameAsTemplate(frameId: string, name: string): Promis
     ...(frame.settings ? { settings: structuredClone(frame.settings) } : {}),
     root: [...frame.root],
     nodes,
-    images: imagesUsedBy(nodes, s.doc.images),
+    images: imagesUsedBy(nodes, s.doc.images, frame.settings),
     thumbnail,
   });
   s.setLeftTab('templates');

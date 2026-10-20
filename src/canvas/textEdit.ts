@@ -31,18 +31,31 @@ export function endTextEdit() {
   active?.finish(true);
 }
 
-export function startTextEdit(frameId: string, nodeId: string, key: string): boolean {
+/** What one editing session edits, and how it ends up in the document. */
+interface EditTarget {
+  frameId: string;
+  /** The element to edit, or null if it isn't there. */
+  find: (doc: Document) => HTMLElement | null;
+  /** Select what is being edited (so the properties panel and overlays follow). */
+  select: () => void;
+  editing: NonNullable<ReturnType<typeof useStore.getState>['editing']>;
+  /** Put the new value in the document. Called once, at the end, for a changed non-empty value. */
+  commit: (value: string) => void;
+  /** Start editing the next (1) or previous (-1) region, or do nothing if there is none. */
+  neighbour: (doc: Document, dir: 1 | -1) => (() => boolean) | null;
+}
+
+function runEdit(target: EditTarget): boolean {
   endTextEdit();
-  const iframe = getFrameElement(frameId);
+  const iframe = getFrameElement(target.frameId);
   const doc = iframe?.contentDocument;
-  const el = doc ? textEl(doc, nodeId, key) : null;
+  const el = doc ? target.find(doc) : null;
   if (!doc || !el) return false;
 
   const multiline = el.hasAttribute('data-multiline');
   const original = readElementText(el);
-  const store = useStore.getState();
-  store.selectNode(frameId, nodeId);
-  store.setEditing({ frameId, nodeId, key });
+  target.select();
+  useStore.getState().setEditing(target.editing);
 
   el.contentEditable = 'plaintext-only';
   if (el.contentEditable !== 'plaintext-only') el.contentEditable = 'true';
@@ -73,7 +86,7 @@ export function startTextEdit(frameId: string, nodeId: string, key: string): boo
     useStore.getState().setEditing(null);
     // An emptied field would leave a region nobody can click, so it counts as a cancel.
     if (commit && value !== '' && value !== original) {
-      useStore.getState().setText(nodeId, key, value);
+      target.commit(value);
       return value;
     }
     return null;
@@ -81,13 +94,9 @@ export function startTextEdit(frameId: string, nodeId: string, key: string): boo
   active = { finish };
 
   const moveTo = (dir: 1 | -1, changed: boolean) => {
-    const host = doc.querySelector(`[data-node="${nodeId}"]`);
-    const all = host ? Array.from(host.querySelectorAll<HTMLElement>('[data-edit]')) : [];
-    const keys = all.map((e) => e.getAttribute('data-edit')!);
-    const next = keys[keys.indexOf(key) + dir];
-    if (!next) return;
+    const go = target.neighbour(doc, dir);
+    if (!go) return;
     // After a change the frame re-renders from the document; wait for that before starting again.
-    const go = () => startTextEdit(frameId, nodeId, next);
     if (changed) requestAnimationFrame(() => requestAnimationFrame(go));
     else go();
   };
@@ -132,6 +141,47 @@ export function startTextEdit(frameId: string, nodeId: string, key: string): boo
   el.addEventListener('paste', onPaste);
   el.addEventListener('blur', onBlur);
   return true;
+}
+
+/** Edit one text region of a component (or a section's own text, such as a collapsible title). */
+export function startTextEdit(frameId: string, nodeId: string, key: string): boolean {
+  return runEdit({
+    frameId,
+    find: (doc) => textEl(doc, nodeId, key),
+    select: () => useStore.getState().selectNode(frameId, nodeId),
+    editing: { frameId, nodeId, key },
+    commit: (value) => useStore.getState().setText(nodeId, key, value),
+    neighbour: (doc, dir) => {
+      const host = doc.querySelector(`[data-node="${nodeId}"]`);
+      const all = host ? Array.from(host.querySelectorAll<HTMLElement>('[data-edit]')) : [];
+      const keys = all.map((e) => e.getAttribute('data-edit')!);
+      const next = keys[keys.indexOf(key) + dir];
+      return next ? () => startTextEdit(frameId, nodeId, next) : null;
+    },
+  });
+}
+
+/**
+ * Edit a piece of a frame's kit settings in place (a site title, a menu item, a footer link, the
+ * page title). `path` is the settings path on the element's `data-setting-edit`, e.g.
+ * `navItems.1.label`. The kit's defaults fill in a list that hasn't been changed yet.
+ */
+export function startSettingEdit(frameId: string, path: string): boolean {
+  const select = `[data-setting-edit="${path}"]`;
+  return runEdit({
+    frameId,
+    find: (doc) => doc.querySelector<HTMLElement>(select),
+    select: () => useStore.getState().selectFrame(frameId),
+    editing: { frameId, nodeId: null, key: path },
+    commit: (value) => useStore.getState().setFrameSettingAt(frameId, path, value),
+    neighbour: (doc, dir) => {
+      const all = Array.from(doc.querySelectorAll<HTMLElement>('[data-setting-edit]')).map((e) =>
+        e.getAttribute('data-setting-edit')!,
+      );
+      const next = all[all.indexOf(path) + dir];
+      return next ? () => startSettingEdit(frameId, next) : null;
+    },
+  });
 }
 
 /** Start editing the first text region of a component (Enter or F2 on a selection). */

@@ -378,3 +378,44 @@ export function setGridColumnCount<T extends Doc>(
   nodes[gridId] = { ...grid, children: columns };
   return { ...doc, nodes };
 }
+
+/**
+ * Change how many columns a node has (1–`max`). Columns that go away give their content to the last
+ * column that stays, so nothing is lost: going from three columns to two moves the third column's
+ * content below the second's, and going to one stacks everything in the first.
+ */
+export function setColumnCount<T extends Doc>(
+  doc: T,
+  parentId: string,
+  count: number,
+  makeId: MakeId,
+  max = 6,
+): T {
+  const parent = doc.nodes[parentId];
+  if (!parent || parent.type === 'component') return doc;
+  const target = Math.min(max, Math.max(1, Math.round(count)));
+  const columns = [...(parent.children ?? [])];
+  if (target === columns.length) return doc;
+  const nodes = { ...doc.nodes };
+
+  if (target > columns.length) {
+    while (columns.length < target) {
+      const id = makeId('n');
+      nodes[id] = { id, type: 'column', children: [] };
+      columns.push(id);
+    }
+  } else {
+    const keep = columns.slice(0, target);
+    const last = nodes[keep[keep.length - 1]!]!;
+    let moved = [...(last.children ?? [])];
+    for (const gone of columns.slice(target)) {
+      moved = [...moved, ...(nodes[gone]?.children ?? [])];
+      delete nodes[gone];
+    }
+    nodes[last.id] = { ...last, children: moved };
+    columns.length = 0;
+    columns.push(...keep);
+  }
+  nodes[parentId] = { ...parent, children: columns };
+  return { ...doc, nodes };
+}

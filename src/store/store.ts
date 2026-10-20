@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { DEFAULT_KIT_ID, getKit } from '../kits';
+import { patchAtPath } from '../lib/settingsPath';
+import { settingContextFor } from '../layout/kitContext';
 import { componentFitsKit, kitMismatchMessage, subtreesFitKit } from '../layout/kitGuard';
 import type { KitId } from '../kits/types';
 import { getComponent, hasVariant } from '../catalogue';
@@ -19,6 +21,7 @@ import {
   canMoveInto,
   removeNode,
   resolveInsertion,
+  setColumnCount,
   setGridColumnCount,
   type Insertion,
 } from '../layout/ops';
@@ -108,7 +111,7 @@ interface State {
   drag: DragPayload | null;
   dropTarget: DropTarget | null;
   /** The text region being edited in place, if any (so overlays can get out of the way). */
-  editing: { frameId: string; nodeId: string; key: string } | null;
+  editing: { frameId: string; nodeId: string | null; key: string } | null;
   /** Text elements per frame that are truncated by "shrink to fit" (UI only). */
   fitWarnings: Record<string, FitWarning[]>;
   contextMenu: ContextMenuState | null;
@@ -230,6 +233,8 @@ interface Actions {
   /** Set a column's width at a breakpoint (null removes the override). */
   setColumnSpan: (columnId: string, bp: BreakpointId, span: number | null) => void;
   setGridColumns: (gridId: string, count: number) => void;
+  /** Change a section's layout (SharePoint: one, two, three columns, one-third left...), moving content as the kit says. */
+  setSectionLayout: (sectionId: string, layoutId: string) => void;
   /** Use an uploaded image (already stored under `image.id`) for an image slot of a component. */
   setImage: (
     nodeId: string,
@@ -247,6 +252,14 @@ interface Actions {
   addPageParts: (frameId: string, part: string) => void;
   /** Change a frame's kit settings (a value of `undefined` clears one). One undo step. */
   setFrameSettings: (frameId: string, patch: Record<string, unknown>) => void;
+  /** Use an uploaded image for a frame setting (a header picture, a logo). The image is stored with the document. One undo step. */
+  setFrameImage: (
+    frameId: string,
+    key: string,
+    image: { id: string; dataUrl: string; name?: string },
+  ) => void;
+  /** Set one value inside a frame's settings by path (e.g. `navItems.1.label`); the kit's defaults fill in a list not changed yet. One undo step. */
+  setFrameSettingAt: (frameId: string, path: string, value: unknown) => void;
   /** Change a kit's document-wide settings, such as the SharePoint theme. One undo step. */
   setKitSettings: (kitId: KitId, patch: Record<string, unknown>) => void;
   /** Alt+↑ / Alt+↓: swap with the previous or next sibling. */
@@ -298,6 +311,22 @@ function newComponentNode(componentId: string, variant: string): DocNode {
     textFit: {},
     hidden: false,
   };
+}
+
+/** Why a layout block can't be added to a frame right now (a kit rule), or null. */
+export function blockUnavailable(
+  doc: MockupDoc,
+  frameId: string,
+  kind: string,
+  columns?: number,
+): string | null {
+  const frame = doc.frames.find((f) => f.id === frameId);
+  if (!frame) return null;
+  const blocks = getKit(frame.kitId).layoutBlocks;
+  const block =
+    blocks.find((b) => b.kind === kind && b.columns === columns) ??
+    blocks.find((b) => b.kind === kind);
+  return block?.unavailable?.(settingContextFor(doc, frameId)) ?? null;
 }
 
 /** Build a layout block of the frame's kit (a section, a column grid...). Null if the kit has no such block. */
@@ -628,6 +657,8 @@ export const useStore = create<Store>((set, get) => ({
     set((s) => {
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
+      const reason = blockUnavailable(s.doc, frame.id, kind, columns);
+      if (reason) return { notice: reason };
       const built = buildLayoutBlock(frame.kitId, kind, columns);
       if (!built) return s;
       return insertLeaf(s, frameId, built.nodes, built.rootId);
@@ -654,6 +685,8 @@ export const useStore = create<Store>((set, get) => ({
         nodes = { [leaf.id]: leaf };
         leafId = leaf.id;
       } else {
+        const reason = blockUnavailable(s.doc, target.frameId, payload.block, payload.columns);
+        if (reason) return { notice: reason };
         const built = buildLayoutBlock(
           s.doc.frames.find((f) => f.id === target.frameId)?.kitId,
           payload.block,
@@ -765,7 +798,13 @@ export const useStore = create<Store>((set, get) => ({
   setText: (nodeId, key, text) =>
     set((s) => {
       const node = s.doc.nodes[nodeId];
-      if (!node || node.type !== 'component') return s;
+      if (!node) return s;
+      // Components hold text. A layout node does only if its kit says so (a collapsible section's title).
+      if (node.type !== 'component') {
+        const frame = s.doc.frames.find((f) => f.id === frameOfNode(s.doc, nodeId));
+        const defs = getKit(frame?.kitId).settings.node[node.type] ?? [];
+        if (!defs.some((d) => d.store === 'text' && d.key === key)) return s;
+      }
       if ((node.text?.[key] ?? null) === text) return s;
       return commit(s, replaceNode(s.doc, { ...node, text: { ...node.text, [key]: text } }));
     }),
@@ -839,7 +878,7 @@ export const useStore = create<Store>((set, get) => ({
   setImage: (nodeId, key, image) =>
     set((s) => {
       const node = s.doc.nodes[nodeId];
-      if (!node || node.type !== 'component') return s;
+      if (!node) return s;
       const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
       const prev = (images[key] as { alt?: string } | undefined) ?? {};
       images[key] = { imageId: image.id, alt: prev.alt ?? '' };
@@ -856,7 +895,7 @@ export const useStore = create<Store>((set, get) => ({
   setImageAlt: (nodeId, key, alt) =>
     set((s) => {
       const node = s.doc.nodes[nodeId];
-      if (!node || node.type !== 'component') return s;
+      if (!node) return s;
       const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
       const prev = (images[key] as { imageId?: string; alt?: string } | undefined) ?? {};
       if ((prev.alt ?? '') === alt) return s;
@@ -867,7 +906,7 @@ export const useStore = create<Store>((set, get) => ({
   clearImage: (nodeId, key) =>
     set((s) => {
       const node = s.doc.nodes[nodeId];
-      if (!node || node.type !== 'component') return s;
+      if (!node) return s;
       const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
       const prev = images[key] as { imageId?: string; alt?: string } | undefined;
       if (!prev?.imageId) return s;
@@ -892,12 +931,66 @@ export const useStore = create<Store>((set, get) => ({
       return commit(s, replaceNode(s.doc, { ...node, hidden }));
     }),
 
+  setSectionLayout: (sectionId, layoutId) =>
+    set((s) => {
+      const section = s.doc.nodes[sectionId];
+      const frameId = frameOfNode(s.doc, sectionId);
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!section || section.type !== 'section' || !frame) return s;
+      const layouts = getKit(frame.kitId).schema.sectionLayouts;
+      const layout = layouts?.find((l) => l.id === layoutId);
+      if (!layout || section.props?.layout === layoutId) return s;
+      const reason = layout.unavailable?.({
+        values: section.props ?? {},
+        ...settingContextFor(s.doc, frame.id, sectionId),
+      });
+      if (reason) return { notice: reason };
+      const resized = setColumnCount(s.doc, sectionId, layout.columns, newId, 3);
+      const node = resized.nodes[sectionId]!;
+      return {
+        ...commit(s, replaceNode(resized, { ...node, props: { ...node.props, layout: layoutId } })),
+        selectedFrameId: frame.id,
+        selectedNodeId: sectionId,
+      };
+    }),
+
   setFrameSettings: (frameId, patch) =>
     set((s) => {
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
       const settings = applyPatch(frame.settings, patch);
       return commit(s, updateFrame(s.doc, frameId, { settings }));
+    }),
+
+  setFrameImage: (frameId, key, image) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const doc = {
+        ...s.doc,
+        images: { ...s.doc.images, [image.id]: { dataUrl: image.dataUrl, name: image.name } },
+      };
+      return commit(
+        s,
+        updateFrame(doc, frameId, { settings: applyPatch(frame.settings, { [key]: image.id }) }),
+      );
+    }),
+
+  setFrameSettingAt: (frameId, path, value) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const patch = patchAtPath(
+        frame.settings,
+        getKit(frame.kitId).frameDefaults?.(frame.settings) ?? {},
+        path,
+        value,
+      );
+      if (!patch) return s;
+      return commit(
+        s,
+        updateFrame(s.doc, frameId, { settings: applyPatch(frame.settings, patch) }),
+      );
     }),
 
   setKitSettings: (kitId, patch) =>

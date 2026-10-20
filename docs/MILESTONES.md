@@ -119,3 +119,15 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Templates follow the library's kit; dropping a template of another kit on a frame says the frame will change kit
 - [x] Minimal SharePoint kit registered (Text web part, one-column section) so switching can be tested end to end
 - [x] Tests: store guards (Vitest); frames in each kit, the library following selection, refused drops, undo (Playwright)
+
+## Milestone S3: SharePoint kit foundations
+
+- [x] Theme: ready-made themes (Blue, Teal, Orange, Red, Purple, Green, Grey, Dark yellow, Dark blue), an editable Organisation theme and a custom theme, all generated into the full set of theme slots; light and dark; a document theme with an optional different theme per frame
+- [x] Site settings per frame: site type (Communication or Team), suite bar, header (Minimal, Compact, Standard, Extended; background; image and overlay; site title; logo, logo thumbnail and logo alignment), navigation (Mega menu or Cascading, up to three levels, editable), footer (Communication only; Simple or Extended; links), page title area (four layouts, alignment, topic, author, date)
+- [x] Text editable in place on the canvas: site title, menu labels, footer links and name, page title, topic, author, date
+- [x] Sections: one, two, three columns, one-third left and right, full width, vertical, flexible (approximation); changing a layout moves content as SharePoint does; backgrounds (None, Neutral, Soft, Strong, Gradient, Image); collapsible sections with title and options, working in Preview
+- [x] Rules enforced and explained: full-width sections need a communication site; one vertical section per page and not with a full-width section; a flexible section can't be changed; footer and mega menu are Communication only
+- [x] Responsive: columns stack and the menu collapses on narrow frames; the vertical section moves below the content
+- [x] Menus open in Preview
+- [ ] Comparison with reference screenshots: none supplied yet; open questions are listed in `SHAREPOINT-OOB.md`
+- [x] Tests: theme generation, site rules, section layouts, column counts, settings paths, rendering and store actions (Vitest); header, theme, site type, section layouts, in-place editing, menus, collapsing and phone layout (Playwright)

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { getKit } from '../../kits';
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
+import { KIT_PANELS } from '../kitPanels';
 import { PageParts } from '../PageParts';
 import { CommitInput, Field, Section } from './controls';
 import { SettingsPanel } from './SettingsPanel';
@@ -19,6 +20,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
   const st = useStore.getState;
   if (!frame) return null;
   const kit = getKit(frame.kitId);
+  const KitFramePanel = KIT_PANELS[kit.id]?.frame;
   const context = { frame: frame.settings ?? NO_VALUES, kit: kitSettings, topLevel };
   return (
     <>
@@ -83,6 +85,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           onChange={(key, value) => st().setFrameSettings(frame.id, { [key]: value })}
         />
       )}
+      {KitFramePanel && <KitFramePanel frameId={frame.id} />}
       {kit.settings.kit.length > 0 && (
         <SettingsPanel
           defs={kit.settings.kit}

@@ -160,8 +160,6 @@ export function contrastRatio(a: Rgb, b: Rgb): number {
   return x / y > 1 ? x / y : y / x;
 }
 
-/** Black or white text, whichever reads better on this background. */
+/** White text if it meets WCAG AA (4.5:1) on this background, otherwise black. SharePoint prefers white on strong colours. */
 export const readableOn = (bg: Rgb): '#000000' | '#ffffff' =>
-  contrastRatio(bg, { r: 0, g: 0, b: 0 }) >= contrastRatio(bg, { r: 255, g: 255, b: 255 })
-    ? '#000000'
-    : '#ffffff';
+  contrastRatio(bg, { r: 255, g: 255, b: 255 }) >= 4.5 ? '#ffffff' : '#000000';

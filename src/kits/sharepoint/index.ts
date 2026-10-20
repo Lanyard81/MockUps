@@ -1,11 +1,13 @@
 import type { Catalogue } from '../../catalogue/types';
 import data from './catalogue/generated/catalogue.json';
-import { buildSpSection } from './blocks';
+import { SP_LAYOUT_BLOCKS } from './blocks';
 import { SP_CATEGORIES } from './categories';
-import { renderSpLayout } from './render';
-import { SP_VERSION } from './version';
+import { renderSpFrame, renderSpLayout } from './render';
+import { SECTION_LAYOUTS } from './sections';
+import { FRAME_SETTINGS, KIT_SETTINGS, SECTION_SETTINGS } from './settings';
 import { spShell } from './shell';
-import { BLUE_THEME, themeVars } from './theme';
+import { defaultNav } from './site';
+import { SP_VERSION } from './version';
 import type { Kit } from '../types';
 
 export const sharepointKit: Kit = {
@@ -25,28 +27,23 @@ export const sharepointKit: Kit = {
     layers: ['section', 'column'],
     defaultProps: (type) => (type === 'section' ? { layout: 'one-column' } : undefined),
     maxChildren: { section: 3 },
+    sectionLayouts: SECTION_LAYOUTS,
   },
   labels: {
     names: { section: 'Section', column: 'Column' },
     empty: { section: 'Empty section', column: 'Empty column' },
   },
   renderLayout: renderSpLayout,
-  renderFrame: (content) =>
-    `<div class="sp-site" style="${themeVars(BLUE_THEME)}"><div class="sp-page">${content}</div></div>`,
-  layoutBlocks: [
-    {
-      kind: 'section',
-      columns: 1,
-      label: 'One column',
-      title: 'Add a one-column section',
-      layer: 'section',
-      icon: [{ x: 4, y: 6, width: 56, height: 28, fill: true }],
-      build: (makeId) => buildSpSection(makeId, 1),
-    },
-  ],
+  renderFrame: renderSpFrame,
+  layoutBlocks: SP_LAYOUT_BLOCKS,
   pageParts: [],
   export: { cdn: null, init: 'window.SPK&&SPK.init()' },
-  settings: { node: {}, frame: [], kit: [] },
+  settings: {
+    node: { section: SECTION_SETTINGS },
+    frame: FRAME_SETTINGS,
+    kit: KIT_SETTINGS,
+  },
+  frameDefaults: (settings) => ({ navItems: defaultNav(settings) }),
   templates: [],
   templateGroups: [],
   samples: [],

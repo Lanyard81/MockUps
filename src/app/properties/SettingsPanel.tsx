@@ -32,7 +32,7 @@ function Control({
               <button
                 key={o.id}
                 className={`swatch${current === o.id ? ' is-active' : ''}`}
-                style={{ background: o.swatch }}
+                style={{ background: typeof o.swatch === 'function' ? o.swatch(ctx) : o.swatch }}
                 aria-pressed={current === o.id}
                 aria-label={o.label}
                 title={why(o) ?? o.title ?? o.label}
@@ -142,7 +142,7 @@ export function SettingsPanel({
   values: Record<string, unknown>;
   /** Everything but `values`: the frame's settings, the kit's settings and the frame's top-level nodes. */
   context: Omit<SettingContext, 'values'>;
-  onChange: (key: string, value: unknown) => void;
+  onChange: (key: string, value: unknown, def: SettingDef) => void;
 }) {
   const ctx: SettingContext = { ...context, values };
   const groups: { title: string; hint?: string; defs: SettingDef[] }[] = [];
@@ -162,10 +162,10 @@ export function SettingsPanel({
               <div key={def.key}>
                 <Control
                   def={def}
-                  value={values[def.key]}
+                  value={def.current ? def.current(ctx) : values[def.key]}
                   disabled={reason !== null}
                   ctx={ctx}
-                  onChange={(v) => onChange(def.key, v)}
+                  onChange={(v) => onChange(def.key, v, def)}
                 />
                 {reason && <p className="prop-hint prop-hint--warn">{reason}</p>}
               </div>

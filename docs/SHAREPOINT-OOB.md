@@ -84,3 +84,19 @@ Agent link, Button, Call to action, Code snippet, Connectors, Conversations (Viv
 - https://learn.microsoft.com/en-us/sharepoint/dev/design/themes-colors
 - https://mc.merill.net/message/MC905757 (custom fonts and themes for site owners)
 - https://www.beyondintranet.com/blog/how-to-customise-theme-header-footer-and-navigation-on-modern-communication-sites/ (navigation and footer)
+
+## Build notes: how the kit differs from real SharePoint (Milestone S3)
+
+Added while building the kit; nothing here has been compared with a tenant yet. No reference screenshots were in `docs/sharepoint-reference/` when this was written, so every item below is a question for the first screenshots.
+
+- **Look**: lookalike, not SharePoint's code. Segoe UI is not bundled; the font stack falls back to the system font, so text widths differ from a real site.
+- **Themes**: Blue is SharePoint's default theme as Microsoft tuned it (Fluent default palette). The other presets (Teal, Orange, Red, Purple, Green, Grey, Dark yellow, Dark blue) use the palette colours listed above and are *generated* from that colour with Fluent UI's shade tables, so their tints may differ slightly from SharePoint's own. Dark themes use a `#1b1a19` background (assumed). Custom and Organisation themes are generated the same way. **Verify** names and colours.
+- **Header**: the four layouts differ in height (48, 56, 80, 128 px; assumed), and the menu is a row below the title except on Minimal, where it shares the row. Header background looks (None, Neutral, Soft, Strong) use themeLighter / neutralLighter / themePrimary; **verify**. Image backgrounds have an overlay percentage but no focal point.
+- **Menu**: Mega menu shows up to three levels in a wide panel (level two as headings, level three listed under them); Cascading opens panels to the side. Team sites always get the left-hand cascading menu. Hub navigation above the header is not built.
+- **Footer**: Simple (one row) and Extended (brand row, then links in four columns); the background uses the same four looks. Up to eight links, one level.
+- **Page title area**: the four layouts are approximations of Image and title, Plain, Colour block and Overlap.
+- **Section layouts**: one, two, three columns, one-third left and right, full width (communication sites), vertical (one per page, not with a full-width section, moves under the content below 1024 px), flexible (**approximation**: web parts wrap and share the row; no free placement or resizing). Columns stack below 640 px (**assumed**).
+- **Section backgrounds**: None, Neutral, Soft, Strong (from the theme), Gradient and Image (with an automatic dark overlay). "Web parts that keep the page background" are not modelled until the web parts exist (S4).
+- **Collapsible sections**: title, heading level (2 to 4), divider, icon side, collapsed by default; they work in Preview and expand in Edit so content can be edited.
+- **Suite bar**: generic and unbranded (app launcher, search, settings, help, initials), always shown in the theme's dark-alt colour.
+- **Icons**: Fluent System Icons (MIT, `@fluentui/svg-icons`), a curated 191 of them, generated into `icons.generated.ts`.

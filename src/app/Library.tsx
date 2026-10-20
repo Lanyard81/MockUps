@@ -9,7 +9,7 @@ import { getThumbnail } from '../catalogue/thumbnails';
 import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
 import { getKit } from '../kits';
 import type { KitId, LayoutBlock } from '../kits/types';
-import { useStore } from '../store/store';
+import { blockUnavailable, useStore } from '../store/store';
 import { KitSwitcher } from './KitSwitcher';
 import { PageParts } from './PageParts';
 import { useLibraryKit } from './useLibraryKit';
@@ -225,11 +225,15 @@ function BlockTile({
   block: LayoutBlock;
   kitId: KitId;
 }) {
+  // A kit rule can rule a block out for this frame (e.g. full-width sections on a team site).
+  const reason = useStore((s) =>
+    frameId ? blockUnavailable(s.doc, frameId, block.kind, block.columns) : null,
+  );
   return (
     <button
       className="tile"
-      disabled={!frameId}
-      title={block.title}
+      disabled={!frameId || reason !== null}
+      title={reason ?? block.title}
       onPointerDown={(e) =>
         beginPendingDrag(e, {
           kind: 'new-layout',

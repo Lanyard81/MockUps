@@ -11,6 +11,9 @@ const EDITOR_ATTRS = [
   'data-multiline',
   'data-fit',
   'data-editing',
+  'data-setting-edit',
+  'data-layout',
+  'data-variant',
   'contenteditable',
 ];
 

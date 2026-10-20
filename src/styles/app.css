@@ -1731,3 +1731,22 @@ kbd {
   gap: var(--ed-space-2);
   margin: 0 0 var(--ed-space-2);
 }
+
+/* Lists edited in Properties (menu links, footer links) */
+.list-editor__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ed-space-1);
+  margin: 0 0 var(--ed-space-2);
+  padding: 0;
+  list-style: none;
+}
+.list-editor__line {
+  display: flex;
+  align-items: center;
+  gap: var(--ed-space-1);
+}
+.list-editor__line input {
+  flex: 1 1 auto;
+  min-width: 0;
+}

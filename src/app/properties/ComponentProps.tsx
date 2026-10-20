@@ -6,6 +6,7 @@ import { describeVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
 import { useStore } from '../../store/store';
 import { ImageField } from './ImageField';
+import { NodeSettings } from './NodeSettings';
 import { IconPicker, type IconValue } from './IconPicker';
 import { CommitInput, Field, Section, Toggle, titleCase } from './controls';
 
@@ -197,6 +198,8 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
           </div>
         )}
       </Section>
+
+      <NodeSettings nodeId={nodeId} frameId={frameId} />
 
       {comp.options.length > 0 && (
         <Section title="Options">
