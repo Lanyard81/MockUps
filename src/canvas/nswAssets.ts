@@ -26,6 +26,10 @@ const FONT_CSS = fontCss();
 const FRAME_CSS = `html{overflow:hidden}body{margin:0}#root{display:flow-root}
 body[data-mode="edit"] [data-empty]{min-height:64px;outline:1px dashed #8a8f98;outline-offset:-1px}
 body[data-mode="edit"]{user-select:none;-webkit-user-select:none}
+body[data-mode="edit"] [contenteditable]{user-select:text;-webkit-user-select:text;cursor:text;outline:2px solid #1f5fd1;outline-offset:2px}
+body[data-mode="edit"] [data-edit]:not([contenteditable]){cursor:default}
+/* NSW cards stretch their link over the whole card; in Edit mode that must not swallow clicks meant for text inside. */
+body[data-mode="edit"] a::after{pointer-events:none}
 body[data-mode="edit"] [data-empty]::before{content:attr(data-empty);display:block;padding:8px 12px;color:#6d675c;font:12px/1.4 system-ui,sans-serif}`;
 
 /**

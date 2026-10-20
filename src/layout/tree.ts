@@ -51,7 +51,7 @@ export interface BuiltTree {
 const col = (id: string, span: number, children: string[] = []): DocNode => ({
   id,
   type: 'column',
-  props: { span },
+  props: { spans: { base: 12, md: span } },
   children,
 });
 

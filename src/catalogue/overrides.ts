@@ -1,4 +1,4 @@
-import type { Category } from './types';
+import type { Category, OptionDef } from './types';
 
 /**
  * Hand-curated data the markup can't express. Applied on top of `sources/` by
@@ -11,23 +11,86 @@ export interface Override {
   keywords?: string[];
   /** Labels for `data-optional` parts, keyed by part key. Falls back to a capitalised key. */
   optionalLabels?: Record<string, string>;
+  /** Properties the user can set. Every selector must match the default variant. */
+  options?: OptionDef[];
   /** Variant shown first and used when a component is added. Defaults to the first variant. */
   defaultVariant?: string;
 }
 
 export const overrides: Record<string, Override> = {
-  button: { keywords: ['cta', 'call to action', 'submit', 'primary', 'secondary'] },
-  link: { keywords: ['anchor', 'hyperlink'] },
+  button: {
+    keywords: ['cta', 'call to action', 'submit', 'primary', 'secondary'],
+    options: [
+      {
+        type: 'toggleClass',
+        key: 'fullWidth',
+        label: 'Full width',
+        selector: '.nsw-button',
+        className: 'nsw-button--full-width',
+      },
+      {
+        type: 'toggleClass',
+        key: 'small',
+        label: 'Small',
+        selector: '.nsw-button',
+        className: 'nsw-button--small',
+      },
+      {
+        type: 'toggleAttr',
+        key: 'disabled',
+        label: 'Disabled',
+        selector: '.nsw-button',
+        attr: 'disabled',
+      },
+      { type: 'icon', key: 'icon', label: 'Icon', selector: '.nsw-button' },
+      { type: 'href', key: 'href', label: 'Link address', selector: '.nsw-button' },
+    ],
+  },
+  link: {
+    keywords: ['anchor', 'hyperlink'],
+    options: [{ type: 'href', key: 'href', label: 'Link address', selector: 'a' }],
+  },
   card: {
     keywords: ['tile', 'teaser', 'promo'],
     optionalLabels: { tag: 'Tag', copy: 'Summary text', date: 'Date', image: 'Image' },
+    options: [
+      { type: 'href', key: 'href', label: 'Link address', selector: '.nsw-card__title a' },
+      {
+        type: 'headingLevel',
+        key: 'level',
+        label: 'Heading level',
+        selector: '.nsw-card__title',
+        default: 3,
+      },
+    ],
   },
   'list-item': {
     keywords: ['result', 'article', 'news'],
     optionalLabels: { label: 'Category label', copy: 'Summary text', date: 'Date', image: 'Image' },
+    options: [
+      { type: 'href', key: 'href', label: 'Link address', selector: '.nsw-list-item__title a' },
+      {
+        type: 'headingLevel',
+        key: 'level',
+        label: 'Heading level',
+        selector: '.nsw-list-item__title',
+        default: 3,
+      },
+    ],
   },
   accordion: { keywords: ['expand', 'collapse', 'faq', 'details'] },
-  callout: { keywords: ['highlight', 'notice', 'important'] },
+  callout: {
+    keywords: ['highlight', 'notice', 'important'],
+    options: [
+      {
+        type: 'headingLevel',
+        key: 'level',
+        label: 'Heading level',
+        selector: '.nsw-callout__content > h2',
+        default: 2,
+      },
+    ],
+  },
   table: { keywords: ['data', 'grid', 'rows', 'columns'] },
   tag: { keywords: ['chip', 'label', 'topic'] },
   'status-labels': { keywords: ['badge', 'status', 'pill'] },
@@ -46,11 +109,22 @@ export const overrides: Record<string, Override> = {
   'hero-banner': {
     keywords: ['banner', 'headline', 'intro', 'splash'],
     optionalLabels: { button: 'Button' },
+    options: [{ type: 'href', key: 'href', label: 'Button link address', selector: '.nsw-button' }],
   },
   'hero-search': { keywords: ['search', 'banner'] },
   'content-block': {
     keywords: ['feature', 'icon', 'teaser'],
     optionalLabels: { icon: 'Icon', link: 'Link' },
+    options: [
+      { type: 'href', key: 'href', label: 'Link address', selector: '.nsw-content-block__link' },
+      {
+        type: 'headingLevel',
+        key: 'level',
+        label: 'Heading level',
+        selector: '.nsw-content-block__title',
+        default: 3,
+      },
+    ],
   },
   'main-nav': { keywords: ['menu', 'navigation', 'primary'] },
   breadcrumbs: { keywords: ['trail', 'path', 'location'] },
@@ -77,7 +151,18 @@ export const overrides: Record<string, Override> = {
     keywords: ['banner', 'announcement', 'emergency', 'critical'],
     optionalLabels: { button: 'Button' },
   },
-  'in-page-alert': { keywords: ['message', 'notification', 'error', 'success', 'warning', 'info'] },
+  'in-page-alert': {
+    keywords: ['message', 'notification', 'error', 'success', 'warning', 'info'],
+    options: [
+      {
+        type: 'headingLevel',
+        key: 'level',
+        label: 'Heading level',
+        selector: '.nsw-in-page-alert__content > h2',
+        default: 2,
+      },
+    ],
+  },
   dialog: { keywords: ['modal', 'confirm', 'popup'] },
   'cookie-consent': { keywords: ['privacy', 'consent', 'cookies'] },
   loader: { keywords: ['spinner', 'loading', 'wait'] },

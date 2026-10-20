@@ -2,6 +2,8 @@ import { isDraggable, isWithin } from '../layout/ops';
 import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { DRAG_THRESHOLD, startDrag } from './drag';
+import { setImageFromFile } from '../app/imageUpload';
+import { startTextEdit } from './textEdit';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
 
 export interface ForwardedWheel {
@@ -68,7 +70,7 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
   // Edit mode: hover outlines.
   doc.addEventListener('pointermove', (e) => {
     const s = useStore.getState();
-    if (s.mode !== 'edit' || s.drag) return;
+    if (s.mode !== 'edit' || s.drag || s.editing) return;
     const id = nodeIdAt(e.target);
     s.setHover(id ? { frameId, nodeId: id } : null);
   });
@@ -79,6 +81,8 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     if (e.button !== 0) return;
     const s0 = useStore.getState();
     if (s0.mode !== 'edit') return;
+    // Clicks inside the text being edited belong to the caret.
+    if ((e.target as Element | null)?.closest?.('[contenteditable]')) return;
     e.preventDefault();
     // preventDefault also stops the usual blur, so release keyboard focus from any editor input.
     (iframe.ownerDocument.activeElement as HTMLElement | null)?.blur?.();
@@ -120,6 +124,34 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     doc.addEventListener('pointermove', move);
     doc.addEventListener('pointerup', up);
     doc.addEventListener('pointercancel', cleanup);
+  });
+
+  // Dropping an image file onto a picture replaces it.
+  const hasFiles = (e: DragEvent) => !!e.dataTransfer?.types.includes('Files');
+  doc.addEventListener('dragover', (e) => {
+    if (hasFiles(e) && useStore.getState().mode === 'edit') e.preventDefault();
+  });
+  doc.addEventListener('drop', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    const store = useStore.getState();
+    if (store.mode !== 'edit') return;
+    const img = (e.target as Element | null)?.closest?.('img[data-image]');
+    const nodeId = nodeIdAt(img ?? null);
+    const key = img?.getAttribute('data-image');
+    const file = e.dataTransfer?.files[0];
+    if (nodeId && key && file) void setImageFromFile(nodeId, key, file);
+    else store.setNotice('Drop the image onto a picture in the mockup to replace it.');
+  });
+
+  // Edit mode: double-click a piece of text to edit it in place.
+  doc.addEventListener('dblclick', (e) => {
+    if (useStore.getState().mode !== 'edit') return;
+    const target = e.target as Element | null;
+    const textRegion = target?.closest?.('[data-edit]');
+    const id = nodeIdAt(target);
+    const key = textRegion?.getAttribute('data-edit');
+    if (id && key) startTextEdit(frameId, id, key);
   });
 
   doc.addEventListener(

@@ -34,7 +34,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "header",
@@ -89,7 +90,8 @@
      "key": "search",
      "label": "Search button"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "footer",
@@ -234,7 +236,8 @@
      "key": "acknowledgement",
      "label": "Acknowledgement of Country"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "hero-banner",
@@ -295,6 +298,14 @@
      "key": "button",
      "label": "Button"
     }
+   ],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Button link address",
+     "selector": ".nsw-button"
+    }
    ]
   },
   {
@@ -334,7 +345,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "content-block",
@@ -387,6 +399,21 @@
     {
      "key": "link",
      "label": "Link"
+    }
+   ],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".nsw-content-block__link"
+    },
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".nsw-content-block__title",
+     "default": 3
     }
    ]
   },
@@ -444,7 +471,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "breadcrumbs",
@@ -484,7 +512,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "side-nav",
@@ -535,7 +564,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "in-page-nav",
@@ -586,7 +616,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "pagination",
@@ -611,7 +642,8 @@
     }
    ],
    "editable": [],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "tabs",
@@ -665,7 +697,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "link-list",
@@ -714,7 +747,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "utility-list",
@@ -764,7 +798,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "back-to-top",
@@ -794,7 +829,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "heading",
@@ -835,7 +871,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "paragraph",
@@ -866,7 +903,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "list",
@@ -907,7 +945,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "button",
@@ -929,55 +968,55 @@
     {
      "id": "dark",
      "label": "Brand Dark",
-     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "dark-outline",
      "label": "Brand Dark Outline",
-     "html": "<button class=\"nsw-button nsw-button--dark-outline\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--dark-outline\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "dark-outline-solid",
      "label": "Brand Dark Outline Solid",
-     "html": "<button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "light",
      "label": "Brand Light",
-     "html": "<button class=\"nsw-button nsw-button--light\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--light\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "light-outline",
      "label": "Brand Light Outline",
-     "html": "<button class=\"nsw-button nsw-button--light-outline\" type=\"button\" data-edit=\"label\">Button</button>",
+     "html": "<button class=\"nsw-button nsw-button--light-outline\" type=\"button\"><span data-edit=\"label\">Button</span></button>",
      "previewBg": "brand-dark"
     },
     {
      "id": "white",
      "label": "White",
-     "html": "<button class=\"nsw-button nsw-button--white\" type=\"button\" data-edit=\"label\">Button</button>",
+     "html": "<button class=\"nsw-button nsw-button--white\" type=\"button\"><span data-edit=\"label\">Button</span></button>",
      "previewBg": "brand-dark"
     },
     {
      "id": "white-outline",
      "label": "White Outline",
-     "html": "<button class=\"nsw-button nsw-button--white-outline\" type=\"button\" data-edit=\"label\">Button</button>",
+     "html": "<button class=\"nsw-button nsw-button--white-outline\" type=\"button\"><span data-edit=\"label\">Button</span></button>",
      "previewBg": "brand-dark"
     },
     {
      "id": "danger",
      "label": "Danger",
-     "html": "<button class=\"nsw-button nsw-button--danger\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--danger\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "info",
      "label": "Info",
-     "html": "<button class=\"nsw-button nsw-button--info\" type=\"button\" data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--info\" type=\"button\"><span data-edit=\"label\">Button</span></button>"
     },
     {
      "id": "disabled",
      "label": "Disabled",
-     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\" disabled data-edit=\"label\">Button</button>"
+     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\" disabled><span data-edit=\"label\">Button</span></button>"
     }
    ],
    "editable": [
@@ -987,7 +1026,42 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": [
+    {
+     "type": "toggleClass",
+     "key": "fullWidth",
+     "label": "Full width",
+     "selector": ".nsw-button",
+     "className": "nsw-button--full-width"
+    },
+    {
+     "type": "toggleClass",
+     "key": "small",
+     "label": "Small",
+     "selector": ".nsw-button",
+     "className": "nsw-button--small"
+    },
+    {
+     "type": "toggleAttr",
+     "key": "disabled",
+     "label": "Disabled",
+     "selector": ".nsw-button",
+     "attr": "disabled"
+    },
+    {
+     "type": "icon",
+     "key": "icon",
+     "label": "Icon",
+     "selector": ".nsw-button"
+    },
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".nsw-button"
+    }
+   ]
   },
   {
    "id": "link",
@@ -1026,7 +1100,15 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": "a"
+    }
+   ]
   },
   {
    "id": "card",
@@ -1118,6 +1200,21 @@
      "key": "date",
      "label": "Date"
     }
+   ],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".nsw-card__title a"
+    },
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".nsw-card__title",
+     "default": 3
+    }
    ]
   },
   {
@@ -1190,6 +1287,21 @@
      "key": "image",
      "label": "Image"
     }
+   ],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".nsw-list-item__title a"
+    },
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".nsw-list-item__title",
+     "default": 3
+    }
    ]
   },
   {
@@ -1246,7 +1358,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "callout",
@@ -1281,7 +1394,16 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": [
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".nsw-callout__content > h2",
+     "default": 2
+    }
+   ]
   },
   {
    "id": "show-more",
@@ -1318,7 +1440,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "table",
@@ -1419,7 +1542,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "tag",
@@ -1454,7 +1578,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "status-labels",
@@ -1499,7 +1624,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "steps",
@@ -1569,7 +1695,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "support-list",
@@ -1600,7 +1727,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "results-bar",
@@ -1626,7 +1754,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "close-button",
@@ -1649,7 +1778,8 @@
     }
    ],
    "editable": [],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "form",
@@ -1712,7 +1842,8 @@
      "key": "helper",
      "label": "Helper text"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "select",
@@ -1752,7 +1883,8 @@
      "key": "helper",
      "label": "Helper text"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "date-input",
@@ -1782,7 +1914,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "date-picker",
@@ -1822,7 +1955,8 @@
      "key": "helper",
      "label": "Helper text"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "file-upload",
@@ -1857,7 +1991,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "filters",
@@ -1903,7 +2038,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "global-alert",
@@ -1924,17 +2060,17 @@
     {
      "id": "default",
      "label": "Default",
-     "html": "<div class=\"nsw-global-alert\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+     "html": "<div class=\"nsw-global-alert\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\"><span data-edit=\"button\">Find out more</span></button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
     },
     {
      "id": "light",
      "label": "Light",
-     "html": "<div class=\"nsw-global-alert nsw-global-alert--light\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+     "html": "<div class=\"nsw-global-alert nsw-global-alert--light\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\"><span data-edit=\"button\">Find out more</span></button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
     },
     {
      "id": "critical",
      "label": "Critical",
-     "html": "<div class=\"nsw-global-alert nsw-global-alert--critical\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+     "html": "<div class=\"nsw-global-alert nsw-global-alert--critical\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\"><span data-edit=\"button\">Find out more</span></button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
     }
    ],
    "editable": [
@@ -1959,7 +2095,8 @@
      "key": "button",
      "label": "Button"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "in-page-alert",
@@ -2012,7 +2149,16 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": [
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".nsw-in-page-alert__content > h2",
+     "default": 2
+    }
+   ]
   },
   {
    "id": "dialog",
@@ -2033,7 +2179,7 @@
     {
      "id": "default",
      "label": "Two actions",
-     "html": "<div class=\"nsw-dialog__wrapper\" role=\"dialog\" aria-modal=\"false\" aria-labelledby=\"dlg-title\"><div class=\"nsw-dialog__top\"><h2 class=\"nsw-dialog__title\" id=\"dlg-title\" data-edit=\"title\">Dialog title</h2><button class=\"nsw-icon-button nsw-dialog__close\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div><div class=\"nsw-dialog__content\"><p data-edit=\"copy\" data-multiline>Explain what the person is being asked to confirm.</p></div><div class=\"nsw-dialog__bottom\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"confirm\">Confirm</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"cancel\">Cancel</button></div></div>"
+     "html": "<div class=\"nsw-dialog__wrapper\" role=\"dialog\" aria-modal=\"false\" aria-labelledby=\"dlg-title\"><div class=\"nsw-dialog__top\"><h2 class=\"nsw-dialog__title\" id=\"dlg-title\" data-edit=\"title\">Dialog title</h2><button class=\"nsw-icon-button nsw-dialog__close\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div><div class=\"nsw-dialog__content\"><p data-edit=\"copy\" data-multiline>Explain what the person is being asked to confirm.</p></div><div class=\"nsw-dialog__bottom\"><button class=\"nsw-button nsw-button--dark\" type=\"button\"><span data-edit=\"confirm\">Confirm</span></button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\"><span data-edit=\"cancel\">Cancel</span></button></div></div>"
     }
    ],
    "editable": [
@@ -2058,7 +2204,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "cookie-consent",
@@ -2079,12 +2226,12 @@
     {
      "id": "default",
      "label": "Banner",
-     "html": "<div class=\"nsw-cookie-banner\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"accept\">Accept all</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"manage\">Manage cookies</button></div></div></div></div>"
+     "html": "<div class=\"nsw-cookie-banner\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\"><span data-edit=\"accept\">Accept all</span></button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\"><span data-edit=\"manage\">Manage cookies</span></button></div></div></div></div>"
     },
     {
      "id": "light",
      "label": "Banner (light)",
-     "html": "<div class=\"nsw-cookie-banner nsw-cookie-banner--light\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"accept\">Accept all</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"manage\">Manage cookies</button></div></div></div></div>"
+     "html": "<div class=\"nsw-cookie-banner nsw-cookie-banner--light\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\"><span data-edit=\"accept\">Accept all</span></button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\"><span data-edit=\"manage\">Manage cookies</span></button></div></div></div></div>"
     }
    ],
    "editable": [
@@ -2109,7 +2256,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "loader",
@@ -2149,7 +2297,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "progress-indicator",
@@ -2179,7 +2328,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "popover",
@@ -2199,7 +2349,7 @@
     {
      "id": "default",
      "label": "Default",
-     "html": "<div class=\"js-popover\" data-popover-id=\"popover-demo\" data-popover-position=\"bottom\"><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-anchor data-edit=\"trigger\">Open popover</button></div><div class=\"nsw-popover\" id=\"popover-demo\" role=\"dialog\"><p data-edit=\"copy\" data-multiline>Popover content goes here.</p></div>"
+     "html": "<div class=\"js-popover\" data-popover-id=\"popover-demo\" data-popover-position=\"bottom\"><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-anchor><span data-edit=\"trigger\">Open popover</span></button></div><div class=\"nsw-popover\" id=\"popover-demo\" role=\"dialog\"><p data-edit=\"copy\" data-multiline>Popover content goes here.</p></div>"
     }
    ],
    "editable": [
@@ -2214,7 +2364,8 @@
      "multiline": true
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "tooltip",
@@ -2244,7 +2395,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "quick-exit",
@@ -2275,7 +2427,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   },
   {
    "id": "media",
@@ -2316,7 +2469,8 @@
      "key": "caption",
      "label": "Caption"
     }
-   ]
+   ],
+   "options": []
   },
   {
    "id": "card-carousel",
@@ -2377,7 +2531,8 @@
      "multiline": false
     }
    ],
-   "optional": []
+   "optional": [],
+   "options": []
   }
  ]
 }

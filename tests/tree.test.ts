@@ -25,7 +25,9 @@ describe('tree', () => {
     const grid = nodes[container.children![0]!]!;
     expect(grid.type).toBe('grid');
     expect(grid.children).toHaveLength(2);
-    expect(grid.children!.map((c) => nodes[c]!.props?.span)).toEqual([6, 6]);
+    expect(
+      grid.children!.map((c) => (nodes[c]!.props?.spans as { md?: number } | undefined)?.md),
+    ).toEqual([6, 6]);
   });
 
   it('collects all descendants', () => {
@@ -45,7 +47,11 @@ describe('tree', () => {
 
   it('builds grids of 1–4 equal columns and containers with one column', () => {
     const g = buildGrid(makeId, 3);
-    expect(g.nodes[g.rootId]!.children!.map((c) => g.nodes[c]!.props?.span)).toEqual([4, 4, 4]);
+    expect(
+      g.nodes[g.rootId]!.children!.map(
+        (c) => (g.nodes[c]!.props?.spans as { md?: number } | undefined)?.md,
+      ),
+    ).toEqual([4, 4, 4]);
     const c = buildContainer(makeId);
     expect(c.nodes[c.rootId]!.type).toBe('container');
   });

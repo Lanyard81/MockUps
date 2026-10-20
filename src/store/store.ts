@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import nswPkg from 'nsw-design-system/package.json';
-import { getComponent } from '../catalogue';
+import { getComponent, hasVariant } from '../catalogue';
+import { readSpans, type BreakpointId } from '../layout/spans';
+import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
 import {
@@ -15,6 +17,7 @@ import {
   canMoveInto,
   removeNode,
   resolveInsertion,
+  setGridColumnCount,
   type Insertion,
 } from '../layout/ops';
 import {
@@ -66,6 +69,12 @@ interface State {
   /** What is being dragged, and where it would drop. Null when no drag is in progress. */
   drag: DragPayload | null;
   dropTarget: DropTarget | null;
+  /** The text region being edited in place, if any (so overlays can get out of the way). */
+  editing: { frameId: string; nodeId: string; key: string } | null;
+  /** Text elements per frame that are truncated by "shrink to fit" (UI only). */
+  fitWarnings: Record<string, FitWarning[]>;
+  /** A short message for the user (errors from uploads and the like). */
+  notice: string | null;
   /** Copied subtree, shared between frames. */
   clipboard: Clipboard | null;
   /** Measured content heights per frame (UI only, not saved). */
@@ -89,6 +98,9 @@ interface Actions {
   setHover: (hover: { frameId: string; nodeId: string } | null) => void;
   setDrag: (drag: DragPayload | null) => void;
   setDropTarget: (target: DropTarget | null) => void;
+  setEditing: (editing: State['editing']) => void;
+  setNotice: (notice: string | null) => void;
+  setFitWarnings: (frameId: string, warnings: FitWarning[]) => void;
   setFrameHeight: (id: string, height: number) => void;
   setViewport: (width: number, height: number) => void;
   setPanning: (panning: boolean) => void;
@@ -120,6 +132,31 @@ interface Actions {
   duplicateNode: (nodeId: string) => void;
   copyNode: (nodeId: string) => void;
   pasteClipboard: () => void;
+  /** Set one editable text region. One call is one undo step (an edit session commits once). */
+  setText: (nodeId: string, key: string, text: string) => void;
+  /** Switch a component's variant. Its text is kept, keyed by region name. */
+  setVariant: (nodeId: string, variantId: string) => void;
+  /** Merge into a node's props. A value of undefined removes the prop. */
+  setNodeProps: (nodeId: string, patch: Record<string, unknown>) => void;
+  /** Turn "shrink to fit" on or off for a text region. `box` is the element's size when switched on. */
+  setTextFit: (
+    nodeId: string,
+    key: string,
+    mode: 'natural' | 'shrink',
+    box?: { width: number; height: number },
+  ) => void;
+  /** Set a column's width at a breakpoint (null removes the override). */
+  setColumnSpan: (columnId: string, bp: BreakpointId, span: number | null) => void;
+  setGridColumns: (gridId: string, count: number) => void;
+  /** Use an uploaded image (already stored under `image.id`) for an image slot of a component. */
+  setImage: (
+    nodeId: string,
+    key: string,
+    image: { id: string; dataUrl: string; name?: string },
+  ) => void;
+  setImageAlt: (nodeId: string, key: string, alt: string) => void;
+  /** Put the original placeholder image back. */
+  clearImage: (nodeId: string, key: string) => void;
   /** Alt+↑ / Alt+↓: swap with the previous or next sibling. */
   moveSelected: (dir: -1 | 1) => void;
 
@@ -152,6 +189,11 @@ function validSelection(doc: MockupDoc, s: Store) {
     selectedNodeId: frameOk && nodeOk ? s.selectedNodeId : null,
   };
 }
+
+const replaceNode = <T extends Pick<MockupDoc, 'nodes'>>(doc: T, node: DocNode): T => ({
+  ...doc,
+  nodes: { ...doc.nodes, [node.id]: node },
+});
 
 function newComponentNode(componentId: string, variant: string): DocNode {
   return {
@@ -194,6 +236,9 @@ export const useStore = create<Store>((set, get) => ({
   hover: null,
   drag: null,
   dropTarget: null,
+  editing: null,
+  notice: null,
+  fitWarnings: {},
   clipboard: null,
   frameHeights: {},
   viewport: { width: 1000, height: 700 },
@@ -218,6 +263,16 @@ export const useStore = create<Store>((set, get) => ({
     ),
   setDrag: (drag) => set({ drag, dropTarget: null, hover: null }),
   setDropTarget: (dropTarget) => set({ dropTarget }),
+  setEditing: (editing) => set({ editing }),
+  setNotice: (notice) => set({ notice }),
+  setFitWarnings: (frameId, warnings) =>
+    set((s) => {
+      const prev = s.fitWarnings[frameId] ?? [];
+      const same =
+        prev.length === warnings.length &&
+        prev.every((w, i) => w.nodeId === warnings[i]!.nodeId && w.key === warnings[i]!.key);
+      return same ? s : { fitWarnings: { ...s.fitWarnings, [frameId]: warnings } };
+    }),
   setFrameHeight: (id, height) =>
     set((s) =>
       s.frameHeights[id] === height ? s : { frameHeights: { ...s.frameHeights, [id]: height } },
@@ -436,6 +491,119 @@ export const useStore = create<Store>((set, get) => ({
         selectedFrameId: frameId,
         selectedNodeId: leafId,
       };
+    }),
+
+  setText: (nodeId, key, text) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component') return s;
+      if ((node.text?.[key] ?? null) === text) return s;
+      return commit(s, replaceNode(s.doc, { ...node, text: { ...node.text, [key]: text } }));
+    }),
+
+  setVariant: (nodeId, variantId) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component' || node.variant === variantId) return s;
+      if (!node.componentId || !hasVariant(node.componentId, variantId)) return s;
+      return commit(s, replaceNode(s.doc, { ...node, variant: variantId }));
+    }),
+
+  setNodeProps: (nodeId, patch) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node) return s;
+      const props = { ...node.props };
+      let changed = false;
+      for (const [k, v] of Object.entries(patch)) {
+        if (v === undefined) {
+          if (k in props) {
+            delete props[k];
+            changed = true;
+          }
+        } else if (JSON.stringify(props[k]) !== JSON.stringify(v)) {
+          props[k] = v;
+          changed = true;
+        }
+      }
+      return changed ? commit(s, replaceNode(s.doc, { ...node, props })) : s;
+    }),
+
+  setTextFit: (nodeId, key, mode, box) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component') return s;
+      const props = { ...node.props };
+      const boxes = { ...((props.fitBoxes as Record<string, unknown> | undefined) ?? {}) };
+      if (mode === 'shrink') {
+        if (!box) return s;
+        boxes[key] = { width: Math.round(box.width), height: Math.round(box.height) };
+      } else {
+        delete boxes[key];
+      }
+      if (Object.keys(boxes).length) props.fitBoxes = boxes;
+      else delete props.fitBoxes;
+      return commit(
+        s,
+        replaceNode(s.doc, { ...node, props, textFit: { ...node.textFit, [key]: mode } }),
+      );
+    }),
+
+  setColumnSpan: (columnId, bp, span) =>
+    set((s) => {
+      const node = s.doc.nodes[columnId];
+      if (!node || node.type !== 'column') return s;
+      const spans = { ...readSpans(node.props) };
+      if (span === null) delete spans[bp];
+      else spans[bp] = Math.min(12, Math.max(1, Math.round(span)));
+      spans.base ??= 12;
+      if (JSON.stringify(spans) === JSON.stringify(readSpans(node.props))) return s;
+      return commit(s, replaceNode(s.doc, { ...node, props: { ...node.props, spans } }));
+    }),
+
+  setGridColumns: (gridId, count) =>
+    set((s) => {
+      const doc = setGridColumnCount(s.doc, gridId, count, newId);
+      return doc === s.doc ? s : commit(s, doc);
+    }),
+
+  setImage: (nodeId, key, image) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component') return s;
+      const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
+      const prev = (images[key] as { alt?: string } | undefined) ?? {};
+      images[key] = { imageId: image.id, alt: prev.alt ?? '' };
+      const doc = replaceNode(
+        {
+          ...s.doc,
+          images: { ...s.doc.images, [image.id]: { dataUrl: image.dataUrl, name: image.name } },
+        },
+        { ...node, props: { ...node.props, images } },
+      );
+      return commit(s, doc);
+    }),
+
+  setImageAlt: (nodeId, key, alt) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component') return s;
+      const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
+      const prev = (images[key] as { imageId?: string; alt?: string } | undefined) ?? {};
+      if ((prev.alt ?? '') === alt) return s;
+      images[key] = { ...prev, alt };
+      return commit(s, replaceNode(s.doc, { ...node, props: { ...node.props, images } }));
+    }),
+
+  clearImage: (nodeId, key) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component') return s;
+      const images = { ...((node.props?.images as Record<string, unknown> | undefined) ?? {}) };
+      const prev = images[key] as { imageId?: string; alt?: string } | undefined;
+      if (!prev?.imageId) return s;
+      images[key] = { alt: prev.alt ?? '' };
+      return commit(s, replaceNode(s.doc, { ...node, props: { ...node.props, images } }));
     }),
 
   moveSelected: (dir) =>

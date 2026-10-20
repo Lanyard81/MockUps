@@ -1,5 +1,6 @@
 import { useStore } from '../store/store';
 import { zoomAt, type View } from '../lib/geometry';
+import { startFirstTextEdit } from './textEdit';
 
 const isTyping = (t: EventTarget | null): boolean => {
   const el = t as HTMLElement | null;
@@ -56,6 +57,13 @@ export function handleKeyDown(e: KeyboardEvent) {
     e.preventDefault();
     if (s.selectedNodeId) s.deleteNode(s.selectedNodeId);
     else if (s.selectedFrameId) s.deleteFrame(s.selectedFrameId);
+  } else if (
+    (key === 'enter' || key === 'f2') &&
+    s.selectedFrameId &&
+    s.selectedNodeId &&
+    s.mode === 'edit'
+  ) {
+    if (startFirstTextEdit(s.selectedFrameId, s.selectedNodeId)) e.preventDefault();
   } else if (key === 'escape') {
     s.selectParent();
   }

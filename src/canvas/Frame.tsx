@@ -1,5 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { collectFitTargets } from '../layout/fit';
 import { renderFrameHtml } from '../layout/render';
+import { applyTextFit } from '../lib/textFit';
 import { useStore } from '../store/store';
 import { DEVICES, type Frame as FrameModel } from '../store/types';
 import { FRAME_SHELL } from './nswAssets';
@@ -23,7 +25,12 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   // Sanitising is the costly part of rendering, so only redo it when the document nodes change,
   // not on every store update (hover, selection and drag state change constantly).
   const nodes = useStore((s) => s.doc.nodes);
-  const html = useMemo(() => renderFrameHtml(nodes, frame.root), [nodes, frame.root]);
+  const images = useStore((s) => s.doc.images);
+  const fitTargets = useMemo(() => collectFitTargets(nodes, frame.root), [nodes, frame.root]);
+  const html = useMemo(
+    () => renderFrameHtml(nodes, frame.root, images),
+    [nodes, frame.root, images],
+  );
   const height = useStore((s) => s.frameHeights[frame.id] ?? DEVICES[frame.device].screenHeight);
   const selected = useStore((s) => s.selectedFrameId === frame.id);
   const interactive = useStore((s) => !s.panning && s.drag === null);
@@ -56,13 +63,17 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     } catch (err) {
       console.error('NSW.initSite failed', err);
     }
+    // "Shrink to fit" is redone after every render, and again once fonts have loaded.
+    const fit = () => store.getState().setFitWarnings(frame.id, applyTextFit(doc, fitTargets));
+    fit();
+    void doc.fonts.ready.then(fit);
     const measure = () =>
       store.getState().setFrameHeight(frame.id, Math.max(screenHeight, root.offsetHeight));
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(root);
     return () => ro.disconnect();
-  }, [ready, html, mode, frame.id, frame.width, screenHeight, store]);
+  }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store]);
 
   useEffect(() => {
     if (renameRequest === frame.id) {

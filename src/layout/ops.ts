@@ -1,5 +1,6 @@
 import { getComponent } from '../catalogue';
 import type { DocNode, Frame, MockupDoc } from '../store/types';
+import { equalSpans } from './spans';
 import { collectIds, removeSubtrees } from './tree';
 
 /**
@@ -207,7 +208,7 @@ export function buildChain(
       type,
       children: [childId],
       ...(type === 'section' ? { props: { background: 'white' } } : {}),
-      ...(type === 'column' ? { props: { span: 12 } } : {}),
+      ...(type === 'column' ? { props: { spans: { base: 12, md: 12 } } } : {}),
     };
     childId = id;
   }
@@ -307,4 +308,48 @@ export function canMoveInto(doc: Doc, id: string, parentId: string | null): bool
     return canContain(doc.nodes[parentId] ?? null, node);
   }
   return canContain(null, node);
+}
+
+/**
+ * Change how many columns a grid has (1–6). Widths are reset to equal. Columns that go away give
+ * their content to the last column that stays, so nothing is lost.
+ */
+export function setGridColumnCount<T extends Doc>(
+  doc: T,
+  gridId: string,
+  count: number,
+  makeId: MakeId,
+): T {
+  const grid = doc.nodes[gridId];
+  if (!grid || grid.type !== 'grid') return doc;
+  const target = Math.min(6, Math.max(1, Math.round(count)));
+  const columns = [...(grid.children ?? [])];
+  const spans = equalSpans(target);
+  const nodes = { ...doc.nodes };
+
+  if (target > columns.length) {
+    while (columns.length < target) {
+      const id = makeId('n');
+      nodes[id] = { id, type: 'column', props: { spans }, children: [] };
+      columns.push(id);
+    }
+  } else if (target < columns.length) {
+    const keep = columns.slice(0, target);
+    const last = nodes[keep[keep.length - 1]!]!;
+    let moved = [...(last.children ?? [])];
+    for (const gone of columns.slice(target)) {
+      moved = [...moved, ...(nodes[gone]?.children ?? [])];
+      delete nodes[gone];
+    }
+    nodes[last.id] = { ...last, children: moved };
+    columns.length = 0;
+    columns.push(...keep);
+  }
+
+  for (const id of columns) {
+    const col = nodes[id]!;
+    nodes[id] = { ...col, props: { ...col.props, spans } };
+  }
+  nodes[gridId] = { ...grid, children: columns };
+  return { ...doc, nodes };
 }

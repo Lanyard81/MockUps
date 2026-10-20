@@ -48,10 +48,18 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 4: Editing text and properties
 
-- [ ] Inline text editing
-- [ ] Shrink text to fit, with warning badge
-- [ ] Properties panel: variant switcher, component options, images, sections, grids, frames
-- [ ] Unit tests for tree operations and text fitting; e2e drag, edit, switch variant, undo
+- [x] Inline text editing: double-click text (or Enter / F2 on a selection); Enter commits, Shift+Enter adds a line break where allowed, Esc cancels, Tab moves to the next text in the component, paste is plain text, one session is one undo step
+- [x] Text grows its component naturally
+- [x] Shrink text to fit, per text element: keeps the box, reduces the font size to at most 75% or 12px, then truncates with an ellipsis and a warning badge (on the canvas data attribute and in the panel); re-runs on text, frame width and font changes
+- [x] Properties panel (right): contextual to the selection
+  - [x] Variant switcher (text is kept)
+  - [x] Component options: full width, small, disabled, link address, heading level, show/hide optional parts
+  - [x] Searchable Material Icons picker with before/after position
+  - [x] Images: upload or drop a file (on the picture or the panel), deduplicated and mirrored to IndexedDB, alt text alongside
+  - [x] Sections: background (10 NSW options) and padding; containers: edge to edge
+  - [x] Grids: 1–6 columns, per-breakpoint column widths; single columns too
+  - [x] Frames: name, device preset, width (the old frame bar is gone)
+- [x] Tests: tree operations (grid columns), text fitting, rendering, images, store actions (Vitest); drag a button in, edit its label on the canvas, switch variant and undo each step, plus the rest of the editing features (Playwright)
 
 ## Milestone 5: Layers, shortcuts and polish
 

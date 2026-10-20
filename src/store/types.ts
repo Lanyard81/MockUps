@@ -51,7 +51,8 @@ export interface MockupDoc {
   view: View;
   frames: Frame[];
   nodes: Record<string, DocNode>;
-  images: Record<string, { dataUrl: string; alt: string }>;
+  /** Uploaded images by content-derived id. Each use (and its alt text) is in the node's `props.images`. */
+  images: Record<string, { dataUrl: string; name?: string }>;
 }
 
 // ---- UI-only types (never saved) ----

@@ -26,7 +26,7 @@ export const feedback: ComponentSource[] = [
       html:
         `<div class="nsw-global-alert${mod}"><div class="nsw-global-alert__wrapper"><div class="nsw-global-alert__content">` +
         `<div class="nsw-global-alert__title" data-edit="title">Alert title</div><p data-edit="copy" data-multiline>A short message that applies to the whole site.</p>` +
-        `<button class="nsw-button nsw-button--white" type="button" data-optional="button" data-edit="button">Find out more</button></div>` +
+        `<button class="nsw-button nsw-button--white" type="button" data-optional="button"><span data-edit="button">Find out more</span></button></div>` +
         `<button class="nsw-icon-button js-close-alert" type="button">${icon('close')}<span class="sr-only">Close</span></button></div></div>`,
     })),
   },
@@ -60,7 +60,7 @@ export const feedback: ComponentSource[] = [
           `<div class="nsw-dialog__wrapper" role="dialog" aria-modal="false" aria-labelledby="dlg-title"><div class="nsw-dialog__top"><h2 class="nsw-dialog__title" id="dlg-title" data-edit="title">Dialog title</h2>` +
           `<button class="nsw-icon-button nsw-dialog__close" type="button">${icon('close')}<span class="sr-only">Close</span></button></div>` +
           `<div class="nsw-dialog__content"><p data-edit="copy" data-multiline>Explain what the person is being asked to confirm.</p></div>` +
-          `<div class="nsw-dialog__bottom"><button class="nsw-button nsw-button--dark" type="button" data-edit="confirm">Confirm</button><button class="nsw-button nsw-button--dark-outline-solid" type="button" data-edit="cancel">Cancel</button></div></div>`,
+          `<div class="nsw-dialog__bottom"><button class="nsw-button nsw-button--dark" type="button"><span data-edit="confirm">Confirm</span></button><button class="nsw-button nsw-button--dark-outline-solid" type="button"><span data-edit="cancel">Cancel</span></button></div></div>`,
       },
     ],
   },
@@ -79,8 +79,8 @@ export const feedback: ComponentSource[] = [
         html:
           `<div class="nsw-cookie-banner"><div class="nsw-cookie-banner__wrapper"><div class="nsw-cookie-banner__content"><div class="nsw-cookie-banner__title" data-edit="title">We use cookies</div>` +
           `<p data-edit="copy" data-multiline>We use cookies to improve your experience on this site.</p></div>` +
-          `<div class="nsw-cookie-banner__buttons-container"><div class="nsw-cookie-banner__cta-group"><button class="nsw-button nsw-button--dark" type="button" data-edit="accept">Accept all</button>` +
-          `<button class="nsw-button nsw-button--dark-outline-solid" type="button" data-edit="manage">Manage cookies</button></div></div></div></div>`,
+          `<div class="nsw-cookie-banner__buttons-container"><div class="nsw-cookie-banner__cta-group"><button class="nsw-button nsw-button--dark" type="button"><span data-edit="accept">Accept all</span></button>` +
+          `<button class="nsw-button nsw-button--dark-outline-solid" type="button"><span data-edit="manage">Manage cookies</span></button></div></div></div></div>`,
       },
       {
         id: 'light',
@@ -88,8 +88,8 @@ export const feedback: ComponentSource[] = [
         html:
           `<div class="nsw-cookie-banner nsw-cookie-banner--light"><div class="nsw-cookie-banner__wrapper"><div class="nsw-cookie-banner__content"><div class="nsw-cookie-banner__title" data-edit="title">We use cookies</div>` +
           `<p data-edit="copy" data-multiline>We use cookies to improve your experience on this site.</p></div>` +
-          `<div class="nsw-cookie-banner__buttons-container"><div class="nsw-cookie-banner__cta-group"><button class="nsw-button nsw-button--dark" type="button" data-edit="accept">Accept all</button>` +
-          `<button class="nsw-button nsw-button--dark-outline-solid" type="button" data-edit="manage">Manage cookies</button></div></div></div></div>`,
+          `<div class="nsw-cookie-banner__buttons-container"><div class="nsw-cookie-banner__cta-group"><button class="nsw-button nsw-button--dark" type="button"><span data-edit="accept">Accept all</span></button>` +
+          `<button class="nsw-button nsw-button--dark-outline-solid" type="button"><span data-edit="manage">Manage cookies</span></button></div></div></div></div>`,
       },
     ],
   },
@@ -132,7 +132,7 @@ export const feedback: ComponentSource[] = [
         id: 'default',
         label: 'Default',
         html:
-          `<div class="js-popover" data-popover-id="popover-demo" data-popover-position="bottom"><button class="nsw-button nsw-button--dark-outline-solid" type="button" data-anchor data-edit="trigger">Open popover</button></div>` +
+          `<div class="js-popover" data-popover-id="popover-demo" data-popover-position="bottom"><button class="nsw-button nsw-button--dark-outline-solid" type="button" data-anchor><span data-edit="trigger">Open popover</span></button></div>` +
           `<div class="nsw-popover" id="popover-demo" role="dialog"><p data-edit="copy" data-multiline>Popover content goes here.</p></div>`,
       },
     ],

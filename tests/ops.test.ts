@@ -16,6 +16,7 @@ import {
   pathTo,
   removeNode,
   resolveInsertion,
+  setGridColumnCount,
   type Doc,
 } from '../src/layout/ops';
 import { buildSection } from '../src/layout/tree';
@@ -164,7 +165,7 @@ describe('creating missing layers', () => {
     expect(chain.nodes[chain.topId]!.type).toBe('section');
     const col = Object.values(chain.nodes).find((c) => c.type === 'column')!;
     expect(col.children).toEqual(['x']);
-    expect(col.props?.span).toBe(12);
+    expect(col.props?.spans).toEqual({ base: 12, md: 12 });
   });
 
   it('builds only the layers that are missing', () => {
@@ -284,5 +285,48 @@ describe('applying an insertion', () => {
     );
     expect(moved.nodes[fx.column]!.children).toEqual(['b']);
     expect(frameOfNode(moved, 'a')).toBe('f2');
+  });
+});
+
+describe("changing a grid's column count", () => {
+  const mdSpans = (doc: Doc, gridId: string) =>
+    doc.nodes[gridId]!.children!.map((c) => (doc.nodes[c]!.props?.spans as { md?: number }).md);
+
+  it('adds equal-width empty columns', () => {
+    const out = setGridColumnCount(fx.doc, fx.grid, 3, makeId);
+    expect(out.nodes[fx.grid]!.children).toHaveLength(3);
+    expect(mdSpans(out, fx.grid)).toEqual([4, 4, 4]);
+    expect(out.nodes[out.nodes[fx.grid]!.children![2]!]!.children).toEqual([]);
+    expect(out.nodes[fx.column]!.children).toEqual(['a', 'b']);
+  });
+
+  it('merges removed columns into the last kept column, losing nothing', () => {
+    const three = setGridColumnCount(fx.doc, fx.grid, 3, makeId);
+    const [c1, c2, c3] = three.nodes[fx.grid]!.children!;
+    const filled: Doc = {
+      ...three,
+      nodes: {
+        ...three.nodes,
+        c: comp('c'),
+        d: comp('d'),
+        [c2!]: { ...three.nodes[c2!]!, children: ['c'] },
+        [c3!]: { ...three.nodes[c3!]!, children: ['d'] },
+      },
+    };
+    const out = setGridColumnCount(filled, fx.grid, 1, makeId);
+    expect(out.nodes[fx.grid]!.children).toEqual([c1]);
+    expect(out.nodes[c1!]!.children).toEqual(['a', 'b', 'c', 'd']);
+    const two = setGridColumnCount(filled, fx.grid, 2, makeId);
+    expect(two.nodes[c2!]!.children).toEqual(['c', 'd']);
+    expect(two.nodes[c3!]).toBeUndefined();
+    expect(mdSpans(two, fx.grid)).toEqual([6, 6]);
+  });
+
+  it('clamps to 1–6 and ignores non-grids', () => {
+    expect(setGridColumnCount(fx.doc, fx.grid, 99, makeId).nodes[fx.grid]!.children).toHaveLength(
+      6,
+    );
+    expect(setGridColumnCount(fx.doc, fx.grid, 0, makeId).nodes[fx.grid]!.children).toHaveLength(1);
+    expect(setGridColumnCount(fx.doc, 'a', 3, makeId)).toBe(fx.doc);
   });
 });

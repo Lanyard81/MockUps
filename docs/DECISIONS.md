@@ -113,3 +113,35 @@ Hover, selection and drop indicators are absolutely positioned elements in the e
 ## 021: Edit-mode press = select, move = drag
 
 In Edit mode a press inside a frame records the item under the pointer. Release without moving selects it. Moving more than 4px picks it up, or picks up the current selection if the press was inside it (so a section chosen from the breadcrumb can be dragged by grabbing inside it). Columns are selectable but not draggable. Deleting a column only empties it, because a grid keeps its columns.
+
+## 022: Text edits touch the document once, when the session ends
+
+While a text region is being edited, the document does not change: the field is the real element, made editable (`contenteditable="plaintext-only"`). Enter, Tab or leaving the field commits through one `setText` call (one history entry); Esc restores the original. An emptied field counts as a cancel, because an empty region can't be clicked again. Keys typed in the field stop propagating, so they can never fire canvas shortcuts (the first version let Enter bubble on to the "Enter starts editing" shortcut and reopened the field).
+
+## 023: Text, options and images are applied to the variant's markup at render time
+
+`layout/component.ts` takes the variant HTML, then applies options, hidden parts, text and images, and caches the result per node object (nodes are immutable). Text is always set with `textContent`, never as HTML. Editable regions are marked in the markup (`data-edit`), so the node's `text` map is keyed by region name and survives a variant change. Line breaks are stored as `\n` and rendered as `<br>`.
+
+## 024: Component options are data
+
+`overrides.ts` declares options per component (`toggleClass`, `toggleAttr`, `href`, `headingLevel`, `icon`) with a CSS selector into the markup. The generator rejects an option whose selector matches nothing in the default variant. The panel builds its controls from this data, and rendering applies it, so adding an option for another component is a few lines of data. An `href` on a button turns it into an `<a>` (a button can't link).
+
+## 025: Shrink to fit keeps a frozen box
+
+Switching it on records the element's box (measured as an inline-block, because an inline element's own box is shorter than its line). From then on the element is rendered at that size and the font shrinks in half-pixel steps, found by binary search, down to `max(12px, 75%)`. If it still doesn't fit, it is clipped with an ellipsis (a line clamp for multi-line text) and flagged. Boxes live in `props.fitBoxes`, the mode in `textFit`. Fitting re-runs after every render and when fonts load.
+
+## 026: Images
+
+Uploads are validated (images only, 15 MB), downscaled to 1600px on the long side, given an id from a SHA-256 of their content (so the same picture is stored once) and mirrored into IndexedDB. The data URL also stays in `doc.images` so saved files are portable. Alt text belongs to the use of an image (`props.images[key].alt`), not to the shared image. A file dropped on a picture in a frame replaces it; a file dropped anywhere else in the editor is ignored, because the browser would otherwise navigate away and lose unsaved work.
+
+## 027: Properties panel replaces the frame bar
+
+Everything about the selection lives in one right-hand panel. The tree is selected with the breadcrumb and Esc, so the panel follows. Number and text fields commit once (on Enter or leaving the field) and stop keys propagating.
+
+## 028: Zustand selectors must return stable values
+
+A selector that builds a new array or object each call (`?? []`) makes React re-render forever ("Maximum update depth", React error 185) and the whole app stops. Use module-level empty constants (`NO_KEYS`, `NO_IDS`) or derive in the component. This was found by the end-to-end tests the first time a component was added.
+
+## 029: NSW cards stretch their link in Edit mode too, so Edit mode switches that off
+
+The NSW card makes its title link cover the whole card (a pseudo-element). In Edit mode that would swallow clicks on the card's other text, so `FRAME_CSS` sets `pointer-events: none` on link pseudo-elements in Edit mode only. It changes nothing visually and doesn't apply in Preview or exports.

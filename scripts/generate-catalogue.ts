@@ -100,6 +100,13 @@ for (const src of sources) {
     if (v.id === defaultVariant) {
       editable = found;
       optional = optFound;
+      for (const opt of ov.options ?? []) {
+        if (!body.querySelector(opt.selector)) {
+          fail(
+            `${src.id}: option "${opt.key}" selector "${opt.selector}" matches nothing in the default variant`,
+          );
+        }
+      }
     }
   }
   if (!variantIds.has(defaultVariant))
@@ -124,6 +131,7 @@ for (const src of sources) {
     })),
     editable,
     optional,
+    options: ov.options ?? [],
   });
 }
 
@@ -142,6 +150,18 @@ const catalogue: Catalogue = { nswVersion: pkg.version, components };
 const out = resolve(root, 'src/catalogue/generated/catalogue.json');
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, JSON.stringify(catalogue, null, 1) + '\n');
+
+// Material Icons names for the icon picker, from the installed font package.
+const iconSrc = readFileSync(
+  resolve(root, 'node_modules/material-icons/css/_codepoints.scss'),
+  'utf8',
+);
+const icons = [...iconSrc.matchAll(/^\s*"([^"]+)":\s*[0-9a-f]+/gim)].map((m) => m[1]!).sort();
+if (icons.length < 500)
+  throw new Error(
+    `Only found ${icons.length} Material Icons names; the package format may have changed`,
+  );
+writeFileSync(resolve(root, 'src/catalogue/generated/icons.json'), JSON.stringify(icons) + '\n');
 
 const variants = components.reduce((n, c) => n + c.variants.length, 0);
 const notFull = components.filter((c) => c.fidelity !== 'full');

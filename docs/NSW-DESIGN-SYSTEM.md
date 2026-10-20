@@ -192,3 +192,11 @@ The library shows a "Static" or "Partial" badge on these, with the reason on hov
 - The NSW Government waratah logo is not in the npm package. The header shows a labelled placeholder.
 - Interactive components in Preview mode (tested): accordion, tabs. Others rely on `initSite()` finding their markup.
 - Multiple copies of a component repeat some element ids (see `DECISIONS.md` 015).
+
+### Editing (Milestone 4)
+
+- **Editable text** is marked in the markup with `data-edit="key"` (and `data-multiline` where line breaks are allowed). Button labels are a `<span>` inside the `<button>`, so the label can be edited without the button reacting to Space and Enter.
+- **Options** (`overrides.ts`): Buttons (full width, small, disabled, icon, link address), Link (address), Cards, List items (link address, heading level), Callout and In-page alert (heading level), Content blocks (link address, heading level), Hero banner (button address). Every component also gets show/hide for its optional parts.
+- **Edit mode only:** link pseudo-elements ignore the pointer, because the NSW card stretches its title link over the whole card (see `DECISIONS.md` 029).
+- **Images** are the placeholder images unless replaced. Hero banner, cards, list items, content blocks, media and card carousel have replaceable images.
+

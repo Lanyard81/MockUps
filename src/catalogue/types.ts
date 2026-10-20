@@ -44,6 +44,20 @@ export interface OptionalPart {
   label: string;
 }
 
+/**
+ * A property the user can change on a component, applied to its markup at render time.
+ * Values live in the node's `props[key]`. Selectors are matched against the variant markup.
+ */
+export type OptionDef =
+  | { type: 'toggleClass'; key: string; label: string; selector: string; className: string }
+  | { type: 'toggleAttr'; key: string; label: string; selector: string; attr: string }
+  /** Link address. On a <button> this turns the element into an <a>. */
+  | { type: 'href'; key: string; label: string; selector: string }
+  /** Heading level h1–h6 for the matched element. `default` is the level the markup uses. */
+  | { type: 'headingLevel'; key: string; label: string; selector: string; default: number }
+  /** A Material icon before or after the label. */
+  | { type: 'icon'; key: string; label: string; selector: string };
+
 export interface CatalogueVariant {
   id: string;
   label: string;
@@ -67,6 +81,7 @@ export interface CatalogueComponent {
   editable: EditableText[];
   /** Parts the user can show or hide. */
   optional: OptionalPart[];
+  options: OptionDef[];
 }
 
 export interface Catalogue {

@@ -61,7 +61,7 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 | `textFit`                | component | `natural` or `shrink`, per text region.                                                                                                                                                                                                 |
 | `hidden`                 | all       | Hidden in the canvas and exports. Set from the Layers panel (Milestone 5).                                                                                                                                                              |
 
-**Images**: keyed by `img_…` id, deduplicated by content. Saved files embed `dataUrl`; in the browser they are also kept in IndexedDB.
+**Images**: keyed by `img_…` id (derived from the image content, so the same picture is stored once), `{ dataUrl, name? }`. Saved files embed `dataUrl`; in the browser they are also kept in IndexedDB. Alt text is not here: it belongs to each use (`props.images[key].alt`).
 
 ## Tree rules
 
@@ -71,7 +71,28 @@ Each node type has a depth, and a node's parent is always exactly one level shal
 
 `componentId` is a catalogue id (`button`, `card`, `hero-banner` and so on, see `src/catalogue/sources/`). `variant` is a variant id from that component (`dark`, `dark-outline`, `headline`). If `variant` is missing, the component's default variant is used. A node whose `componentId` is not in the catalogue renders as an "Unknown component" placeholder, so files from newer versions open without crashing.
 
-`text`, `textFit` and the option `props` are written by the editing tools in Milestone 4. Until then, components render their default markup.
+**`text`** maps an editable region name (the `data-edit` key in the variant markup) to its text. Line breaks are `\n`. Regions that aren't in `text` show the variant's default. Because it is keyed by region name, the text survives a variant change.
+
+**`textFit`** maps a region name to `natural` or `shrink`. For `shrink`, `props.fitBoxes[key]` holds the `{ width, height }` (CSS px) the text is fitted into.
+
+**`props`** for components holds option values (see `OptionDef` in `src/catalogue/types.ts`) plus:
+
+| Key           | Value                                                                                                                                         |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hiddenParts` | `string[]` of optional-part keys that are hidden                                                                                              |
+| `images`      | `{ [slot]: { imageId?: string, alt?: string } }`. No `imageId` means the placeholder is shown                                                 |
+| `fitBoxes`    | see `textFit` above                                                                                                                           |
+| option keys   | `fullWidth`, `small`, `disabled` (booleans); `href` (string); `level` (heading level 1–6); `icon` (`{ name, position: 'before' \| 'after' }`) |
+
+**Layout node props**
+
+| Node      | Props                                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| section   | `background` (`white`, `off-white`, `brand-light`, `brand-dark`, `brand-supplementary`, `grey-01`…`grey-04`, `black`), `padding` (`half`, `none`; absent means standard) |
+| container | `flush` (boolean)                                                                                                                                                        |
+| column    | `spans`: `{ base?, sm?, md?, lg?, xl? }`, each 1–12. A breakpoint left out inherits from the smaller one, as in the NSW grid. `base` defaults to 12                      |
+
+A grid's column count is its number of column children (1–6).
 
 ## Current limitations
 

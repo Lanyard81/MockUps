@@ -21,6 +21,10 @@ export function getVariant(componentId: string, variantId?: string): CatalogueVa
   return c.variants.find((v) => v.id === (variantId ?? c.defaultVariant)) ?? c.variants[0];
 }
 
+/** True only if the component has exactly this variant (getVariant falls back to the default). */
+export const hasVariant = (componentId: string, variantId: string): boolean =>
+  !!byId.get(componentId)?.variants.some((v) => v.id === variantId);
+
 export interface SearchResult {
   component: CatalogueComponent;
   variants: CatalogueVariant[];

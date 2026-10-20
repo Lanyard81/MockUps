@@ -86,7 +86,7 @@ describe('adding components and layout blocks', () => {
   it('adds grids of N columns with md spans that add up to 12', () => {
     s().addLayoutBlock(frameId(), 'grid', 3);
     const cols = Object.values(s().doc.nodes).filter((n) => n.type === 'column');
-    expect(cols.map((c) => c.props?.span)).toEqual([4, 4, 4]);
+    expect(cols.map((c) => (c.props?.spans as { md?: number } | undefined)?.md)).toEqual([4, 4, 4]);
   });
 
   it('ignores unknown components and every add is one undo step', () => {
@@ -267,5 +267,111 @@ describe('selection, moving and clipboard', () => {
     expect(s().selectedNodeId === null || !!s().doc.nodes[s().selectedNodeId!]).toBe(true);
     while (s().past.length) s().undo();
     expect(s().selectedNodeId).toBeNull();
+  });
+});
+
+describe('editing text and properties', () => {
+  const frameId = () => s().doc.frames[0]!.id;
+  const addButton = () => {
+    s().addComponent(frameId(), 'button', 'dark');
+    return s().selectedNodeId!;
+  };
+
+  it('sets text as one undo step and ignores no-op edits', () => {
+    const id = addButton();
+    const before = s().past.length;
+    s().setText(id, 'label', 'Go');
+    expect(s().doc.nodes[id]!.text).toEqual({ label: 'Go' });
+    s().setText(id, 'label', 'Go');
+    expect(s().past.length).toBe(before + 1);
+    s().undo();
+    expect(s().doc.nodes[id]!.text).toEqual({});
+    s().redo();
+    expect(s().doc.nodes[id]!.text).toEqual({ label: 'Go' });
+  });
+
+  it('keeps text when the variant changes, and ignores unknown variants', () => {
+    const id = addButton();
+    s().setText(id, 'label', 'Go');
+    s().setVariant(id, 'danger');
+    expect(s().doc.nodes[id]).toMatchObject({ variant: 'danger', text: { label: 'Go' } });
+    const snap = s().doc;
+    s().setVariant(id, 'nope');
+    s().setVariant(id, 'danger');
+    expect(s().doc).toBe(snap);
+  });
+
+  it('merges props, removes undefined ones, and skips no-op changes', () => {
+    const id = addButton();
+    s().setNodeProps(id, { fullWidth: true, href: '#x' });
+    expect(s().doc.nodes[id]!.props).toMatchObject({ fullWidth: true, href: '#x' });
+    s().setNodeProps(id, { href: undefined });
+    expect(s().doc.nodes[id]!.props).not.toHaveProperty('href');
+    const before = s().past.length;
+    s().setNodeProps(id, { fullWidth: true });
+    expect(s().past.length).toBe(before);
+  });
+
+  it('turns shrink-to-fit on with the element box, and off again', () => {
+    const id = addButton();
+    s().setTextFit(id, 'label', 'shrink', { width: 120.4, height: 40 });
+    expect(s().doc.nodes[id]!.textFit).toEqual({ label: 'shrink' });
+    expect(s().doc.nodes[id]!.props?.fitBoxes).toEqual({ label: { width: 120, height: 40 } });
+    s().setTextFit(id, 'label', 'natural');
+    expect(s().doc.nodes[id]!.props).not.toHaveProperty('fitBoxes');
+  });
+
+  it('sets column widths per breakpoint', () => {
+    s().addLayoutBlock(frameId(), 'grid', 2);
+    const col = Object.values(s().doc.nodes).find((n) => n.type === 'column')!;
+    s().setColumnSpan(col.id, 'lg', 3);
+    expect(s().doc.nodes[col.id]!.props?.spans).toEqual({ base: 12, md: 6, lg: 3 });
+    s().setColumnSpan(col.id, 'lg', null);
+    expect(s().doc.nodes[col.id]!.props?.spans).toEqual({ base: 12, md: 6 });
+    s().setColumnSpan(col.id, 'md', 99);
+    expect((s().doc.nodes[col.id]!.props?.spans as { md: number }).md).toBe(12);
+  });
+
+  it("changes a grid's column count as one undo step", () => {
+    s().addLayoutBlock(frameId(), 'grid', 2);
+    const grid = Object.values(s().doc.nodes).find((n) => n.type === 'grid')!;
+    const before = s().past.length;
+    s().setGridColumns(grid.id, 4);
+    expect(s().doc.nodes[grid.id]!.children).toHaveLength(4);
+    expect(s().past.length).toBe(before + 1);
+    s().undo();
+    expect(s().doc.nodes[grid.id]!.children).toHaveLength(2);
+  });
+
+  it('uses an image, keeps alt text across replacements, and can reset to the placeholder', () => {
+    s().addComponent(frameId(), 'card', 'default');
+    const id = s().selectedNodeId!;
+    s().setImageAlt(id, 'image', 'A tree');
+    s().setImage(id, 'image', {
+      id: 'img_a',
+      dataUrl: 'data:image/png;base64,AAAA',
+      name: 'tree.png',
+    });
+    expect(s().doc.images['img_a']).toEqual({
+      dataUrl: 'data:image/png;base64,AAAA',
+      name: 'tree.png',
+    });
+    expect(s().doc.nodes[id]!.props?.images).toEqual({
+      image: { imageId: 'img_a', alt: 'A tree' },
+    });
+    s().setImage(id, 'image', { id: 'img_b', dataUrl: 'data:image/png;base64,BBBB' });
+    expect((s().doc.nodes[id]!.props?.images as { image: { alt: string } }).image.alt).toBe(
+      'A tree',
+    );
+    s().clearImage(id, 'image');
+    expect(s().doc.nodes[id]!.props?.images).toEqual({ image: { alt: 'A tree' } });
+  });
+
+  it('ignores text edits on layout nodes', () => {
+    s().addLayoutBlock(frameId(), 'section');
+    const section = Object.values(s().doc.nodes).find((n) => n.type === 'section')!;
+    const snap = s().doc;
+    s().setText(section.id, 'x', 'y');
+    expect(s().doc).toBe(snap);
   });
 });

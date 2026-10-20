@@ -40,7 +40,8 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   const node = useStore((s) => (selectedId ? s.doc.nodes[selectedId] : undefined));
   const label = nodeLabel(node);
   const movable = !!node && isDraggable(node);
-  const edit = mode === 'edit';
+  const editing = useStore((s) => s.editing?.frameId === frameId);
+  const edit = mode === 'edit' && !editing;
 
   // Measure after the frame has rendered its content (the frame's own effect runs after ours).
   useEffect(() => {

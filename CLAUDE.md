@@ -39,6 +39,10 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 - Each dependency is recorded with its reason in `docs/DECISIONS.md`.
 - Drag and drop uses plain pointer events (no DnD library). Hover, selection and drop state are UI-only store fields: they must never enter history or cause frames to re-render. A press that begins in an iframe keeps its events there, so drag code listens on the source frame's document too. Use `requestAnimationFrame` for drag updates and avoid re-rendering whole frames per change.
 
+- Zustand selectors must return stable values: never `?? []` or `?? {}` inside `useStore(...)` (React error 185, the app freezes). Use module-level constants.
+- Text editing is the only place a frame's DOM is edited in place (`canvas/textEdit.ts`); it commits once through `setText`. Everything else renders from the document.
+- Component options are data (`overrides.ts` `options`, applied in `layout/component.ts`). Add an option there, not in the panel.
+
 ## Document model
 
 `MockupDoc` in `src/store/types.ts`, documented in `docs/DATA-MODEL.md`. Frames hold ordered `root` section ids; `nodes` is a flat id map of `section > container > grid > column > component`; images are stored by id. Change the schema only with a `version` bump and a migration, and update `DATA-MODEL.md`.
