@@ -195,3 +195,7 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Using a template** makes a new frame (click, or drop on empty canvas) or replaces a frame's content (drop on a frame, with a confirmation when the frame isn't empty). Each is one undo step. Templates always get fresh ids.
 - **My templates** are stored in browser storage (not in undo) and travel inside `.mockup.json` files. Deleting one asks first. Thumbnails come from the same hidden-frame renderer as the library.
 - **Samples** are built by code (`templates/samples.ts`, deterministic ids) and also written to `public/samples/*.mockup.json` by `npm run samples`; CI fails if the committed files differ. The File menu opens them from code, so they work offline from a single file.
+
+## 041: Single-file check ignores script bodies
+
+`finish-single.mjs` now blanks the contents of `<script>` elements before looking for external `<link>`, `<script>`, `<img>` and `url()` references. The app's own code contains markup strings (the CDN HTML export writes Google Fonts links into exported pages) that are never loaded by the app itself. Tags in the page, script `src` attributes and CSS `url()` are still checked, and the e2e test opens the file from disk offline.

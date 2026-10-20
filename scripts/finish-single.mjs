@@ -2,7 +2,10 @@
 import { readFileSync, renameSync } from 'node:fs';
 
 renameSync('dist-single/index.html', 'dist-single/nsw-mockup-builder.html');
-const html = readFileSync('dist-single/nsw-mockup-builder.html', 'utf8');
+const full = readFileSync('dist-single/nsw-mockup-builder.html', 'utf8');
+// Script bodies are the app's own code: they contain markup strings (e.g. the CDN HTML export) that
+// are written into exported pages, never loaded here. The script tags themselves are still checked.
+const html = full.replace(/(<script\b[^>]*>)[\s\S]*?<\/script>/g, '$1</script>');
 // Only tags that load something: URLs inside inline NSW strings (e.g. help links) are fine.
 const external =
   html.match(
@@ -13,5 +16,5 @@ if (external.length > 0) {
   process.exit(1);
 }
 console.log(
-  `dist-single/nsw-mockup-builder.html: ${(html.length / 1024).toFixed(0)} kB, no external links`,
+  `dist-single/nsw-mockup-builder.html: ${(full.length / 1024).toFixed(0)} kB, no external links`,
 );
