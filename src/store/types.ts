@@ -35,6 +35,23 @@ export interface DocNode {
   name?: string;
 }
 
+/** A screenshot shown on a frame as a tracing guide. Edit mode only: never in Preview, exports or templates. */
+export interface FrameReference {
+  /** The image, in `doc.images`. */
+  imageId: string;
+  /** 0 to 1. */
+  opacity: number;
+  /** Over the content, behind it, or at full opacity beside the frame for comparing. */
+  placement: 'over' | 'behind' | 'beside';
+  /** Scale to the frame's width, or show at its actual size. */
+  fit: 'width' | 'actual';
+  offsetX: number;
+  offsetY: number;
+  visible: boolean;
+  /** Pixels in the stored image per CSS pixel (2 for a 2× screenshot). Used by "Actual size". */
+  pixelRatio: number;
+}
+
 export interface Frame {
   id: string;
   name: string;
@@ -48,10 +65,12 @@ export interface Frame {
   y: number;
   /** Ids of top-level sections, top to bottom. */
   root: string[];
+  /** A screenshot to trace over (Milestone R1). */
+  reference?: FrameReference;
 }
 
 export interface MockupDoc {
-  version: 2;
+  version: 3;
   id: string;
   name: string;
   /** The kit used for the first frame of the mockup, and a new frame's starting choice. */

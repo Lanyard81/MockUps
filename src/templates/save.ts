@@ -5,7 +5,7 @@ import { useTemplates } from '../store/templates';
 import type { DocNode, MockupDoc } from '../store/types';
 
 /** Images a set of nodes refers to, copied out of the document. */
-function imagesUsedBy(
+export function imagesUsedBy(
   nodes: Record<string, DocNode>,
   images: MockupDoc['images'],
   settings?: Record<string, unknown>,

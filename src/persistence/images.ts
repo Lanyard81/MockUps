@@ -84,3 +84,53 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
   }
   return { id, dataUrl, name: file.name };
 }
+
+export const MAX_REFERENCE_WIDTH = 3000;
+export const MAX_REFERENCE_HEIGHT = 12000;
+
+export interface PreparedReference extends PreparedImage {
+  /** Size of the original screenshot, for working out the device and 2× capture. */
+  originalWidth: number;
+  /** Pixels in the stored image per original pixel (below 1 when it had to be shrunk). */
+  storedScale: number;
+}
+
+/**
+ * A screenshot for a frame's reference layer. Much larger than ordinary pictures are allowed
+ * (full-page screenshots are tall), but still capped; very large PNGs are stored as JPEG.
+ */
+export async function prepareReference(file: File): Promise<PreparedReference> {
+  if (!file.type.startsWith('image/') || file.type === 'image/svg+xml')
+    throw new ImageError('Choose a screenshot (PNG, JPEG, GIF or WebP).');
+  if (file.size > MAX_IMAGE_BYTES) throw new ImageError('That image is larger than 15 MB.');
+  const bitmap = await createImageBitmap(file).catch(() => {
+    throw new ImageError('That image could not be opened.');
+  });
+  try {
+    const storedScale = Math.min(
+      1,
+      MAX_REFERENCE_WIDTH / bitmap.width,
+      MAX_REFERENCE_HEIGHT / bitmap.height,
+    );
+    let dataUrl: string;
+    if (storedScale === 1 && file.type !== 'image/webp' && file.size < 4 * 1024 * 1024) {
+      dataUrl = await readAsDataUrl(file);
+    } else {
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * storedScale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * storedScale));
+      canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      dataUrl = canvas.toDataURL('image/png');
+      if (dataUrl.length > 6 * 1024 * 1024) dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    }
+    const id = await imageId(dataUrl);
+    try {
+      if ((await get<string>(`image:${id}`)) === undefined) await set(`image:${id}`, dataUrl);
+    } catch {
+      /* storage unavailable: the image still lives in the document */
+    }
+    return { id, dataUrl, name: file.name, originalWidth: bitmap.width, storedScale };
+  } finally {
+    bitmap.close();
+  }
+}

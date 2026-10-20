@@ -121,14 +121,14 @@ describe('document migration', () => {
     migrateDoc(old);
     expect(old.version).toBe(1);
     const current = migrateDoc(migrateDoc(old));
-    expect((current as { version: number }).version).toBe(2);
+    expect((current as { version: number }).version).toBe(DOC_VERSION);
     expect(migrateDoc('x')).toBe('x');
     expect(migrateDoc(null)).toBeNull();
   });
 
-  it('opens a version 1 file and validates it as version 2', () => {
+  it('opens a version 1 file and validates it as the current version', () => {
     const doc = validateDoc(v1());
-    expect(doc.version).toBe(2);
+    expect(doc.version).toBe(DOC_VERSION);
     expect(doc.frames.every((f) => f.kitId === 'nsw')).toBe(true);
     expect(doc.kitVersions.nsw).toBe('3.20.0');
   });
@@ -140,7 +140,7 @@ describe('document migration', () => {
       doc: v1(),
       templates: [],
     });
-    expect(parseMockupFile(text).doc.version).toBe(2);
+    expect(parseMockupFile(text).doc.version).toBe(DOC_VERSION);
   });
 
   it('refuses a frame from a kit this build doesn’t have, in words', () => {
@@ -168,7 +168,7 @@ describe('kit-aware store', () => {
 
   it('a new document starts on the default kit with its version recorded', () => {
     const doc = createDoc();
-    expect(doc.version).toBe(2);
+    expect(doc.version).toBe(DOC_VERSION);
     expect(doc.defaultKitId).toBe('nsw');
     expect(doc.kitVersions.nsw).toBe(getKit('nsw').version);
     expect(doc.frames[0]!.kitId).toBe('nsw');
@@ -208,10 +208,10 @@ describe('kit-aware store', () => {
     expect(Object.values(s().doc.nodes).some((n) => n.componentId === 'masthead')).toBe(true);
   });
 
-  it('the NSW samples are kit-2 documents on the NSW kit', () => {
+  it('the NSW samples are current-version documents on the NSW kit', () => {
     for (const def of SAMPLES) {
       const doc = buildSample(def);
-      expect(doc.version).toBe(2);
+      expect(doc.version).toBe(DOC_VERSION);
       expect(doc.frames.every((f) => f.kitId === 'nsw')).toBe(true);
     }
   });

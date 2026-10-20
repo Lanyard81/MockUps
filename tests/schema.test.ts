@@ -97,7 +97,7 @@ describe('untrusted input is refused or repaired', () => {
 
   it('refuses files from a newer version, in words', () => {
     reject(
-      mutate((d) => (d.version = 3)),
+      mutate((d) => (d.version = 99)),
       /newer version/,
     );
   });

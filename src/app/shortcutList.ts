@@ -54,6 +54,8 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
       { keys: `${MOD}scroll`, action: 'Zoom (or pinch)' },
       { keys: `${MOD}+  ${MOD}−`, action: 'Zoom in and out' },
       { keys: `${MOD}0`, action: 'Zoom to fit' },
+      { keys: `${MOD}${SHIFT}R`, action: 'Show or hide the selected frame’s reference image' },
+      { keys: `${MOD}V`, action: 'With only a frame selected, paste an image as its reference' },
       { keys: '?', action: 'Show or hide this sheet' },
     ],
   },

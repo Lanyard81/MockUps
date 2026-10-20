@@ -6,6 +6,7 @@ import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
 import { KIT_PANELS } from '../kitPanels';
 import { PageParts } from '../PageParts';
+import { ReferenceProps } from './ReferenceProps';
 import { CommitInput, Field, Section } from './controls';
 import { SettingsPanel } from './SettingsPanel';
 
@@ -72,6 +73,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           The width decides which {kit.shortLabel} layout is used, just as on a real device.
         </p>
       </Section>
+      <ReferenceProps frameId={frame.id} />
       {kit.pageParts.length > 0 && (
         <Section
           title="Page parts"

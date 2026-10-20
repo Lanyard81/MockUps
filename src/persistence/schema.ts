@@ -7,6 +7,7 @@ import {
   type DeviceId,
   type DocNode,
   type Frame,
+  type FrameReference,
   type MockupDoc,
   type NodeType,
   type SavedTemplate,
@@ -201,6 +202,7 @@ function cleanFrame(raw: unknown, index: number): Frame {
       'This mockup uses a style kit this version of the app doesn’t have. Open it with the latest version.',
     );
   const settings = cleanSettings(raw.settings);
+  const reference = cleanReference(raw.reference);
   return {
     id: str(raw.id, 100) || `f_${index}`,
     name: str(raw.name) || `Frame ${index + 1}`,
@@ -211,6 +213,27 @@ function cleanFrame(raw: unknown, index: number): Frame {
     x: num(raw.x, 0),
     y: num(raw.y, 0),
     root: Array.isArray(raw.root) ? raw.root.filter((c): c is string => typeof c === 'string') : [],
+    ...(reference ? { reference } : {}),
+  };
+}
+
+const PLACEMENTS = ['over', 'behind', 'beside'] as const;
+
+/** A frame's reference image settings, or undefined when missing or damaged. The image itself is checked later. */
+function cleanReference(raw: unknown): FrameReference | undefined {
+  if (!isObject(raw)) return undefined;
+  const imageId = str(raw.imageId, 100);
+  if (!imageId || FORBIDDEN_KEYS.has(imageId)) return undefined;
+  const placement = PLACEMENTS.find((p) => p === raw.placement) ?? 'over';
+  return {
+    imageId,
+    opacity: clamp(num(raw.opacity, 0.4), 0, 1),
+    placement,
+    fit: raw.fit === 'actual' ? 'actual' : 'width',
+    offsetX: clamp(num(raw.offsetX, 0), -20000, 20000),
+    offsetY: clamp(num(raw.offsetY, 0), -20000, 20000),
+    visible: raw.visible !== false,
+    pixelRatio: clamp(num(raw.pixelRatio, 1), 0.1, 8),
   };
 }
 
@@ -235,7 +258,13 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
   if (raw.frames.length > MAX_FRAMES)
     throw new FileError('This mockup has too many frames to open.');
 
-  const frames = raw.frames.map(cleanFrame);
+  const images = cleanImages(raw.images);
+  // A reference whose image is missing is dropped, not left pointing at nothing.
+  const frames = raw.frames.map(cleanFrame).map((f) => {
+    if (!f.reference || images[f.reference.imageId]) return f;
+    const { reference: _gone, ...rest } = f; // eslint-disable-line @typescript-eslint/no-unused-vars
+    return rest;
+  });
   if (new Set(frames.map((f) => f.id)).size !== frames.length)
     throw new FileError('The file’s frames are damaged (two share an id).');
   const nodes = cleanTree(
@@ -267,7 +296,7 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     view: { x: num(view.x, 80), y: num(view.y, 80), zoom: clamp(num(view.zoom, 1), 0.1, 4) },
     frames,
     nodes,
-    images: cleanImages(raw.images),
+    images,
   };
 }
 

@@ -18,6 +18,7 @@ import { StorageBanner } from './StorageBanner';
 import { Toast } from './Toast';
 import { Toolbar } from './Toolbar';
 import { Tour } from './Tour';
+import { addReferenceFromFile, isReferenceFile } from './referenceUpload';
 
 export function App() {
   useEffect(() => {
@@ -36,9 +37,22 @@ export function App() {
       const file = [...(e.dataTransfer?.files ?? [])].find((f) => /\.json$/i.test(f.name));
       if (file) void openMockupFile(file);
     };
+    // Pasting an image with only a frame selected makes it that frame's reference image.
+    const pasteImage = (e: ClipboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+      const s = useStore.getState();
+      if (!s.selectedFrameId || s.selectedNodeId) return;
+      const file = [...(e.clipboardData?.files ?? [])].find(isReferenceFile);
+      if (!file) return;
+      e.preventDefault();
+      void addReferenceFromFile(s.selectedFrameId, file);
+    };
+    window.addEventListener('paste', pasteImage);
     window.addEventListener('dragover', stopFileDrop);
     window.addEventListener('drop', openDropped);
     return () => {
+      window.removeEventListener('paste', pasteImage);
       window.removeEventListener('dragover', stopFileDrop);
       window.removeEventListener('drop', openDropped);
       window.removeEventListener('keydown', handleKeyDown);

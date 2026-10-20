@@ -7,6 +7,7 @@ import { DEVICES, type Frame as FrameModel } from '../store/types';
 import { getKit } from '../kits';
 import { FrameOverlay } from './FrameOverlay';
 import { attachFrameInput } from './input';
+import { ReferenceLayer } from './ReferenceLayer';
 import { registerFrameElement } from './registry';
 
 interface Props {
@@ -79,6 +80,21 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     ro.observe(root);
     return () => ro.disconnect();
   }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store, kit]);
+
+  // A reference "behind" the content needs the page itself see-through (editor affordance only).
+  const showRef = mode === 'edit' && !!frame.reference?.visible;
+  const behind = showRef && frame.reference?.placement === 'behind';
+  useEffect(() => {
+    const doc = iframeRef.current?.contentDocument;
+    if (!ready || !doc) return;
+    doc.getElementById('ref-behind')?.remove();
+    if (!behind) return;
+    const style = doc.createElement('style');
+    style.id = 'ref-behind';
+    style.textContent = 'html,body,#root{background:transparent !important}';
+    doc.head.appendChild(style);
+    return () => style.remove();
+  }, [ready, behind]);
 
   useEffect(() => {
     if (renameRequest === frame.id) {
@@ -166,15 +182,20 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         <span className="frame__size">{frame.width}px</span>
       </div>
       <div className="frame__body" style={{ height }}>
+        {showRef && behind && <ReferenceLayer frame={frame} />}
         <iframe
           ref={iframeRef}
           className="frame__iframe"
           title={frame.name}
           srcDoc={kit.shell.document}
           onLoad={onLoad}
-          style={{ pointerEvents: interactive ? 'auto' : 'none' }}
+          style={{
+            pointerEvents: interactive ? 'auto' : 'none',
+            ...(behind ? { background: 'transparent', position: 'relative', zIndex: 1 } : {}),
+          }}
           data-mode={mode}
         />
+        {showRef && !behind && <ReferenceLayer frame={frame} />}
         <FrameOverlay
           frameId={frame.id}
           layoutKey={`${html.length}:${height}:${frame.width}:${ready}`}

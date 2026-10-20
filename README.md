@@ -43,6 +43,10 @@ Each frame is built with one style kit. **NSW** uses the real NSW Design System.
 
 For SharePoint frames you get a theme (ready-made, Organisation or custom), site settings (site type, header, navigation, footer, page title area), sections (one to three columns, one-third left or right, full width, vertical, flexible, collapsible), 40 web parts, seven page templates, and **Copy as SharePoint build notes**: a plain-English spec a site owner can follow to build the page. **Convert to SharePoint** and **Convert to NSW** make a converted copy of a frame; anything with no equivalent becomes a labelled placeholder and is listed in a summary. See `docs/SHAREPOINT-OOB.md` for what is and isn't modelled.
 
+## Tracing over a screenshot
+
+Select a frame and paste a screenshot (or drop one on the frame, or use **Reference image** in Properties). It is drawn faintly over the frame so you can rebuild the page on top; choose Over, Behind or Beside, change the opacity and size, and hide it with Ctrl/⌘ Shift R. It only shows while editing: never in Preview, PNG or HTML export, or templates.
+
 ## Saving and sharing
 
 - **Autosave:** work is saved in your browser as you go ("Saved" beside the mockup name). **File → My mockups…** lists everything you've made.

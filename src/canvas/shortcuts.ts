@@ -29,6 +29,13 @@ export function handleKeyDown(e: KeyboardEvent) {
     s.setHelpOpen(!s.helpOpen);
     return;
   }
+  if (mod && e.shiftKey && key === 'r' && s.selectedFrameId) {
+    // Show or hide the selected frame's reference image.
+    const reference = s.doc.frames.find((f) => f.id === s.selectedFrameId)?.reference;
+    e.preventDefault();
+    if (reference) s.updateFrameReference(s.selectedFrameId, { visible: !reference.visible });
+    return;
+  }
   if (mod && key === 'z') {
     e.preventDefault();
     if (e.shiftKey) s.redo();

@@ -7,7 +7,7 @@ import { conversionTargets } from '../layout/convert';
 import { getComponent } from '../catalogue';
 import { parentOf } from '../layout/ops';
 import { useStore } from '../store/store';
-import { ALT, MOD } from './platform';
+import { ALT, MOD, SHIFT } from './platform';
 
 interface Item {
   label: string;
@@ -139,6 +139,7 @@ export function ContextMenu() {
     ];
   } else {
     const frameKit = getKit(doc.frames.find((f) => f.id === frameId)?.kitId);
+    const reference = doc.frames.find((f) => f.id === frameId)?.reference;
     items = [
       { label: 'Rename frame', onSelect: () => st().requestRename(frameId) },
       {
@@ -151,6 +152,15 @@ export function ContextMenu() {
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
         onSelect: () => st().setDialog('saveTemplate', frameId),
       },
+      ...(reference
+        ? [
+            {
+              label: reference.visible ? 'Hide reference image' : 'Show reference image',
+              shortcut: `${MOD}${SHIFT}R`,
+              onSelect: () => st().updateFrameReference(frameId, { visible: !reference.visible }),
+            },
+          ]
+        : []),
       ...frameKit.pageParts.map((part, i) => ({
         label: part.label,
         separatorBefore: i === 0,

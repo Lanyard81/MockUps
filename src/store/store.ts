@@ -9,6 +9,7 @@ import { getComponent, hasVariant } from '../catalogue';
 import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
+import { DEFAULT_REFERENCE } from '../lib/reference';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
 import {
   applyInsertion,
@@ -38,6 +39,7 @@ import {
   type DropTarget,
   type Placement,
   type Frame,
+  type FrameReference,
   type MockupDoc,
 } from './types';
 import type { InstantiatedTemplate } from '../templates/types';
@@ -74,7 +76,7 @@ function writeLastKit(id: KitId) {
 
 export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
-    version: 2,
+    version: 3,
     id: newId('doc'),
     name: 'Untitled mockup',
     defaultKitId: kitId,
@@ -264,6 +266,17 @@ interface Actions {
     key: string,
     image: { id: string; dataUrl: string; name?: string },
   ) => void;
+  /** Put a screenshot on a frame as its reference layer (keeps the current look when replacing). One undo step. */
+  setFrameReference: (
+    frameId: string,
+    image: { id: string; dataUrl: string; name?: string },
+    pixelRatio: number,
+  ) => void;
+  /** Change the reference layer. One undo step. */
+  updateFrameReference: (frameId: string, patch: ReferencePatch) => void;
+  /** Change it as part of a gesture (a slider drag): call `beginGesture()` first; no history entry of its own. */
+  updateFrameReferenceLive: (frameId: string, patch: ReferencePatch) => void;
+  removeFrameReference: (frameId: string) => void;
   /** Set one value inside a frame's settings by path (e.g. `navItems.1.label`); the kit's defaults fill in a list not changed yet. One undo step. */
   setFrameSettingAt: (frameId: string, path: string, value: unknown) => void;
   /** Change a kit's document-wide settings, such as the SharePoint theme. One undo step. */
@@ -278,6 +291,8 @@ interface Actions {
   undo: () => void;
   redo: () => void;
 }
+
+export type ReferencePatch = Partial<Omit<FrameReference, 'imageId'>>;
 
 export type Store = State & Actions;
 
@@ -998,6 +1013,52 @@ export const useStore = create<Store>((set, get) => ({
         s,
         updateFrame(doc, frameId, { settings: applyPatch(frame.settings, { [key]: image.id }) }),
       );
+    }),
+
+  setFrameReference: (frameId, image, pixelRatio) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const doc = {
+        ...s.doc,
+        images: { ...s.doc.images, [image.id]: { dataUrl: image.dataUrl, name: image.name } },
+      };
+      const reference: FrameReference = {
+        ...DEFAULT_REFERENCE,
+        ...frame.reference,
+        visible: true,
+        imageId: image.id,
+        pixelRatio,
+      };
+      return commit(s, updateFrame(doc, frameId, { reference }));
+    }),
+
+  updateFrameReference: (frameId, patch) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame?.reference) return s;
+      return commit(
+        s,
+        updateFrame(s.doc, frameId, { reference: { ...frame.reference, ...patch } }),
+      );
+    }),
+
+  updateFrameReferenceLive: (frameId, patch) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame?.reference) return s;
+      return { doc: updateFrame(s.doc, frameId, { reference: { ...frame.reference, ...patch } }) };
+    }),
+
+  removeFrameReference: (frameId) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame?.reference) return s;
+      const { reference: _gone, ...rest } = frame; // eslint-disable-line @typescript-eslint/no-unused-vars
+      return commit(s, {
+        ...s.doc,
+        frames: s.doc.frames.map((f) => (f.id === frameId ? rest : f)),
+      });
     }),
 
   setFrameSettingAt: (frameId, path, value) =>

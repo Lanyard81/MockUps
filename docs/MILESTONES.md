@@ -160,3 +160,18 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Section structure maps to the nearest layout (one, two or three columns, one-third left or right, full width), including column widths; backgrounds map to the nearest equivalent
 - [x] Text and pictures carry across; anything without an equivalent becomes a clearly labelled placeholder showing the original name (a SharePoint Placeholder web part; an NSW in-page alert), and a summary lists what could not be mapped
 - [x] Tests: the mapping both ways, structure, placeholders, one undo step and an untouched original (Vitest); the flows in the browser (Playwright)
+
+## Milestone R1: Reference layer
+
+- [x] Add a reference image to a frame from the frame's Properties ("Add reference image…"), by dropping an image on the frame, or by pasting one with only a frame selected
+- [x] Drawn over the content with pointer events off; default opacity 40%
+- [x] Controls: opacity, show/hide (⌘/Ctrl+Shift+R, also in the frame menu), Over / Behind / Beside (full opacity next to the frame), Fit to width or Actual size, x/y offset, replace, remove
+- [x] Offers to set the frame width to the screenshot's width (nearest device preset within 5%, 2× captures halved)
+- [x] Edit mode only: absent from Preview, thumbnails, PNG and HTML export, build notes and templates
+- [x] Stored as `frame.reference` with the image in `doc.images`; document version 3 with migration and validation
+- [x] Undoable (an opacity drag is one step); works in the single-file build
+- [x] Tests: migration, validation, width detection, actions and undo (Vitest); paste, panel, opacity, placements, shortcut, drop, export unchanged, Preview, reload (Playwright)
+
+## Milestone R2: Page specs (not started)
+
+## Milestone R3: Import from screenshot (optional, not started)

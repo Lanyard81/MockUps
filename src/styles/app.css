@@ -261,6 +261,37 @@ select {
 .frame--selected .frame__body {
   outline: 2px solid var(--ed-accent);
 }
+.frame__ref {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.frame__ref img {
+  position: absolute;
+  max-width: none;
+  display: block;
+  user-select: none;
+}
+.frame__ref--behind {
+  z-index: 0;
+}
+.frame__ref--beside {
+  inset: 0 auto auto calc(100% + 24px);
+  overflow: visible;
+}
+.frame__ref--beside img {
+  position: static;
+}
+.frame__ref-label {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  padding-bottom: 4px;
+  font-size: 12px;
+  color: var(--ed-text-muted);
+  white-space: nowrap;
+}
 .frame__iframe {
   display: block;
   width: 100%;
@@ -1762,4 +1793,10 @@ kbd {
 .modal__list {
   margin: 0;
   padding-left: var(--ed-space-5);
+}
+
+.prop-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ed-space-2, 8px);
 }

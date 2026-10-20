@@ -3,6 +3,7 @@ import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { DRAG_THRESHOLD, startDrag } from './drag';
 import { setImageFromFile } from '../app/imageUpload';
+import { addReferenceFromFile, isReferenceFile } from '../app/referenceUpload';
 import { startSettingEdit, startTextEdit } from './textEdit';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
 
@@ -144,7 +145,14 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     const key = img?.getAttribute('data-image');
     const file = e.dataTransfer?.files[0];
     if (nodeId && key && file) void setImageFromFile(nodeId, key, file);
-    else store.setNotice('Drop the image onto a picture in the mockup to replace it.');
+    else if (file && isReferenceFile(file)) {
+      // Anywhere else on the frame, an image becomes its reference screenshot.
+      store.selectFrame(frameId);
+      void addReferenceFromFile(frameId, file);
+    } else
+      store.setNotice(
+        'Drop an image onto a picture to replace it, or onto the frame to trace over it.',
+      );
   });
 
   // Edit mode: right-click opens the actions menu for what is under the pointer.
