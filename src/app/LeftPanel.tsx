@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useStore } from '../store/store';
 import { Layers } from './Layers';
 import { Library } from './Library';
-
-type Tab = 'library' | 'layers';
+import { Templates } from './Templates';
 
 /** Left side: the component library, with the layers tree in a tab beside it. */
 export function LeftPanel() {
-  const [tab, setTab] = useState<Tab>('library');
+  const tab = useStore((s) => s.leftTab);
+  const setTab = useStore((s) => s.setLeftTab);
   return (
     <div className="left">
       <div className="tabs" role="tablist" aria-label="Left panel">
-        {(['library', 'layers'] as const).map((t) => (
+        {(['library', 'templates', 'layers'] as const).map((t) => (
           <button
             key={t}
             role="tab"
@@ -20,7 +20,7 @@ export function LeftPanel() {
             className={`tabs__tab${tab === t ? ' is-active' : ''}`}
             onClick={() => setTab(t)}
           >
-            {t === 'library' ? 'Library' : 'Layers'}
+            {t === 'library' ? 'Library' : t === 'templates' ? 'Templates' : 'Layers'}
           </button>
         ))}
       </div>
@@ -33,6 +33,15 @@ export function LeftPanel() {
         className="left__body"
       >
         <Library />
+      </div>
+      <div
+        id="panel-templates"
+        role="tabpanel"
+        aria-labelledby="tab-templates"
+        hidden={tab !== 'templates'}
+        className="left__body"
+      >
+        <Templates />
       </div>
       <div
         id="panel-layers"

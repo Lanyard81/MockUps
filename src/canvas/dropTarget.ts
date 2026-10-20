@@ -19,7 +19,25 @@ function leafInfo(payload: DragPayload, doc: Doc): { depth: number; exclude?: st
       const node = doc.nodes[payload.nodeId];
       return node ? { depth: depthOf(node), exclude: node.id } : null;
     }
+    case 'template':
+      return null; // templates drop onto whole frames or the canvas: see `frameAtPoint`
   }
+}
+
+/** The frame under a screen point, with its iframe. */
+export function frameAtPoint(
+  doc: Doc,
+  clientX: number,
+  clientY: number,
+): { frame: Doc['frames'][number]; iframe: HTMLIFrameElement } | null {
+  for (const frame of doc.frames) {
+    const iframe = getFrameElement(frame.id);
+    if (!iframe) continue;
+    const r = iframe.getBoundingClientRect();
+    if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom)
+      return { frame, iframe };
+  }
+  return null;
 }
 
 const toRect = (r: DOMRect): IndicatorRect => ({
@@ -103,18 +121,9 @@ export function computeDropTarget(
   if (!leaf) return null;
 
   // Which frame is under the pointer?
-  let frame: Doc['frames'][number] | undefined;
-  let iframe: HTMLIFrameElement | undefined;
-  for (const f of doc.frames) {
-    const el = getFrameElement(f.id);
-    if (!el) continue;
-    const r = el.getBoundingClientRect();
-    if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
-      frame = f;
-      iframe = el;
-      break;
-    }
-  }
+  const hit = frameAtPoint(doc, clientX, clientY);
+  const frame = hit?.frame;
+  const iframe = hit?.iframe;
   const idoc = iframe?.contentDocument;
   if (!frame || !iframe || !idoc) return null;
 

@@ -4,7 +4,7 @@ A browser-based tool for making screen mockups from the official [NSW Government
 
 **Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
 
-> Status: Milestones 0–6 are done (scaffolding, canvas and device frames, component library, drag and drop, editing, layers and polish, saving and export). Templates and click-through prototypes are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
+> Status: Milestones 0–7 are done (scaffolding, canvas and device frames, component library, drag and drop, editing, layers and polish, saving and export, templates and samples). Click-through prototypes are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
 
 ## Run it locally
 
@@ -28,6 +28,10 @@ Other scripts:
 | `npm run build:single` | Single self-contained file at `dist-single/nsw-mockup-builder.html` |
 
 Playwright needs a Chromium. Run `npx playwright install chromium`, or point `PW_CHROMIUM` at an existing binary.
+
+## Templates and samples
+
+The Templates tab holds 22 official page templates (homepage, content, search, maps, theming, landing pages). Click one to add it as a new frame, or drag it onto a frame to replace that frame's content (you're asked first). Right-click a frame and choose Save as template to keep your own. The File menu opens three sample mockups.
 
 ## Saving and sharing
 

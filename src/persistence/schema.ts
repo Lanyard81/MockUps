@@ -229,9 +229,13 @@ export interface MockupFile {
 }
 
 /** The on-disk format of a `.mockup.json`: the document, with images embedded, plus the user's templates. */
-export function serialiseMockupFile(doc: MockupDoc, templates: SavedTemplate[] = []): string {
+export function serialiseMockupFile(
+  doc: MockupDoc,
+  templates: SavedTemplate[] = [],
+  savedAt: string = new Date().toISOString(),
+): string {
   return JSON.stringify(
-    { app: FILE_APP, fileVersion: FILE_VERSION, savedAt: new Date().toISOString(), doc, templates },
+    { app: FILE_APP, fileVersion: FILE_VERSION, savedAt, doc, templates },
     null,
     1,
   );

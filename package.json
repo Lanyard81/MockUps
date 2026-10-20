@@ -16,6 +16,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "catalogue": "tsx scripts/generate-catalogue.ts",
+    "samples": "tsx scripts/generate-samples.ts",
     "catalogue:check": "npm run catalogue && git diff --exit-code src/catalogue/generated"
   },
   "dependencies": {

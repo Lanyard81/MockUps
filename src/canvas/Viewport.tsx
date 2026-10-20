@@ -15,7 +15,7 @@ export function Viewport() {
   const panning = useStore((s) => s.panning);
   const fitted = useStore((s) => s.fitted);
   const dragging = useStore((s) => s.drag !== null);
-  const droppable = useStore((s) => s.dropTarget !== null);
+  const droppable = useStore((s) => s.dropTarget !== null || s.templateDrop !== null);
 
   // Track the viewport size so "Zoom to fit" knows how much room there is.
   useEffect(() => {

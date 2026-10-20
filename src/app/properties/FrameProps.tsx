@@ -56,6 +56,14 @@ export function FrameProps({ frameId }: { frameId: string }) {
       <div className="prop-actions">
         <button
           className="btn"
+          disabled={frame.root.length === 0}
+          onClick={() => st().setDialog('saveTemplate', frame.id)}
+          title="Keep this frame to start new frames from later"
+        >
+          Save as template…
+        </button>
+        <button
+          className="btn"
           onClick={() => st().duplicateFrame(frame.id)}
           title="Duplicate (Ctrl/⌘ D)"
         >

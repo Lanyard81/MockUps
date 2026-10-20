@@ -143,6 +143,11 @@ export function ContextMenu() {
         onSelect: () => st().duplicateFrame(frameId),
       },
       {
+        label: 'Save as template…',
+        disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
+        onSelect: () => st().setDialog('saveTemplate', frameId),
+      },
+      {
         label: 'Add masthead + header',
         separatorBefore: true,
         onSelect: () => st().addPageParts(frameId, 'top'),

@@ -84,11 +84,11 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 7: Templates
 
-- [ ] Templates tab
-- [ ] Official NSW templates built from catalogue components
-- [ ] Drop a template to create or replace a frame
-- [ ] Save as template; my templates
-- [ ] Sample mockups
+- [x] Templates tab
+- [x] Official NSW templates built from catalogue components
+- [x] Drop a template to create or replace a frame
+- [x] Save as template; my templates
+- [x] Sample mockups
 
 ## Milestone 8 (optional, confirm first): Click-through prototypes
 

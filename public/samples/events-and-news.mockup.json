@@ -1,0 +1,892 @@
+{
+ "app": "nsw-mockup-builder",
+ "fileVersion": 1,
+ "savedAt": "2026-10-20T00:00:00.000Z",
+ "doc": {
+  "version": 1,
+  "id": "doc_sample_events-and-news",
+  "name": "Events and news",
+  "nswVersion": "3.28.1",
+  "view": {
+   "x": 80,
+   "y": 80,
+   "zoom": 0.3
+  },
+  "frames": [
+   {
+    "id": "f_events-and-news_1",
+    "name": "Events",
+    "device": "desktop",
+    "width": 1440,
+    "x": 0,
+    "y": 0,
+    "root": [
+     "n_eve1",
+     "n_eve2",
+     "n_eve3",
+     "n_eve4",
+     "n_eve16",
+     "n_eve24",
+     "n_eve25"
+    ]
+   },
+   {
+    "id": "f_events-and-news_2",
+    "name": "Article",
+    "device": "desktop",
+    "width": 1440,
+    "x": 1520,
+    "y": 0,
+    "root": [
+     "n_eve26",
+     "n_eve27",
+     "n_eve28",
+     "n_eve33",
+     "n_eve49",
+     "n_eve50"
+    ]
+   },
+   {
+    "id": "f_events-and-news_3",
+    "name": "Search",
+    "device": "desktop",
+    "width": 1440,
+    "x": 3040,
+    "y": 0,
+    "root": [
+     "n_eve51",
+     "n_eve52",
+     "n_eve53",
+     "n_eve66",
+     "n_eve67"
+    ]
+   }
+  ],
+  "nodes": {
+   "n_eve1": {
+    "id": "n_eve1",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve2": {
+    "id": "n_eve2",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve3": {
+    "id": "n_eve3",
+    "type": "component",
+    "componentId": "main-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "item1": "Home",
+     "item2": "Services",
+     "item3": "News",
+     "item4": "Events",
+     "item5": "About us",
+     "item6": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve4": {
+    "id": "n_eve4",
+    "type": "component",
+    "componentId": "hero-banner",
+    "variant": "off-white",
+    "props": {},
+    "text": {
+     "title": "Events",
+     "intro": "Find workshops, talks and community days near you.",
+     "button": "View the calendar"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve5": {
+    "id": "n_eve5",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "Upcoming events"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve6": {
+    "id": "n_eve6",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_eve5"
+    ]
+   },
+   "n_eve7": {
+    "id": "n_eve7",
+    "type": "grid",
+    "children": [
+     "n_eve6"
+    ]
+   },
+   "n_eve8": {
+    "id": "n_eve8",
+    "type": "component",
+    "componentId": "card",
+    "variant": "default",
+    "props": {
+     "goto": "f_events-and-news_2"
+    },
+    "text": {
+     "tag": "News",
+     "title": "Featured item 1",
+     "copy": "A short summary of this item and why it matters to the reader.",
+     "date": "20 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve9": {
+    "id": "n_eve9",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_eve8"
+    ]
+   },
+   "n_eve10": {
+    "id": "n_eve10",
+    "type": "component",
+    "componentId": "card",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "tag": "Guide",
+     "title": "Featured item 2",
+     "copy": "A short summary of this item and why it matters to the reader.",
+     "date": "20 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve11": {
+    "id": "n_eve11",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_eve10"
+    ]
+   },
+   "n_eve12": {
+    "id": "n_eve12",
+    "type": "component",
+    "componentId": "card",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "tag": "Event",
+     "title": "Featured item 3",
+     "copy": "A short summary of this item and why it matters to the reader.",
+     "date": "20 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve13": {
+    "id": "n_eve13",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_eve12"
+    ]
+   },
+   "n_eve14": {
+    "id": "n_eve14",
+    "type": "grid",
+    "children": [
+     "n_eve9",
+     "n_eve11",
+     "n_eve13"
+    ]
+   },
+   "n_eve15": {
+    "id": "n_eve15",
+    "type": "container",
+    "children": [
+     "n_eve7",
+     "n_eve14"
+    ]
+   },
+   "n_eve16": {
+    "id": "n_eve16",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_eve15"
+    ]
+   },
+   "n_eve17": {
+    "id": "n_eve17",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "Host an event"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve18": {
+    "id": "n_eve18",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "text": "Run an event with support from our team."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve19": {
+    "id": "n_eve19",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 8
+     }
+    },
+    "children": [
+     "n_eve17",
+     "n_eve18"
+    ]
+   },
+   "n_eve20": {
+    "id": "n_eve20",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark",
+    "props": {
+     "goto": "f_events-and-news_3"
+    },
+    "text": {
+     "label": "Apply to host an event"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve21": {
+    "id": "n_eve21",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_eve20"
+    ]
+   },
+   "n_eve22": {
+    "id": "n_eve22",
+    "type": "grid",
+    "children": [
+     "n_eve19",
+     "n_eve21"
+    ]
+   },
+   "n_eve23": {
+    "id": "n_eve23",
+    "type": "container",
+    "children": [
+     "n_eve22"
+    ]
+   },
+   "n_eve24": {
+    "id": "n_eve24",
+    "type": "section",
+    "props": {
+     "background": "brand-light"
+    },
+    "children": [
+     "n_eve23"
+    ]
+   },
+   "n_eve25": {
+    "id": "n_eve25",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve26": {
+    "id": "n_eve26",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve27": {
+    "id": "n_eve27",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve28": {
+    "id": "n_eve28",
+    "type": "component",
+    "componentId": "main-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "item1": "Home",
+     "item2": "Services",
+     "item3": "News",
+     "item4": "Events",
+     "item5": "About us",
+     "item6": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve29": {
+    "id": "n_eve29",
+    "type": "component",
+    "componentId": "breadcrumbs",
+    "variant": "default",
+    "props": {
+     "goto": "f_events-and-news_1"
+    },
+    "text": {
+     "crumb1": "Home",
+     "crumb2": "News",
+     "current": "Article"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve30": {
+    "id": "n_eve30",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_eve29"
+    ]
+   },
+   "n_eve31": {
+    "id": "n_eve31",
+    "type": "grid",
+    "children": [
+     "n_eve30"
+    ]
+   },
+   "n_eve32": {
+    "id": "n_eve32",
+    "type": "container",
+    "children": [
+     "n_eve31"
+    ]
+   },
+   "n_eve33": {
+    "id": "n_eve33",
+    "type": "section",
+    "props": {
+     "background": "white",
+     "padding": "half"
+    },
+    "children": [
+     "n_eve32"
+    ]
+   },
+   "n_eve34": {
+    "id": "n_eve34",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "Article headline goes here"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve35": {
+    "id": "n_eve35",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "intro",
+    "props": {},
+    "text": {
+     "text": "A short introduction that tells the reader what this article covers."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve36": {
+    "id": "n_eve36",
+    "type": "component",
+    "componentId": "media",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "caption": "Image caption"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve37": {
+    "id": "n_eve37",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "First section"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve38": {
+    "id": "n_eve38",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "text": "Body text for this section. Use plain, direct language that is easy to scan."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve39": {
+    "id": "n_eve39",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "text": "A second paragraph continues the section with supporting detail."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve40": {
+    "id": "n_eve40",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "Second section"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve41": {
+    "id": "n_eve41",
+    "type": "component",
+    "componentId": "callout",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Good to know",
+     "copy": "Use a callout for information the reader should not miss."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve42": {
+    "id": "n_eve42",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "text": "Closing paragraph with next steps."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve43": {
+    "id": "n_eve43",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 8
+     }
+    },
+    "children": [
+     "n_eve34",
+     "n_eve35",
+     "n_eve36",
+     "n_eve37",
+     "n_eve38",
+     "n_eve39",
+     "n_eve40",
+     "n_eve41",
+     "n_eve42"
+    ]
+   },
+   "n_eve44": {
+    "id": "n_eve44",
+    "type": "component",
+    "componentId": "in-page-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "On this page",
+     "item1": "First section",
+     "item2": "Second section",
+     "item3": "Next steps",
+     "item4": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve45": {
+    "id": "n_eve45",
+    "type": "component",
+    "componentId": "link-list",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Related links",
+     "link1": "Related guide",
+     "link2": "Another service",
+     "link3": "Frequently asked questions",
+     "link4": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve46": {
+    "id": "n_eve46",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_eve44",
+     "n_eve45"
+    ]
+   },
+   "n_eve47": {
+    "id": "n_eve47",
+    "type": "grid",
+    "children": [
+     "n_eve43",
+     "n_eve46"
+    ]
+   },
+   "n_eve48": {
+    "id": "n_eve48",
+    "type": "container",
+    "children": [
+     "n_eve47"
+    ]
+   },
+   "n_eve49": {
+    "id": "n_eve49",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_eve48"
+    ]
+   },
+   "n_eve50": {
+    "id": "n_eve50",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve51": {
+    "id": "n_eve51",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve52": {
+    "id": "n_eve52",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve53": {
+    "id": "n_eve53",
+    "type": "component",
+    "componentId": "main-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "item1": "Home",
+     "item2": "Services",
+     "item3": "News",
+     "item4": "Events",
+     "item5": "About us",
+     "item6": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve54": {
+    "id": "n_eve54",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "Search"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve55": {
+    "id": "n_eve55",
+    "type": "component",
+    "componentId": "form",
+    "variant": "search",
+    "props": {},
+    "text": {
+     "label": "Search"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve56": {
+    "id": "n_eve56",
+    "type": "component",
+    "componentId": "results-bar",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "summary": "Showing 1–10 of 54 results"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve57": {
+    "id": "n_eve57",
+    "type": "component",
+    "componentId": "list-item",
+    "variant": "default",
+    "props": {
+     "goto": "f_events-and-news_2"
+    },
+    "text": {
+     "label": "Guide",
+     "title": "Search result 1",
+     "copy": "A short description of this result, taken from the start of the page.",
+     "date": "12 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve58": {
+    "id": "n_eve58",
+    "type": "component",
+    "componentId": "list-item",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "label": "Form",
+     "title": "Search result 2",
+     "copy": "A short description of this result, taken from the start of the page.",
+     "date": "12 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve59": {
+    "id": "n_eve59",
+    "type": "component",
+    "componentId": "list-item",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "label": "Service",
+     "title": "Search result 3",
+     "copy": "A short description of this result, taken from the start of the page.",
+     "date": "12 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve60": {
+    "id": "n_eve60",
+    "type": "component",
+    "componentId": "list-item",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "label": "News",
+     "title": "Search result 4",
+     "copy": "A short description of this result, taken from the start of the page.",
+     "date": "12 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve61": {
+    "id": "n_eve61",
+    "type": "component",
+    "componentId": "list-item",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "label": "Guide",
+     "title": "Search result 5",
+     "copy": "A short description of this result, taken from the start of the page.",
+     "date": "12 October 2026"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve62": {
+    "id": "n_eve62",
+    "type": "component",
+    "componentId": "pagination",
+    "variant": "default",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_eve63": {
+    "id": "n_eve63",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_eve54",
+     "n_eve55",
+     "n_eve56",
+     "n_eve57",
+     "n_eve58",
+     "n_eve59",
+     "n_eve60",
+     "n_eve61",
+     "n_eve62"
+    ]
+   },
+   "n_eve64": {
+    "id": "n_eve64",
+    "type": "grid",
+    "children": [
+     "n_eve63"
+    ]
+   },
+   "n_eve65": {
+    "id": "n_eve65",
+    "type": "container",
+    "children": [
+     "n_eve64"
+    ]
+   },
+   "n_eve66": {
+    "id": "n_eve66",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_eve65"
+    ]
+   },
+   "n_eve67": {
+    "id": "n_eve67",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   }
+  },
+  "images": {}
+ },
+ "templates": []
+}

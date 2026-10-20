@@ -1,0 +1,506 @@
+{
+ "app": "nsw-mockup-builder",
+ "fileVersion": 1,
+ "savedAt": "2026-10-20T00:00:00.000Z",
+ "doc": {
+  "version": 1,
+  "id": "doc_sample_mobile-service",
+  "name": "Mobile service",
+  "nswVersion": "3.28.1",
+  "view": {
+   "x": 80,
+   "y": 80,
+   "zoom": 0.3
+  },
+  "frames": [
+   {
+    "id": "f_mobile-service_1",
+    "name": "Home",
+    "device": "iphone",
+    "width": 393,
+    "x": 0,
+    "y": 0,
+    "root": [
+     "n_mob1",
+     "n_mob2",
+     "n_mob3",
+     "n_mob10",
+     "n_mob11"
+    ]
+   },
+   {
+    "id": "f_mobile-service_2",
+    "name": "Service",
+    "device": "iphone",
+    "width": 393,
+    "x": 473,
+    "y": 0,
+    "root": [
+     "n_mob12",
+     "n_mob13",
+     "n_mob23",
+     "n_mob24"
+    ]
+   },
+   {
+    "id": "f_mobile-service_3",
+    "name": "Contact",
+    "device": "iphone",
+    "width": 393,
+    "x": 946,
+    "y": 0,
+    "root": [
+     "n_mob25",
+     "n_mob26",
+     "n_mob35",
+     "n_mob36"
+    ]
+   }
+  ],
+  "nodes": {
+   "n_mob1": {
+    "id": "n_mob1",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob2": {
+    "id": "n_mob2",
+    "type": "component",
+    "componentId": "header",
+    "variant": "simple",
+    "props": {},
+    "text": {
+     "title": "Service name"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob3": {
+    "id": "n_mob3",
+    "type": "component",
+    "componentId": "hero-banner",
+    "variant": "dark",
+    "props": {
+     "goto": "f_mobile-service_2"
+    },
+    "text": {
+     "title": "Help, wherever you are",
+     "intro": "Services in your pocket.",
+     "button": "See services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob4": {
+    "id": "n_mob4",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "Popular"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob5": {
+    "id": "n_mob5",
+    "type": "component",
+    "componentId": "card",
+    "variant": "default",
+    "props": {
+     "goto": "f_mobile-service_2",
+     "hiddenParts": [
+      "date"
+     ]
+    },
+    "text": {
+     "tag": "Service",
+     "title": "Renew a licence",
+     "copy": "Online in minutes."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob6": {
+    "id": "n_mob6",
+    "type": "component",
+    "componentId": "card",
+    "variant": "default",
+    "props": {
+     "hiddenParts": [
+      "date"
+     ]
+    },
+    "text": {
+     "tag": "Service",
+     "title": "Find a service centre",
+     "copy": "Hours and directions."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob7": {
+    "id": "n_mob7",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_mob4",
+     "n_mob5",
+     "n_mob6"
+    ]
+   },
+   "n_mob8": {
+    "id": "n_mob8",
+    "type": "grid",
+    "children": [
+     "n_mob7"
+    ]
+   },
+   "n_mob9": {
+    "id": "n_mob9",
+    "type": "container",
+    "children": [
+     "n_mob8"
+    ]
+   },
+   "n_mob10": {
+    "id": "n_mob10",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_mob9"
+    ]
+   },
+   "n_mob11": {
+    "id": "n_mob11",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob12": {
+    "id": "n_mob12",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob13": {
+    "id": "n_mob13",
+    "type": "component",
+    "componentId": "header",
+    "variant": "simple",
+    "props": {},
+    "text": {
+     "title": "Service name"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob14": {
+    "id": "n_mob14",
+    "type": "component",
+    "componentId": "breadcrumbs",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "crumb1": "Home",
+     "crumb2": "Services",
+     "current": "Renew a licence"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob15": {
+    "id": "n_mob15",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "Renew a licence"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob16": {
+    "id": "n_mob16",
+    "type": "component",
+    "componentId": "paragraph",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "text": "You can renew up to 90 days before your licence expires."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob17": {
+    "id": "n_mob17",
+    "type": "component",
+    "componentId": "accordion",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title1": "What you need",
+     "content1": "Your licence number and a payment card.",
+     "title2": "How much it costs",
+     "content2": "Fees depend on the licence type.",
+     "title3": "How long it takes",
+     "content3": "Most renewals are done on the spot."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob18": {
+    "id": "n_mob18",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark",
+    "props": {},
+    "text": {
+     "label": "Start renewal"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob19": {
+    "id": "n_mob19",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark-outline",
+    "props": {
+     "goto": "f_mobile-service_3"
+    },
+    "text": {
+     "label": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob20": {
+    "id": "n_mob20",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_mob14",
+     "n_mob15",
+     "n_mob16",
+     "n_mob17",
+     "n_mob18",
+     "n_mob19"
+    ]
+   },
+   "n_mob21": {
+    "id": "n_mob21",
+    "type": "grid",
+    "children": [
+     "n_mob20"
+    ]
+   },
+   "n_mob22": {
+    "id": "n_mob22",
+    "type": "container",
+    "children": [
+     "n_mob21"
+    ]
+   },
+   "n_mob23": {
+    "id": "n_mob23",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_mob22"
+    ]
+   },
+   "n_mob24": {
+    "id": "n_mob24",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob25": {
+    "id": "n_mob25",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob26": {
+    "id": "n_mob26",
+    "type": "component",
+    "componentId": "header",
+    "variant": "simple",
+    "props": {},
+    "text": {
+     "title": "Service name"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob27": {
+    "id": "n_mob27",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob28": {
+    "id": "n_mob28",
+    "type": "component",
+    "componentId": "form",
+    "variant": "text",
+    "props": {
+     "hiddenParts": [
+      "helper"
+     ]
+    },
+    "text": {
+     "label": "Your name",
+     "helper": ""
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob29": {
+    "id": "n_mob29",
+    "type": "component",
+    "componentId": "form",
+    "variant": "text",
+    "props": {
+     "hiddenParts": [
+      "helper"
+     ]
+    },
+    "text": {
+     "label": "Email address",
+     "helper": ""
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob30": {
+    "id": "n_mob30",
+    "type": "component",
+    "componentId": "form",
+    "variant": "textarea",
+    "props": {
+     "hiddenParts": [
+      "helper"
+     ]
+    },
+    "text": {
+     "label": "Your message",
+     "helper": ""
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob31": {
+    "id": "n_mob31",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark",
+    "props": {
+     "goto": "f_mobile-service_1"
+    },
+    "text": {
+     "label": "Send message"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_mob32": {
+    "id": "n_mob32",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_mob27",
+     "n_mob28",
+     "n_mob29",
+     "n_mob30",
+     "n_mob31"
+    ]
+   },
+   "n_mob33": {
+    "id": "n_mob33",
+    "type": "grid",
+    "children": [
+     "n_mob32"
+    ]
+   },
+   "n_mob34": {
+    "id": "n_mob34",
+    "type": "container",
+    "children": [
+     "n_mob33"
+    ]
+   },
+   "n_mob35": {
+    "id": "n_mob35",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_mob34"
+    ]
+   },
+   "n_mob36": {
+    "id": "n_mob36",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   }
+  },
+  "images": {}
+ },
+ "templates": []
+}

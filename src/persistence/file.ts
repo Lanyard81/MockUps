@@ -2,6 +2,7 @@ import { downloadBlob, slug } from '../export/download';
 import { newId } from '../lib/ids';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
+import { SAMPLES, buildSample } from '../templates/samples';
 import { FileError, parseMockupFile, serialiseMockupFile } from './schema';
 
 /** Save the open mockup (images embedded) and the user's templates as one portable file. */
@@ -42,4 +43,14 @@ export function pickMockupFile(): void {
     if (file) void openMockupFile(file);
   });
   input.click();
+}
+
+/** Open one of the built-in sample mockups as a new mockup (the same path as opening a file). */
+export function loadSample(id: string): void {
+  const def = SAMPLES.find((d) => d.id === id);
+  if (!def) return;
+  const s = useStore.getState();
+  const { doc } = parseMockupFile(serialiseMockupFile(buildSample(def)));
+  s.loadDoc({ ...doc, id: newId('doc') });
+  s.setNotice(`Opened the “${def.name}” sample. Switch to Preview to click through it.`);
 }

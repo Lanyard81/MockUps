@@ -37,6 +37,7 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   const hoverId = useStore((s) => (s.hover?.frameId === frameId ? s.hover.nodeId : null));
   const dragging = useStore((s) => s.drag !== null);
   const drop = useStore((s) => (s.dropTarget?.frameId === frameId ? s.dropTarget : null));
+  const replacing = useStore((s) => s.templateDrop?.frameId === frameId);
   const node = useStore((s) => (selectedId ? s.doc.nodes[selectedId] : undefined));
   const label = nodeLabel(node);
   const movable = !!node && isDraggable(node);
@@ -79,6 +80,15 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
           {label}
         </div>
       </div>
+      {replacing && (
+        <div
+          className="ov-drop ov-drop--box ov-drop--replace"
+          data-testid="replace-indicator"
+          style={{ inset: 0 }}
+        >
+          <span>Replace this frame’s content</span>
+        </div>
+      )}
       {drop && parent && (
         <div
           className="ov-drop-parent"

@@ -10,6 +10,7 @@ import { ExportDialog } from './ExportDialog';
 import { LeftPanel } from './LeftPanel';
 import { MyMockups } from './MyMockups';
 import { Properties } from './Properties';
+import { SaveTemplateDialog } from './SaveTemplateDialog';
 import { ShortcutsSheet } from './ShortcutsSheet';
 import { StorageBanner } from './StorageBanner';
 import { Toast } from './Toast';
@@ -70,6 +71,7 @@ export function App() {
       <ShortcutsSheet />
       <MyMockups />
       <ExportDialog />
+      <SaveTemplateDialog />
       <ConfirmDialog />
       <Tour />
       <Toast />

@@ -40,6 +40,7 @@ import {
   type Frame,
   type MockupDoc,
 } from './types';
+import type { InstantiatedTemplate } from '../templates/build';
 
 const HISTORY_LIMIT = 100;
 const FRAME_GAP = 80;
@@ -82,7 +83,13 @@ interface State {
   /** Can this page keep data between visits? Null until checked. */
   storageOk: boolean | null;
   /** The open dialog, if any. */
-  dialog: 'mockups' | 'export' | null;
+  dialog: 'mockups' | 'export' | 'saveTemplate' | null;
+  /** The frame a dialog is about (Save as template). */
+  dialogFrameId: string | null;
+  /** Which tab of the left panel is showing. */
+  leftTab: 'library' | 'layers' | 'templates';
+  /** While dragging a template: the frame it is over (it would replace its content), or just the canvas. */
+  templateDrop: { frameId: string | null } | null;
   confirm: ConfirmRequest | null;
   /** Zoom to fit as soon as every frame has been measured (after opening a mockup). */
   fitRequested: boolean;
@@ -118,7 +125,13 @@ interface Actions {
   openContextMenu: (menu: ContextMenuState | null) => void;
   setSaveState: (state: State['saveState']) => void;
   setStorageOk: (ok: boolean) => void;
-  setDialog: (dialog: State['dialog']) => void;
+  setDialog: (dialog: State['dialog'], frameId?: string) => void;
+  setLeftTab: (tab: State['leftTab']) => void;
+  setTemplateDrop: (drop: State['templateDrop']) => void;
+  /** Put a template on the canvas as a new frame (undoable). Returns the frame's id. */
+  addFrameFromTemplate: (template: InstantiatedTemplate, at?: { x: number; y: number }) => string;
+  /** Replace everything in a frame with a template (undoable). */
+  replaceFrameWithTemplate: (frameId: string, template: InstantiatedTemplate) => void;
   requestConfirm: (request: ConfirmRequest | null) => void;
   clearFitRequest: () => void;
   /** Replace the whole document (opening a mockup or file). Starts a fresh undo history. */
@@ -274,6 +287,9 @@ export const useStore = create<Store>((set, get) => ({
   saveState: 'saved',
   storageOk: null,
   dialog: null,
+  dialogFrameId: null,
+  leftTab: 'library',
+  templateDrop: null,
   confirm: null,
   fitRequested: true,
   helpOpen: false,
@@ -300,14 +316,58 @@ export const useStore = create<Store>((set, get) => ({
     set((s) =>
       s.hover?.nodeId === hover?.nodeId && s.hover?.frameId === hover?.frameId ? s : { hover },
     ),
-  setDrag: (drag) => set({ drag, dropTarget: null, hover: null }),
+  setDrag: (drag) => set({ drag, dropTarget: null, templateDrop: null, hover: null }),
   setDropTarget: (dropTarget) => set({ dropTarget }),
   setEditing: (editing) => set({ editing }),
   setNotice: (notice) => set({ notice }),
   openContextMenu: (contextMenu) => set({ contextMenu }),
   setSaveState: (saveState) => set({ saveState }),
   setStorageOk: (storageOk) => set({ storageOk }),
-  setDialog: (dialog) => set({ dialog }),
+  setDialog: (dialog, frameId) => set({ dialog, dialogFrameId: frameId ?? null }),
+  setLeftTab: (leftTab) => set({ leftTab }),
+  setTemplateDrop: (templateDrop) => set({ templateDrop }),
+  addFrameFromTemplate: (template, at) => {
+    const id = newId('f');
+    set((s) => {
+      const right = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width));
+      const frame: Frame = {
+        id,
+        name: template.name,
+        device: template.device,
+        width: template.width,
+        x: Math.round(at?.x ?? right + FRAME_GAP),
+        y: Math.round(at?.y ?? s.doc.frames[0]?.y ?? 0),
+        root: template.root,
+      };
+      return {
+        ...commit(s, {
+          ...s.doc,
+          frames: [...s.doc.frames, frame],
+          nodes: { ...s.doc.nodes, ...template.nodes },
+          images: { ...s.doc.images, ...template.images },
+        }),
+        selectedFrameId: id,
+        selectedNodeId: null,
+        fitRequested: s.doc.frames.length === 0,
+      };
+    });
+    return id;
+  },
+  replaceFrameWithTemplate: (frameId, template) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const kept = removeSubtrees(s.doc.nodes, frame.root);
+      return {
+        ...commit(s, {
+          ...updateFrame(s.doc, frameId, { root: template.root }),
+          nodes: { ...kept, ...template.nodes },
+          images: { ...s.doc.images, ...template.images },
+        }),
+        selectedFrameId: frameId,
+        selectedNodeId: null,
+      };
+    }),
   requestConfirm: (confirm) => set({ confirm }),
   clearFitRequest: () => set({ fitRequested: false }),
   loadDoc: (doc) =>
@@ -465,7 +525,7 @@ export const useStore = create<Store>((set, get) => ({
 
   dropNew: (payload, target) =>
     set((s) => {
-      if (payload.kind === 'move') return s;
+      if (payload.kind === 'move' || payload.kind === 'template') return s;
       let nodes: Record<string, DocNode>;
       let leafId: string;
       if (payload.kind === 'new-component') {

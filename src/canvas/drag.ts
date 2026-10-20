@@ -1,6 +1,7 @@
 import { useStore } from '../store/store';
 import type { DragPayload, DropTarget } from '../store/types';
-import { computeDropTarget } from './dropTarget';
+import { isOverCanvas, screenToWorld, templateAsNewFrame, templateOnFrame } from '../templates/use';
+import { computeDropTarget, frameAtPoint } from './dropTarget';
 import { frameScale } from './registry';
 
 /** Pixels the pointer must travel before a press becomes a drag. */
@@ -58,6 +59,21 @@ export function startDrag(
   const update = () => {
     raf = 0;
     const s = useStore.getState();
+    if (payload.kind === 'template') {
+      // A template goes onto a frame (replacing its content) or onto empty canvas (a new frame).
+      const hit = frameAtPoint(s.doc, latest.x, latest.y);
+      const next = hit
+        ? { frameId: hit.frame.id }
+        : isOverCanvas(latest.x, latest.y)
+          ? { frameId: null }
+          : null;
+      if (
+        s.templateDrop?.frameId !== next?.frameId ||
+        (s.templateDrop === null) !== (next === null)
+      )
+        s.setTemplateDrop(next);
+      return;
+    }
     const next = computeDropTarget(payload, s.doc, latest.x, latest.y);
     if (!sameTarget(s.dropTarget, next)) s.setDropTarget(next);
   };
@@ -93,6 +109,15 @@ export function startDrag(
     setTimeout(() => (justDragged = false), 0);
 
     const s = useStore.getState();
+    if (payload.kind === 'template') {
+      const hit = commit ? frameAtPoint(s.doc, latest.x, latest.y) : null;
+      const overCanvas = commit && isOverCanvas(latest.x, latest.y);
+      s.setDrag(null);
+      const ref = { source: payload.source, templateId: payload.templateId };
+      if (hit) templateOnFrame(ref, hit.frame.id);
+      else if (overCanvas) templateAsNewFrame(ref, screenToWorld(latest.x, latest.y));
+      return;
+    }
     // Recalculate at the release position so the drop matches what the pointer is over.
     const target = commit ? computeDropTarget(payload, s.doc, latest.x, latest.y) : null;
     s.setDrag(null);

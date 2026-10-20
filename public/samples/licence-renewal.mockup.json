@@ -1,0 +1,741 @@
+{
+ "app": "nsw-mockup-builder",
+ "fileVersion": 1,
+ "savedAt": "2026-10-20T00:00:00.000Z",
+ "doc": {
+  "version": 1,
+  "id": "doc_sample_licence-renewal",
+  "name": "Licence renewal journey",
+  "nswVersion": "3.28.1",
+  "view": {
+   "x": 80,
+   "y": 80,
+   "zoom": 0.3
+  },
+  "frames": [
+   {
+    "id": "f_licence-renewal_1",
+    "name": "Home",
+    "device": "desktop",
+    "width": 1440,
+    "x": 0,
+    "y": 0,
+    "root": [
+     "n_lic1",
+     "n_lic2",
+     "n_lic3",
+     "n_lic4",
+     "n_lic16",
+     "n_lic21",
+     "n_lic22"
+    ]
+   },
+   {
+    "id": "f_licence-renewal_2",
+    "name": "Apply",
+    "device": "desktop",
+    "width": 1440,
+    "x": 1520,
+    "y": 0,
+    "root": [
+     "n_lic23",
+     "n_lic24",
+     "n_lic25",
+     "n_lic44",
+     "n_lic45"
+    ]
+   },
+   {
+    "id": "f_licence-renewal_3",
+    "name": "Done",
+    "device": "desktop",
+    "width": 1440,
+    "x": 3040,
+    "y": 0,
+    "root": [
+     "n_lic46",
+     "n_lic47",
+     "n_lic55",
+     "n_lic56"
+    ]
+   }
+  ],
+  "nodes": {
+   "n_lic1": {
+    "id": "n_lic1",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic2": {
+    "id": "n_lic2",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic3": {
+    "id": "n_lic3",
+    "type": "component",
+    "componentId": "main-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "item1": "Home",
+     "item2": "Services",
+     "item3": "News",
+     "item4": "Events",
+     "item5": "About us",
+     "item6": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic4": {
+    "id": "n_lic4",
+    "type": "component",
+    "componentId": "hero-banner",
+    "variant": "wide",
+    "props": {
+     "goto": "f_licence-renewal_2"
+    },
+    "text": {
+     "title": "Get things done online",
+     "intro": "Services for people, families and businesses in New South Wales.",
+     "button": "Get started"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic5": {
+    "id": "n_lic5",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h2",
+    "props": {},
+    "text": {
+     "text": "How we can help"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic6": {
+    "id": "n_lic6",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_lic5"
+    ]
+   },
+   "n_lic7": {
+    "id": "n_lic7",
+    "type": "grid",
+    "children": [
+     "n_lic6"
+    ]
+   },
+   "n_lic8": {
+    "id": "n_lic8",
+    "type": "component",
+    "componentId": "content-block",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "For individuals",
+     "copy": "Licences, benefits and everyday paperwork.",
+     "link": "See services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic9": {
+    "id": "n_lic9",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_lic8"
+    ]
+   },
+   "n_lic10": {
+    "id": "n_lic10",
+    "type": "component",
+    "componentId": "content-block",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "For families",
+     "copy": "Support for every stage of family life.",
+     "link": "See services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic11": {
+    "id": "n_lic11",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_lic10"
+    ]
+   },
+   "n_lic12": {
+    "id": "n_lic12",
+    "type": "component",
+    "componentId": "content-block",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "For business",
+     "copy": "Registrations, permits and compliance.",
+     "link": "See services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic13": {
+    "id": "n_lic13",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_lic12"
+    ]
+   },
+   "n_lic14": {
+    "id": "n_lic14",
+    "type": "grid",
+    "children": [
+     "n_lic9",
+     "n_lic11",
+     "n_lic13"
+    ]
+   },
+   "n_lic15": {
+    "id": "n_lic15",
+    "type": "container",
+    "children": [
+     "n_lic7",
+     "n_lic14"
+    ]
+   },
+   "n_lic16": {
+    "id": "n_lic16",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_lic15"
+    ]
+   },
+   "n_lic17": {
+    "id": "n_lic17",
+    "type": "component",
+    "componentId": "callout",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Need help now?",
+     "copy": "Call us on 13 77 88 or visit your nearest service centre."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic18": {
+    "id": "n_lic18",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_lic17"
+    ]
+   },
+   "n_lic19": {
+    "id": "n_lic19",
+    "type": "grid",
+    "children": [
+     "n_lic18"
+    ]
+   },
+   "n_lic20": {
+    "id": "n_lic20",
+    "type": "container",
+    "children": [
+     "n_lic19"
+    ]
+   },
+   "n_lic21": {
+    "id": "n_lic21",
+    "type": "section",
+    "props": {
+     "background": "off-white"
+    },
+    "children": [
+     "n_lic20"
+    ]
+   },
+   "n_lic22": {
+    "id": "n_lic22",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic23": {
+    "id": "n_lic23",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic24": {
+    "id": "n_lic24",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic25": {
+    "id": "n_lic25",
+    "type": "component",
+    "componentId": "main-nav",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "item1": "Home",
+     "item2": "Services",
+     "item3": "News",
+     "item4": "Events",
+     "item5": "About us",
+     "item6": "Contact us"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic26": {
+    "id": "n_lic26",
+    "type": "component",
+    "componentId": "breadcrumbs",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "crumb1": "Home",
+     "crumb2": "Services",
+     "current": "Apply"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic27": {
+    "id": "n_lic27",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_lic26"
+    ]
+   },
+   "n_lic28": {
+    "id": "n_lic28",
+    "type": "grid",
+    "children": [
+     "n_lic27"
+    ]
+   },
+   "n_lic29": {
+    "id": "n_lic29",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "Apply for a permit"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic30": {
+    "id": "n_lic30",
+    "type": "component",
+    "componentId": "progress-indicator",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "count": "Step 1 of 3"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic31": {
+    "id": "n_lic31",
+    "type": "component",
+    "componentId": "in-page-alert",
+    "variant": "info",
+    "props": {},
+    "text": {
+     "title": "Before you start",
+     "copy": "You will need your licence number and a payment card."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic32": {
+    "id": "n_lic32",
+    "type": "component",
+    "componentId": "form",
+    "variant": "text",
+    "props": {},
+    "text": {
+     "label": "Full name",
+     "helper": "As it appears on your licence"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic33": {
+    "id": "n_lic33",
+    "type": "component",
+    "componentId": "form",
+    "variant": "text",
+    "props": {},
+    "text": {
+     "label": "Email address",
+     "helper": "We’ll send your receipt here"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic34": {
+    "id": "n_lic34",
+    "type": "component",
+    "componentId": "date-input",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "legend": "Date of birth"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic35": {
+    "id": "n_lic35",
+    "type": "component",
+    "componentId": "select",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "label": "Service centre",
+     "helper": "Choose the one closest to you"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic36": {
+    "id": "n_lic36",
+    "type": "component",
+    "componentId": "form",
+    "variant": "radio",
+    "props": {},
+    "text": {
+     "legend": "How would you like to be contacted?"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic37": {
+    "id": "n_lic37",
+    "type": "component",
+    "componentId": "form",
+    "variant": "textarea",
+    "props": {},
+    "text": {
+     "label": "Anything else we should know?",
+     "helper": "Optional"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic38": {
+    "id": "n_lic38",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark",
+    "props": {
+     "goto": "f_licence-renewal_3"
+    },
+    "text": {
+     "label": "Submit"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic39": {
+    "id": "n_lic39",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 8
+     }
+    },
+    "children": [
+     "n_lic29",
+     "n_lic30",
+     "n_lic31",
+     "n_lic32",
+     "n_lic33",
+     "n_lic34",
+     "n_lic35",
+     "n_lic36",
+     "n_lic37",
+     "n_lic38"
+    ]
+   },
+   "n_lic40": {
+    "id": "n_lic40",
+    "type": "component",
+    "componentId": "link-list",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Help with this form",
+     "link1": "What you’ll need",
+     "link2": "Fees and payments",
+     "link3": "Contact us",
+     "link4": "Accessibility help"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic41": {
+    "id": "n_lic41",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 4
+     }
+    },
+    "children": [
+     "n_lic40"
+    ]
+   },
+   "n_lic42": {
+    "id": "n_lic42",
+    "type": "grid",
+    "children": [
+     "n_lic39",
+     "n_lic41"
+    ]
+   },
+   "n_lic43": {
+    "id": "n_lic43",
+    "type": "container",
+    "children": [
+     "n_lic28",
+     "n_lic42"
+    ]
+   },
+   "n_lic44": {
+    "id": "n_lic44",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_lic43"
+    ]
+   },
+   "n_lic45": {
+    "id": "n_lic45",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic46": {
+    "id": "n_lic46",
+    "type": "component",
+    "componentId": "masthead",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic47": {
+    "id": "n_lic47",
+    "type": "component",
+    "componentId": "header",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title": "Service name",
+     "description": "Helping people with everyday services"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic48": {
+    "id": "n_lic48",
+    "type": "component",
+    "componentId": "in-page-alert",
+    "variant": "success",
+    "props": {},
+    "text": {
+     "title": "Application received",
+     "copy": "Your reference number is LR-204817. We have emailed you a receipt."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic49": {
+    "id": "n_lic49",
+    "type": "component",
+    "componentId": "heading",
+    "variant": "h1",
+    "props": {},
+    "text": {
+     "text": "What happens next"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic50": {
+    "id": "n_lic50",
+    "type": "component",
+    "componentId": "steps",
+    "variant": "default",
+    "props": {},
+    "text": {
+     "title1": "We check your details",
+     "copy1": "This usually takes one working day.",
+     "title2": "You get an email",
+     "copy2": "It tells you when your new licence is on its way.",
+     "title3": "Your licence arrives",
+     "copy3": "Within 7 days, by post."
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic51": {
+    "id": "n_lic51",
+    "type": "component",
+    "componentId": "button",
+    "variant": "dark",
+    "props": {
+     "goto": "f_licence-renewal_1"
+    },
+    "text": {
+     "label": "Back to home"
+    },
+    "textFit": {},
+    "hidden": false
+   },
+   "n_lic52": {
+    "id": "n_lic52",
+    "type": "column",
+    "props": {
+     "spans": {
+      "base": 12,
+      "md": 12
+     }
+    },
+    "children": [
+     "n_lic48",
+     "n_lic49",
+     "n_lic50",
+     "n_lic51"
+    ]
+   },
+   "n_lic53": {
+    "id": "n_lic53",
+    "type": "grid",
+    "children": [
+     "n_lic52"
+    ]
+   },
+   "n_lic54": {
+    "id": "n_lic54",
+    "type": "container",
+    "children": [
+     "n_lic53"
+    ]
+   },
+   "n_lic55": {
+    "id": "n_lic55",
+    "type": "section",
+    "props": {
+     "background": "white"
+    },
+    "children": [
+     "n_lic54"
+    ]
+   },
+   "n_lic56": {
+    "id": "n_lic56",
+    "type": "component",
+    "componentId": "footer",
+    "variant": "dark",
+    "props": {},
+    "text": {},
+    "textFit": {},
+    "hidden": false
+   }
+  },
+  "images": {}
+ },
+ "templates": []
+}

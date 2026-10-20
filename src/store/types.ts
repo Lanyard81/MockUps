@@ -63,7 +63,8 @@ export interface MockupDoc {
 export type DragPayload =
   | { kind: 'new-component'; componentId: string; variantId: string; label: string }
   | { kind: 'new-layout'; block: 'section' | 'container' | 'grid'; columns?: number; label: string }
-  | { kind: 'move'; nodeId: string; label: string };
+  | { kind: 'move'; nodeId: string; label: string }
+  | { kind: 'template'; source: 'official' | 'mine'; templateId: string; label: string };
 
 export interface IndicatorRect {
   x: number;

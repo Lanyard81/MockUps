@@ -2,7 +2,8 @@ import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { DEVICES, type DeviceId } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
-import { pickMockupFile, saveToFile } from '../persistence/file';
+import { SAMPLES } from '../templates/samples';
+import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
 import { Menu } from './Menu';
 
@@ -33,6 +34,11 @@ export function Toolbar() {
           items={[
             { label: 'New mockup', onSelect: () => s.getState().newDoc() },
             { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
+            ...SAMPLES.map((d, i) => ({
+              label: `Sample: ${d.name}`,
+              separatorBefore: i === 0,
+              onSelect: () => loadSample(d.id),
+            })),
             { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
             { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
             {

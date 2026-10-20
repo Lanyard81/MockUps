@@ -97,3 +97,64 @@ export function getThumbnail(
   queue = job.catch(() => undefined);
   return job;
 }
+
+const htmlMemory = new Map<string, string>();
+
+/**
+ * A thumbnail of a whole page (a template), rendered at `width` px wide in the hidden frame, cropped
+ * to `maxHeight`, and cached by `key` (which should change when the markup does).
+ */
+export function getPageThumbnail(
+  key: string,
+  html: string,
+  width: number,
+  maxHeight = 900,
+): Promise<string | null> {
+  const full = `page:${key}:${width}:${hash(html)}`;
+  const hit = htmlMemory.get(full);
+  if (hit) return Promise.resolve(hit);
+
+  const job = queue.then(async () => {
+    const again = htmlMemory.get(full);
+    if (again) return again;
+    try {
+      const stored = await get<string>(full);
+      if (stored) {
+        htmlMemory.set(full, stored);
+        return stored;
+      }
+    } catch {
+      /* storage unavailable: render instead */
+    }
+    try {
+      const host = await getHost();
+      const doc = host.contentDocument!;
+      host.style.width = `${width}px`;
+      doc.getElementById('root')!.innerHTML =
+        `<div id="thumb" style="background:#fff">${html}</div>`;
+      await doc.fonts.ready;
+      await nextFrame();
+      await nextFrame();
+      const el = doc.getElementById('thumb')!;
+      const url = await toPng(el, {
+        pixelRatio: Math.min(1, 640 / width),
+        backgroundColor: '#ffffff',
+        fontEmbedCSS: await getFontEmbedCss(),
+        width: el.offsetWidth,
+        height: Math.min(el.offsetHeight, maxHeight),
+      });
+      htmlMemory.set(full, url);
+      try {
+        await set(full, url);
+      } catch {
+        /* keep the in-memory copy */
+      }
+      return url;
+    } catch (err) {
+      console.warn('Page thumbnail failed', key, err);
+      return null;
+    }
+  });
+  queue = job.catch(() => undefined);
+  return job;
+}

@@ -188,3 +188,10 @@ A file gets a fresh id when opened, so opening it never overwrites a mockup of t
 ## 039: Startup bugs found by the end-to-end tests
 
 The first version of "fit on load and after opening a mockup" zoomed inside a store subscriber before clearing its own request, so each zoom re-entered the subscriber until the stack overflowed and the page stayed blank. Rule: a store subscriber that changes the store must make its own condition false first.
+
+## 040: Templates and samples
+
+- **Official templates are built from catalogue components** (`src/templates/build.ts`, `official.ts`): a small DSL (`c`, `row`, `sec`, `page`) that produces the same section > container > grid > column > component tree as hand-built pages, so they pass the tree rules and render with real NSW markup. The NSW docs site isn't reachable from the build sandbox, so the 22 templates follow the published template layouts from knowledge. Easy Read is approximated with content blocks and the map templates use a media placeholder. Both are listed as limitations.
+- **Using a template** makes a new frame (click, or drop on empty canvas) or replaces a frame's content (drop on a frame, with a confirmation when the frame isn't empty). Each is one undo step. Templates always get fresh ids.
+- **My templates** are stored in browser storage (not in undo) and travel inside `.mockup.json` files. Deleting one asks first. Thumbnails come from the same hidden-frame renderer as the library.
+- **Samples** are built by code (`templates/samples.ts`, deterministic ids) and also written to `public/samples/*.mockup.json` by `npm run samples`; CI fails if the committed files differ. The File menu opens them from code, so they work offline from a single file.

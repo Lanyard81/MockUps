@@ -179,7 +179,12 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         {frame.root.length === 0 && ready && (
           <div className="frame__empty">
             <strong>This frame is empty</strong>
-            <span>Drag a component here from the library, or click one to add it.</span>
+            <span>Drag a component here from the library, or start from a template.</span>
+            <span className="frame__empty-actions">
+              <button className="btn" onClick={() => useStore.getState().setLeftTab('templates')}>
+                Browse templates
+              </button>
+            </span>
           </div>
         )}
       </div>
