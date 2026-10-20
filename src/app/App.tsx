@@ -3,6 +3,7 @@ import { Viewport } from '../canvas/Viewport';
 import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { FrameBar } from './FrameBar';
+import { Library } from './Library';
 import { Toolbar } from './Toolbar';
 
 export function App() {
@@ -35,6 +36,7 @@ export function App() {
     <div className="app">
       <Toolbar />
       <FrameBar />
+      <Library />
       <Viewport />
     </div>
   );

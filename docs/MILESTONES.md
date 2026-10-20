@@ -25,11 +25,15 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 2: Component catalogue and library
 
-- [ ] Catalogue generation script (see the markup source note in `NSW-DESIGN-SYSTEM.md`)
-- [ ] `catalogue/overrides.ts` and regeneration docs
-- [ ] Every component checked against its docs-site demo; failures listed
-- [ ] Library panel: categories, search, cached thumbnails, variants
-- [ ] Layout blocks: Section, Container, Grid (1–4 columns)
+- [x] Catalogue generation script (`npm run catalogue`): hand-written markup validated against the installed package (see `DECISIONS.md` 009–011)
+- [x] `catalogue/overrides.ts` and regeneration docs (README, `NSW-DESIGN-SYSTEM.md`)
+- [x] All 46 components covered, plus Heading, Paragraph and List text blocks; 103 variants
+- [ ] Every component compared with its docs-site demo page (not possible from the build sandbox: the docs site is blocked. Checked against the package CSS and by eye instead; **needs a check on your side**)
+- [x] Components that can't be shown faithfully are listed in `NSW-DESIGN-SYSTEM.md`
+- [x] Library panel: categories, instant search, cached live thumbnails, variants
+- [x] Layout blocks: Section, Container, Grid (1–4 columns)
+- [x] Click a variant to add it to the selected frame (drag and drop is Milestone 3)
+- [x] Tests: catalogue and store (Vitest); library, adding and layout blocks (Playwright)
 
 ## Milestone 3: Drag, drop and the layout model
 

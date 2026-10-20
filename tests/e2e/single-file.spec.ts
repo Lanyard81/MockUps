@@ -12,6 +12,15 @@ test('single file works from disk with no network', async ({ page, context }) =>
   });
   await context.setOffline(true);
   await page.goto(`file://${file}`);
+  await page
+    .getByTestId('component-button')
+    .getByRole('button', { name: 'Brand Dark', exact: true })
+    .click();
+  // A component that uses an icon, so the icon font is actually needed and loaded.
+  await page
+    .getByTestId('component-link')
+    .getByRole('button', { name: 'With arrow', exact: true })
+    .click();
   const home = page.frameLocator('iframe[title="Home"]');
   await expect(home.locator('.nsw-button--dark').first()).toHaveCSS(
     'background-color',
@@ -19,7 +28,10 @@ test('single file works from disk with no network', async ({ page, context }) =>
   );
   const fonts = await page.locator('iframe[title="Home"]').evaluate((f) => {
     const doc = (f as HTMLIFrameElement).contentDocument!;
-    return [doc.fonts.check('16px "Public Sans"'), doc.fonts.check('24px "Material Icons"')];
+    return doc.fonts.ready.then(() => [
+      doc.fonts.check('16px "Public Sans"'),
+      doc.fonts.check('24px "Material Icons"'),
+    ]);
   });
   expect(fonts).toEqual([true, true]);
   await page.getByRole('button', { name: 'Add frame' }).click();

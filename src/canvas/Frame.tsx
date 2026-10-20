@@ -39,6 +39,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     const doc = iframe?.contentDocument;
     const root = doc?.getElementById('root');
     if (!ready || !iframe || !doc || !root) return;
+    doc.body.dataset.mode = mode;
     root.innerHTML = html;
     try {
       (iframe.contentWindow as FrameWindow).NSW?.initSite();
@@ -51,7 +52,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     const ro = new ResizeObserver(measure);
     ro.observe(root);
     return () => ro.disconnect();
-  }, [ready, html, frame.id, frame.width, screenHeight, store]);
+  }, [ready, html, mode, frame.id, frame.width, screenHeight, store]);
 
   useEffect(() => {
     if (renameRequest === frame.id) {
@@ -146,10 +147,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         {frame.root.length === 0 && ready && (
           <div className="frame__empty">
             <strong>This frame is empty</strong>
-            <span>The component library arrives in the next milestone.</span>
-            <button className="btn" onClick={() => store.getState().addDemoContent(frame.id)}>
-              Add demo content
-            </button>
+            <span>Click a component in the library to add it here.</span>
           </div>
         )}
       </div>

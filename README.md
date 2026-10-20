@@ -4,7 +4,7 @@ A browser-based tool for making screen mockups from the official [NSW Government
 
 **Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
 
-> Status: Milestones 0 and 1 are done (project scaffolding, canvas and device frames). The component library, drag and drop and editing arrive in later milestones. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
+> Status: Milestones 0–2 are done (scaffolding, canvas and device frames, component library). Drag and drop and editing arrive in later milestones. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
 
 ## Run it locally
 
@@ -45,11 +45,11 @@ Vite's `base` is `/MockUps/` (the repository name). If you rename the repository
 
 ```bash
 npm install nsw-design-system@latest
-npm run catalogue     # regenerates the component catalogue (from Milestone 2)
+npm run catalogue     # re-checks every snippet against the new CSS and JS, and regenerates the catalogue
 npm test && npm run test:e2e
 ```
 
-Frames load the CSS and JavaScript from the installed package, so upgrading the package upgrades every mockup. Check `docs/NSW-DESIGN-SYSTEM.md` for components that need attention after an upgrade.
+`npm run catalogue` fails and lists any class that no longer exists in the new version. Fix those snippets in `src/catalogue/sources/`, run it again, and commit `src/catalogue/generated/catalogue.json`. Frames load the CSS and JavaScript from the installed package, so upgrading the package upgrades every mockup. Check `docs/NSW-DESIGN-SYSTEM.md` for components that need attention after an upgrade.
 
 ## Documentation
 

@@ -6,8 +6,8 @@
   "description": "Browser-based mockup tool built from the official NSW Design System",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "build:single": "tsc --noEmit && SINGLE=1 vite build && node scripts/finish-single.mjs",
+    "build": "npm run catalogue && tsc --noEmit && vite build",
+    "build:single": "npm run catalogue && tsc --noEmit && SINGLE=1 vite build && node scripts/finish-single.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "catalogue": "tsx scripts/generate-catalogue.ts"
+    "catalogue": "tsx scripts/generate-catalogue.ts",
+    "catalogue:check": "npm run catalogue && git diff --exit-code src/catalogue/generated"
   },
   "dependencies": {
     "@fontsource/public-sans": "^5.3.0",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.1",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

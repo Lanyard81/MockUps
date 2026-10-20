@@ -1,0 +1,2383 @@
+{
+ "nswVersion": "3.28.1",
+ "components": [
+  {
+   "id": "masthead",
+   "slug": "masthead",
+   "name": "Masthead",
+   "category": "Layout",
+   "keywords": [
+    "official",
+    "government",
+    "top bar"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "dark",
+   "variants": [
+    {
+     "id": "dark",
+     "label": "Dark",
+     "html": "<div class=\"nsw-masthead\"><div class=\"nsw-container\"><span data-edit=\"text\">An official website of the NSW Government</span></div></div>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<div class=\"nsw-masthead nsw-masthead--light\"><div class=\"nsw-container\"><span data-edit=\"text\">An official website of the NSW Government</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "An official website of the NSW Government",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "header",
+   "slug": "header",
+   "name": "Header",
+   "category": "Layout",
+   "keywords": [
+    "logo",
+    "banner",
+    "site name",
+    "search"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "note": "The NSW Government waratah logo is not part of the npm package, so a labelled placeholder is shown.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "With menu and search",
+     "html": "<header class=\"nsw-header\"><div class=\"nsw-header__container\"><div class=\"nsw-container\"><div class=\"nsw-header__inner\"><div class=\"nsw-header__menu\" data-optional=\"menu\"><button type=\"button\" aria-expanded=\"false\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">menu</span><span>Menu</span></button></div><div class=\"nsw-header__main\"><div class=\"nsw-header__waratah\"><a href=\"#\"><svg class=\"nsw-header__rectangular-logo\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 220 60\" width=\"220\" height=\"60\" role=\"img\" aria-label=\"Logo placeholder\"><rect width=\"220\" height=\"60\" fill=\"none\" stroke=\"#002664\" stroke-width=\"2\" stroke-dasharray=\"6 4\"/><text x=\"110\" y=\"35\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#002664\">LOGO PLACEHOLDER</text></svg></a></div><div class=\"nsw-header__name\"><div class=\"nsw-header__title\" data-edit=\"title\">Site name</div><div class=\"nsw-header__description\" data-edit=\"description\" data-optional=\"description\">A short description of this service</div></div></div><div class=\"nsw-header__search\" data-optional=\"search\"><button type=\"button\" aria-expanded=\"false\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">search</span><span>Search</span></button></div></div></div></div></header>"
+    },
+    {
+     "id": "simple",
+     "label": "Simple",
+     "html": "<header class=\"nsw-header nsw-header--simple\"><div class=\"nsw-header__container\"><div class=\"nsw-container\"><div class=\"nsw-header__inner\"><div class=\"nsw-header__main\"><div class=\"nsw-header__waratah\"><a href=\"#\"><svg class=\"nsw-header__rectangular-logo\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 220 60\" width=\"220\" height=\"60\" role=\"img\" aria-label=\"Logo placeholder\"><rect width=\"220\" height=\"60\" fill=\"none\" stroke=\"#002664\" stroke-width=\"2\" stroke-dasharray=\"6 4\"/><text x=\"110\" y=\"35\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#002664\">LOGO PLACEHOLDER</text></svg></a></div><div class=\"nsw-header__name\"><div class=\"nsw-header__title\" data-edit=\"title\">Site name</div></div></div></div></div></div></header>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Site name",
+     "multiline": false
+    },
+    {
+     "key": "description",
+     "default": "A short description of this service",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "menu",
+     "label": "Menu button"
+    },
+    {
+     "key": "description",
+     "label": "Description"
+    },
+    {
+     "key": "search",
+     "label": "Search button"
+    }
+   ]
+  },
+  {
+   "id": "footer",
+   "slug": "footer",
+   "name": "Footer",
+   "category": "Layout",
+   "keywords": [
+    "links",
+    "copyright",
+    "legal"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "dark",
+   "variants": [
+    {
+     "id": "dark",
+     "label": "Dark",
+     "html": "<footer class=\"nsw-footer nsw-footer--dark\"><div class=\"nsw-footer__upper\"><div class=\"nsw-container\"><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group1\">Group 1</h3><ul><li><a href=\"#\" data-edit=\"g1link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g1link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g1link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group2\">Group 2</h3><ul><li><a href=\"#\" data-edit=\"g2link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g2link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g2link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group3\">Group 3</h3><ul><li><a href=\"#\" data-edit=\"g3link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g3link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g3link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group4\">Group 4</h3><ul><li><a href=\"#\" data-edit=\"g4link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g4link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g4link3\">Footer link 3</a></li></ul></div></div></div><div class=\"nsw-footer__lower\"><div class=\"nsw-container\"><p class=\"nsw-footer__acknowledgement\" data-edit=\"acknowledgement\" data-optional=\"acknowledgement\">We pay respect to the Traditional Custodians and First Peoples of NSW, and acknowledge their continued connection to their country and culture.</p><hr><ul><li><a href=\"#\" data-edit=\"legal1\">Privacy</a></li><li><a href=\"#\" data-edit=\"legal2\">Copyright</a></li><li><a href=\"#\" data-edit=\"legal3\">Disclaimer</a></li><li><a href=\"#\" data-edit=\"legal4\">Accessibility</a></li></ul><p class=\"nsw-footer__copyright\" data-edit=\"copyright\">Copyright © 2026</p></div></div></footer>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<footer class=\"nsw-footer nsw-footer--light\"><div class=\"nsw-footer__upper\"><div class=\"nsw-container\"><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group1\">Group 1</h3><ul><li><a href=\"#\" data-edit=\"g1link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g1link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g1link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group2\">Group 2</h3><ul><li><a href=\"#\" data-edit=\"g2link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g2link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g2link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group3\">Group 3</h3><ul><li><a href=\"#\" data-edit=\"g3link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g3link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g3link3\">Footer link 3</a></li></ul></div><div class=\"nsw-footer__group\"><h3 class=\"nsw-footer__heading\" data-edit=\"group4\">Group 4</h3><ul><li><a href=\"#\" data-edit=\"g4link1\">Footer link 1</a></li><li><a href=\"#\" data-edit=\"g4link2\">Footer link 2</a></li><li><a href=\"#\" data-edit=\"g4link3\">Footer link 3</a></li></ul></div></div></div><div class=\"nsw-footer__lower\"><div class=\"nsw-container\"><p class=\"nsw-footer__acknowledgement\" data-edit=\"acknowledgement\" data-optional=\"acknowledgement\">We pay respect to the Traditional Custodians and First Peoples of NSW, and acknowledge their continued connection to their country and culture.</p><hr><ul><li><a href=\"#\" data-edit=\"legal1\">Privacy</a></li><li><a href=\"#\" data-edit=\"legal2\">Copyright</a></li><li><a href=\"#\" data-edit=\"legal3\">Disclaimer</a></li><li><a href=\"#\" data-edit=\"legal4\">Accessibility</a></li></ul><p class=\"nsw-footer__copyright\" data-edit=\"copyright\">Copyright © 2026</p></div></div></footer>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "group1",
+     "default": "Group 1",
+     "multiline": false
+    },
+    {
+     "key": "g1link1",
+     "default": "Footer link 1",
+     "multiline": false
+    },
+    {
+     "key": "g1link2",
+     "default": "Footer link 2",
+     "multiline": false
+    },
+    {
+     "key": "g1link3",
+     "default": "Footer link 3",
+     "multiline": false
+    },
+    {
+     "key": "group2",
+     "default": "Group 2",
+     "multiline": false
+    },
+    {
+     "key": "g2link1",
+     "default": "Footer link 1",
+     "multiline": false
+    },
+    {
+     "key": "g2link2",
+     "default": "Footer link 2",
+     "multiline": false
+    },
+    {
+     "key": "g2link3",
+     "default": "Footer link 3",
+     "multiline": false
+    },
+    {
+     "key": "group3",
+     "default": "Group 3",
+     "multiline": false
+    },
+    {
+     "key": "g3link1",
+     "default": "Footer link 1",
+     "multiline": false
+    },
+    {
+     "key": "g3link2",
+     "default": "Footer link 2",
+     "multiline": false
+    },
+    {
+     "key": "g3link3",
+     "default": "Footer link 3",
+     "multiline": false
+    },
+    {
+     "key": "group4",
+     "default": "Group 4",
+     "multiline": false
+    },
+    {
+     "key": "g4link1",
+     "default": "Footer link 1",
+     "multiline": false
+    },
+    {
+     "key": "g4link2",
+     "default": "Footer link 2",
+     "multiline": false
+    },
+    {
+     "key": "g4link3",
+     "default": "Footer link 3",
+     "multiline": false
+    },
+    {
+     "key": "acknowledgement",
+     "default": "We pay respect to the Traditional Custodians and First Peoples of NSW, and acknowledge their continued connection to their country and culture.",
+     "multiline": false
+    },
+    {
+     "key": "legal1",
+     "default": "Privacy",
+     "multiline": false
+    },
+    {
+     "key": "legal2",
+     "default": "Copyright",
+     "multiline": false
+    },
+    {
+     "key": "legal3",
+     "default": "Disclaimer",
+     "multiline": false
+    },
+    {
+     "key": "legal4",
+     "default": "Accessibility",
+     "multiline": false
+    },
+    {
+     "key": "copyright",
+     "default": "Copyright © 2026",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "acknowledgement",
+     "label": "Acknowledgement of Country"
+    }
+   ]
+  },
+  {
+   "id": "hero-banner",
+   "slug": "hero-banner",
+   "name": "Hero banner",
+   "category": "Layout",
+   "keywords": [
+    "banner",
+    "headline",
+    "intro",
+    "splash"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "dark",
+   "variants": [
+    {
+     "id": "dark",
+     "label": "Dark",
+     "html": "<div class=\"nsw-hero-banner nsw-hero-banner--dark\"><div class=\"nsw-container\"><div class=\"nsw-hero-banner__container\"><div class=\"nsw-hero-banner__wrapper\"><div class=\"nsw-hero-banner__content\"><h1 data-edit=\"title\">Hero banner title</h1><p class=\"nsw-intro\" data-edit=\"intro\" data-multiline>Use a hero banner to introduce the main purpose of a page or service.</p><a class=\"nsw-button nsw-button--white\" href=\"#\" data-optional=\"button\"><span data-edit=\"button\">Get started</span></a></div></div><div class=\"nsw-hero-banner__box\"><img class=\"nsw-hero-banner__image\" src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L336%20243%20L528%20378%20L672%20270%20L960%20540%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22768%22%20cy%3D%22135%22%20r%3D%2243.2%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22486%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2232.4%22%20fill%3D%22%23495054%22%3EHero%20image%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"hero\"></div></div></div></div>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<div class=\"nsw-hero-banner nsw-hero-banner--light\"><div class=\"nsw-container\"><div class=\"nsw-hero-banner__container\"><div class=\"nsw-hero-banner__wrapper\"><div class=\"nsw-hero-banner__content\"><h1 data-edit=\"title\">Hero banner title</h1><p class=\"nsw-intro\" data-edit=\"intro\" data-multiline>Use a hero banner to introduce the main purpose of a page or service.</p><a class=\"nsw-button nsw-button--dark\" href=\"#\" data-optional=\"button\"><span data-edit=\"button\">Get started</span></a></div></div><div class=\"nsw-hero-banner__box\"><img class=\"nsw-hero-banner__image\" src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L336%20243%20L528%20378%20L672%20270%20L960%20540%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22768%22%20cy%3D%22135%22%20r%3D%2243.2%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22486%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2232.4%22%20fill%3D%22%23495054%22%3EHero%20image%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"hero\"></div></div></div></div>"
+    },
+    {
+     "id": "off-white",
+     "label": "Off-white",
+     "html": "<div class=\"nsw-hero-banner nsw-hero-banner--off-white\"><div class=\"nsw-container\"><div class=\"nsw-hero-banner__container\"><div class=\"nsw-hero-banner__wrapper\"><div class=\"nsw-hero-banner__content\"><h1 data-edit=\"title\">Hero banner title</h1><p class=\"nsw-intro\" data-edit=\"intro\" data-multiline>Use a hero banner to introduce the main purpose of a page or service.</p><a class=\"nsw-button nsw-button--dark\" href=\"#\" data-optional=\"button\"><span data-edit=\"button\">Get started</span></a></div></div><div class=\"nsw-hero-banner__box\"><img class=\"nsw-hero-banner__image\" src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L336%20243%20L528%20378%20L672%20270%20L960%20540%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22768%22%20cy%3D%22135%22%20r%3D%2243.2%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22486%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2232.4%22%20fill%3D%22%23495054%22%3EHero%20image%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"hero\"></div></div></div></div>"
+    },
+    {
+     "id": "wide",
+     "label": "Wide",
+     "html": "<div class=\"nsw-hero-banner nsw-hero-banner--dark nsw-hero-banner--wide\"><div class=\"nsw-container\"><div class=\"nsw-hero-banner__container\"><div class=\"nsw-hero-banner__wrapper\"><div class=\"nsw-hero-banner__content\"><h1 data-edit=\"title\">Hero banner title</h1><p class=\"nsw-intro\" data-edit=\"intro\" data-multiline>Use a hero banner to introduce the main purpose of a page or service.</p><a class=\"nsw-button nsw-button--white\" href=\"#\" data-optional=\"button\"><span data-edit=\"button\">Get started</span></a></div></div><div class=\"nsw-hero-banner__box\"><img class=\"nsw-hero-banner__image\" src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L336%20243%20L528%20378%20L672%20270%20L960%20540%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22768%22%20cy%3D%22135%22%20r%3D%2243.2%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22486%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2232.4%22%20fill%3D%22%23495054%22%3EHero%20image%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"hero\"></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Hero banner title",
+     "multiline": false
+    },
+    {
+     "key": "intro",
+     "default": "Use a hero banner to introduce the main purpose of a page or service.",
+     "multiline": true
+    },
+    {
+     "key": "button",
+     "default": "Get started",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "button",
+     "label": "Button"
+    }
+   ]
+  },
+  {
+   "id": "hero-search",
+   "slug": "hero-search",
+   "name": "Hero search",
+   "category": "Layout",
+   "keywords": [
+    "search",
+    "banner"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-section nsw-section--brand-dark nsw-section--invert\"><div class=\"nsw-container\"><h2 class=\"nsw-h2\" data-edit=\"title\">Find what you need</h2><p class=\"nsw-intro\" data-edit=\"intro\" data-multiline>Search for services, forms and information.</p><div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"hero-search-input\" data-edit=\"label\">Search</label><div class=\"nsw-form__input-group\"><input class=\"nsw-form__input\" type=\"text\" id=\"hero-search-input\" placeholder=\"Search\"><button class=\"nsw-button nsw-button--white\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">search</span><span>Search</span></button></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Find what you need",
+     "multiline": false
+    },
+    {
+     "key": "intro",
+     "default": "Search for services, forms and information.",
+     "multiline": true
+    },
+    {
+     "key": "label",
+     "default": "Search",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "content-block",
+   "slug": "content-block",
+   "name": "Content blocks",
+   "category": "Layout",
+   "keywords": [
+    "feature",
+    "icon",
+    "teaser"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Icon",
+     "html": "<div><div class=\"nsw-content-block__icon\" data-optional=\"icon\"><span class=\"material-icons nsw-material-icons nsw-material-icons--36 nsw-material-icons--brand\" focusable=\"false\" aria-hidden=\"true\">verified</span></div><h3 class=\"nsw-content-block__title\" data-edit=\"title\">Content block title</h3><p class=\"nsw-content-block__copy\" data-edit=\"copy\" data-multiline>A short description that explains the content block.</p><a class=\"nsw-content-block__link\" href=\"#\" data-optional=\"link\"><span data-edit=\"link\">Read more</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24\" focusable=\"false\" aria-hidden=\"true\">east</span></a></div>"
+    },
+    {
+     "id": "image",
+     "label": "Image",
+     "html": "<div><div class=\"nsw-content-block__image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><h3 class=\"nsw-content-block__title\" data-edit=\"title\">Content block title</h3><p class=\"nsw-content-block__copy\" data-edit=\"copy\" data-multiline>A short description that explains the content block.</p><a class=\"nsw-content-block__link\" href=\"#\" data-optional=\"link\"><span data-edit=\"link\">Read more</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24\" focusable=\"false\" aria-hidden=\"true\">east</span></a></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Content block title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "A short description that explains the content block.",
+     "multiline": true
+    },
+    {
+     "key": "link",
+     "default": "Read more",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "icon",
+     "label": "Icon"
+    },
+    {
+     "key": "link",
+     "label": "Link"
+    }
+   ]
+  },
+  {
+   "id": "main-nav",
+   "slug": "main-nav",
+   "name": "Main navigation",
+   "category": "Navigation",
+   "keywords": [
+    "menu",
+    "navigation",
+    "primary"
+   ],
+   "needsJs": true,
+   "fullWidth": true,
+   "fidelity": "partial",
+   "note": "Shown as the desktop bar (frames about 992px and wider). On narrow frames it is a slide-out menu, as on a real site. Sub-menus are not included.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<nav class=\"nsw-main-nav\" id=\"main-nav\" aria-label=\"Main navigation\"><div class=\"nsw-main-nav__header\"><div class=\"nsw-main-nav__title\">Menu</div><button class=\"nsw-icon-button\" type=\"button\" aria-expanded=\"true\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close menu</span></button></div><ul class=\"nsw-main-nav__list\"><li><a href=\"#\"><span data-edit=\"item1\">Home</span></a></li><li><a href=\"#\"><span data-edit=\"item2\">Services</span></a></li><li><a href=\"#\"><span data-edit=\"item3\">Events</span></a></li><li><a href=\"#\"><span data-edit=\"item4\">News</span></a></li><li><a href=\"#\"><span data-edit=\"item5\">About us</span></a></li><li><a href=\"#\"><span data-edit=\"item6\">Contact</span></a></li></ul></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "item1",
+     "default": "Home",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "Services",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "Events",
+     "multiline": false
+    },
+    {
+     "key": "item4",
+     "default": "News",
+     "multiline": false
+    },
+    {
+     "key": "item5",
+     "default": "About us",
+     "multiline": false
+    },
+    {
+     "key": "item6",
+     "default": "Contact",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "breadcrumbs",
+   "slug": "breadcrumbs",
+   "name": "Breadcrumbs",
+   "category": "Navigation",
+   "keywords": [
+    "trail",
+    "path",
+    "location"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<nav class=\"nsw-breadcrumbs\" aria-label=\"Breadcrumbs\"><ol><li><a href=\"#\" data-edit=\"crumb1\">Home</a></li><li><a href=\"#\" data-edit=\"crumb2\">Services</a></li><li><span aria-current=\"page\" data-edit=\"current\">Current page</span></li></ol></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "crumb1",
+     "default": "Home",
+     "multiline": false
+    },
+    {
+     "key": "crumb2",
+     "default": "Services",
+     "multiline": false
+    },
+    {
+     "key": "current",
+     "default": "Current page",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "side-nav",
+   "slug": "side-nav",
+   "name": "Side navigation",
+   "category": "Navigation",
+   "keywords": [
+    "sidebar",
+    "menu",
+    "local navigation"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "partial",
+   "note": "Expand and collapse on narrow frames is not wired up.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<nav class=\"nsw-side-nav\" aria-label=\"Side navigation\"><div class=\"nsw-side-nav__content\"><ul><li><a href=\"#\" data-edit=\"item1\">Parent page</a><ul class=\"nsw-side-nav__group\"><li><a href=\"#\" data-edit=\"child1\">Child page 1</a></li><li><a href=\"#\" data-edit=\"child2\">Child page 2</a></li></ul></li><li><a href=\"#\" data-edit=\"item2\">Another page</a></li><li><a href=\"#\" data-edit=\"item3\">Third page</a></li></ul></div></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "item1",
+     "default": "Parent page",
+     "multiline": false
+    },
+    {
+     "key": "child1",
+     "default": "Child page 1",
+     "multiline": false
+    },
+    {
+     "key": "child2",
+     "default": "Child page 2",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "Another page",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "Third page",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "in-page-nav",
+   "slug": "in-page-nav",
+   "name": "In-page navigation",
+   "category": "Navigation",
+   "keywords": [
+    "on this page",
+    "anchor links",
+    "contents",
+    "toc"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<nav class=\"nsw-in-page-nav\" aria-labelledby=\"in-page-nav-title\"><h2 class=\"nsw-in-page-nav__title\" id=\"in-page-nav-title\" data-edit=\"title\">On this page</h2><ul><li><a href=\"#\" data-edit=\"item1\"><span>Link 1</span></a></li><li><a href=\"#\" data-edit=\"item2\"><span>Link 2</span></a></li><li><a href=\"#\" data-edit=\"item3\"><span>Link 3</span></a></li><li><a href=\"#\" data-edit=\"item4\"><span>Link 4</span></a></li></ul></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "On this page",
+     "multiline": false
+    },
+    {
+     "key": "item1",
+     "default": "Link 1",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "Link 2",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "Link 3",
+     "multiline": false
+    },
+    {
+     "key": "item4",
+     "default": "Link 4",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "pagination",
+   "slug": "pagination",
+   "name": "Pagination",
+   "category": "Navigation",
+   "keywords": [
+    "pages",
+    "next",
+    "previous",
+    "paging"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<nav class=\"nsw-pagination\" aria-label=\"Pagination\"><ul><li><a href=\"#\" aria-label=\"Previous page\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_left</span><span>Previous</span></a></li><li><a href=\"#\" aria-label=\"Page 1\">1</a></li><li><a href=\"#\" aria-current=\"page\" aria-label=\"Page 2\">2</a></li><li><a href=\"#\" aria-label=\"Page 3\">3</a></li><li><span>…</span></li><li><a href=\"#\" aria-label=\"Page 10\">10</a></li><li><a href=\"#\" aria-label=\"Next page\"><span>Next</span><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_right</span></a></li></ul></nav>"
+    }
+   ],
+   "editable": [],
+   "optional": []
+  },
+  {
+   "id": "tabs",
+   "slug": "tabs",
+   "name": "Tabs",
+   "category": "Navigation",
+   "keywords": [
+    "tabbed",
+    "panels"
+   ],
+   "needsJs": true,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-tabs js-tabs\"><div class=\"nsw-tabs__list-wrapper\"><ul class=\"nsw-tabs__list\"><li><a href=\"#tab-panel-1\" data-edit=\"tab1\">Tab 1</a></li><li><a href=\"#tab-panel-2\" data-edit=\"tab2\">Tab 2</a></li><li><a href=\"#tab-panel-3\" data-edit=\"tab3\">Tab 3</a></li></ul></div><div class=\"nsw-tabs__content\" id=\"tab-panel-1\"><p data-edit=\"panel1\" data-multiline>Content for tab 1.</p></div><div class=\"nsw-tabs__content\" id=\"tab-panel-2\"><p data-edit=\"panel2\" data-multiline>Content for tab 2.</p></div><div class=\"nsw-tabs__content\" id=\"tab-panel-3\"><p data-edit=\"panel3\" data-multiline>Content for tab 3.</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "tab1",
+     "default": "Tab 1",
+     "multiline": false
+    },
+    {
+     "key": "tab2",
+     "default": "Tab 2",
+     "multiline": false
+    },
+    {
+     "key": "tab3",
+     "default": "Tab 3",
+     "multiline": false
+    },
+    {
+     "key": "panel1",
+     "default": "Content for tab 1.",
+     "multiline": true
+    },
+    {
+     "key": "panel2",
+     "default": "Content for tab 2.",
+     "multiline": true
+    },
+    {
+     "key": "panel3",
+     "default": "Content for tab 3.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "link-list",
+   "slug": "link-list",
+   "name": "Link list",
+   "category": "Navigation",
+   "keywords": [
+    "related links",
+    "list of links"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-link-list\"><h2 class=\"nsw-link-list__title nsw-h4\" data-edit=\"title\">Related links</h2><ul><li><a href=\"#\"><span data-edit=\"link1\">Related link 1</span><span class=\"material-icons nsw-material-icons nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></li><li><a href=\"#\"><span data-edit=\"link2\">Related link 2</span><span class=\"material-icons nsw-material-icons nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></li><li><a href=\"#\"><span data-edit=\"link3\">Related link 3</span><span class=\"material-icons nsw-material-icons nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></li><li><a href=\"#\"><span data-edit=\"link4\">Related link 4</span><span class=\"material-icons nsw-material-icons nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Related links",
+     "multiline": false
+    },
+    {
+     "key": "link1",
+     "default": "Related link 1",
+     "multiline": false
+    },
+    {
+     "key": "link2",
+     "default": "Related link 2",
+     "multiline": false
+    },
+    {
+     "key": "link3",
+     "default": "Related link 3",
+     "multiline": false
+    },
+    {
+     "key": "link4",
+     "default": "Related link 4",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "utility-list",
+   "slug": "utility-list",
+   "name": "Utility list",
+   "category": "Navigation",
+   "keywords": [
+    "print",
+    "share",
+    "actions"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Vertical",
+     "html": "<div class=\"nsw-utility-list\"><div class=\"nsw-utility-list__title\" data-edit=\"title\">Utilities</div><ul><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">print</span><span data-edit=\"item1\">Print</span></a></li><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">share</span><span data-edit=\"item2\">Share</span></a></li><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">mail</span><span data-edit=\"item3\">Email</span></a></li></ul></div>"
+    },
+    {
+     "id": "horizontal",
+     "label": "Horizontal",
+     "html": "<div class=\"nsw-utility-list nsw-utility-list--horizontal\"><ul><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">print</span><span data-edit=\"item1\">Print</span></a></li><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">share</span><span data-edit=\"item2\">Share</span></a></li><li class=\"nsw-utility-list__item\"><a class=\"nsw-utility-list__link\" href=\"#\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">mail</span><span data-edit=\"item3\">Email</span></a></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Utilities",
+     "multiline": false
+    },
+    {
+     "key": "item1",
+     "default": "Print",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "Share",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "Email",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "back-to-top",
+   "slug": "back-to-top",
+   "name": "Back to top",
+   "category": "Navigation",
+   "keywords": [
+    "scroll",
+    "top"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "The real component is fixed to the bottom of the screen. Shown here as the plain button it contains.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">arrow_upward</span><span data-edit=\"label\">Back to top</span></button>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Back to top",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "heading",
+   "slug": "typography",
+   "name": "Heading",
+   "category": "Content",
+   "keywords": [],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "h1",
+   "variants": [
+    {
+     "id": "h1",
+     "label": "Heading 1",
+     "html": "<h1 data-edit=\"text\">Heading 1</h1>"
+    },
+    {
+     "id": "h2",
+     "label": "Heading 2",
+     "html": "<h2 data-edit=\"text\">Heading 2</h2>"
+    },
+    {
+     "id": "h3",
+     "label": "Heading 3",
+     "html": "<h3 data-edit=\"text\">Heading 3</h3>"
+    },
+    {
+     "id": "h4",
+     "label": "Heading 4",
+     "html": "<h4 data-edit=\"text\">Heading 4</h4>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Heading 1",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "paragraph",
+   "slug": "typography",
+   "name": "Paragraph",
+   "category": "Content",
+   "keywords": [],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Body text",
+     "html": "<p data-edit=\"text\" data-multiline>Body text for your page. Use plain, direct language that is easy to scan.</p>"
+    },
+    {
+     "id": "intro",
+     "label": "Intro text",
+     "html": "<p class=\"nsw-intro\" data-edit=\"text\" data-multiline>An introduction that sets the scene for the content below.</p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Body text for your page. Use plain, direct language that is easy to scan.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "list",
+   "slug": "typography",
+   "name": "List",
+   "category": "Content",
+   "keywords": [],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "bullet",
+   "variants": [
+    {
+     "id": "bullet",
+     "label": "Bulleted",
+     "html": "<ul><li data-edit=\"item1\">List item 1</li><li data-edit=\"item2\">List item 2</li><li data-edit=\"item3\">List item 3</li></ul>"
+    },
+    {
+     "id": "number",
+     "label": "Numbered",
+     "html": "<ol><li data-edit=\"item1\">List item 1</li><li data-edit=\"item2\">List item 2</li><li data-edit=\"item3\">List item 3</li></ol>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "item1",
+     "default": "List item 1",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "List item 2",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "List item 3",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "button",
+   "slug": "button",
+   "name": "Buttons",
+   "category": "Content",
+   "keywords": [
+    "cta",
+    "call to action",
+    "submit",
+    "primary",
+    "secondary"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "dark",
+   "variants": [
+    {
+     "id": "dark",
+     "label": "Brand Dark",
+     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "dark-outline",
+     "label": "Brand Dark Outline",
+     "html": "<button class=\"nsw-button nsw-button--dark-outline\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "dark-outline-solid",
+     "label": "Brand Dark Outline Solid",
+     "html": "<button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "light",
+     "label": "Brand Light",
+     "html": "<button class=\"nsw-button nsw-button--light\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "light-outline",
+     "label": "Brand Light Outline",
+     "html": "<button class=\"nsw-button nsw-button--light-outline\" type=\"button\" data-edit=\"label\">Button</button>",
+     "previewBg": "brand-dark"
+    },
+    {
+     "id": "white",
+     "label": "White",
+     "html": "<button class=\"nsw-button nsw-button--white\" type=\"button\" data-edit=\"label\">Button</button>",
+     "previewBg": "brand-dark"
+    },
+    {
+     "id": "white-outline",
+     "label": "White Outline",
+     "html": "<button class=\"nsw-button nsw-button--white-outline\" type=\"button\" data-edit=\"label\">Button</button>",
+     "previewBg": "brand-dark"
+    },
+    {
+     "id": "danger",
+     "label": "Danger",
+     "html": "<button class=\"nsw-button nsw-button--danger\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "info",
+     "label": "Info",
+     "html": "<button class=\"nsw-button nsw-button--info\" type=\"button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "disabled",
+     "label": "Disabled",
+     "html": "<button class=\"nsw-button nsw-button--dark\" type=\"button\" disabled data-edit=\"label\">Button</button>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Button",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "link",
+   "slug": "link",
+   "name": "Link",
+   "category": "Content",
+   "keywords": [
+    "anchor",
+    "hyperlink"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<p><a href=\"#\" data-edit=\"label\">Link text</a></p>"
+    },
+    {
+     "id": "icon",
+     "label": "With arrow",
+     "html": "<p><a href=\"#\"><span data-edit=\"label\">Link text</span><span class=\"material-icons nsw-material-icons nsw-material-icons--inline\" focusable=\"false\" aria-hidden=\"true\">east</span></a></p>"
+    },
+    {
+     "id": "small",
+     "label": "Small",
+     "html": "<p class=\"nsw-small\"><a href=\"#\" data-edit=\"label\">Small link text</a></p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Link text",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "card",
+   "slug": "card",
+   "name": "Cards",
+   "category": "Content",
+   "keywords": [
+    "tile",
+    "teaser",
+    "promo"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-card\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "headline",
+     "label": "Headline",
+     "html": "<div class=\"nsw-card nsw-card--headline\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "highlight",
+     "label": "Highlight",
+     "html": "<div class=\"nsw-card nsw-card--highlight\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "horizontal",
+     "label": "Horizontal",
+     "html": "<div class=\"nsw-card nsw-card--horizontal\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "dark",
+     "label": "Dark",
+     "html": "<div class=\"nsw-card nsw-card--dark\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<div class=\"nsw-card nsw-card--light\"><div class=\"nsw-card__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L224%20162%20L352%20251.99999999999997%20L448%20180%20L640%20360%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%2290%22%20r%3D%2228.8%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22324%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2221.599999999999998%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    },
+    {
+     "id": "no-image",
+     "label": "No image",
+     "html": "<div class=\"nsw-card\"><div class=\"nsw-card__content\"><div class=\"nsw-card__tag\" data-optional=\"tag\" data-edit=\"tag\">Tag</div><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title\">Card title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>Supporting text that gives a short summary of the card content.</p><p class=\"nsw-card__date\" data-optional=\"date\" data-edit=\"date\">20 October 2026</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "tag",
+     "default": "Tag",
+     "multiline": false
+    },
+    {
+     "key": "title",
+     "default": "Card title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "Supporting text that gives a short summary of the card content.",
+     "multiline": true
+    },
+    {
+     "key": "date",
+     "default": "20 October 2026",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "image",
+     "label": "Image"
+    },
+    {
+     "key": "tag",
+     "label": "Tag"
+    },
+    {
+     "key": "copy",
+     "label": "Summary text"
+    },
+    {
+     "key": "date",
+     "label": "Date"
+    }
+   ]
+  },
+  {
+   "id": "list-item",
+   "slug": "list-item",
+   "name": "List items",
+   "category": "Content",
+   "keywords": [
+    "result",
+    "article",
+    "news"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-list-item\"><div class=\"nsw-list-item__content\"><div class=\"nsw-list-item__label\" data-optional=\"label\" data-edit=\"label\">Category</div><h3 class=\"nsw-list-item__title\"><a href=\"#\"><span data-edit=\"title\">List item title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><div class=\"nsw-list-item__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>A short description of the list item.</div><div class=\"nsw-list-item__info\" data-optional=\"date\" data-edit=\"date\">20 October 2026</div></div><div class=\"nsw-list-item__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22320%22%20viewBox%3D%220%200%20480%20320%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20320%20L168%20144%20L264%20224%20L336%20160%20L480%20320%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2280%22%20r%3D%2225.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22288%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2219.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div></div>"
+    },
+    {
+     "id": "block",
+     "label": "Block",
+     "html": "<div class=\"nsw-list-item nsw-list-item--block\"><div class=\"nsw-list-item__content\"><div class=\"nsw-list-item__label\" data-optional=\"label\" data-edit=\"label\">Category</div><h3 class=\"nsw-list-item__title\"><a href=\"#\"><span data-edit=\"title\">List item title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><div class=\"nsw-list-item__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>A short description of the list item.</div><div class=\"nsw-list-item__info\" data-optional=\"date\" data-edit=\"date\">20 October 2026</div></div><div class=\"nsw-list-item__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22320%22%20viewBox%3D%220%200%20480%20320%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20320%20L168%20144%20L264%20224%20L336%20160%20L480%20320%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2280%22%20r%3D%2225.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22288%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2219.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div></div>"
+    },
+    {
+     "id": "reversed",
+     "label": "Image left",
+     "html": "<div class=\"nsw-list-item nsw-list-item--reversed\"><div class=\"nsw-list-item__content\"><div class=\"nsw-list-item__label\" data-optional=\"label\" data-edit=\"label\">Category</div><h3 class=\"nsw-list-item__title\"><a href=\"#\"><span data-edit=\"title\">List item title</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><div class=\"nsw-list-item__copy\" data-optional=\"copy\" data-edit=\"copy\" data-multiline>A short description of the list item.</div><div class=\"nsw-list-item__info\" data-optional=\"date\" data-edit=\"date\">20 October 2026</div></div><div class=\"nsw-list-item__image\" data-optional=\"image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22320%22%20viewBox%3D%220%200%20480%20320%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20320%20L168%20144%20L264%20224%20L336%20160%20L480%20320%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2280%22%20r%3D%2225.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22288%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2219.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Category",
+     "multiline": false
+    },
+    {
+     "key": "title",
+     "default": "List item title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "A short description of the list item.",
+     "multiline": true
+    },
+    {
+     "key": "date",
+     "default": "20 October 2026",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "label",
+     "label": "Category label"
+    },
+    {
+     "key": "copy",
+     "label": "Summary text"
+    },
+    {
+     "key": "date",
+     "label": "Date"
+    },
+    {
+     "key": "image",
+     "label": "Image"
+    }
+   ]
+  },
+  {
+   "id": "accordion",
+   "slug": "accordion",
+   "name": "Accordion",
+   "category": "Content",
+   "keywords": [
+    "expand",
+    "collapse",
+    "faq",
+    "details"
+   ],
+   "needsJs": true,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-accordion js-accordion-details\"><details class=\"nsw-accordion__item\" open><summary class=\"nsw-accordion__title\" data-edit=\"title1\">Accordion title 1</summary><div class=\"nsw-accordion__content-wrap\"><div class=\"nsw-accordion__content\"><p data-edit=\"content1\" data-multiline>Accordion content 1.</p></div></div></details><details class=\"nsw-accordion__item\"><summary class=\"nsw-accordion__title\" data-edit=\"title2\">Accordion title 2</summary><div class=\"nsw-accordion__content-wrap\"><div class=\"nsw-accordion__content\"><p data-edit=\"content2\" data-multiline>Accordion content 2.</p></div></div></details><details class=\"nsw-accordion__item\"><summary class=\"nsw-accordion__title\" data-edit=\"title3\">Accordion title 3</summary><div class=\"nsw-accordion__content-wrap\"><div class=\"nsw-accordion__content\"><p data-edit=\"content3\" data-multiline>Accordion content 3.</p></div></div></details></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "Accordion title 1",
+     "multiline": false
+    },
+    {
+     "key": "content1",
+     "default": "Accordion content 1.",
+     "multiline": true
+    },
+    {
+     "key": "title2",
+     "default": "Accordion title 2",
+     "multiline": false
+    },
+    {
+     "key": "content2",
+     "default": "Accordion content 2.",
+     "multiline": true
+    },
+    {
+     "key": "title3",
+     "default": "Accordion title 3",
+     "multiline": false
+    },
+    {
+     "key": "content3",
+     "default": "Accordion content 3.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "callout",
+   "slug": "callout",
+   "name": "Callout",
+   "category": "Content",
+   "keywords": [
+    "highlight",
+    "notice",
+    "important"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-callout\"><div class=\"nsw-callout__content\"><h2 class=\"nsw-h4\" data-edit=\"title\">Callout title</h2><p data-edit=\"copy\" data-multiline>Use a callout to draw attention to important information.</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Callout title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "Use a callout to draw attention to important information.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "show-more",
+   "slug": "show-more",
+   "name": "Show more",
+   "category": "Content",
+   "keywords": [],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "partial",
+   "note": "Built on the native details element, so it opens and closes in Preview mode.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<details class=\"nsw-show-more\"><summary class=\"nsw-show-more__toggle\"><span class=\"nsw-show-more__toggle-text--show\" data-edit=\"show\">Show more</span><span class=\"nsw-show-more__toggle-text--hide\" data-edit=\"hide\">Show less</span><span class=\"material-icons nsw-material-icons nsw-show-more__icon\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_down</span></summary><div class=\"nsw-show-more__content\"><p data-edit=\"content\" data-multiline>Additional content that is hidden until the user asks for it.</p></div></details>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "show",
+     "default": "Show more",
+     "multiline": false
+    },
+    {
+     "key": "hide",
+     "default": "Show less",
+     "multiline": false
+    },
+    {
+     "key": "content",
+     "default": "Additional content that is hidden until the user asks for it.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "table",
+   "slug": "table",
+   "name": "Tables",
+   "category": "Content",
+   "keywords": [
+    "data",
+    "grid",
+    "rows",
+    "columns"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<table class=\"nsw-table\"><caption data-edit=\"caption\">Table caption</caption><thead><tr><th scope=\"col\" data-edit=\"h1\">Heading 1</th><th scope=\"col\" data-edit=\"h2\">Heading 2</th><th scope=\"col\" data-edit=\"h3\">Heading 3</th></tr></thead><tbody><tr><td data-edit=\"r1c1\">Cell 1.1</td><td data-edit=\"r1c2\">Cell 1.2</td><td data-edit=\"r1c3\">Cell 1.3</td></tr><tr><td data-edit=\"r2c1\">Cell 2.1</td><td data-edit=\"r2c2\">Cell 2.2</td><td data-edit=\"r2c3\">Cell 2.3</td></tr><tr><td data-edit=\"r3c1\">Cell 3.1</td><td data-edit=\"r3c2\">Cell 3.2</td><td data-edit=\"r3c3\">Cell 3.3</td></tr></tbody></table>"
+    },
+    {
+     "id": "striped",
+     "label": "Striped",
+     "html": "<table class=\"nsw-table nsw-table--striped\"><caption data-edit=\"caption\">Table caption</caption><thead><tr><th scope=\"col\" data-edit=\"h1\">Heading 1</th><th scope=\"col\" data-edit=\"h2\">Heading 2</th><th scope=\"col\" data-edit=\"h3\">Heading 3</th></tr></thead><tbody><tr><td data-edit=\"r1c1\">Cell 1.1</td><td data-edit=\"r1c2\">Cell 1.2</td><td data-edit=\"r1c3\">Cell 1.3</td></tr><tr><td data-edit=\"r2c1\">Cell 2.1</td><td data-edit=\"r2c2\">Cell 2.2</td><td data-edit=\"r2c3\">Cell 2.3</td></tr><tr><td data-edit=\"r3c1\">Cell 3.1</td><td data-edit=\"r3c2\">Cell 3.2</td><td data-edit=\"r3c3\">Cell 3.3</td></tr></tbody></table>"
+    },
+    {
+     "id": "bordered",
+     "label": "Bordered",
+     "html": "<table class=\"nsw-table nsw-table--bordered\"><caption data-edit=\"caption\">Table caption</caption><thead><tr><th scope=\"col\" data-edit=\"h1\">Heading 1</th><th scope=\"col\" data-edit=\"h2\">Heading 2</th><th scope=\"col\" data-edit=\"h3\">Heading 3</th></tr></thead><tbody><tr><td data-edit=\"r1c1\">Cell 1.1</td><td data-edit=\"r1c2\">Cell 1.2</td><td data-edit=\"r1c3\">Cell 1.3</td></tr><tr><td data-edit=\"r2c1\">Cell 2.1</td><td data-edit=\"r2c2\">Cell 2.2</td><td data-edit=\"r2c3\">Cell 2.3</td></tr><tr><td data-edit=\"r3c1\">Cell 3.1</td><td data-edit=\"r3c2\">Cell 3.2</td><td data-edit=\"r3c3\">Cell 3.3</td></tr></tbody></table>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "caption",
+     "default": "Table caption",
+     "multiline": false
+    },
+    {
+     "key": "h1",
+     "default": "Heading 1",
+     "multiline": false
+    },
+    {
+     "key": "h2",
+     "default": "Heading 2",
+     "multiline": false
+    },
+    {
+     "key": "h3",
+     "default": "Heading 3",
+     "multiline": false
+    },
+    {
+     "key": "r1c1",
+     "default": "Cell 1.1",
+     "multiline": false
+    },
+    {
+     "key": "r1c2",
+     "default": "Cell 1.2",
+     "multiline": false
+    },
+    {
+     "key": "r1c3",
+     "default": "Cell 1.3",
+     "multiline": false
+    },
+    {
+     "key": "r2c1",
+     "default": "Cell 2.1",
+     "multiline": false
+    },
+    {
+     "key": "r2c2",
+     "default": "Cell 2.2",
+     "multiline": false
+    },
+    {
+     "key": "r2c3",
+     "default": "Cell 2.3",
+     "multiline": false
+    },
+    {
+     "key": "r3c1",
+     "default": "Cell 3.1",
+     "multiline": false
+    },
+    {
+     "key": "r3c2",
+     "default": "Cell 3.2",
+     "multiline": false
+    },
+    {
+     "key": "r3c3",
+     "default": "Cell 3.3",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "tag",
+   "slug": "tag",
+   "name": "Tags",
+   "category": "Content",
+   "keywords": [
+    "chip",
+    "label",
+    "topic"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<p><a class=\"nsw-tag\" href=\"#\" data-edit=\"label\">Tag</a></p>"
+    },
+    {
+     "id": "checkbox",
+     "label": "Selectable",
+     "html": "<p><label class=\"nsw-tag nsw-tag--checkbox\"><input type=\"checkbox\"><span data-edit=\"label\">Tag</span></label></p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Tag",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "status-labels",
+   "slug": "status-labels",
+   "name": "Status labels",
+   "category": "Content",
+   "keywords": [
+    "badge",
+    "status",
+    "pill"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "info",
+   "variants": [
+    {
+     "id": "info",
+     "label": "Info",
+     "html": "<p><span class=\"nsw-status-label nsw-status-label--info\" data-edit=\"label\">Info</span></p>"
+    },
+    {
+     "id": "success",
+     "label": "Success",
+     "html": "<p><span class=\"nsw-status-label nsw-status-label--success\" data-edit=\"label\">Success</span></p>"
+    },
+    {
+     "id": "warning",
+     "label": "Warning",
+     "html": "<p><span class=\"nsw-status-label nsw-status-label--warning\" data-edit=\"label\">Warning</span></p>"
+    },
+    {
+     "id": "error",
+     "label": "Error",
+     "html": "<p><span class=\"nsw-status-label nsw-status-label--error\" data-edit=\"label\">Error</span></p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Info",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "steps",
+   "slug": "steps",
+   "name": "Steps",
+   "category": "Content",
+   "keywords": [
+    "process",
+    "numbered",
+    "stages"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<ol class=\"nsw-steps\"><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title1\">Step 1</h3><p data-edit=\"copy1\" data-multiline>Describe what happens in step 1.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title2\">Step 2</h3><p data-edit=\"copy2\" data-multiline>Describe what happens in step 2.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title3\">Step 3</h3><p data-edit=\"copy3\" data-multiline>Describe what happens in step 3.</p></div></li></ol>"
+    },
+    {
+     "id": "dark",
+     "label": "Dark",
+     "html": "<ol class=\"nsw-steps nsw-steps--dark\"><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title1\">Step 1</h3><p data-edit=\"copy1\" data-multiline>Describe what happens in step 1.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title2\">Step 2</h3><p data-edit=\"copy2\" data-multiline>Describe what happens in step 2.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title3\">Step 3</h3><p data-edit=\"copy3\" data-multiline>Describe what happens in step 3.</p></div></li></ol>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<ol class=\"nsw-steps nsw-steps--light\"><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title1\">Step 1</h3><p data-edit=\"copy1\" data-multiline>Describe what happens in step 1.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title2\">Step 2</h3><p data-edit=\"copy2\" data-multiline>Describe what happens in step 2.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title3\">Step 3</h3><p data-edit=\"copy3\" data-multiline>Describe what happens in step 3.</p></div></li></ol>"
+    },
+    {
+     "id": "supplementary",
+     "label": "Supplementary",
+     "html": "<ol class=\"nsw-steps nsw-steps--supplementary\"><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title1\">Step 1</h3><p data-edit=\"copy1\" data-multiline>Describe what happens in step 1.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title2\">Step 2</h3><p data-edit=\"copy2\" data-multiline>Describe what happens in step 2.</p></div></li><li class=\"nsw-steps__item\"><div class=\"nsw-steps__content\"><h3 class=\"nsw-h4\" data-edit=\"title3\">Step 3</h3><p data-edit=\"copy3\" data-multiline>Describe what happens in step 3.</p></div></li></ol>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "Step 1",
+     "multiline": false
+    },
+    {
+     "key": "copy1",
+     "default": "Describe what happens in step 1.",
+     "multiline": true
+    },
+    {
+     "key": "title2",
+     "default": "Step 2",
+     "multiline": false
+    },
+    {
+     "key": "copy2",
+     "default": "Describe what happens in step 2.",
+     "multiline": true
+    },
+    {
+     "key": "title3",
+     "default": "Step 3",
+     "multiline": false
+    },
+    {
+     "key": "copy3",
+     "default": "Describe what happens in step 3.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "support-list",
+   "slug": "support-list",
+   "name": "Support list",
+   "category": "Content",
+   "keywords": [
+    "logos",
+    "partners",
+    "funding"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "partial",
+   "note": "Logos are shown as labelled placeholders.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-support-list\"><div class=\"nsw-support-list__container\"><div class=\"nsw-support-list__header\"><h2 class=\"nsw-h4\" data-edit=\"title\">Supported by</h2></div><div class=\"nsw-support-list__logo-grid\"><div class=\"nsw-support-list__logo-grid__item\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22100%22%20viewBox%3D%220%200%20240%20100%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20100%20L84%2045%20L132%2070%20L168%2050%20L240%20100%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%2225%22%20r%3D%228%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2290%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23495054%22%3ELogo%201%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"Logo 1\"></div><div class=\"nsw-support-list__logo-grid__item\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22100%22%20viewBox%3D%220%200%20240%20100%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20100%20L84%2045%20L132%2070%20L168%2050%20L240%20100%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%2225%22%20r%3D%228%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2290%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23495054%22%3ELogo%202%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"Logo 2\"></div><div class=\"nsw-support-list__logo-grid__item\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22100%22%20viewBox%3D%220%200%20240%20100%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20100%20L84%2045%20L132%2070%20L168%2050%20L240%20100%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%2225%22%20r%3D%228%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2290%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23495054%22%3ELogo%203%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"Logo 3\"></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Supported by",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "results-bar",
+   "slug": "results-bar",
+   "name": "Results bar",
+   "category": "Content",
+   "keywords": [],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-results-bar\"><div data-edit=\"summary\">Showing 1–10 of 48 results</div><div class=\"nsw-results-bar__sorting\"><label class=\"nsw-form__label\" for=\"results-sort\">Sort by</label><select class=\"nsw-form__select\" id=\"results-sort\"><option>Relevance</option><option>Newest</option></select></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "summary",
+     "default": "Showing 1–10 of 48 results",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "close-button",
+   "slug": "close-button",
+   "name": "Close button",
+   "category": "Content",
+   "keywords": [
+    "dismiss",
+    "x"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<button class=\"nsw-icon-button\" type=\"button\" aria-label=\"Close\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button>"
+    }
+   ],
+   "editable": [],
+   "optional": []
+  },
+  {
+   "id": "form",
+   "slug": "form",
+   "name": "Forms",
+   "category": "Forms",
+   "keywords": [
+    "input",
+    "text field",
+    "checkbox",
+    "radio",
+    "textarea",
+    "field"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "text",
+   "variants": [
+    {
+     "id": "text",
+     "label": "Text input",
+     "html": "<div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"f-text\"><span data-edit=\"label\">Text input</span></label><span class=\"nsw-form__helper\" data-optional=\"helper\" data-edit=\"helper\">Helper text</span><input class=\"nsw-form__input\" type=\"text\" id=\"f-text\"></div>"
+    },
+    {
+     "id": "textarea",
+     "label": "Text area",
+     "html": "<div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"f-area\"><span data-edit=\"label\">Text area</span></label><span class=\"nsw-form__helper\" data-optional=\"helper\" data-edit=\"helper\">Helper text</span><textarea class=\"nsw-form__input\" id=\"f-area\" rows=\"4\"></textarea></div>"
+    },
+    {
+     "id": "checkbox",
+     "label": "Checkboxes",
+     "html": "<fieldset class=\"nsw-form__fieldset\"><legend class=\"nsw-form__legend\" data-edit=\"legend\">Checkbox group</legend><div class=\"nsw-form__group\"><input class=\"nsw-form__checkbox-input\" type=\"checkbox\" id=\"f-cb-1\"><label class=\"nsw-form__checkbox-label\" for=\"f-cb-1\" data-edit=\"option1\">Option 1</label></div><div class=\"nsw-form__group\"><input class=\"nsw-form__checkbox-input\" type=\"checkbox\" id=\"f-cb-2\"><label class=\"nsw-form__checkbox-label\" for=\"f-cb-2\" data-edit=\"option2\">Option 2</label></div><div class=\"nsw-form__group\"><input class=\"nsw-form__checkbox-input\" type=\"checkbox\" id=\"f-cb-3\"><label class=\"nsw-form__checkbox-label\" for=\"f-cb-3\" data-edit=\"option3\">Option 3</label></div></fieldset>"
+    },
+    {
+     "id": "radio",
+     "label": "Radio buttons",
+     "html": "<fieldset class=\"nsw-form__fieldset\"><legend class=\"nsw-form__legend\" data-edit=\"legend\">Radio group</legend><div class=\"nsw-form__group\"><input class=\"nsw-form__radio-input\" type=\"radio\" name=\"f-radio\" id=\"f-rd-1\"><label class=\"nsw-form__radio-label\" for=\"f-rd-1\" data-edit=\"option1\">Option 1</label></div><div class=\"nsw-form__group\"><input class=\"nsw-form__radio-input\" type=\"radio\" name=\"f-radio\" id=\"f-rd-2\"><label class=\"nsw-form__radio-label\" for=\"f-rd-2\" data-edit=\"option2\">Option 2</label></div><div class=\"nsw-form__group\"><input class=\"nsw-form__radio-input\" type=\"radio\" name=\"f-radio\" id=\"f-rd-3\"><label class=\"nsw-form__radio-label\" for=\"f-rd-3\" data-edit=\"option3\">Option 3</label></div></fieldset>"
+    },
+    {
+     "id": "search",
+     "label": "Search field",
+     "html": "<div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"f-search\" data-edit=\"label\">Search</label><div class=\"nsw-form__input-group\"><input class=\"nsw-form__input\" type=\"text\" id=\"f-search\" placeholder=\"Search\"><button class=\"nsw-button nsw-button--dark\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">search</span><span>Search</span></button></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Text input",
+     "multiline": false
+    },
+    {
+     "key": "helper",
+     "default": "Helper text",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "helper",
+     "label": "Helper text"
+    }
+   ]
+  },
+  {
+   "id": "select",
+   "slug": "select",
+   "name": "Select",
+   "category": "Forms",
+   "keywords": [
+    "dropdown",
+    "drop-down",
+    "combo"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Single select",
+     "html": "<div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"f-select\"><span data-edit=\"label\">Select</span></label><span class=\"nsw-form__helper\" data-optional=\"helper\" data-edit=\"helper\">Helper text</span><select class=\"nsw-form__select\" id=\"f-select\"><option>Option 1</option><option>Option 2</option><option>Option 3</option></select></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Select",
+     "multiline": false
+    },
+    {
+     "key": "helper",
+     "default": "Helper text",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "helper",
+     "label": "Helper text"
+    }
+   ]
+  },
+  {
+   "id": "date-input",
+   "slug": "date-input",
+   "name": "Date input",
+   "category": "Forms",
+   "keywords": [
+    "dob",
+    "birth",
+    "calendar"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<fieldset class=\"nsw-form__fieldset\"><legend class=\"nsw-form__legend\" data-edit=\"legend\">Date of birth</legend><span class=\"nsw-form__helper\">For example, 20 10 1990</span><div class=\"nsw-form__date-wrapper\"><div class=\"nsw-form__date\"><label class=\"nsw-form__label nsw-form__label--small\" for=\"f-day\">Day</label><input class=\"nsw-form__input nsw-form__date-input\" type=\"text\" inputmode=\"numeric\" id=\"f-day\" maxlength=\"2\"></div><div class=\"nsw-form__date\"><label class=\"nsw-form__label nsw-form__label--small\" for=\"f-month\">Month</label><input class=\"nsw-form__input nsw-form__date-input\" type=\"text\" inputmode=\"numeric\" id=\"f-month\" maxlength=\"2\"></div><div class=\"nsw-form__date\"><label class=\"nsw-form__label nsw-form__label--small\" for=\"f-year\">Year</label><input class=\"nsw-form__input nsw-form__date-input\" type=\"text\" inputmode=\"numeric\" id=\"f-year\" maxlength=\"4\"></div></div></fieldset>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "legend",
+     "default": "Date of birth",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "date-picker",
+   "slug": "date-picker",
+   "name": "Date picker",
+   "category": "Forms",
+   "keywords": [
+    "calendar",
+    "date"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "Shows the date field only. The calendar pop-up needs the full page script and is not shown on the canvas.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-form__group\"><label class=\"nsw-form__label\" for=\"f-date\"><span data-edit=\"label\">Date</span></label><span class=\"nsw-form__helper\" data-optional=\"helper\" data-edit=\"helper\">Helper text</span><div class=\"nsw-form__input-group\"><input class=\"nsw-form__input\" type=\"text\" id=\"f-date\" placeholder=\"dd/mm/yyyy\"><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" aria-label=\"Choose date\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">calendar_today</span></button></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Date",
+     "multiline": false
+    },
+    {
+     "key": "helper",
+     "default": "Helper text",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "helper",
+     "label": "Helper text"
+    }
+   ]
+  },
+  {
+   "id": "file-upload",
+   "slug": "file-upload",
+   "name": "File upload",
+   "category": "Forms",
+   "keywords": [
+    "attach",
+    "upload",
+    "document"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-form__group\"><span class=\"nsw-form__label\" data-edit=\"label\">Upload a file</span><div class=\"nsw-file-upload\"><input class=\"nsw-file-upload__input\" type=\"file\" id=\"f-file\"><label class=\"nsw-file-upload__label\" for=\"f-file\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">upload_file</span><span data-edit=\"prompt\">Choose a file</span></label></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Upload a file",
+     "multiline": false
+    },
+    {
+     "key": "prompt",
+     "default": "Choose a file",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "filters",
+   "slug": "filters",
+   "name": "Filters",
+   "category": "Forms",
+   "keywords": [
+    "refine",
+    "facets",
+    "search results"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "Shown as the filter heading and groups. The slide-in panel behaviour is not wired up.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-filters\"><div class=\"nsw-filters__title\" data-edit=\"title\">Filter results</div><div class=\"nsw-filters__wrapper\"><div class=\"nsw-filters__item\"><button class=\"nsw-filters__item-button\" type=\"button\"><span data-edit=\"group1\">Filter group 1</span><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_down</span></button></div><div class=\"nsw-filters__item\"><button class=\"nsw-filters__item-button\" type=\"button\"><span data-edit=\"group2\">Filter group 2</span><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_down</span></button></div><div class=\"nsw-filters__item\"><button class=\"nsw-filters__item-button\" type=\"button\"><span data-edit=\"group3\">Filter group 3</span><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">keyboard_arrow_down</span></button></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Filter results",
+     "multiline": false
+    },
+    {
+     "key": "group1",
+     "default": "Filter group 1",
+     "multiline": false
+    },
+    {
+     "key": "group2",
+     "default": "Filter group 2",
+     "multiline": false
+    },
+    {
+     "key": "group3",
+     "default": "Filter group 3",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "global-alert",
+   "slug": "global-alert",
+   "name": "Global alert",
+   "category": "Feedback",
+   "keywords": [
+    "banner",
+    "announcement",
+    "emergency",
+    "critical"
+   ],
+   "needsJs": true,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-global-alert\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+    },
+    {
+     "id": "light",
+     "label": "Light",
+     "html": "<div class=\"nsw-global-alert nsw-global-alert--light\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+    },
+    {
+     "id": "critical",
+     "label": "Critical",
+     "html": "<div class=\"nsw-global-alert nsw-global-alert--critical\"><div class=\"nsw-global-alert__wrapper\"><div class=\"nsw-global-alert__content\"><div class=\"nsw-global-alert__title\" data-edit=\"title\">Alert title</div><p data-edit=\"copy\" data-multiline>A short message that applies to the whole site.</p><button class=\"nsw-button nsw-button--white\" type=\"button\" data-optional=\"button\" data-edit=\"button\">Find out more</button></div><button class=\"nsw-icon-button js-close-alert\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Alert title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "A short message that applies to the whole site.",
+     "multiline": true
+    },
+    {
+     "key": "button",
+     "default": "Find out more",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "button",
+     "label": "Button"
+    }
+   ]
+  },
+  {
+   "id": "in-page-alert",
+   "slug": "in-page-alert",
+   "name": "In-page alert",
+   "category": "Feedback",
+   "keywords": [
+    "message",
+    "notification",
+    "error",
+    "success",
+    "warning",
+    "info"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "info",
+   "variants": [
+    {
+     "id": "info",
+     "label": "Info",
+     "html": "<div class=\"nsw-in-page-alert nsw-in-page-alert--info\"><span class=\"material-icons nsw-material-icons nsw-in-page-alert__icon\" focusable=\"false\" aria-hidden=\"true\">info</span><div class=\"nsw-in-page-alert__content\"><h2 class=\"nsw-h4\" data-edit=\"title\">Alert title</h2><p data-edit=\"copy\" data-multiline>A short message about this part of the page.</p></div></div>"
+    },
+    {
+     "id": "success",
+     "label": "Success",
+     "html": "<div class=\"nsw-in-page-alert nsw-in-page-alert--success\"><span class=\"material-icons nsw-material-icons nsw-in-page-alert__icon\" focusable=\"false\" aria-hidden=\"true\">check_circle</span><div class=\"nsw-in-page-alert__content\"><h2 class=\"nsw-h4\" data-edit=\"title\">Alert title</h2><p data-edit=\"copy\" data-multiline>A short message about this part of the page.</p></div></div>"
+    },
+    {
+     "id": "warning",
+     "label": "Warning",
+     "html": "<div class=\"nsw-in-page-alert nsw-in-page-alert--warning\"><span class=\"material-icons nsw-material-icons nsw-in-page-alert__icon\" focusable=\"false\" aria-hidden=\"true\">warning</span><div class=\"nsw-in-page-alert__content\"><h2 class=\"nsw-h4\" data-edit=\"title\">Alert title</h2><p data-edit=\"copy\" data-multiline>A short message about this part of the page.</p></div></div>"
+    },
+    {
+     "id": "error",
+     "label": "Error",
+     "html": "<div class=\"nsw-in-page-alert nsw-in-page-alert--error\"><span class=\"material-icons nsw-material-icons nsw-in-page-alert__icon\" focusable=\"false\" aria-hidden=\"true\">cancel</span><div class=\"nsw-in-page-alert__content\"><h2 class=\"nsw-h4\" data-edit=\"title\">Alert title</h2><p data-edit=\"copy\" data-multiline>A short message about this part of the page.</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Alert title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "A short message about this part of the page.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "dialog",
+   "slug": "dialog",
+   "name": "Dialog",
+   "category": "Feedback",
+   "keywords": [
+    "modal",
+    "confirm",
+    "popup"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "The dialog box is shown inline. The dark backdrop and open/close behaviour are not shown.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Two actions",
+     "html": "<div class=\"nsw-dialog__wrapper\" role=\"dialog\" aria-modal=\"false\" aria-labelledby=\"dlg-title\"><div class=\"nsw-dialog__top\"><h2 class=\"nsw-dialog__title\" id=\"dlg-title\" data-edit=\"title\">Dialog title</h2><button class=\"nsw-icon-button nsw-dialog__close\" type=\"button\"><span class=\"material-icons nsw-material-icons\" focusable=\"false\" aria-hidden=\"true\">close</span><span class=\"sr-only\">Close</span></button></div><div class=\"nsw-dialog__content\"><p data-edit=\"copy\" data-multiline>Explain what the person is being asked to confirm.</p></div><div class=\"nsw-dialog__bottom\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"confirm\">Confirm</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"cancel\">Cancel</button></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Dialog title",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "Explain what the person is being asked to confirm.",
+     "multiline": true
+    },
+    {
+     "key": "confirm",
+     "default": "Confirm",
+     "multiline": false
+    },
+    {
+     "key": "cancel",
+     "default": "Cancel",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "cookie-consent",
+   "slug": "cookie-consent",
+   "name": "Cookie consent",
+   "category": "Feedback",
+   "keywords": [
+    "privacy",
+    "consent",
+    "cookies"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "static",
+   "note": "Shown as the banner only. The preferences dialog is not shown.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Banner",
+     "html": "<div class=\"nsw-cookie-banner\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"accept\">Accept all</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"manage\">Manage cookies</button></div></div></div></div>"
+    },
+    {
+     "id": "light",
+     "label": "Banner (light)",
+     "html": "<div class=\"nsw-cookie-banner nsw-cookie-banner--light\"><div class=\"nsw-cookie-banner__wrapper\"><div class=\"nsw-cookie-banner__content\"><div class=\"nsw-cookie-banner__title\" data-edit=\"title\">We use cookies</div><p data-edit=\"copy\" data-multiline>We use cookies to improve your experience on this site.</p></div><div class=\"nsw-cookie-banner__buttons-container\"><div class=\"nsw-cookie-banner__cta-group\"><button class=\"nsw-button nsw-button--dark\" type=\"button\" data-edit=\"accept\">Accept all</button><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-edit=\"manage\">Manage cookies</button></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "We use cookies",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "We use cookies to improve your experience on this site.",
+     "multiline": true
+    },
+    {
+     "key": "accept",
+     "default": "Accept all",
+     "multiline": false
+    },
+    {
+     "key": "manage",
+     "default": "Manage cookies",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "loader",
+   "slug": "loader",
+   "name": "Loader",
+   "category": "Feedback",
+   "keywords": [
+    "spinner",
+    "loading",
+    "wait"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "sm",
+   "variants": [
+    {
+     "id": "sm",
+     "label": "Small",
+     "html": "<div class=\"nsw-loader\" role=\"status\"><div class=\"nsw-loader__circle nsw-loader__circle--sm\"></div><span class=\"nsw-loader__label\" data-edit=\"label\">Loading</span></div>"
+    },
+    {
+     "id": "md",
+     "label": "Medium",
+     "html": "<div class=\"nsw-loader\" role=\"status\"><div class=\"nsw-loader__circle nsw-loader__circle--md\"></div><span class=\"nsw-loader__label\" data-edit=\"label\">Loading</span></div>"
+    },
+    {
+     "id": "lg",
+     "label": "Large",
+     "html": "<div class=\"nsw-loader\" role=\"status\"><div class=\"nsw-loader__circle nsw-loader__circle--lg\"></div><span class=\"nsw-loader__label\" data-edit=\"label\">Loading</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Loading",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "progress-indicator",
+   "slug": "progress-indicator",
+   "name": "Progress indicator",
+   "category": "Feedback",
+   "keywords": [
+    "progress",
+    "bar",
+    "steps"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-progress-indicator\"><div class=\"nsw-progress-indicator__count\" data-edit=\"count\">Step 2 of 4</div><div class=\"nsw-progress-indicator__bar\"><div class=\"active\"></div><div class=\"active\"></div><div></div><div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "count",
+     "default": "Step 2 of 4",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "popover",
+   "slug": "popover",
+   "name": "Popover",
+   "category": "Feedback",
+   "keywords": [
+    "popup",
+    "overlay"
+   ],
+   "needsJs": true,
+   "fullWidth": false,
+   "fidelity": "partial",
+   "note": "The trigger button opens the popover in Preview mode.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"js-popover\" data-popover-id=\"popover-demo\" data-popover-position=\"bottom\"><button class=\"nsw-button nsw-button--dark-outline-solid\" type=\"button\" data-anchor data-edit=\"trigger\">Open popover</button></div><div class=\"nsw-popover\" id=\"popover-demo\" role=\"dialog\"><p data-edit=\"copy\" data-multiline>Popover content goes here.</p></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "trigger",
+     "default": "Open popover",
+     "multiline": false
+    },
+    {
+     "key": "copy",
+     "default": "Popover content goes here.",
+     "multiline": true
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "tooltip",
+   "slug": "tooltip",
+   "name": "Tooltip",
+   "category": "Feedback",
+   "keywords": [
+    "hint",
+    "hover",
+    "toggletip"
+   ],
+   "needsJs": true,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Tooltip",
+     "html": "<p><span class=\"js-tooltip\" data-tooltip-content=\"Tooltip text\" tabindex=\"0\"><span data-edit=\"label\">Hover or focus me</span></span></p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Hover or focus me",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "quick-exit",
+   "slug": "quick-exit",
+   "name": "Quick exit",
+   "category": "Feedback",
+   "keywords": [
+    "safety",
+    "escape",
+    "leave"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "static",
+   "note": "The real component sticks to the top of the screen and listens for the Esc key. Shown here as the static bar, without the Esc-key hint.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-quick-exit\"><div class=\"nsw-quick-exit__content\"><span class=\"nsw-quick-exit__exit-text\" data-edit=\"label\">Exit now</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Exit now",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  },
+  {
+   "id": "media",
+   "slug": "media",
+   "name": "Media",
+   "category": "Media",
+   "keywords": [
+    "image",
+    "picture",
+    "photo",
+    "video"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Image",
+     "html": "<figure class=\"nsw-media\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L336%20243%20L528%20378%20L672%20270%20L960%20540%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22768%22%20cy%3D%22135%22%20r%3D%2243.2%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22486%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2232.4%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image\"><figcaption data-optional=\"caption\" data-edit=\"caption\">Image caption</figcaption></figure>"
+    },
+    {
+     "id": "video",
+     "label": "Video",
+     "html": "<figure class=\"nsw-media\"><div class=\"nsw-media__video\"><iframe title=\"Video placeholder\" src=\"about:blank\" style=\"background:#22272b\"></iframe></div><figcaption data-optional=\"caption\" data-edit=\"caption\">Video caption</figcaption></figure>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "caption",
+     "default": "Image caption",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "caption",
+     "label": "Caption"
+    }
+   ]
+  },
+  {
+   "id": "card-carousel",
+   "slug": "card-carousel",
+   "name": "Card carousel",
+   "category": "Media",
+   "keywords": [
+    "slider",
+    "cards",
+    "scroll"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "Cards are shown in a row. The scrolling, arrows and dots need the carousel script, which depends on more markup than is included here.",
+   "defaultVariant": "default",
+   "variants": [
+    {
+     "id": "default",
+     "label": "Default",
+     "html": "<div class=\"nsw-carousel-container\"><div class=\"nsw-carousel__header\"><h2 class=\"nsw-carousel__title nsw-h3\" data-edit=\"title\">Carousel title</h2></div><div class=\"nsw-grid\"><div class=\"nsw-col nsw-col-md-4\"><div class=\"nsw-card\"><div class=\"nsw-card__image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22270%22%20viewBox%3D%220%200%20480%20270%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20270%20L168%20121.5%20L264%20189%20L336%20135%20L480%20270%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2267.5%22%20r%3D%2221.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22243%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image1\"></div><div class=\"nsw-card__content\"><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title1\">Card 1</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-edit=\"copy1\">Supporting text for card 1.</p></div></div></div><div class=\"nsw-col nsw-col-md-4\"><div class=\"nsw-card\"><div class=\"nsw-card__image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22270%22%20viewBox%3D%220%200%20480%20270%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20270%20L168%20121.5%20L264%20189%20L336%20135%20L480%20270%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2267.5%22%20r%3D%2221.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22243%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image2\"></div><div class=\"nsw-card__content\"><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title2\">Card 2</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-edit=\"copy2\">Supporting text for card 2.</p></div></div></div><div class=\"nsw-col nsw-col-md-4\"><div class=\"nsw-card\"><div class=\"nsw-card__image\"><img src=\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22270%22%20viewBox%3D%220%200%20480%20270%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23cdd3d6%22%2F%3E%3Cpath%20d%3D%22M0%20270%20L168%20121.5%20L264%20189%20L336%20135%20L480%20270%20Z%22%20fill%3D%22%23aab3b8%22%2F%3E%3Ccircle%20cx%3D%22384%22%20cy%3D%2267.5%22%20r%3D%2221.6%22%20fill%3D%22%23e6eaec%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%22243%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216.2%22%20fill%3D%22%23495054%22%3EImage%3C%2Ftext%3E%3C%2Fsvg%3E\" alt=\"\" data-image=\"image3\"></div><div class=\"nsw-card__content\"><h3 class=\"nsw-card__title\"><a href=\"#\"><span data-edit=\"title3\">Card 3</span><span class=\"material-icons nsw-material-icons nsw-material-icons--24 nsw-link--icon\" focusable=\"false\" aria-hidden=\"true\">east</span></a></h3><p class=\"nsw-card__copy\" data-edit=\"copy3\">Supporting text for card 3.</p></div></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Carousel title",
+     "multiline": false
+    },
+    {
+     "key": "title1",
+     "default": "Card 1",
+     "multiline": false
+    },
+    {
+     "key": "copy1",
+     "default": "Supporting text for card 1.",
+     "multiline": false
+    },
+    {
+     "key": "title2",
+     "default": "Card 2",
+     "multiline": false
+    },
+    {
+     "key": "copy2",
+     "default": "Supporting text for card 2.",
+     "multiline": false
+    },
+    {
+     "key": "title3",
+     "default": "Card 3",
+     "multiline": false
+    },
+    {
+     "key": "copy3",
+     "default": "Supporting text for card 3.",
+     "multiline": false
+    }
+   ],
+   "optional": []
+  }
+ ]
+}

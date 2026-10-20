@@ -5,17 +5,27 @@ import publicSans400i from '@fontsource/public-sans/files/public-sans-latin-400-
 import publicSans700 from '@fontsource/public-sans/files/public-sans-latin-700-normal.woff2?url';
 import materialIcons from 'material-icons/iconfont/material-icons.woff2?url';
 
-// Font URLs are inlined as data URIs in the single-file build, so no network is needed.
-const FONT_CSS = `
-@font-face{font-family:"Public Sans";font-style:normal;font-weight:400;font-display:block;src:url(${publicSans400}) format("woff2")}
-@font-face{font-family:"Public Sans";font-style:italic;font-weight:400;font-display:block;src:url(${publicSans400i}) format("woff2")}
-@font-face{font-family:"Public Sans";font-style:normal;font-weight:700;font-display:block;src:url(${publicSans700}) format("woff2")}
-@font-face{font-family:"Material Icons";font-style:normal;font-weight:400;font-display:block;src:url(${materialIcons}) format("woff2")}
-.material-icons{font-family:"Material Icons";font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:"liga"}
-`;
+/** Every font the frames use. URLs are data URIs in the single-file build. */
+export const FONT_FACES = [
+  { family: 'Public Sans', style: 'normal', weight: 400, url: publicSans400 },
+  { family: 'Public Sans', style: 'italic', weight: 400, url: publicSans400i },
+  { family: 'Public Sans', style: 'normal', weight: 700, url: publicSans700 },
+  { family: 'Material Icons', style: 'normal', weight: 400, url: materialIcons },
+];
+
+export const fontCss = (resolveUrl: (url: string) => string = (u) => u) =>
+  FONT_FACES.map(
+    (f) =>
+      `@font-face{font-family:"${f.family}";font-style:${f.style};font-weight:${f.weight};font-display:block;src:url(${resolveUrl(f.url)}) format("woff2")}`,
+  ).join('\n') +
+  `\n.material-icons{font-family:"Material Icons";font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:"liga"}`;
+
+const FONT_CSS = fontCss();
 
 // Only frame plumbing lives here. No NSW component is restyled.
-const FRAME_CSS = `html{overflow:hidden}body{margin:0}#root{display:flow-root}`;
+const FRAME_CSS = `html{overflow:hidden}body{margin:0}#root{display:flow-root}
+body[data-mode="edit"] [data-empty]{min-height:64px;outline:1px dashed #8a8f98;outline-offset:-1px}
+body[data-mode="edit"] [data-empty]::before{content:attr(data-empty);display:block;padding:8px 12px;color:#6d675c;font:12px/1.4 system-ui,sans-serif}`;
 
 /**
  * The document every frame loads. Built once and shared as `srcdoc`, so the NSW CSS, fonts and

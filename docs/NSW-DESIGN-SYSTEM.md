@@ -157,4 +157,38 @@ At `https://designsystem.nsw.gov.au/templates/`:
   - Sections: `nsw-section` with `--white`, `--off-white`, `--brand-dark`, `--brand-light`, `--brand-supplementary`, `--black`, `--grey-*`, `--box`, `--image`, `--invert`, `--half-padding`, `--no-padding`.
   - Layout: `nsw-container`, `nsw-container--flush`, `nsw-grid`, `nsw-col`, `nsw-col-1` to `nsw-col-12`.
   - Accordion: the `<details>` variant uses `.js-accordion-details` with `details.nsw-accordion__item > summary.nsw-accordion__title` and `.nsw-accordion__content-wrap > .nsw-accordion__content`.
-- **Components that can't be generated yet**: none attempted (Milestone 2).
+
+## Catalogue (Milestone 2)
+
+Source: `src/catalogue/sources/*.ts` (hand-written NSW markup) → `npm run catalogue` → `src/catalogue/generated/catalogue.json`. 49 entries (the 46 components plus Heading, Paragraph and List, which are plain HTML elements styled by NSW base styles) and 103 variants.
+
+### How the markup was checked
+
+- **Automatic**: every CSS class in every snippet must be defined in the installed `main.css`, and every `js-` hook must exist in the package JavaScript. This is re-checked on each build and after each upgrade.
+- **By eye**: every variant was rendered at desktop width and reviewed. Structure, nesting and ARIA are written from knowledge of the design system, not copied from it.
+- **Not done**: comparison with the demo pages on designsystem.nsw.gov.au. That site is blocked from the build sandbox. Please compare the library against the docs site and report differences.
+
+### Components that are not fully faithful on the canvas
+
+| Component | Level | Reason |
+| --- | --- | --- |
+| Back to top | Static | The real component is fixed to the screen corner. Shown as the button it contains. |
+| Quick exit | Static | The real component sticks to the top and listens for the Esc key. Shown as the bar, without the Esc hint. |
+| Dialog | Static | Dialog box only: no dark backdrop, no open and close behaviour. |
+| Cookie consent | Static | Banner only: the preferences dialog is not included. |
+| Date picker | Static | Date field only: the calendar pop-up needs the page script and extra markup. |
+| Filters | Static | Heading and groups only: the slide-in panel is not wired. |
+| Card carousel | Static | Cards shown in a row: scrolling, arrows and dots need the carousel script and its markup. |
+| Main navigation | Partial | Desktop bar from about 992px wide. Narrow frames show the slide-out menu closed, as on a real site. No sub-menus. |
+| Side navigation | Partial | No expand and collapse on narrow frames. |
+| Show more | Partial | Built on `details`: works in Preview, unverified against the official markup. |
+| Support list | Partial | Logo grid with placeholders. |
+| Popover | Partial | Trigger and panel included. Opens in Preview if the NSW script accepts the markup (untested). |
+
+The library shows a "Static" or "Partial" badge on these, with the reason on hover.
+
+### Other notes
+
+- The NSW Government waratah logo is not in the npm package. The header shows a labelled placeholder.
+- Interactive components in Preview mode (tested): accordion, tabs. Others rely on `initSite()` finding their markup.
+- Multiple copies of a component repeat some element ids (see `DECISIONS.md` 015).

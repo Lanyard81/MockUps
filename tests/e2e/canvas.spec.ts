@@ -1,14 +1,15 @@
 import { expect, test, type Page } from '@playwright/test';
+import { addFromLibrary } from './helpers';
 
 const frameDoc = (page: Page, name: string) => page.frameLocator(`iframe[title="${name}"]`);
 
 test.beforeEach(async ({ page }) => {
   await page.goto('./');
-  await expect(frameDoc(page, 'Home').locator('.nsw-button').first()).toBeVisible();
   await expect(page.getByTestId('viewport')).toHaveAttribute('data-fitted', 'true');
 });
 
 test('frames render real NSW markup, styles and fonts', async ({ page }) => {
+  await addFromLibrary(page, 'button', 'Brand Dark');
   const button = frameDoc(page, 'Home').locator('.nsw-button--dark').first();
   await expect(button).toHaveCSS('background-color', 'rgb(0, 38, 100)');
   const font = await page.locator('iframe[title="Home"]').evaluate((f) => {
@@ -28,7 +29,8 @@ test('frame width drives the NSW responsive layout', async ({ page }) => {
 });
 
 test('edit mode blocks interaction, preview mode runs NSW scripts', async ({ page }) => {
-  const details = frameDoc(page, 'Home').locator('details.nsw-accordion__item').first();
+  await addFromLibrary(page, 'accordion', 'Default');
+  const details = frameDoc(page, 'Home').locator('details.nsw-accordion__item').nth(1);
   const summary = details.locator('summary');
   await summary.click();
   await expect(details).not.toHaveAttribute('open', '');
@@ -118,6 +120,12 @@ test('space + drag pans the canvas, dragging a label moves a frame as one undo s
 
 test('fold line appears when content is taller than the screen', async ({ page }) => {
   await expect(page.locator('.frame__fold')).toHaveCount(0);
+  for (const [id, v] of [
+    ['card', 'Default'],
+    ['card', 'Headline'],
+    ['steps', 'Default'],
+  ])
+    await addFromLibrary(page, id!, v!);
   await page.locator('.frame__name').first().click();
   await page.getByLabel('Width').fill('240');
   await page.getByLabel('Width').blur();

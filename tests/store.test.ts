@@ -19,6 +19,7 @@ describe('frame actions and undo', () => {
   });
 
   it('duplicates a frame with fresh node ids, and deleting it frees its nodes', () => {
+    s().addComponent(s().doc.frames[0]!.id, 'button');
     const first = s().doc.frames[0]!;
     const before = Object.keys(s().doc.nodes).length;
     s().duplicateFrame(first.id);
@@ -54,5 +55,47 @@ describe('frame actions and undo', () => {
     const id = s().doc.frames[0]!.id;
     s().setFrameWidth(id, 10);
     expect(s().doc.frames[0]).toMatchObject({ width: 240, device: 'custom' });
+  });
+});
+
+describe('adding components and layout blocks', () => {
+  const frameId = () => s().doc.frames[0]!.id;
+  const rootTypes = () => s().doc.frames[0]!.root.map((id) => s().doc.nodes[id]!.type);
+
+  it('creates a section automatically for the first component, then stacks into it', () => {
+    s().addComponent(frameId(), 'heading', 'h1');
+    s().addComponent(frameId(), 'paragraph');
+    expect(rootTypes()).toEqual(['section']);
+    const comps = Object.values(s().doc.nodes).filter((n) => n.type === 'component');
+    expect(comps.map((n) => n.componentId)).toEqual(['heading', 'paragraph']);
+    expect(comps[0]!.variant).toBe('h1');
+    expect(comps[1]!.variant).toBe('default');
+  });
+
+  it('puts full-width components straight under the frame root', () => {
+    s().addComponent(frameId(), 'masthead');
+    expect(rootTypes()).toEqual(['component']);
+  });
+
+  it('starts a new section after a full-width component', () => {
+    s().addComponent(frameId(), 'masthead');
+    s().addComponent(frameId(), 'heading');
+    expect(rootTypes()).toEqual(['component', 'section']);
+  });
+
+  it('adds grids of N columns with md spans that add up to 12', () => {
+    s().addLayoutBlock(frameId(), 'grid', 3);
+    const cols = Object.values(s().doc.nodes).filter((n) => n.type === 'column');
+    expect(cols.map((c) => c.props?.span)).toEqual([4, 4, 4]);
+  });
+
+  it('ignores unknown components and every add is one undo step', () => {
+    s().addComponent(frameId(), 'does-not-exist');
+    expect(s().past).toHaveLength(0);
+    s().addComponent(frameId(), 'button');
+    expect(s().past).toHaveLength(1);
+    s().undo();
+    expect(s().doc.frames[0]!.root).toEqual([]);
+    expect(Object.keys(s().doc.nodes)).toHaveLength(0);
   });
 });

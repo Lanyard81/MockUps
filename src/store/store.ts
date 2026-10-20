@@ -1,9 +1,18 @@
 import { create } from 'zustand';
 import nswPkg from 'nsw-design-system/package.json';
-import { demoNodes } from '../catalogue/demo';
+import { getComponent } from '../catalogue';
 import { newId } from '../lib/ids';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
-import { cloneSubtrees, removeSubtrees } from '../layout/tree';
+import {
+  appendChild,
+  buildContainer,
+  buildGrid,
+  buildSection,
+  cloneSubtrees,
+  findAppendColumn,
+  lastOfType,
+  removeSubtrees,
+} from '../layout/tree';
 import { DEVICES, type DeviceId, type Frame, type MockupDoc } from './types';
 
 const HISTORY_LIMIT = 100;
@@ -12,15 +21,14 @@ const FRAME_GAP = 80;
 export type Mode = 'edit' | 'preview';
 
 export function createDoc(): MockupDoc {
-  const { nodes, root } = demoNodes(newId);
   return {
     version: 1,
     id: newId('doc'),
     name: 'Untitled mockup',
     nswVersion: nswPkg.version,
     view: { x: 80, y: 80, zoom: 1 },
-    frames: [{ id: newId('f'), name: 'Home', device: 'iphone', width: 393, x: 0, y: 0, root }],
-    nodes,
+    frames: [{ id: newId('f'), name: 'Home', device: 'iphone', width: 393, x: 0, y: 0, root: [] }],
+    nodes: {},
     images: {},
   };
 }
@@ -61,7 +69,14 @@ interface Actions {
   renameFrame: (id: string, name: string) => void;
   setFrameDevice: (id: string, device: DeviceId) => void;
   setFrameWidth: (id: string, width: number) => void;
-  addDemoContent: (id: string) => void;
+  /** Add a catalogue component to a frame, stacking it under the previous content. */
+  addComponent: (frameId: string, componentId: string, variantId?: string) => void;
+  /** Add a layout block: a section, a container, or a grid of 1–4 columns. */
+  addLayoutBlock: (
+    frameId: string,
+    kind: 'section' | 'container' | 'grid',
+    columns?: number,
+  ) => void;
 
   /** Call once at the start of a continuous gesture (e.g. a drag) so it is one undo entry. */
   beginGesture: () => void;
@@ -202,17 +217,95 @@ export const useStore = create<Store>((set, get) => ({
       return commit(s, updateFrame(s.doc, id, { width: w, device: 'custom' }));
     }),
 
-  addDemoContent: (id) =>
+  addComponent: (frameId, componentId, variantId) =>
     set((s) => {
-      const frame = s.doc.frames.find((f) => f.id === id);
-      if (!frame) return s;
-      const { nodes, root } = demoNodes(newId);
-      return commit(s, {
-        ...updateFrame(s.doc, id, { root: [...frame.root, ...root] }),
-        nodes: { ...s.doc.nodes, ...nodes },
-      });
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      const comp = getComponent(componentId);
+      if (!frame || !comp) return s;
+      const id = newId('n');
+      let nodes: MockupDoc['nodes'] = {
+        ...s.doc.nodes,
+        [id]: {
+          id,
+          type: 'component',
+          componentId,
+          variant: variantId ?? comp.defaultVariant,
+          props: {},
+          text: {},
+          textFit: {},
+          hidden: false,
+        },
+      };
+      let root = frame.root;
+      const column = comp.fullWidth ? undefined : findAppendColumn(nodes, root);
+      if (comp.fullWidth) {
+        root = [...root, id];
+      } else if (column) {
+        nodes = appendChild(nodes, column, id);
+      } else {
+        const built = buildSection(newId);
+        const container = lastOfType(built.nodes, built.nodes[built.rootId]?.children, 'container');
+        const grid = lastOfType(
+          built.nodes,
+          container ? built.nodes[container]?.children : undefined,
+          'grid',
+        );
+        const colId = lastOfType(
+          built.nodes,
+          grid ? built.nodes[grid]?.children : undefined,
+          'column',
+        );
+        nodes = appendChild({ ...nodes, ...built.nodes }, colId!, id);
+        root = [...root, built.rootId];
+      }
+      return {
+        ...commit(s, { ...updateFrame(s.doc, frameId, { root }), nodes }),
+        selectedFrameId: frameId,
+      };
     }),
 
+  addLayoutBlock: (frameId, kind, columns = 1) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const count = Math.min(4, Math.max(1, columns));
+      let nodes = s.doc.nodes;
+      let root = frame.root;
+      const lastRoot = root[root.length - 1];
+      const section = lastRoot && nodes[lastRoot]?.type === 'section' ? lastRoot : undefined;
+      if (kind === 'container' && section) {
+        const built = buildContainer(newId);
+        nodes = appendChild({ ...nodes, ...built.nodes }, section, built.rootId);
+      } else if (kind === 'grid' && section) {
+        const container = lastOfType(nodes, nodes[section]?.children, 'container');
+        const built = buildGrid(newId, count);
+        if (container) {
+          nodes = appendChild({ ...nodes, ...built.nodes }, container, built.rootId);
+        } else {
+          const c = newId('n');
+          nodes = appendChild(
+            {
+              ...nodes,
+              ...built.nodes,
+              [c]: { id: c, type: 'container', children: [built.rootId] },
+            },
+            section,
+            c,
+          );
+        }
+      } else {
+        // A section, or no section to put the block in yet: start a new one, so a beginner
+        // never has to think about sections.
+        const spans = kind === 'grid' ? Array<number>(count).fill(12 / count) : [12];
+        const built = buildSection(newId, 'white', spans);
+        nodes = { ...nodes, ...built.nodes };
+        root = [...root, built.rootId];
+      }
+      return {
+        ...commit(s, { ...updateFrame(s.doc, frameId, { root }), nodes }),
+        selectedFrameId: frameId,
+      };
+    }),
   beginGesture: () => set((s) => commit(s, s.doc)),
   moveFrameLive: (id, x, y) =>
     set((s) => ({ doc: updateFrame(s.doc, id, { x: Math.round(x), y: Math.round(y) }) })),
