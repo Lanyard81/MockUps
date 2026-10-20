@@ -1,5 +1,6 @@
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId } from '../../store/types';
+import { PageParts } from '../PageParts';
 import { CommitInput, Field, Section } from './controls';
 
 export function FrameProps({ frameId }: { frameId: string }) {
@@ -48,6 +49,9 @@ export function FrameProps({ frameId }: { frameId: string }) {
         <p className="prop-hint">
           The width decides which NSW layout is used, just as on a real device.
         </p>
+      </Section>
+      <Section title="Page parts" hint="Start a page with the standard NSW furniture.">
+        <PageParts frameId={frame.id} />
       </Section>
       <div className="prop-actions">
         <button

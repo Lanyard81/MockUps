@@ -114,6 +114,14 @@ export function Toolbar() {
         <button className="btn" onClick={() => s.getState().zoomToFit()}>
           Zoom to fit
         </button>
+        <button
+          className="btn btn--icon"
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+          onClick={() => s.getState().setHelpOpen(true)}
+        >
+          ?
+        </button>
       </div>
     </header>
   );

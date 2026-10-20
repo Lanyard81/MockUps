@@ -9,6 +9,7 @@ import {
 import { getThumbnail } from '../catalogue/thumbnails';
 import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
 import { useStore } from '../store/store';
+import { PageParts } from './PageParts';
 
 type Filter = Category | 'All';
 
@@ -67,7 +68,17 @@ export function Library() {
         {grouped.map(({ category, items }) => (
           <section key={category} className="library__group" aria-label={category}>
             <h2 className="library__category">{category}</h2>
-            {category === 'Layout' && showLayoutBlocks && <LayoutBlocks frameId={target?.id} />}
+            {category === 'Layout' && showLayoutBlocks && (
+              <>
+                <div className="component" data-testid="page-parts">
+                  <div className="component__head">
+                    <h3 className="component__name">Quick page parts</h3>
+                  </div>
+                  <PageParts frameId={target?.id} />
+                </div>
+                <LayoutBlocks frameId={target?.id} />
+              </>
+            )}
             {items.map(({ component, variants }) => (
               <ComponentGroup
                 key={component.id}

@@ -30,6 +30,8 @@ export interface DocNode {
   text?: Record<string, string>;
   textFit?: Record<string, 'natural' | 'shrink'>;
   hidden?: boolean;
+  /** A name the user gave this layer. Shown in the Layers panel instead of the default label. */
+  name?: string;
 }
 
 export interface Frame {
@@ -70,12 +72,17 @@ export interface IndicatorRect {
   height: number;
 }
 
-/** Where a drop would land, with the geometry to draw it (in frame coordinates). */
-export interface DropTarget {
+/** A position in the tree: a frame, a parent (null = the frame root) and an index in its children. */
+export interface Placement {
   frameId: string;
   parentId: string | null;
   index: number;
+  /** When set, create the missing layers from this depth down (see `buildChain`). */
   chainFrom: number | null;
+}
+
+/** Where a drop would land, with the geometry to draw it (in frame coordinates). */
+export interface DropTarget extends Placement {
   /** A line between items, or a box over an empty container. */
   indicator: { kind: 'line' | 'box'; rect: IndicatorRect; parent?: IndicatorRect };
 }
@@ -83,4 +90,15 @@ export interface DropTarget {
 export interface Clipboard {
   nodes: Record<string, DocNode>;
   rootId: string;
+}
+
+/** A right-click menu: where it is, and what it is about. */
+export interface ContextMenuState {
+  x: number;
+  y: number;
+  frameId: string;
+  /** The node it applies to, or null for the frame itself. */
+  nodeId: string | null;
+  /** The text region that was right-clicked, so "Edit text" edits that one. */
+  textKey?: string;
 }

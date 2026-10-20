@@ -1,8 +1,8 @@
 import { getComponent, getVariant } from '../catalogue';
 import type { DocNode } from '../store/types';
 
-/** Human name for a node, used in the breadcrumb, selection chip and drag ghost. */
-export function nodeLabel(node: DocNode | undefined): string {
+/** What a node is called unless the user has renamed it. */
+export function defaultNodeLabel(node: DocNode | undefined): string {
   if (!node) return '';
   switch (node.type) {
     case 'section':
@@ -20,4 +20,9 @@ export function nodeLabel(node: DocNode | undefined): string {
       return comp.variants.length > 1 && variant ? `${comp.name} · ${variant.label}` : comp.name;
     }
   }
+}
+
+/** Human name for a node, used in the breadcrumb, selection chip, Layers panel and drag ghost. */
+export function nodeLabel(node: DocNode | undefined): string {
+  return node?.name || defaultNodeLabel(node);
 }

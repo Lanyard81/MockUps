@@ -104,6 +104,7 @@ test('drop into a specific grid column', async ({ page }) => {
 
 test('drag a layout block onto the frame', async ({ page }) => {
   const tile = page.getByTestId('layout-blocks').getByRole('button', { name: '3 columns' });
+  await tile.scrollIntoViewIfNeeded();
   await dragBetween(page, await centre(tile), await inFrame(page, 'Home', 0.5, 0.4));
   await expect(doc(page).locator('.nsw-col-md-4')).toHaveCount(3);
 });

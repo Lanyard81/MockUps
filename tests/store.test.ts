@@ -375,3 +375,69 @@ describe('editing text and properties', () => {
     expect(s().doc).toBe(snap);
   });
 });
+
+describe('layers, page parts and names', () => {
+  const frameId = () => s().doc.frames[0]!.id;
+  const rootComponents = () =>
+    s().doc.frames[0]!.root.map((id) => s().doc.nodes[id]!.componentId ?? s().doc.nodes[id]!.type);
+
+  it('adds the masthead and header at the top, as one undo step', () => {
+    s().addComponent(frameId(), 'heading', 'h1');
+    const before = s().past.length;
+    s().addPageParts(frameId(), 'top');
+    expect(rootComponents()).toEqual(['masthead', 'header', 'section']);
+    expect(s().past.length).toBe(before + 1);
+    expect(s().doc.nodes[s().selectedNodeId!]!.componentId).toBe('masthead');
+    s().undo();
+    expect(rootComponents()).toEqual(['section']);
+  });
+
+  it('adds the footer at the bottom', () => {
+    s().addComponent(frameId(), 'heading', 'h1');
+    s().addPageParts(frameId(), 'footer');
+    expect(rootComponents()).toEqual(['section', 'footer']);
+  });
+
+  it('puts page parts into an empty frame', () => {
+    s().addPageParts(frameId(), 'top');
+    s().addPageParts(frameId(), 'footer');
+    expect(rootComponents()).toEqual(['masthead', 'header', 'footer']);
+  });
+
+  it('renames a layer, and an empty name goes back to the default', () => {
+    s().addComponent(frameId(), 'button', 'dark');
+    const id = s().selectedNodeId!;
+    s().setNodeName(id, '  Main call to action ');
+    expect(s().doc.nodes[id]!.name).toBe('Main call to action');
+    const before = s().past.length;
+    s().setNodeName(id, 'Main call to action');
+    expect(s().past.length).toBe(before);
+    s().setNodeName(id, '');
+    expect(s().doc.nodes[id]).not.toHaveProperty('name');
+    s().undo();
+    expect(s().doc.nodes[id]!.name).toBe('Main call to action');
+  });
+
+  it('hides and shows a layer as undoable steps', () => {
+    s().addComponent(frameId(), 'button', 'dark');
+    const id = s().selectedNodeId!;
+    s().setHidden(id, true);
+    expect(s().doc.nodes[id]!.hidden).toBe(true);
+    const before = s().past.length;
+    s().setHidden(id, true);
+    expect(s().past.length).toBe(before);
+    s().undo();
+    expect(s().doc.nodes[id]!.hidden).toBe(false);
+  });
+
+  it('opens and closes the context menu and the shortcuts sheet without touching history', () => {
+    const before = s().past.length;
+    s().openContextMenu({ x: 1, y: 2, frameId: frameId(), nodeId: null });
+    expect(s().contextMenu).toMatchObject({ x: 1, y: 2 });
+    s().openContextMenu(null);
+    s().setHelpOpen(true);
+    expect(s().helpOpen).toBe(true);
+    s().setHelpOpen(false);
+    expect(s().past.length).toBe(before);
+  });
+});

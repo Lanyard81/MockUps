@@ -10,6 +10,8 @@ test('single file works from disk with no network', async ({ page, context }) =>
   page.on('request', (r) => {
     if (/^https?:/.test(r.url())) requests.push(r.url());
   });
+  // A file:// page has its own storage: close the first-run tour for this test.
+  await page.addInitScript(() => localStorage.setItem('nswmb.tourDone', '1'));
   await context.setOffline(true);
   await page.goto(`file://${file}`);
   await page

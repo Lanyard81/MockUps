@@ -4,7 +4,7 @@ A browser-based tool for making screen mockups from the official [NSW Government
 
 **Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
 
-> Status: Milestones 0–4 are done (scaffolding, canvas and device frames, component library, drag and drop, text and property editing). Layers, saving and templates are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
+> Status: Milestones 0–5 are done (scaffolding, canvas and device frames, component library, drag and drop, text and property editing, layers, shortcuts and polish). Saving, export and templates are next. See [`docs/MILESTONES.md`](docs/MILESTONES.md).
 
 ## Run it locally
 

@@ -200,3 +200,7 @@ The library shows a "Static" or "Partial" badge on these, with the reason on hov
 - **Edit mode only:** link pseudo-elements ignore the pointer, because the NSW card stretches its title link over the whole card (see `DECISIONS.md` 029).
 - **Images** are the placeholder images unless replaced. Hero banner, cards, list items, content blocks, media and card carousel have replaceable images.
 
+### Element ids (Milestone 5)
+
+Every id in a component's markup is suffixed with its node id at render time, and all references to it are rewritten (see `DECISIONS.md` 030), so the same component can be used any number of times in a frame. In exports and saved HTML the suffixed ids are what appear. Only `main-nav` is left alone, because the NSW script looks it up by name.
+

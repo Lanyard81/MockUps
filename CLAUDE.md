@@ -41,6 +41,8 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 
 - Zustand selectors must return stable values: never `?? []` or `?? {}` inside `useStore(...)` (React error 185, the app freezes). Use module-level constants.
 - Text editing is the only place a frame's DOM is edited in place (`canvas/textEdit.ts`); it commits once through `setText`. Everything else renders from the document.
+- Layer and canvas moves share one rule set and one store action (`moveNode`); Layers placements come from `layout/layers.ts`. The right-click menu, shortcuts and panel buttons call the same store actions: never add a second implementation of an action.
+- Any new key that does something must be added to `app/shortcutList.ts` (the `?` sheet) and, if it's an item action, to `ContextMenu.tsx`.
 - Component options are data (`overrides.ts` `options`, applied in `layout/component.ts`). Add an option there, not in the panel.
 
 ## Document model

@@ -84,7 +84,7 @@ Empty sections, containers, grids and columns get a dashed outline and label in 
 
 ## 015: Known limits of the markup
 
-- Duplicate element ids: several form components use fixed ids (`f-text`, `main-nav` and so on). Adding the same component twice repeats an id. To be made unique at render time (Milestone 4).
+- Duplicate element ids: fixed in Milestone 5 (see 030). Only `main-nav` keeps its name.
 - Only the first `#main-nav` is wired by the NSW script.
 - The NSW Government waratah logo is not in the package: the header uses a labelled placeholder.
 
@@ -145,3 +145,23 @@ A selector that builds a new array or object each call (`?? []`) makes React re-
 ## 029: NSW cards stretch their link in Edit mode too, so Edit mode switches that off
 
 The NSW card makes its title link cover the whole card (a pseudo-element). In Edit mode that would swallow clicks on the card's other text, so `FRAME_CSS` sets `pointer-events: none` on link pseudo-elements in Edit mode only. It changes nothing visually and doesn't apply in Preview or exports.
+
+## 030: Ids are made unique per component at render time
+
+Variant markup uses fixed ids (`f-text`, `tab-panel-1`, `popover-demo`...). `uniquifyIds` (in `layout/component.ts`) suffixes every id with the node's id (`f-text--n_abc`) and rewrites everything that refers to them: `for`, `aria-labelledby`/`describedby`/`controls`/`owns`/`activedescendant`, `list`, `form`, `#fragment` links (tabs) and `data-popover-id`. Results are stable per node (the node id never changes), cached with the rest of the render, and cloned nodes get new ids from their new node id. The one exception is `main-nav`, which the NSW script finds by exact name, so two main navigations in one frame still share it. Thumbnails render raw markup in a separate document, so they don't need it.
+
+## 031: Layers use the same tree rules as the canvas
+
+A Layers drop is converted to a `Placement` by `layout/layers.ts` using `canContain` and `isWithin`, so a layer can only land somewhere the canvas would also allow (a component cannot go into the frame root, columns can't move, nothing goes into itself). The pointer's position on a row decides before, inside or after; "inside" falls back to before or after if the row can't hold the node. The store's `moveNode` is shared with canvas drags, so one layer drag is one undo step. The path to the selection is always expanded so the selected layer is visible.
+
+## 032: Right-click menu is one component for the canvas, layers and frames
+
+The menu is host UI (`ContextMenu`) driven by a store field (`contextMenu`), opened from the frame's own document on `contextmenu` in Edit mode (the press selects the item first, and closes any open menu). Actions are the same store actions as the shortcuts, with the shortcut shown beside each. Disabled items stay visible, so the menu always has the same shape.
+
+## 033: First-run tour is remembered in localStorage
+
+The tour stores `nswmb.tourDone` in `localStorage` (wrapped in try/catch). If storage is blocked it can't be remembered, so it only stays closed for that visit. Tests start with it already dismissed (`storageState` in `playwright.config.ts`); `tests/e2e/tour.spec.ts` starts with empty storage.
+
+## 034: `name` and `hidden` are on every node
+
+A layer's custom name (`name`) is used everywhere a node is labelled (Layers, breadcrumb, selection label, drag ghost). `hidden` removes a node from the canvas and from exports but keeps it in Layers. Hidden nodes still count for positions when dropping, because their place in the list is unchanged.

@@ -89,6 +89,54 @@ function applyOption(root: ParentNode, opt: OptionDef, value: unknown) {
   }
 }
 
+/** Ids the NSW script looks up by name, so they can't be made unique. */
+const FIXED_IDS = new Set(['main-nav']);
+
+/** Attributes whose value is one or more element ids. */
+const ID_LIST_ATTRS = [
+  'for',
+  'aria-labelledby',
+  'aria-describedby',
+  'aria-controls',
+  'aria-owns',
+  'aria-activedescendant',
+  'list',
+  'form',
+  'data-popover-id',
+];
+
+/**
+ * Make every id in a component unique to its node, and point everything that refers to those ids at the
+ * new names (`for`, `aria-*`, `#fragment` links, popover ids). Without this, the same component used
+ * twice in a frame repeats its ids, which breaks labels, tabs and popovers.
+ */
+export function uniquifyIds(root: ParentNode, suffix: string) {
+  const renamed = new Map<string, string>();
+  for (const el of root.querySelectorAll('[id]')) {
+    if (FIXED_IDS.has(el.id)) continue;
+    const next = `${el.id}--${suffix}`;
+    renamed.set(el.id, next);
+    el.id = next;
+  }
+  if (renamed.size === 0) return;
+  for (const el of root.querySelectorAll('*')) {
+    for (const attr of ID_LIST_ATTRS) {
+      const value = el.getAttribute(attr);
+      if (value)
+        el.setAttribute(
+          attr,
+          value
+            .split(/\s+/)
+            .map((t) => renamed.get(t) ?? t)
+            .join(' '),
+        );
+    }
+    const href = el.getAttribute('href');
+    if (href?.startsWith('#') && renamed.has(href.slice(1)))
+      el.setAttribute('href', `#${renamed.get(href.slice(1))}`);
+  }
+}
+
 export function renderComponent(node: DocNode, images: Images): string {
   const hit = cache.get(node);
   if (hit && hit.images === images) return hit.html;
@@ -125,6 +173,8 @@ export function renderComponent(node: DocNode, images: Images): string {
     if (stored) img.setAttribute('src', stored.dataUrl);
     if (typeof alt === 'string') img.setAttribute('alt', alt);
   }
+
+  uniquifyIds(root, safeKey(node.id));
 
   const html = tpl.innerHTML;
   cache.set(node, { images, html });

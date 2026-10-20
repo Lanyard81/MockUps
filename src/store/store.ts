@@ -33,7 +33,9 @@ import {
   type DeviceId,
   type DocNode,
   type DragPayload,
+  type ContextMenuState,
   type DropTarget,
+  type Placement,
   type Frame,
   type MockupDoc,
 } from './types';
@@ -73,6 +75,9 @@ interface State {
   editing: { frameId: string; nodeId: string; key: string } | null;
   /** Text elements per frame that are truncated by "shrink to fit" (UI only). */
   fitWarnings: Record<string, FitWarning[]>;
+  contextMenu: ContextMenuState | null;
+  /** The keyboard shortcuts sheet is open. */
+  helpOpen: boolean;
   /** A short message for the user (errors from uploads and the like). */
   notice: string | null;
   /** Copied subtree, shared between frames. */
@@ -100,6 +105,8 @@ interface Actions {
   setDropTarget: (target: DropTarget | null) => void;
   setEditing: (editing: State['editing']) => void;
   setNotice: (notice: string | null) => void;
+  openContextMenu: (menu: ContextMenuState | null) => void;
+  setHelpOpen: (open: boolean) => void;
   setFitWarnings: (frameId: string, warnings: FitWarning[]) => void;
   setFrameHeight: (id: string, height: number) => void;
   setViewport: (width: number, height: number) => void;
@@ -127,7 +134,7 @@ interface Actions {
   /** Drop a new component or layout block at an exact position. */
   dropNew: (payload: DragPayload, target: DropTarget) => void;
   /** Move an existing node to an exact position, possibly in another frame. */
-  moveNode: (nodeId: string, target: DropTarget) => void;
+  moveNode: (nodeId: string, target: Placement) => void;
   deleteNode: (nodeId: string) => void;
   duplicateNode: (nodeId: string) => void;
   copyNode: (nodeId: string) => void;
@@ -157,6 +164,12 @@ interface Actions {
   setImageAlt: (nodeId: string, key: string, alt: string) => void;
   /** Put the original placeholder image back. */
   clearImage: (nodeId: string, key: string) => void;
+  /** Rename a layer. An empty name goes back to the default label. */
+  setNodeName: (nodeId: string, name: string) => void;
+  /** Hide or show a layer on the canvas and in exports (Layers panel). */
+  setHidden: (nodeId: string, hidden: boolean) => void;
+  /** Quick page parts: the masthead and header at the top of a frame, or a footer at the bottom. */
+  addPageParts: (frameId: string, part: 'top' | 'footer') => void;
   /** Alt+↑ / Alt+↓: swap with the previous or next sibling. */
   moveSelected: (dir: -1 | 1) => void;
 
@@ -238,6 +251,8 @@ export const useStore = create<Store>((set, get) => ({
   dropTarget: null,
   editing: null,
   notice: null,
+  contextMenu: null,
+  helpOpen: false,
   fitWarnings: {},
   clipboard: null,
   frameHeights: {},
@@ -265,6 +280,8 @@ export const useStore = create<Store>((set, get) => ({
   setDropTarget: (dropTarget) => set({ dropTarget }),
   setEditing: (editing) => set({ editing }),
   setNotice: (notice) => set({ notice }),
+  openContextMenu: (contextMenu) => set({ contextMenu }),
+  setHelpOpen: (helpOpen) => set({ helpOpen }),
   setFitWarnings: (frameId, warnings) =>
     set((s) => {
       const prev = s.fitWarnings[frameId] ?? [];
@@ -604,6 +621,50 @@ export const useStore = create<Store>((set, get) => ({
       if (!prev?.imageId) return s;
       images[key] = { alt: prev.alt ?? '' };
       return commit(s, replaceNode(s.doc, { ...node, props: { ...node.props, images } }));
+    }),
+
+  setNodeName: (nodeId, name) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      const next = name.trim();
+      if (!node || (node.name ?? '') === next) return s;
+      const { name: _old, ...rest } = node;
+      void _old;
+      return commit(s, replaceNode(s.doc, next ? { ...rest, name: next } : rest));
+    }),
+
+  setHidden: (nodeId, hidden) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || (node.hidden ?? false) === hidden) return s;
+      return commit(s, replaceNode(s.doc, { ...node, hidden }));
+    }),
+
+  addPageParts: (frameId, part) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame) return s;
+      const specs =
+        part === 'top'
+          ? [
+              ['masthead', 'dark'],
+              ['header', 'default'],
+            ]
+          : [['footer', 'dark']];
+      let doc: MockupDoc = s.doc;
+      const added: string[] = [];
+      specs.forEach(([componentId, variant], i) => {
+        const node = newComponentNode(componentId!, variant!);
+        added.push(node.id);
+        doc = applyInsertion(
+          { ...doc, nodes: { ...doc.nodes, [node.id]: node } },
+          frameId,
+          { parentId: null, index: part === 'top' ? i : frame.root.length + i, chainFrom: null },
+          node.id,
+          newId,
+        );
+      });
+      return { ...commit(s, doc), selectedFrameId: frameId, selectedNodeId: added[0]! };
     }),
 
   moveSelected: (dir) =>

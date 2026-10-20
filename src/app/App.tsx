@@ -3,9 +3,12 @@ import { DragGhost } from '../canvas/DragGhost';
 import { Viewport } from '../canvas/Viewport';
 import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
-import { Library } from './Library';
+import { ContextMenu } from './ContextMenu';
+import { LeftPanel } from './LeftPanel';
 import { Properties } from './Properties';
+import { ShortcutsSheet } from './ShortcutsSheet';
 import { Toast } from './Toast';
+import { Tour } from './Tour';
 import { Toolbar } from './Toolbar';
 
 export function App() {
@@ -45,10 +48,13 @@ export function App() {
   return (
     <div className="app">
       <Toolbar />
-      <Library />
+      <LeftPanel />
       <Viewport />
       <Properties />
       <DragGhost />
+      <ContextMenu />
+      <ShortcutsSheet />
+      <Tour />
       <Toast />
     </div>
   );

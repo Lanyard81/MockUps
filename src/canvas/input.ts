@@ -67,6 +67,9 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
   const nodeIdAt = (target: EventTarget | null) =>
     (target as Element | null)?.closest?.('[data-node]')?.getAttribute('data-node') ?? null;
 
+  // Any press inside a frame closes an open right-click menu (it lives outside the frame).
+  doc.addEventListener('pointerdown', () => useStore.getState().openContextMenu(null), true);
+
   // Edit mode: hover outlines.
   doc.addEventListener('pointermove', (e) => {
     const s = useStore.getState();
@@ -142,6 +145,25 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     const file = e.dataTransfer?.files[0];
     if (nodeId && key && file) void setImageFromFile(nodeId, key, file);
     else store.setNotice('Drop the image onto a picture in the mockup to replace it.');
+  });
+
+  // Edit mode: right-click opens the actions menu for what is under the pointer.
+  doc.addEventListener('contextmenu', (e) => {
+    const store = useStore.getState();
+    if (store.mode !== 'edit') return;
+    e.preventDefault();
+    const target = e.target as Element | null;
+    const id = nodeIdAt(target);
+    const point = toScreen(e.clientX, e.clientY);
+    if (id) store.selectNode(frameId, id);
+    else store.selectFrame(frameId);
+    store.openContextMenu({
+      x: point.x,
+      y: point.y,
+      frameId,
+      nodeId: id,
+      textKey: target?.closest?.('[data-edit]')?.getAttribute('data-edit') ?? undefined,
+    });
   });
 
   // Edit mode: double-click a piece of text to edit it in place.

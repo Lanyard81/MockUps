@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { readElementText, renderComponent, setElementText } from '../src/layout/component';
+import {
+  readElementText,
+  renderComponent,
+  setElementText,
+  uniquifyIds,
+} from '../src/layout/component';
 import { renderFrameHtml } from '../src/layout/render';
 import { columnClasses, effectiveSpan, equalSpans, readSpans } from '../src/layout/spans';
 import type { DocNode } from '../src/store/types';
@@ -195,5 +200,69 @@ describe('column spans', () => {
   it('makes equal widths', () => {
     expect(equalSpans(3)).toEqual({ base: 12, md: 4 });
     expect(equalSpans(5)).toEqual({ base: 12, md: 2 });
+  });
+});
+
+describe('unique ids', () => {
+  const ids = (html: string) => [...dom(html).querySelectorAll('[id]')].map((e) => e.id);
+
+  it('gives the same component different ids in different nodes', () => {
+    const a = renderComponent(node('form', 'text', { id: 'n_a' }), {});
+    const b = renderComponent(node('form', 'text', { id: 'n_b' }), {});
+    const all = [...ids(a), ...ids(b)];
+    expect(all.length).toBeGreaterThan(1);
+    expect(new Set(all).size).toBe(all.length);
+  });
+
+  it('keeps a label pointing at its own input', () => {
+    const el = dom(renderComponent(node('form', 'text', { id: 'n_a' }), {}));
+    const input = el.querySelector('input')!;
+    expect(el.querySelector('label')!.getAttribute('for')).toBe(input.id);
+    expect(input.id).toContain('n_a');
+  });
+
+  it('keeps tabs wired: each link points at a panel in the same component', () => {
+    const el = dom(renderComponent(node('tabs', 'default', { id: 'n_t' }), {}));
+    for (const a of el.querySelectorAll('a[href^="#"]')) {
+      const target = el.querySelector(`[id="${a.getAttribute('href')!.slice(1)}"]`);
+      expect(target).not.toBeNull();
+      expect(target!.id).toContain('n_t');
+    }
+  });
+
+  it('updates aria references and popover ids together', () => {
+    const el = dom(renderComponent(node('popover', 'default', { id: 'n_p' }), {}));
+    const trigger = el.querySelector('[data-popover-id]')!;
+    expect(el.querySelector(`[id="${trigger.getAttribute('data-popover-id')}"]`)).not.toBeNull();
+    const dlg = dom(renderComponent(node('dialog', 'default', { id: 'n_d' }), {}));
+    const wrapper = dlg.querySelector('[aria-labelledby]')!;
+    expect(dlg.querySelector(`[id="${wrapper.getAttribute('aria-labelledby')}"]`)).not.toBeNull();
+  });
+
+  it('leaves ids the NSW script looks up by name', () => {
+    expect(ids(renderComponent(node('main-nav', 'default', { id: 'n_m' }), {}))).toContain(
+      'main-nav',
+    );
+  });
+
+  it('is stable: the same node always gets the same ids', () => {
+    const n = node('form', 'text', { id: 'n_s' });
+    expect(ids(renderComponent(n, {}))).toEqual(
+      ids(renderComponent({ ...n, text: { label: 'x' } }, {})),
+    );
+  });
+
+  it('rewrites a fragment in place and ignores fragments without ids', () => {
+    const d = dom(
+      '<label for="x">L</label><input id="x"><a href="#x">go</a><a href="#other">no</a>',
+    );
+    uniquifyIds(d, 's1');
+    expect(d.querySelector('input')!.id).toBe('x--s1');
+    expect(d.querySelector('label')!.getAttribute('for')).toBe('x--s1');
+    expect(d.querySelectorAll('a')[0]!.getAttribute('href')).toBe('#x--s1');
+    expect(d.querySelectorAll('a')[1]!.getAttribute('href')).toBe('#other');
+    const none = dom('<p>hi</p>');
+    uniquifyIds(none, 's2');
+    expect(none.innerHTML).toBe('<p>hi</p>');
   });
 });

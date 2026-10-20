@@ -4,6 +4,13 @@ export default defineConfig({
   testDir: 'tests/e2e',
   use: {
     baseURL: 'http://localhost:4173/MockUps/',
+    // The first-run tour is dismissed in every test except the one that is about the tour.
+    storageState: {
+      cookies: [],
+      origins: [
+        { origin: 'http://localhost:4173', localStorage: [{ name: 'nswmb.tourDone', value: '1' }] },
+      ],
+    },
     launchOptions: { executablePath: process.env.PW_CHROMIUM || undefined },
   },
   webServer: {

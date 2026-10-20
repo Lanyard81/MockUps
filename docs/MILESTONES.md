@@ -63,10 +63,13 @@ Tick items as they are completed. Work stops after each milestone until the user
 
 ## Milestone 5: Layers, shortcuts and polish
 
-- [ ] Layers panel
-- [ ] Quick page parts (masthead + header, footer)
-- [ ] Shortcuts sheet (`?`) and first-run tour
-- [ ] Right-click menu
+- [x] Layers panel (a tab beside the library): the tree for every frame; click to select (and the canvas selection highlights its row); drag to reorder, nest or move to another frame, with the tree rules enforced; double-click to rename; hide and show; collapse and expand
+- [x] Quick page parts: "Add masthead + header" and "Add footer", in the library and in the frame panel; also in the frame's right-click menu
+- [x] Keyboard shortcuts sheet (`?`, or the button in the toolbar)
+- [x] First-run tour: four tips, dismissible, never shown again once closed
+- [x] Right-click menu on canvas items, layers and frames
+- [x] Fixed: duplicate element ids when a component is used more than once (ids are unique per component, references follow)
+- [x] Tests: layer drop rules, ids, store actions (Vitest); layers, page parts, menus, sheet, tour and ids (Playwright)
 
 ## Milestone 6: Saving, export and the single-file build
 

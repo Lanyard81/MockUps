@@ -128,6 +128,13 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         className="frame__label"
         onPointerDown={renaming ? undefined : startDrag}
         onDoubleClick={() => setRenaming(true)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          store.getState().selectFrame(frame.id);
+          store
+            .getState()
+            .openContextMenu({ x: e.clientX, y: e.clientY, frameId: frame.id, nodeId: null });
+        }}
       >
         {renaming ? (
           <input

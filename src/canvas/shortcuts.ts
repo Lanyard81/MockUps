@@ -24,6 +24,11 @@ export function handleKeyDown(e: KeyboardEvent) {
     }
     return;
   }
+  if (e.key === '?' && !mod) {
+    e.preventDefault();
+    s.setHelpOpen(!s.helpOpen);
+    return;
+  }
   if (mod && key === 'z') {
     e.preventDefault();
     if (e.shiftKey) s.redo();
