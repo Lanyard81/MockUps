@@ -14,12 +14,15 @@ export function Menu({
   items,
   icon,
   plain,
+  header,
 }: {
   label: ReactNode;
   items: Item[];
   icon?: string;
   /** A quiet button rather than the blue call to action. */
   plain?: boolean;
+  /** Controls shown above the items (e.g. a choice that changes what the items do). */
+  header?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -51,6 +54,7 @@ export function Menu({
       </button>
       {open && (
         <div className="menu__list" role="menu">
+          {header && <div className="menu__header">{header}</div>}
           {items.map((item) => (
             <div key={item.label} role="none">
               {item.separatorBefore && <div className="context-menu__sep" role="separator" />}

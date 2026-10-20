@@ -18,3 +18,5 @@ Open the Pages site or `dist-single/nsw-mockup-builder.html` (try the single fil
 **Saving and export (M6)** 14. Refresh: your work returns (autosave). My mockups: open, rename, duplicate, delete (confirms). 15. Save to file / Open file (images included). Export: PNG, HTML (self-contained, CDN, several frames as zip), Copy HTML.
 
 **Known limits**: official templates were written from knowledge (docs site unreachable): Easy Read is approximate, maps are placeholders. Shrink-to-fit isn't in HTML export. Canvas doesn't auto-scroll while dragging. Edge/Safari storage untested.
+
+**Style kits (S1, S2)** 16. Add frame: choose NSW or SharePoint (the choice is remembered); the frame label shows a kit badge; Undo removes the frame. 17. Select a SharePoint frame: the library switches to SharePoint. Select an NSW frame: it switches back. Click the other kit in the switcher to browse it: the tiles go grey with a warning, and dragging one onto the frame says why nothing happened. 18. Open a mockup saved before kits existed (any earlier `.mockup.json`): it opens, every frame is NSW.

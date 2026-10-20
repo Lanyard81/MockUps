@@ -108,3 +108,14 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Properties panel builds kit settings from data (`SettingsPanel`)
 - [x] Catalogue generator and validator run per kit
 - [x] Tests: registry, schema-driven ops, migration, kit settings, store; all earlier tests pass (import paths and a `kitId` on test frames only)
+
+## Milestone S2: Switching between kits
+
+- [x] Every frame belongs to one kit; one mockup can hold NSW and SharePoint frames side by side
+- [x] Add frame asks for the kit (and device) and remembers the last choice; a new mockup starts in it
+- [x] Library kit switcher (NSW | SharePoint); it follows the selected frame and can be switched to browse the other kit
+- [x] Adding, dragging, moving or pasting something from the other kit into a frame is refused with a clear message ("This is a SharePoint frame — switch the library to SharePoint, or convert the frame.")
+- [x] Frame label kit badge; the frame's properties name its kit
+- [x] Templates follow the library's kit; dropping a template of another kit on a frame says the frame will change kit
+- [x] Minimal SharePoint kit registered (Text web part, one-column section) so switching can be tested end to end
+- [x] Tests: store guards (Vitest); frames in each kit, the library following selection, refused drops, undo (Playwright)

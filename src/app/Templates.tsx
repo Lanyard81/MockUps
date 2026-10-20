@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPageThumbnail } from '../catalogue/thumbnails';
 import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
-import { DEFAULT_KIT_ID, getKit } from '../kits';
+import { DEFAULT_KIT_ID } from '../kits';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
+import { KitSwitcher } from './KitSwitcher';
+import { useLibraryKit } from './useLibraryKit';
 import {
   OFFICIAL_TEMPLATES,
   templateGroups,
@@ -109,7 +111,7 @@ function OfficialTile({ id }: { id: string }) {
   // Rendered once per template: the ids are fixed so the cached thumbnail is found again.
   const html = useMemo(() => {
     const t = instantiateOfficial(def, stableIds());
-    return renderFrameHtml(t.nodes, t.root, t.images, t.kitId, t.settings);
+    return renderFrameHtml(t.nodes, t.root, t.images, { kitId: t.kitId, settings: t.settings });
   }, [def]);
   const render = useMemo(
     () => () => getPageThumbnail(`official:${def.id}`, html, def.width, 900, def.kitId),
@@ -132,7 +134,7 @@ function MineTile({ template }: { template: SavedTemplate }) {
       const t = instantiateSaved(template, stableIds());
       return getPageThumbnail(
         `mine:${template.id}`,
-        renderFrameHtml(t.nodes, t.root, t.images, t.kitId, t.settings),
+        renderFrameHtml(t.nodes, t.root, t.images, { kitId: t.kitId, settings: t.settings }),
         template.width,
         900,
         t.kitId,
@@ -200,13 +202,8 @@ export function Templates() {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (text: string) => terms.every((t) => text.toLowerCase().includes(t));
 
-  // Templates follow the kit of the selected frame, like the library does.
-  const kitId = useStore(
-    (s) =>
-      (s.doc.frames.find((f) => f.id === s.selectedFrameId) ?? s.doc.frames[0])?.kitId ??
-      DEFAULT_KIT_ID,
-  );
-  const kit = getKit(kitId);
+  // Templates follow the same kit as the library.
+  const { kit } = useLibraryKit();
   const myMatches = mine.filter(
     (t) => (t.kitId ?? DEFAULT_KIT_ID) === kit.id && matches(`${t.name} my template`),
   );
@@ -233,6 +230,7 @@ export function Templates() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <KitSwitcher />
         <p className="library__target">
           Click to add as a new frame, or drag onto a frame to replace its content.
         </p>

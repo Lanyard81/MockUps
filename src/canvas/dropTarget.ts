@@ -25,6 +25,7 @@ function leafInfo(
       return { depth: comp.fullWidth ? 1 : schema.layers.length + 1 };
     }
     case 'new-layout': {
+      if (getKit(payload.kitId).id !== getKit(kitId).id) return null;
       const block = getKit(kitId).layoutBlocks.find(
         (b) =>
           b.kind === payload.block &&

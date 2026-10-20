@@ -1,4 +1,4 @@
-import type { SettingContext, SettingDef } from '../../kits/types';
+import type { SettingContext, SettingDef, SettingOption } from '../../kits/types';
 import { CommitInput, Field, Section, Segmented, Toggle } from './controls';
 
 const asString = (v: unknown, fallback: string) => (typeof v === 'string' ? v : fallback);
@@ -8,13 +8,17 @@ function Control({
   def,
   value,
   disabled,
+  ctx,
   onChange,
 }: {
   def: SettingDef;
   value: unknown;
   disabled: boolean;
+  ctx: SettingContext;
   onChange: (v: unknown) => void;
 }) {
+  /** Why an option can't be chosen here, or null. A chosen option that became unavailable stays visible. */
+  const why = (o: SettingOption) => o.unavailable?.(ctx) ?? null;
   // A value equal to the default is stored as "not set", so documents stay small and defaults can change.
   const commit = (v: unknown) =>
     onChange(v === def.default && !('keepDefault' in def && def.keepDefault) ? undefined : v);
@@ -31,8 +35,8 @@ function Control({
                 style={{ background: o.swatch }}
                 aria-pressed={current === o.id}
                 aria-label={o.label}
-                title={o.label}
-                disabled={disabled}
+                title={why(o) ?? o.title ?? o.label}
+                disabled={disabled || (why(o) !== null && current !== o.id)}
                 onClick={() => commit(o.id)}
               />
             ))}
@@ -46,7 +50,12 @@ function Control({
         <Segmented
           label={def.label}
           value={asString(value, String(def.default ?? def.options[0]?.id))}
-          options={def.options.map((o) => ({ id: o.id, label: o.label }))}
+          options={def.options.map((o) => ({
+            id: o.id,
+            label: o.label,
+            title: why(o) ?? o.title,
+            disabled: why(o) !== null,
+          }))}
           onChange={disabled ? () => undefined : commit}
         />
       );
@@ -60,8 +69,9 @@ function Control({
             onChange={(e) => commit(e.target.value)}
           >
             {def.options.map((o) => (
-              <option key={o.id} value={o.id}>
+              <option key={o.id} value={o.id} disabled={why(o) !== null} title={why(o) ?? o.title}>
                 {o.label}
+                {why(o) ? ` (${why(o)})` : ''}
               </option>
             ))}
           </select>
@@ -125,15 +135,16 @@ function Control({
 export function SettingsPanel({
   defs,
   values,
-  frame,
+  context,
   onChange,
 }: {
   defs: SettingDef[];
   values: Record<string, unknown>;
-  frame: Record<string, unknown>;
+  /** Everything but `values`: the frame's settings, the kit's settings and the frame's top-level nodes. */
+  context: Omit<SettingContext, 'values'>;
   onChange: (key: string, value: unknown) => void;
 }) {
-  const ctx: SettingContext = { values, frame };
+  const ctx: SettingContext = { ...context, values };
   const groups: { title: string; hint?: string; defs: SettingDef[] }[] = [];
   for (const def of defs) {
     let g = groups.find((x) => x.title === def.group);
@@ -153,6 +164,7 @@ export function SettingsPanel({
                   def={def}
                   value={values[def.key]}
                   disabled={reason !== null}
+                  ctx={ctx}
                   onChange={(v) => onChange(def.key, v)}
                 />
                 {reason && <p className="prop-hint prop-hint--warn">{reason}</p>}

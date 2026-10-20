@@ -1,14 +1,13 @@
 import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
-import { DEVICES, type DeviceId } from '../store/types';
+import { DEVICES } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
-import { KITS } from '../kits';
+import { KITS, getKit } from '../kits';
 import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
 import { Menu } from './Menu';
 
 const ZOOM_PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
-const ADDABLE: DeviceId[] = ['iphone', 'android', 'tablet', 'desktop', 'custom'];
 
 export function Toolbar() {
   const mode = useStore((s) => s.mode);
@@ -17,6 +16,7 @@ export function Toolbar() {
   const canRedo = useStore((s) => s.future.length > 0);
   const zoom = useStore((s) => s.doc.view.zoom);
   const hasSelection = useStore((s) => s.selectedNodeId !== null);
+  const newFrameKit = useStore((s) => s.newFrameKitId);
   const s = useStore;
   const pct = Math.round(zoom * 100);
   const options = ZOOM_PRESETS.includes(pct)
@@ -60,10 +60,34 @@ export function Toolbar() {
         <Menu
           icon="+"
           label="Add frame"
-          items={ADDABLE.map((d) => ({
+          header={
+            KITS.length > 1 ? (
+              <div
+                className="segmented segmented--block"
+                role="group"
+                aria-label="Style kit for the new frame"
+              >
+                {KITS.map((k) => (
+                  <button
+                    key={k.id}
+                    className={k.id === newFrameKit ? 'is-active' : ''}
+                    aria-pressed={k.id === newFrameKit}
+                    title={k.name}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      s.getState().setNewFrameKit(k.id);
+                    }}
+                  >
+                    {k.shortLabel}
+                  </button>
+                ))}
+              </div>
+            ) : undefined
+          }
+          items={getKit(newFrameKit).devices.map((d) => ({
             label: DEVICES[d].label,
             hint: d === 'custom' ? 'any width' : `${DEVICES[d].width}px`,
-            onSelect: () => s.getState().addFrame(d),
+            onSelect: () => s.getState().addFrame(d, newFrameKit),
           }))}
         />
         <button

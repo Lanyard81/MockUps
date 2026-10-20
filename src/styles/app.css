@@ -1698,3 +1698,36 @@ kbd {
   background: #fff;
   flex: none;
 }
+
+/* Style kits */
+.frame__kit {
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--ed-text-muted);
+  background: var(--ed-surface-2);
+  border: 1px solid var(--ed-border);
+  border-radius: 999px;
+}
+.kit-switcher {
+  margin-top: var(--ed-space-2);
+}
+.library__warn {
+  display: block;
+  padding: var(--ed-space-2);
+  color: var(--ed-danger);
+  background: var(--ed-danger-soft);
+  border-radius: var(--ed-radius-sm);
+}
+.menu__header {
+  padding: var(--ed-space-1) var(--ed-space-1) var(--ed-space-2);
+  border-bottom: 1px solid var(--ed-border);
+  margin-bottom: var(--ed-space-1);
+}
+.prop-kit {
+  display: flex;
+  align-items: center;
+  gap: var(--ed-space-2);
+  margin: 0 0 var(--ed-space-2);
+}

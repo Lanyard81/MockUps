@@ -72,7 +72,7 @@ export interface MockupDoc {
 /** What is being dragged. */
 export type DragPayload =
   | { kind: 'new-component'; componentId: string; variantId: string; label: string }
-  | { kind: 'new-layout'; block: string; columns?: number; label: string }
+  | { kind: 'new-layout'; kitId: KitId; block: string; columns?: number; label: string }
   | { kind: 'move'; nodeId: string; label: string }
   | { kind: 'template'; source: 'official' | 'mine'; templateId: string; label: string };
 
@@ -101,6 +101,8 @@ export interface DropTarget extends Placement {
 export interface Clipboard {
   nodes: Record<string, DocNode>;
   rootId: string;
+  /** The kit of the frame it was copied from. */
+  kitId?: KitId;
 }
 
 /** A right-click menu: where it is, and what it is about. */

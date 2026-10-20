@@ -10,24 +10,25 @@ import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
 import { getKit } from '../kits';
 import type { KitId, LayoutBlock } from '../kits/types';
 import { useStore } from '../store/store';
+import { KitSwitcher } from './KitSwitcher';
 import { PageParts } from './PageParts';
+import { useLibraryKit } from './useLibraryKit';
+import { kitMismatchMessage } from '../layout/kitGuard';
 
 type Filter = Category | 'All';
-
-/** Where "click to add" puts things: the selected frame, else the first one. */
-function useTargetFrame() {
-  return useStore((s) => s.doc.frames.find((f) => f.id === s.selectedFrameId) ?? s.doc.frames[0]);
-}
 
 export function Library() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All');
-  const target = useTargetFrame();
-  // The library shows the kit of the frame that "click to add" would use.
-  const kit = getKit(target?.kitId);
-  const results = useMemo(() => searchCatalogue(query, filter, kit.id), [query, filter, kit.id]);
+  const { kit, target, mismatch } = useLibraryKit();
+  // The filter belongs to a kit's categories: reset it when the kit changes.
+  const activeFilter: Filter = filter === 'All' || kit.categories.includes(filter) ? filter : 'All';
+  const results = useMemo(
+    () => searchCatalogue(query, activeFilter, kit.id),
+    [query, activeFilter, kit.id],
+  );
   const showLayoutBlocks =
-    (filter === 'All' || filter === kit.layoutCategory) && query.trim() === '';
+    (activeFilter === 'All' || activeFilter === kit.layoutCategory) && query.trim() === '';
 
   const grouped = kit.categories
     .map((category) => ({
@@ -51,16 +52,21 @@ export function Library() {
           {(['All', ...kit.categories] as Filter[]).map((c) => (
             <button
               key={c}
-              className={`chip${filter === c ? ' is-active' : ''}`}
-              aria-pressed={filter === c}
+              className={`chip${activeFilter === c ? ' is-active' : ''}`}
+              aria-pressed={activeFilter === c}
               onClick={() => setFilter(c)}
             >
               {c}
             </button>
           ))}
         </div>
+        <KitSwitcher />
         <p className="library__target">
-          {target ? (
+          {mismatch && target ? (
+            <span className="library__warn" role="status">
+              {kitMismatchMessage(target.kitId)}
+            </span>
+          ) : target ? (
             <>
               Click to add to <strong>{target.name}</strong>
             </>
@@ -81,10 +87,10 @@ export function Library() {
                     <div className="component__head">
                       <h3 className="component__name">Quick page parts</h3>
                     </div>
-                    <PageParts frameId={target?.id} kitId={kit.id} />
+                    <PageParts frameId={mismatch ? undefined : target?.id} kitId={kit.id} />
                   </div>
                 )}
-                <LayoutBlocks frameId={target?.id} kitId={kit.id} />
+                <LayoutBlocks frameId={mismatch ? undefined : target?.id} kitId={kit.id} />
               </>
             )}
             {items.map(({ component, variants }) => (
@@ -92,7 +98,7 @@ export function Library() {
                 key={component.id}
                 component={component}
                 variants={variants}
-                frameId={target?.id}
+                frameId={mismatch ? undefined : target?.id}
                 kitId={kit.id}
               />
             ))}
@@ -210,7 +216,15 @@ function Tile({
   );
 }
 
-function BlockTile({ frameId, block }: { frameId?: string; block: LayoutBlock }) {
+function BlockTile({
+  frameId,
+  block,
+  kitId,
+}: {
+  frameId?: string;
+  block: LayoutBlock;
+  kitId: KitId;
+}) {
   return (
     <button
       className="tile"
@@ -219,6 +233,7 @@ function BlockTile({ frameId, block }: { frameId?: string; block: LayoutBlock })
       onPointerDown={(e) =>
         beginPendingDrag(e, {
           kind: 'new-layout',
+          kitId,
           block: block.kind,
           columns: block.columns,
           label: block.label,
@@ -257,7 +272,12 @@ function LayoutBlocks({ frameId, kitId }: { frameId?: string; kitId: KitId }) {
       </div>
       <div className="tiles">
         {getKit(kitId).layoutBlocks.map((b) => (
-          <BlockTile key={`${b.kind}:${b.columns ?? ''}`} frameId={frameId} block={b} />
+          <BlockTile
+            key={`${b.kind}:${b.columns ?? ''}`}
+            frameId={frameId}
+            block={b}
+            kitId={kitId}
+          />
         ))}
       </div>
     </div>

@@ -113,7 +113,7 @@ export function Segmented<T extends string>({
 }: {
   label: string;
   value: T;
-  options: { id: T; label: string }[];
+  options: { id: T; label: string; title?: string; disabled?: boolean }[];
   onChange: (v: T) => void;
 }) {
   return (
@@ -123,6 +123,8 @@ export function Segmented<T extends string>({
           key={o.id}
           className={value === o.id ? 'is-active' : ''}
           aria-pressed={value === o.id}
+          title={o.title}
+          disabled={o.disabled && value !== o.id}
           onClick={() => onChange(o.id)}
         >
           {o.label}

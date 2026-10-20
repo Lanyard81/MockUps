@@ -1,3 +1,4 @@
+import { getKit } from '../kits';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
 import type { InstantiatedTemplate } from './types';
@@ -34,10 +35,11 @@ export function templateOnFrame(ref: TemplateRef, frameId: string): void {
   const t = resolveTemplate(ref);
   if (!frame || !t) return s.setNotice('That template isn’t available any more.');
   const apply = () => useStore.getState().replaceFrameWithTemplate(frameId, t);
-  if (frame.root.length === 0) return apply();
+  const changesKit = getKit(frame.kitId).id !== getKit(t.kitId).id;
+  if (frame.root.length === 0 && !changesKit) return apply();
   s.requestConfirm({
     title: 'Replace this frame’s content?',
-    body: `Everything in “${frame.name}” will be replaced with “${t.name}”. You can undo this straight afterwards.`,
+    body: `Everything in “${frame.name}” will be replaced with “${t.name}”${changesKit ? `, and the frame will become ${getKit(t.kitId).shortLabel === 'NSW' ? 'an' : 'a'} ${getKit(t.kitId).shortLabel} frame` : ''}. You can undo this straight afterwards.`,
     confirmLabel: 'Replace content',
     danger: true,
     onConfirm: apply,

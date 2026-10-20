@@ -19,9 +19,15 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
   const frame = useStore((s) => s.doc.frames.find((f) => f.id === frameId))!;
   const nodes = useStore((s) => s.doc.nodes);
   const images = useStore((s) => s.doc.images);
+  const kitSettings = useStore((s) => s.doc.kitSettings[frame.kitId]);
   const html = useMemo(
-    () => renderFrameHtml(nodes, frame.root, images, frame.kitId, frame.settings),
-    [nodes, frame.root, images, frame.kitId, frame.settings],
+    () =>
+      renderFrameHtml(nodes, frame.root, images, {
+        kitId: frame.kitId,
+        settings: frame.settings,
+        kitSettings,
+      }),
+    [nodes, frame.root, images, frame.kitId, frame.settings, kitSettings],
   );
   const kit = getKit(frame.kitId);
   const iframeRef = useRef<HTMLIFrameElement>(null);

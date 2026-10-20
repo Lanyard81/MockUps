@@ -25,9 +25,15 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   const nodes = useStore((s) => s.doc.nodes);
   const images = useStore((s) => s.doc.images);
   const fitTargets = useMemo(() => collectFitTargets(nodes, frame.root), [nodes, frame.root]);
+  const kitSettings = useStore((s) => s.doc.kitSettings[frame.kitId]);
   const html = useMemo(
-    () => renderFrameHtml(nodes, frame.root, images, frame.kitId, frame.settings),
-    [nodes, frame.root, images, frame.kitId, frame.settings],
+    () =>
+      renderFrameHtml(nodes, frame.root, images, {
+        kitId: frame.kitId,
+        settings: frame.settings,
+        kitSettings,
+      }),
+    [nodes, frame.root, images, frame.kitId, frame.settings, kitSettings],
   );
   const height = useStore((s) => s.frameHeights[frame.id] ?? DEVICES[frame.device].screenHeight);
   const selected = useStore((s) => s.selectedFrameId === frame.id);
@@ -154,6 +160,9 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
             {frame.name}
           </span>
         )}
+        <span className="frame__kit" title={kit.name} data-testid="frame-kit">
+          {kit.shortLabel}
+        </span>
         <span className="frame__size">{frame.width}px</span>
       </div>
       <div className="frame__body" style={{ height }}>

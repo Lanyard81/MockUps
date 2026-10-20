@@ -1,0 +1,37 @@
+{
+ "version": "1",
+ "components": [
+  {
+   "id": "sp-text",
+   "slug": "text",
+   "name": "Text",
+   "category": "Text and media",
+   "keywords": [
+    "paragraph",
+    "heading",
+    "body",
+    "rich text"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "paragraph",
+   "variants": [
+    {
+     "id": "paragraph",
+     "label": "Paragraph",
+     "html": "<div class=\"sp-text\"><p data-edit=\"text\" data-multiline>Add your text here. Type a few words, then use the toolbar to format them.</p></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Add your text here. Type a few words, then use the toolbar to format them.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  }
+ ]
+}

@@ -216,3 +216,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Version 2 document, with a migration.** A frame that names a kit this build doesn't have is refused with a message rather than shown with the wrong styles.
 - **Scripts that import the app** (`npm run samples`) run through Vite (`scripts/vite-run.mjs`) so `?raw` CSS and `?url` fonts resolve; the catalogue generator imports only sources and overrides, so it uses plain `tsx`.
 - **`scripts/finish-single.mjs` ignores script bodies** (decision 041), so kit data containing CDN links for exported pages doesn't trip it.
+
+## 044: Switching between kits (Milestone S2)
+
+- **Kits never mix inside a frame.** Components, layout blocks, moves and pastes are checked against the frame's kit (`layout/kitGuard.ts`) in the store actions, and refused with one message naming the frame's kit. Layout nodes (sections, columns) belong to the kit they were made in, so they can't cross either, even when empty. Dragging is also refused at the drop (`computeDropTarget` returns no target) and says why.
+- **The library follows the target frame** (the selected frame, else the first). The switcher can browse the other kit for that frame; selecting another frame goes back to following. While the library shows the wrong kit for the frame, its tiles are disabled and a warning explains.
+- **The last kit chosen for a new frame is remembered** in `localStorage` (`nswmb.lastKit`, guarded: storage can be blocked) and also starts a new mockup. It is a UI preference, not part of the document or history.
+- **Converting a frame** is Milestone S6; until then the message says "or convert the frame" because that is the intended way out.

@@ -1,6 +1,6 @@
 import { DEFAULT_KIT_ID, KITS, getKit } from '../kits';
 import type { Kit } from '../kits/types';
-import { renderFrameHtml } from '../layout/render';
+import { renderFrameOf } from '../layout/render';
 import { getFontEmbedCss } from '../lib/fontData';
 import type { Frame, MockupDoc } from '../store/types';
 import { cleanForExport } from './clean';
@@ -72,10 +72,7 @@ export async function buildFramePage(
 ): Promise<string> {
   const kit = getKit(frame.kitId);
   const { head, foot } = await assets(mode, kit);
-  const body = cleanForExport(
-    renderFrameHtml(doc.nodes, frame.root, doc.images, frame.kitId, frame.settings),
-    { links },
-  );
+  const body = cleanForExport(renderFrameOf(doc, frame), { links });
   return shell(`${doc.name} – ${frame.name}`, head, body, foot);
 }
 

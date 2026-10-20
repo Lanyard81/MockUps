@@ -216,3 +216,115 @@ describe('kit-aware store', () => {
     }
   });
 });
+
+describe('kits do not mix inside a frame', () => {
+  beforeEach(() => {
+    useStore.setState({ doc: createDoc(), past: [], future: [], notice: null, clipboard: null });
+    s().addFrame('desktop', 'sharepoint');
+  });
+  const nsw = () => s().doc.frames[0]!;
+  const sp = () => s().doc.frames[1]!;
+
+  it('adds a frame in the chosen kit and records its version', () => {
+    expect(sp().kitId).toBe('sharepoint');
+    expect(s().doc.kitVersions.sharepoint).toBe(getKit('sharepoint').version);
+  });
+
+  it('refuses a component from the other kit, with a message, and makes no history entry', () => {
+    const past = s().past.length;
+    s().addComponent(sp().id, 'heading', 'h1');
+    expect(s().notice).toMatch(
+      /This is a SharePoint frame — switch the library to SharePoint, or convert the frame/,
+    );
+    expect(s().past.length).toBe(past);
+    s().addComponent(nsw().id, 'sp-text', 'paragraph');
+    expect(s().notice).toMatch(/This is an NSW frame/);
+    expect(Object.keys(s().doc.nodes)).toHaveLength(0);
+  });
+
+  it('accepts a component of the frame’s own kit and builds that kit’s layers around it', () => {
+    s().addComponent(sp().id, 'sp-text', 'paragraph');
+    const types = Object.values(s().doc.nodes)
+      .map((n) => n.type)
+      .sort();
+    expect(types).toEqual(['column', 'component', 'section']);
+    s().undo();
+    expect(Object.keys(s().doc.nodes)).toHaveLength(0);
+  });
+
+  it('builds layout blocks from the frame’s kit', () => {
+    s().addLayoutBlock(sp().id, 'section', 1);
+    const section = Object.values(s().doc.nodes).find((n) => n.type === 'section')!;
+    expect(section.props?.layout).toBe('one-column');
+    expect(Object.values(s().doc.nodes).some((n) => n.type === 'container')).toBe(false);
+  });
+
+  it('refuses to drop a new item from the other kit', () => {
+    const past = s().past.length;
+    s().dropNew(
+      { kind: 'new-component', componentId: 'heading', variantId: 'h1', label: 'Heading' },
+      {
+        frameId: sp().id,
+        parentId: null,
+        index: 0,
+        chainFrom: 1,
+        indicator: { kind: 'box', rect: { x: 0, y: 0, width: 1, height: 1 } },
+      },
+    );
+    expect(s().past.length).toBe(past);
+    expect(s().notice).toMatch(/SharePoint frame/);
+    s().dropNew(
+      { kind: 'new-layout', kitId: 'nsw', block: 'section', label: 'Section' },
+      {
+        frameId: sp().id,
+        parentId: null,
+        index: 0,
+        chainFrom: null,
+        indicator: { kind: 'box', rect: { x: 0, y: 0, width: 1, height: 1 } },
+      },
+    );
+    expect(s().past.length).toBe(past);
+  });
+
+  it('refuses to move a node, or paste a copy, into a frame of the other kit', () => {
+    s().addComponent(nsw().id, 'heading', 'h1');
+    const heading = Object.values(s().doc.nodes).find((n) => n.componentId === 'heading')!;
+    const before = s().past.length;
+    s().moveNode(heading.id, { frameId: sp().id, parentId: null, index: 0, chainFrom: 1 });
+    expect(s().past.length).toBe(before);
+    expect(s().notice).toMatch(/SharePoint frame/);
+    s().setNotice(null);
+    s().copyNode(heading.id);
+    s().selectFrame(sp().id);
+    s().pasteClipboard();
+    expect(s().past.length).toBe(before);
+    expect(s().notice).toMatch(/SharePoint frame/);
+  });
+
+  it('a layout node can’t cross kits even when it is empty', () => {
+    s().addLayoutBlock(nsw().id, 'section');
+    const section = Object.values(s().doc.nodes).find((n) => n.type === 'section')!;
+    s().copyNode(section.id);
+    s().selectFrame(sp().id);
+    s().pasteClipboard();
+    expect(Object.values(s().doc.nodes).filter((n) => n.type === 'section')).toHaveLength(1);
+  });
+
+  it('remembers the kit chosen for new frames, and new mockups start in it', () => {
+    s().setNewFrameKit('sharepoint');
+    expect(s().newFrameKitId).toBe('sharepoint');
+    expect(localStorage.getItem('nswmb.lastKit')).toBe('sharepoint');
+    s().newDoc();
+    expect(s().doc.defaultKitId).toBe('sharepoint');
+    expect(s().doc.frames[0]!.kitId).toBe('sharepoint');
+    s().setNewFrameKit('nsw');
+  });
+
+  it('the library follows the selected frame until another kit is chosen for it', () => {
+    s().selectFrame(sp().id);
+    s().setLibraryKit('nsw');
+    expect(s().libraryKit).toEqual({ kitId: 'nsw', frameId: sp().id });
+    s().setLibraryKit(null);
+    expect(s().libraryKit).toBeNull();
+  });
+});

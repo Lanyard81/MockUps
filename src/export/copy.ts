@@ -1,4 +1,6 @@
-import { renderNodeHtml } from '../layout/render';
+import { frameOfNode } from '../layout/ops';
+import { renderNodeHtml, type RenderOptions } from '../layout/render';
+import type { MockupDoc } from '../store/types';
 import { useStore } from '../store/store';
 import { cleanForExport, formatHtml } from './clean';
 
@@ -19,12 +21,24 @@ export async function copyText(text: string): Promise<boolean> {
   }
 }
 
+/** The kit and settings of the frame a node is in. */
+function nodeRenderOptions(doc: MockupDoc, nodeId: string): RenderOptions {
+  const frame = doc.frames.find((f) => f.id === frameOfNode(doc, nodeId));
+  return {
+    kitId: frame?.kitId,
+    settings: frame?.settings,
+    kitSettings: frame ? doc.kitSettings[frame.kitId] : undefined,
+  };
+}
+
 /** The clean, indented markup of a component or section, as handed to developers. */
 export function htmlForNode(nodeId: string): string | null {
   const { doc } = useStore.getState();
   if (!doc.nodes[nodeId]) return null;
   return formatHtml(
-    cleanForExport(renderNodeHtml(doc.nodes, nodeId, doc.images), { unwrap: true }),
+    cleanForExport(renderNodeHtml(doc.nodes, nodeId, doc.images, nodeRenderOptions(doc, nodeId)), {
+      unwrap: true,
+    }),
   );
 }
 

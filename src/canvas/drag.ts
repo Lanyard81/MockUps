@@ -2,6 +2,7 @@ import { useStore } from '../store/store';
 import type { DragPayload, DropTarget } from '../store/types';
 import { isOverCanvas, screenToWorld, templateAsNewFrame, templateOnFrame } from '../templates/use';
 import { computeDropTarget, frameAtPoint } from './dropTarget';
+import { kitMismatchMessage } from '../layout/kitGuard';
 import { frameScale } from './registry';
 
 /** Pixels the pointer must travel before a press becomes a drag. */
@@ -121,7 +122,13 @@ export function startDrag(
     // Recalculate at the release position so the drop matches what the pointer is over.
     const target = commit ? computeDropTarget(payload, s.doc, latest.x, latest.y) : null;
     s.setDrag(null);
-    if (!target) return;
+    if (!target) {
+      // Released over a frame of another kit: say why nothing happened.
+      const over = commit ? frameAtPoint(s.doc, latest.x, latest.y) : null;
+      if (over && (payload.kind === 'new-component' || payload.kind === 'new-layout'))
+        s.setNotice(kitMismatchMessage(over.frame.kitId));
+      return;
+    }
     if (payload.kind === 'move') s.moveNode(payload.nodeId, target);
     else s.dropNew(payload, target);
   };

@@ -10,10 +10,11 @@ import { fileURLToPath } from 'node:url';
 import type { Catalogue } from '../src/catalogue/types';
 import { buildCatalogue } from './lib/buildCatalogue';
 import { nswBuild, nswIcons } from './kits/nsw';
+import { spBuild } from './kits/sharepoint';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-const kits = [nswBuild];
+const kits = [nswBuild, spBuild];
 let failed = false;
 
 for (const kit of kits) {

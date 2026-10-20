@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { DEFAULT_KIT_ID, getKit } from '../kits';
+import { componentFitsKit, kitMismatchMessage, subtreesFitKit } from '../layout/kitGuard';
 import type { KitId } from '../kits/types';
 import { getComponent, hasVariant } from '../catalogue';
 import { readSpans, type BreakpointId } from '../kits/nsw/spans';
@@ -47,20 +48,40 @@ export function kitVersionsFor(ids: KitId[]): Record<KitId, string> {
   return Object.fromEntries(ids.map((id) => [id, getKit(id).version]));
 }
 
-export function createDoc(): MockupDoc {
+const LAST_KIT_KEY = 'nswmb.lastKit';
+
+/** The kit used for the last new frame. Browser storage can be blocked, so every access is guarded. */
+function readLastKit(): KitId {
+  try {
+    const id = localStorage.getItem(LAST_KIT_KEY);
+    return id ? getKit(id).id : DEFAULT_KIT_ID;
+  } catch {
+    return DEFAULT_KIT_ID;
+  }
+}
+
+function writeLastKit(id: KitId) {
+  try {
+    localStorage.setItem(LAST_KIT_KEY, id);
+  } catch {
+    /* storage blocked: the choice just isn't remembered */
+  }
+}
+
+export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
     version: 2,
     id: newId('doc'),
     name: 'Untitled mockup',
-    defaultKitId: DEFAULT_KIT_ID,
-    kitVersions: kitVersionsFor([DEFAULT_KIT_ID]),
+    defaultKitId: kitId,
+    kitVersions: kitVersionsFor([kitId]),
     kitSettings: {},
     view: { x: 80, y: 80, zoom: 1 },
     frames: [
       {
         id: newId('f'),
         name: 'Home',
-        kitId: DEFAULT_KIT_ID,
+        kitId,
         device: 'iphone',
         width: 393,
         x: 0,
@@ -101,6 +122,10 @@ interface State {
   dialogFrameId: string | null;
   /** Which tab of the left panel is showing. */
   leftTab: 'library' | 'layers' | 'templates';
+  /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
+  newFrameKitId: KitId;
+  /** A kit the user switched the library to for one frame (otherwise the library follows the selected frame's kit). */
+  libraryKit: { kitId: KitId; frameId: string | null } | null;
   /** While dragging a template: the frame it is over (it would replace its content), or just the canvas. */
   templateDrop: { frameId: string | null } | null;
   confirm: ConfirmRequest | null;
@@ -142,6 +167,8 @@ interface Actions {
   setStorageOk: (ok: boolean) => void;
   setDialog: (dialog: State['dialog'], frameId?: string) => void;
   setLeftTab: (tab: State['leftTab']) => void;
+  setNewFrameKit: (kitId: KitId) => void;
+  setLibraryKit: (kitId: KitId | null) => void;
   setTemplateDrop: (drop: State['templateDrop']) => void;
   /** Put a template on the canvas as a new frame (undoable). Returns the frame's id. */
   addFrameFromTemplate: (template: InstantiatedTemplate, at?: { x: number; y: number }) => string;
@@ -328,6 +355,8 @@ export const useStore = create<Store>((set, get) => ({
   dialog: null,
   dialogFrameId: null,
   leftTab: 'library',
+  newFrameKitId: readLastKit(),
+  libraryKit: null,
   templateDrop: null,
   confirm: null,
   fitRequested: true,
@@ -365,6 +394,17 @@ export const useStore = create<Store>((set, get) => ({
   setStorageOk: (storageOk) => set({ storageOk }),
   setDialog: (dialog, frameId) => set({ dialog, dialogFrameId: frameId ?? null }),
   setLeftTab: (leftTab) => set({ leftTab }),
+  setNewFrameKit: (kitId) => {
+    const id = getKit(kitId).id;
+    writeLastKit(id);
+    set({ newFrameKitId: id });
+  },
+  setLibraryKit: (kitId) =>
+    set((s) => ({
+      libraryKit: kitId
+        ? { kitId, frameId: s.selectedFrameId ?? s.doc.frames[0]?.id ?? null }
+        : null,
+    })),
   setTemplateDrop: (templateDrop) => set({ templateDrop }),
   addFrameFromTemplate: (template, at) => {
     const id = newId('f');
@@ -436,7 +476,8 @@ export const useStore = create<Store>((set, get) => ({
       fitRequested: true,
       saveState: 'saved',
     }),
-  newDoc: () => get().loadDoc(createDoc()),
+  // A new mockup starts in the kit used for the last new frame.
+  newDoc: () => get().loadDoc(createDoc(get().newFrameKitId)),
   renameDoc: (name) =>
     set((s) => {
       const next = name.trim().slice(0, 200);
@@ -575,7 +616,10 @@ export const useStore = create<Store>((set, get) => ({
   addComponent: (frameId, componentId, variantId) =>
     set((s) => {
       const comp = getComponent(componentId);
-      if (!s.doc.frames.some((f) => f.id === frameId) || !comp) return s;
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame || !comp) return s;
+      if (!componentFitsKit(componentId, frame.kitId))
+        return { notice: kitMismatchMessage(frame.kitId) };
       const leaf = newComponentNode(componentId, variantId ?? comp.defaultVariant);
       return insertLeaf(s, frameId, { [leaf.id]: leaf }, leaf.id);
     }),
@@ -592,6 +636,15 @@ export const useStore = create<Store>((set, get) => ({
   dropNew: (payload, target) =>
     set((s) => {
       if (payload.kind === 'move' || payload.kind === 'template') return s;
+      const targetFrame = s.doc.frames.find((f) => f.id === target.frameId);
+      if (
+        targetFrame &&
+        ((payload.kind === 'new-component' &&
+          !componentFitsKit(payload.componentId, targetFrame.kitId)) ||
+          (payload.kind === 'new-layout' &&
+            getKit(payload.kitId).id !== getKit(targetFrame.kitId).id))
+      )
+        return { notice: kitMismatchMessage(targetFrame.kitId) };
       let nodes: Record<string, DocNode>;
       let leafId: string;
       if (payload.kind === 'new-component') {
@@ -635,6 +688,12 @@ export const useStore = create<Store>((set, get) => ({
       )
         return s;
       if (target.parentId !== null && !canMoveInto(s.doc, nodeId, target.parentId)) return s;
+      // Kits don't mix inside a frame, and layout nodes belong to the kit they were made in.
+      const fromFrame = frameOfNode(s.doc, nodeId);
+      const toFrame = s.doc.frames.find((f) => f.id === target.frameId);
+      const fromKit = s.doc.frames.find((f) => f.id === fromFrame)?.kitId;
+      if (toFrame && fromKit && getKit(fromKit).id !== getKit(toFrame.kitId).id)
+        return { notice: kitMismatchMessage(toFrame.kitId) };
       const doc = applyInsertion(detachNode(s.doc, nodeId), target.frameId, target, nodeId, newId);
       return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: nodeId };
     }),
@@ -674,7 +733,9 @@ export const useStore = create<Store>((set, get) => ({
     set((s) => {
       const node = s.doc.nodes[nodeId];
       if (!node || !isDraggable(node)) return s;
-      return { clipboard: extractSubtree(s.doc, nodeId) };
+      const frameId = frameOfNode(s.doc, nodeId);
+      const kitId = s.doc.frames.find((f) => f.id === frameId)?.kitId;
+      return { clipboard: { ...extractSubtree(s.doc, nodeId), ...(kitId ? { kitId } : {}) } };
     }),
 
   pasteClipboard: () =>
@@ -682,6 +743,14 @@ export const useStore = create<Store>((set, get) => ({
       const clip = s.clipboard;
       const frameId = s.selectedFrameId ?? s.doc.frames[0]?.id;
       if (!clip || !frameId) return s;
+      const targetFrame = s.doc.frames.find((f) => f.id === frameId);
+      // Layout nodes belong to the kit they were copied from, so the whole paste has to match.
+      if (
+        targetFrame &&
+        ((clip.kitId && getKit(clip.kitId).id !== getKit(targetFrame.kitId).id) ||
+          !subtreesFitKit(clip.nodes, [clip.rootId], targetFrame.kitId))
+      )
+        return { notice: kitMismatchMessage(targetFrame.kitId) };
       const copy = cloneSubtrees(clip.nodes, [clip.rootId], newId);
       const leafId = copy.roots[0]!;
       const doc0 = { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } };

@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { getKit } from '../../kits';
 import { useStore } from '../../store/store';
-import { DEVICES, type DeviceId } from '../../store/types';
+import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
 import { PageParts } from '../PageParts';
 import { CommitInput, Field, Section } from './controls';
 import { SettingsPanel } from './SettingsPanel';
@@ -10,12 +11,22 @@ const NO_VALUES: Record<string, unknown> = {};
 export function FrameProps({ frameId }: { frameId: string }) {
   const frame = useStore((s) => s.doc.frames.find((f) => f.id === frameId));
   const kitSettings = useStore((s) => s.doc.kitSettings[frame?.kitId ?? '']) ?? NO_VALUES;
+  const nodes = useStore((s) => s.doc.nodes);
+  const topLevel = useMemo(
+    () => (frame?.root ?? []).map((id) => nodes[id]).filter((n): n is DocNode => !!n),
+    [frame?.root, nodes],
+  );
   const st = useStore.getState;
   if (!frame) return null;
   const kit = getKit(frame.kitId);
+  const context = { frame: frame.settings ?? NO_VALUES, kit: kitSettings, topLevel };
   return (
     <>
       <Section title="Frame">
+        <p className="prop-kit" data-testid="frame-kit-info">
+          <span className="badge">{kit.shortLabel}</span> {kit.name}
+        </p>
+        {kit.fidelityNote && <p className="prop-hint">{kit.fidelityNote}</p>}
         <Field label="Name" htmlFor="frame-name">
           <CommitInput
             id="frame-name"
@@ -68,7 +79,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
         <SettingsPanel
           defs={kit.settings.frame}
           values={frame.settings ?? NO_VALUES}
-          frame={frame.settings ?? NO_VALUES}
+          context={context}
           onChange={(key, value) => st().setFrameSettings(frame.id, { [key]: value })}
         />
       )}
@@ -76,7 +87,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
         <SettingsPanel
           defs={kit.settings.kit}
           values={kitSettings}
-          frame={frame.settings ?? NO_VALUES}
+          context={context}
           onChange={(key, value) => st().setKitSettings(kit.id, { [key]: value })}
         />
       )}

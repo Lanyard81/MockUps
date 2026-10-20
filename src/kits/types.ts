@@ -22,6 +22,11 @@ export interface KitSchema {
   defaultProps: (type: LayerType) => Record<string, unknown> | undefined;
   /** Largest number of children a layer may have (e.g. columns in a grid). Unset means no limit. */
   maxChildren?: Partial<Record<LayerType, number>>;
+  /**
+   * Arrangements of the top layer's columns, chosen with `props.layout`. Changing one changes the
+   * number of columns and moves content between them (see `setSectionLayout` in `layout/ops.ts`).
+   */
+  sectionLayouts?: readonly SectionLayout[];
 }
 
 /** The document every frame loads, and what to run in it after the content changes. */
@@ -46,12 +51,12 @@ export interface KitShell {
 export type SettingDef = (
   | {
       type: 'swatches';
-      options: readonly { id: string; label: string; swatch: string }[];
+      options: readonly SettingOption<{ swatch: string }>[];
       /** Keep the default value in the document instead of clearing it. */
       keepDefault?: boolean;
     }
-  | { type: 'segmented'; options: readonly { id: string; label: string }[] }
-  | { type: 'select'; options: readonly { id: string; label: string }[] }
+  | { type: 'segmented'; options: readonly SettingOption[] }
+  | { type: 'select'; options: readonly SettingOption[] }
   | { type: 'toggle' }
   | { type: 'text'; placeholder?: string; multiline?: boolean }
   | { type: 'color' }
@@ -70,11 +75,43 @@ export type SettingDef = (
   unavailable?: (ctx: SettingContext) => string | null;
 };
 
+/** One choice in a setting. `unavailable` gives the reason it can't be chosen here, or null. */
+export type SettingOption<Extra = unknown> = {
+  id: string;
+  label: string;
+  /** A short explanation shown on hover, for names that aren't self-explanatory. */
+  title?: string;
+  unavailable?: (ctx: SettingContext) => string | null;
+} & Extra;
+
 export interface SettingContext {
   /** The values of the thing being edited. */
   values: Record<string, unknown>;
   /** Settings of the frame the thing is in (frame-level settings of this kit). */
   frame: Record<string, unknown>;
+  /** The document-wide settings of this kit (e.g. the theme). */
+  kit: Record<string, unknown>;
+  /** The top-level nodes of the frame, for page-wide rules (one vertical section per page, ...). */
+  topLevel: DocNode[];
+}
+
+/** What a kit needs to draw layout nodes and page chrome. */
+export interface RenderContext {
+  images: MockupDoc['images'];
+  /** The frame's kit settings. */
+  settings: Record<string, unknown>;
+  /** The document-wide settings of this kit. */
+  kitSettings: Record<string, unknown>;
+}
+
+/** A way of arranging a section's columns (SharePoint: one, two, three columns, one-third left...). */
+export interface SectionLayout {
+  id: string;
+  label: string;
+  /** How many columns the section has with this layout. */
+  columns: number;
+  title?: string;
+  unavailable?: (ctx: SettingContext) => string | null;
 }
 
 export interface KitSettings {
@@ -144,11 +181,11 @@ export interface Kit {
   schema: KitSchema;
   labels: LayerLabels;
   /** Markup for a layout node, given the rendered markup of its children. */
-  renderLayout: (node: DocNode, childrenHtml: string) => string;
+  renderLayout: (node: DocNode, childrenHtml: string, ctx: RenderContext) => string;
   /** Wrap a variant that needs a dark backdrop (e.g. white buttons) for its library thumbnail. */
   previewOnDark?: (html: string) => string;
-  /** Markup around the frame's content (page chrome). Defaults to the content itself. */
-  renderFrame?: (contentHtml: string, frameSettings: Record<string, unknown>) => string;
+  /** Markup around the frame's content (page chrome). Defaults to the children's markup, joined. */
+  renderFrame?: (children: { node: DocNode; html: string }[], ctx: RenderContext) => string;
   layoutBlocks: LayoutBlock[];
   pageParts: PageParts[];
   /** How exported HTML pages load the kit. */
