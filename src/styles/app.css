@@ -1750,3 +1750,7 @@ kbd {
   flex: 1 1 auto;
   min-width: 0;
 }
+.icon-picker__current {
+  display: inline-flex;
+  vertical-align: middle;
+}

@@ -233,3 +233,12 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Section layouts change structure through one action** (`setSectionLayout` → `setColumnCount` in `layout/ops.ts`, tested), so content moves exactly one way: removed columns' content joins the last column that stays.
 - **Text in page chrome is editable in place** through `data-setting-edit="<settings path>"` (`canvas/textEdit.ts` `startSettingEdit`), committing once through `setFrameSettingAt`. A collapsible section's title is ordinary node text (`data-edit`), allowed on a layout node only where the kit declares it.
 - **Breakpoints are assumptions** (1024 px for the vertical section, 640 px for stacking and the mobile menu), recorded in `SHAREPOINT-OOB.md` for checking against a real site.
+
+## 046: SharePoint web parts (Milestone S4)
+
+- **Web parts are catalogue components** with `sp-` ids, hand-written markup validated against the kit's CSS (`npm run catalogue`), `data-edit` text, `data-optional` parts and `data-image` pictures, exactly like the NSW ones. The generator takes a kit's CSS classes from `styles.ts`, so a web part can't use a class the kit doesn't define.
+- **Two new option kinds, as data**: `choice` (the chosen option's class is added, the others' removed: alignment, aspect ratio, table style) and `iconSlot` (an icon from the kit's own set, rendered by `Kit.icons.render`, so core code never imports SharePoint code).
+- **An option may belong to some variants only** (a table's style). The generator now requires each option's selector to match _some_ variant, and the panel shows an option only when it matches the chosen one (`optionsForVariant`), so nothing is offered that does nothing. NSW's options all match their default variant, so its data is unchanged.
+- **Sample content is made up and generated**: pictures are gradient SVGs made in code (no photo is bundled), people and headlines are invented. This keeps the single file small and avoids using anyone's likeness or text.
+- **Counts are show/hide, not new variants**: a hero's 1 to 5 items, quick links, news stories and list rows are `data-optional` parts, labelled "Item 3", "Link 4" and so on.
+- **Behaviour in Preview** is one delegated listener in the kit's script (carousel slides and dots, filmstrip scrolling, menus, collapsible sections); in Edit nothing runs, and carousels show the first slide.

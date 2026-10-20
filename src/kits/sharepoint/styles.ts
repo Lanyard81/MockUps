@@ -1,3 +1,5 @@
+import { SP_WEBPART_CSS } from './stylesWebParts';
+
 /**
  * The SharePoint-style kit's CSS: a lookalike built on Fluent UI design tokens (SharePoint's own
  * page CSS isn't published). Every class is `sp-*`; colours come from theme variables set on the
@@ -199,6 +201,15 @@ const text = `
 .sp-text p+p{margin-top:12px}
 `;
 
-export const SP_CSS = [base, suite, header, nav, title, footer, sections, responsive, text].join(
-  '\n',
-);
+export const SP_CSS = [
+  base,
+  suite,
+  header,
+  nav,
+  title,
+  footer,
+  sections,
+  responsive,
+  text,
+  SP_WEBPART_CSS,
+].join('\n');

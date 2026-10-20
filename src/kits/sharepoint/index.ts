@@ -1,6 +1,7 @@
 import type { Catalogue } from '../../catalogue/types';
 import data from './catalogue/generated/catalogue.json';
 import { SP_LAYOUT_BLOCKS } from './blocks';
+import { SP_ICON_NAMES, spIcon } from './icons';
 import { SP_CATEGORIES } from './categories';
 import { renderSpFrame, renderSpLayout } from './render';
 import { SECTION_LAYOUTS } from './sections';
@@ -37,6 +38,7 @@ export const sharepointKit: Kit = {
   renderFrame: renderSpFrame,
   layoutBlocks: SP_LAYOUT_BLOCKS,
   pageParts: [],
+  icons: { render: (name) => spIcon(name), names: SP_ICON_NAMES },
   export: { cdn: null, init: 'window.SPK&&SPK.init()' },
   settings: {
     node: { section: SECTION_SETTINGS },

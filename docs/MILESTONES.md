@@ -131,3 +131,13 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Menus open in Preview
 - [ ] Comparison with reference screenshots: none supplied yet; open questions are listed in `SHAREPOINT-OOB.md`
 - [x] Tests: theme generation, site rules, section layouts, column counts, settings paths, rendering and store actions (Vitest); header, theme, site type, section layouts, in-place editing, menus, collapsing and phone layout (Playwright)
+
+## Milestone S4: Core web parts
+
+- [x] Text (paragraph, headings, pull quote, lists, table with styles, alignment, theme colour text, highlight), Image (aspect ratio, caption, uploaded picture), Image gallery (Brick, Grid, Carousel), Button, Call to action, Link, Divider, Spacer
+- [x] Hero (Tiles, Layers, 1 to 5 items), Quick links (Compact, Filmstrip, Grid, Button, List, Tiles; per-link Fluent icon picker; alignment), News (Top story, List, Side-by-side, Hub news, Carousel, Tiles, Filmstrip; compact view), Events (Compact, Filmstrip), Highlighted content (Cards, List, Carousel, Filmstrip), People (Compact, Descriptive)
+- [x] Document library, List, Countdown timer, Page properties
+- [x] "Show title and commands" (title and "See all") on the web parts that have them
+- [x] Carousels, filmstrips and collapsible content work in Preview
+- [x] New option kinds: `choice` (one of several looks) and `iconSlot` (an icon from the kit's own set); options that do nothing in the chosen layout are hidden
+- [x] Catalogue validation (every class defined by the kit's CSS), unit tests for every web part and option, and Playwright tests adding every layout, switching layout, editing text, icons and Preview behaviour

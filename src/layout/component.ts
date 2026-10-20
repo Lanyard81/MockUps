@@ -1,4 +1,5 @@
-import { getComponent, getVariant } from '../catalogue';
+import { getComponent, getVariant, kitOfComponent } from '../catalogue';
+import { getKit } from '../kits';
 import type { OptionDef } from '../catalogue/types';
 import type { DocNode, MockupDoc } from '../store/types';
 
@@ -45,7 +46,13 @@ function retag(el: Element, tag: string): Element {
   return next;
 }
 
-function applyOption(root: ParentNode, opt: OptionDef, value: unknown, goto?: unknown) {
+function applyOption(
+  root: ParentNode,
+  opt: OptionDef,
+  value: unknown,
+  goto: unknown,
+  iconRenderer?: (name: string) => string,
+) {
   if (opt.type === 'href' && typeof goto === 'string' && goto) {
     // A "go to frame" link: a real link in the markup, followed by Preview and by HTML export.
     let el = root.querySelector(opt.selector);
@@ -84,6 +91,20 @@ function applyOption(root: ParentNode, opt: OptionDef, value: unknown, goto?: un
     case 'headingLevel': {
       const level = Number(value);
       if (els[0] && level >= 1 && level <= 6 && level !== opt.default) retag(els[0], `h${level}`);
+      break;
+    }
+    case 'choice': {
+      const el = els[0];
+      if (!el) break;
+      const chosen = opt.choices.find((c) => c.id === value);
+      for (const c of opt.choices) if (c.className) el.classList.remove(c.className);
+      if (chosen?.className) el.classList.add(chosen.className);
+      break;
+    }
+    case 'iconSlot': {
+      const el = els[0];
+      const render = iconRenderer;
+      if (el && render && typeof value === 'string' && value) el.innerHTML = render(value);
       break;
     }
     case 'icon': {
@@ -165,7 +186,8 @@ export function renderComponent(node: DocNode, images: Images): string {
   const props = asRecord(node.props);
 
   // Options first: some retag elements, and the rest of the steps look elements up afterwards.
-  for (const opt of comp.options) applyOption(root, opt, props[opt.key], props.goto);
+  const iconRenderer = getKit(kitOfComponent(comp.id)).icons?.render;
+  for (const opt of comp.options) applyOption(root, opt, props[opt.key], props.goto, iconRenderer);
 
   const hidden = Array.isArray(props.hiddenParts) ? props.hiddenParts.map(String) : [];
   for (const key of hidden)
@@ -238,4 +260,25 @@ function describeUncached(html: string): VariantParts {
       el.getAttribute('data-image')!,
     ),
   };
+}
+
+const applies = new Map<string, boolean>();
+
+/**
+ * The options that do something in this variant: those whose selector matches its markup. (An option can
+ * belong to only some variants of a component, such as a table's style.) Results are cached.
+ */
+export function optionsForVariant(variantHtml: string, options: OptionDef[]): OptionDef[] {
+  return options.filter((opt) => {
+    const key = `${opt.selector}\u0000${variantHtml}`;
+    let hit = applies.get(key);
+    if (hit === undefined) {
+      const tpl = document.createElement('template');
+      tpl.innerHTML = variantHtml;
+      hit = tpl.content.querySelector(opt.selector) !== null;
+      if (applies.size > 2000) applies.clear();
+      applies.set(key, hit);
+    }
+    return hit;
+  });
 }

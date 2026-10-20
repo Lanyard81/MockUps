@@ -15,6 +15,25 @@ export const SP_JS = `(function(){
   function closest(el, sel){ return el && el.closest ? el.closest(sel) : null; }
   doc.addEventListener('click', function(e){
     var t = e.target;
+    var step = closest(t, '[data-sp-prev],[data-sp-next]');
+    if (step) {
+      var dir = step.hasAttribute('data-sp-next') ? 1 : -1;
+      var carousel = closest(step, '[data-sp-carousel]');
+      if (carousel) {
+        var slides = carousel.querySelectorAll('.sp-carousel__slide');
+        var dots = carousel.querySelectorAll('.sp-carousel__dot');
+        var current = 0;
+        for (var s = 0; s < slides.length; s++) if (slides[s].classList.contains('is-active')) current = s;
+        var next = (current + dir + slides.length) % slides.length;
+        for (var k = 0; k < slides.length; k++) slides[k].classList.toggle('is-active', k === next);
+        for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('is-active', d === next);
+        return;
+      }
+      var strip = closest(step, '[data-sp-strip]');
+      var track = strip && strip.querySelector('.sp-strip__track');
+      if (track) track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+      return;
+    }
     var collapse = closest(t, '[data-sp-collapse-toggle]');
     if (collapse) {
       var section = closest(collapse, '.sp-section');

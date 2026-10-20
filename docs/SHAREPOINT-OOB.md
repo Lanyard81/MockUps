@@ -100,3 +100,17 @@ Added while building the kit; nothing here has been compared with a tenant yet. 
 - **Collapsible sections**: title, heading level (2 to 4), divider, icon side, collapsed by default; they work in Preview and expand in Edit so content can be edited.
 - **Suite bar**: generic and unbranded (app launcher, search, settings, help, initials), always shown in the theme's dark-alt colour.
 - **Icons**: Fluent System Icons (MIT, `@fluentui/svg-icons`), a curated 191 of them, generated into `icons.generated.ts`.
+
+### Web parts (Milestone S4): notes and open questions
+
+Eighteen web parts so far: Text (paragraph, headings 1 to 4, pull quote, bulleted and numbered lists, table with four styles), Image (four aspect ratios, caption), Image gallery (Brick, Grid, Carousel), Button, Call to action, Link (preview card, inline), Divider, Spacer, Hero (Tiles, Layers; 1 to 5 items), Quick links (Compact, Filmstrip, Grid, Button, List, Tiles; per-link Fluent icon), News (Top story, List, Side-by-side, Hub news, Carousel, Tiles, Filmstrip; compact view), Events (Compact, Filmstrip), Highlighted content (Cards, List, Carousel, Filmstrip), People (Compact, Descriptive), Document library, List, Countdown timer, Page properties.
+
+- **Sample content** is made up (names, dates, headlines) and pictures are generated gradients, never real photos. Everything is editable; pictures can be replaced by uploading.
+- **Static previews**: Events, Highlighted content, Document library, List and Countdown timer show fixed sample data (SharePoint shows live data). They are marked "Static" in the library. Their editable text is the sample content.
+- **Heading set**: Heading 1 to 4 (the OOB note says to verify the current set). Text colours are limited to the theme colour and a highlight; the full font and highlight colour palettes aren't modelled.
+- **Quick links**: item pictures and icons follow the chosen layout (Grid and Filmstrip use pictures; the others use icons). Icon size and button style options are not modelled (OOB notes say to verify).
+- **Hero**: Layers is an approximation (stacked bands). Hero is meant for a full-width section; the library notes this but doesn't force it.
+- **Highlighted content, Events, People** option names follow the OOB list (marked verify there).
+- **Carousels** change slide and **filmstrips** scroll in Preview; auto-cycling isn't modelled.
+- Web parts SharePoint keeps on the page background (List, Document library, Quick chart) are not given a background of their own yet.
+- Not built yet (S5): Quick chart, Weather, World clock, Sites, Recent documents, Site activity, Saved for later, Group calendar, Organisation chart, Markdown, Code snippet, Embed, YouTube, File and media, Forms, Power BI, Power Apps, Maps, Planner, Conversations, Highlights, Agent link.

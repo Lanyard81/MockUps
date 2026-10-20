@@ -2,16 +2,18 @@ import { getComponent } from '../../catalogue';
 import type { OptionDef } from '../../catalogue/types';
 import { getFrameElement } from '../../canvas/registry';
 import { copySelectionHtml } from '../../export/copy';
-import { describeVariant } from '../../layout/component';
+import { describeVariant, optionsForVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
 import { useStore } from '../../store/store';
 import { ImageField } from './ImageField';
 import { NodeSettings } from './NodeSettings';
 import { IconPicker, type IconValue } from './IconPicker';
+import { SlotIconPicker } from './SlotIconPicker';
 import { CommitInput, Field, Section, Toggle, titleCase } from './controls';
 
 /** A stable empty list: a selector must not return a fresh array each time, or React loops forever. */
 const NO_KEYS: string[] = [];
+const NO_OPTIONS: OptionDef[] = [];
 
 /** A link's destination: another frame in this mockup (click-through in Preview) or an address. */
 function LinkControl({
@@ -76,6 +78,35 @@ function OptionControl({ nodeId, opt }: { nodeId: string; opt: OptionDef }) {
       );
     case 'href':
       return <LinkControl nodeId={nodeId} opt={opt} value={value} set={set} />;
+    case 'choice':
+      return (
+        <Field label={opt.label}>
+          <select
+            aria-label={opt.label}
+            value={typeof value === 'string' ? value : opt.choices[0]!.id}
+            onChange={(e) =>
+              set(e.target.value === opt.choices[0]!.id ? undefined : e.target.value)
+            }
+          >
+            {opt.choices.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+      );
+    case 'iconSlot':
+      return (
+        <Field label={opt.label}>
+          <SlotIconPicker
+            nodeId={nodeId}
+            label={opt.label}
+            value={typeof value === 'string' ? value : null}
+            onChange={(v) => set(v ?? undefined)}
+          />
+        </Field>
+      );
     case 'headingLevel':
       return (
         <Field label={opt.label}>
@@ -174,6 +205,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
   const variantId = node?.variant ?? comp?.defaultVariant;
   const variant = comp?.variants.find((v) => v.id === variantId) ?? comp?.variants[0];
   const parts = variant ? describeVariant(variant.html) : null;
+  const options = variant && comp ? optionsForVariant(variant.html, comp.options) : NO_OPTIONS;
   const st = useStore.getState;
   if (!node || !comp || !variant || !parts) return null;
 
@@ -201,9 +233,9 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
 
       <NodeSettings nodeId={nodeId} frameId={frameId} />
 
-      {comp.options.length > 0 && (
+      {options.length > 0 && (
         <Section title="Options">
-          {comp.options.map((opt) => (
+          {options.map((opt) => (
             <OptionControl key={opt.key} nodeId={nodeId} opt={opt} />
           ))}
         </Section>

@@ -207,6 +207,8 @@ export interface Kit {
     init: string;
   };
   settings: KitSettings;
+  /** Markup for one of the kit's icons by name (see the `iconSlot` option), and the names it offers. */
+  icons?: { render: (name: string) => string; names: readonly string[] };
   /** Values frame settings have when unset, for lists a user edits in place (a default menu...). */
   frameDefaults?: (settings: Record<string, unknown> | undefined) => Record<string, unknown>;
   templates: TemplateDef[];

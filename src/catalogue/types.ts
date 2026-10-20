@@ -49,7 +49,17 @@ export type OptionDef =
   /** Heading level h1–h6 for the matched element. `default` is the level the markup uses. */
   | { type: 'headingLevel'; key: string; label: string; selector: string; default: number }
   /** A Material icon before or after the label. */
-  | { type: 'icon'; key: string; label: string; selector: string };
+  | { type: 'icon'; key: string; label: string; selector: string }
+  /** One of several looks: the chosen option's class is added to the matched element (the first option is the markup as written). */
+  | {
+      type: 'choice';
+      key: string;
+      label: string;
+      selector: string;
+      choices: { id: string; label: string; className?: string }[];
+    }
+  /** An icon from the kit's own icon set (SharePoint: Fluent icons) shown inside the matched element. */
+  | { type: 'iconSlot'; key: string; label: string; selector: string };
 
 export interface CatalogueVariant {
   id: string;

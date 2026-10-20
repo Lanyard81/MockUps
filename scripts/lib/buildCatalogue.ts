@@ -57,6 +57,8 @@ export function buildCatalogue(cfg: KitBuildConfig): {
     let editable: EditableText[] = [];
     let optional: OptionalPart[] = [];
     const defaultVariant = ov.defaultVariant ?? src.variants[0]?.id ?? '';
+    // An option may belong to only some variants (a table style, a carousel's arrows).
+    const matched = new Set<string>();
 
     for (const v of src.variants) {
       const where = `${src.id}/${v.id}`;
@@ -97,20 +99,22 @@ export function buildCatalogue(cfg: KitBuildConfig): {
         if (!optFound.some((o) => o.key === key))
           optFound.push({ key, label: ov.optionalLabels?.[key] ?? titleCase(key) });
       }
+      for (const opt of ov.options ?? []) {
+        if (body.querySelector(opt.selector)) matched.add(opt.key);
+      }
       if (v.id === defaultVariant) {
         editable = found;
         optional = optFound;
-        for (const opt of ov.options ?? []) {
-          if (!body.querySelector(opt.selector)) {
-            fail(
-              `${src.id}: option "${opt.key}" selector "${opt.selector}" matches nothing in the default variant`,
-            );
-          }
-        }
       }
     }
     if (!variantIds.has(defaultVariant))
       fail(`${src.id}: defaultVariant "${defaultVariant}" does not exist`);
+    for (const opt of ov.options ?? []) {
+      if (!matched.has(opt.key))
+        fail(
+          `${src.id}: option "${opt.key}" selector "${opt.selector}" matches nothing in any variant`,
+        );
+    }
 
     components.push({
       id: src.id,
