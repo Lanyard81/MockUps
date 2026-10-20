@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { MAX_CHART_POINTS, readChart } from '../kits/sharepoint/charts';
 import { MAX_FOOTER_LINKS, MAX_NAV_DEPTH, readSite, type NavItem } from '../kits/sharepoint/site';
 import { useStore } from '../store/store';
 import { setFrameImageFromFile } from './imageUpload';
@@ -298,6 +299,73 @@ export function SpSectionPanel({ nodeId }: { nodeId: string }) {
       hint="A dark overlay is added automatically so text stays readable."
     >
       <ImageField nodeId={nodeId} imageKey="background" label="Section background" />
+    </Section>
+  );
+}
+
+/** The numbers behind a quick chart: a label and a value for each point, up to eight. */
+export function ChartDataPanel({ nodeId }: { nodeId: string }) {
+  const raw = useStore((s) => s.doc.nodes[nodeId]?.props?.chart);
+  const data = readChart(raw);
+  const save = (labels: string[], values: number[]) =>
+    useStore.getState().setNodeProps(nodeId, { chart: { labels, values } });
+  return (
+    <Section
+      title="Chart data"
+      hint={`Up to ${MAX_CHART_POINTS} points. The chart redraws as you change them.`}
+    >
+      <ul className="list-editor__list">
+        {data.labels.map((label, i) => (
+          <li key={i} className="list-editor__row">
+            <div className="list-editor__line">
+              <CommitInput
+                label={`Label ${i + 1}`}
+                value={label}
+                onCommit={(v) =>
+                  save(
+                    data.labels.map((l, j) => (j === i ? v : l)),
+                    data.values,
+                  )
+                }
+              />
+              <CommitInput
+                label={`Value ${i + 1}`}
+                value={String(data.values[i] ?? 0)}
+                onCommit={(v) => {
+                  const n = Number(v);
+                  if (Number.isFinite(n) && n >= 0)
+                    save(
+                      data.labels,
+                      data.values.map((x, j) => (j === i ? n : x)),
+                    );
+                }}
+              />
+              <button
+                className="btn btn--icon"
+                aria-label={`Remove ${label}`}
+                disabled={data.labels.length <= 1}
+                onClick={() =>
+                  save(
+                    data.labels.filter((_, j) => j !== i),
+                    data.values.filter((_, j) => j !== i),
+                  )
+                }
+              >
+                ×
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <button
+        className="btn"
+        disabled={data.labels.length >= MAX_CHART_POINTS}
+        onClick={() =>
+          save([...data.labels, `Item ${data.labels.length + 1}`], [...data.values, 10])
+        }
+      >
+        Add a point
+      </button>
     </Section>
   );
 }

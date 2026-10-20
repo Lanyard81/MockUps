@@ -188,6 +188,7 @@ export function renderComponent(node: DocNode, images: Images): string {
   // Options first: some retag elements, and the rest of the steps look elements up afterwards.
   const iconRenderer = getKit(kitOfComponent(comp.id)).icons?.render;
   for (const opt of comp.options) applyOption(root, opt, props[opt.key], props.goto, iconRenderer);
+  getKit(kitOfComponent(comp.id)).enhanceComponent?.(root, node);
 
   const hidden = Array.isArray(props.hiddenParts) ? props.hiddenParts.map(String) : [];
   for (const key of hidden)

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { copyBuildNotes, downloadBuildNotes } from '../../export/buildNotes';
 import { getKit } from '../../kits';
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
@@ -93,6 +94,21 @@ export function FrameProps({ frameId }: { frameId: string }) {
           context={context}
           onChange={(key, value) => st().setKitSettings(kit.id, { [key]: value })}
         />
+      )}
+      {kit.buildNotes && (
+        <Section
+          title={kit.buildNotes.label}
+          hint="A plain-English spec you can follow in SharePoint: site settings, then each section and web part."
+        >
+          <div className="prop-actions">
+            <button className="btn" onClick={() => void copyBuildNotes(frame.id)}>
+              Copy as {kit.buildNotes.label}
+            </button>
+            <button className="btn" onClick={() => downloadBuildNotes(frame.id)}>
+              Download (.md)
+            </button>
+          </div>
+        </Section>
       )}
       <div className="prop-actions">
         <button

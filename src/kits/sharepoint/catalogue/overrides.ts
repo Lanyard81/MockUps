@@ -244,4 +244,56 @@ export const overrides: Record<string, Override> = {
     keywords: ['table', 'items', 'tasks', 'data'],
     optionalLabels: { titleRow: 'Show title', commandBar: 'Show command bar', row5: 'Row 5' },
   },
+  'sp-quick-chart': {
+    keywords: ['chart', 'graph', 'column', 'pie', 'data', 'bar'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-weather': {
+    keywords: ['forecast', 'temperature', 'location'],
+    optionalLabels: { forecast: 'Show the forecast' },
+  },
+  'sp-world-clock': { keywords: ['time', 'zones', 'city'], optionalLabels: { ...TITLE_LABELS } },
+  'sp-sites': { keywords: ['sites', 'follow', 'links'], optionalLabels: { ...TITLE_LABELS } },
+  'sp-recent-documents': {
+    keywords: ['files', 'recent', 'documents'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-site-activity': {
+    keywords: ['feed', 'changes', 'updates'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-saved-for-later': {
+    keywords: ['bookmarks', 'saved', 'read later'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-group-calendar': { keywords: ['calendar', 'events', 'month', 'outlook'] },
+  'sp-org-chart': {
+    keywords: ['organisation', 'organization', 'hierarchy', 'reports'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-markdown': { keywords: ['formatting', 'text'] },
+  'sp-code-snippet': {
+    keywords: ['code', 'programming', 'source'],
+    optionalLabels: { language: 'Show the language' },
+  },
+  'sp-embed': { keywords: ['iframe', 'website', 'html'] },
+  'sp-youtube': { keywords: ['video', 'play'] },
+  'sp-file-media': { keywords: ['file', 'pdf', 'document', 'preview', 'video'] },
+  'sp-forms': { keywords: ['survey', 'quiz', 'poll', 'form'] },
+  'sp-power-bi': { keywords: ['report', 'dashboard', 'analytics'] },
+  'sp-power-apps': { keywords: ['app', 'low code'] },
+  'sp-maps': { keywords: ['map', 'location', 'pin', 'address'] },
+  'sp-planner': {
+    keywords: ['plan', 'tasks', 'board', 'kanban'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-conversations': {
+    keywords: ['viva engage', 'yammer', 'posts', 'discussion'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-highlights': {
+    keywords: ['viva engage', 'yammer', 'posts'],
+    optionalLabels: { ...TITLE_LABELS },
+  },
+  'sp-agent-link': { keywords: ['agent', 'copilot', 'assistant', 'chat', 'ai'] },
 };

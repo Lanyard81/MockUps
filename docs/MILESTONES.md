@@ -141,3 +141,13 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Carousels, filmstrips and collapsible content work in Preview
 - [x] New option kinds: `choice` (one of several looks) and `iconSlot` (an icon from the kit's own set); options that do nothing in the chosen layout are hidden
 - [x] Catalogue validation (every class defined by the kit's CSS), unit tests for every web part and option, and Playwright tests adding every layout, switching layout, editing text, icons and Preview behaviour
+
+## Milestone S5: More web parts, templates and SharePoint-specific export
+
+- [x] Quick chart (column and pie, with editable data) and 21 more web parts as static or placeholder previews marked with their fidelity: Weather, World clock, Sites, Recent documents, Site activity, Saved for later, Group calendar, Organisation chart, Markdown, Code snippet, Embed, YouTube, File and media, Microsoft Forms, Power BI, Power Apps, Maps, Planner, Conversations, Highlights, Agent link
+- [x] Excluded and listed: My feed, Stream (classic), Kindle instant preview, Assignments, Connectors
+- [x] Seven SharePoint templates in the Templates tab: Communication site Topic, Showcase, Blank; Team site home; Intranet home; News article; Department landing page
+- [x] "Copy as SharePoint build notes" and "Download build notes (.md)" for a SharePoint frame (frame menu and frame properties)
+- [x] PNG and HTML export work for SharePoint frames (kit CSS and script included; tested)
+- [x] Frame menu page parts now come from the kit (NSW masthead and footer no longer appear on SharePoint frames)
+- [x] Tests: charts, templates (including the section rules), build notes (Vitest); templates, chart editing, build notes and exports (Playwright)

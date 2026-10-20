@@ -2021,6 +2021,1279 @@
     }
    ],
    "options": []
+  },
+  {
+   "id": "sp-quick-chart",
+   "slug": "quick-chart",
+   "name": "Quick chart",
+   "category": "Data",
+   "keywords": [
+    "chart",
+    "graph",
+    "column",
+    "pie",
+    "data",
+    "bar"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "note": "Edit the data in Properties. SharePoint offers column, bar, line, pie and doughnut charts; this kit draws column and pie.",
+   "defaultVariant": "column",
+   "variants": [
+    {
+     "id": "column",
+     "label": "Column",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Quick chart</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-chart\" data-chart=\"column\"><svg class=\"sp-chart__svg\" viewBox=\"0 0 480 260\" role=\"img\" aria-label=\"Column chart\"><line x1=\"0\" y1=\"224\" x2=\"480\" y2=\"224\" class=\"sp-chart__axis\"/><rect x=\"28.0\" y=\"105.7\" width=\"64.0\" height=\"118.3\" style=\"fill:var(--sp-theme-primary)\"/><text x=\"60.0\" y=\"99.7\" text-anchor=\"middle\" class=\"sp-chart__value\">42</text><text x=\"60.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">Q1</text><rect x=\"148.0\" y=\"60.6\" width=\"64.0\" height=\"163.4\" style=\"fill:var(--sp-theme-secondary)\"/><text x=\"180.0\" y=\"54.6\" text-anchor=\"middle\" class=\"sp-chart__value\">58</text><text x=\"180.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">Q2</text><rect x=\"268.0\" y=\"119.8\" width=\"64.0\" height=\"104.2\" style=\"fill:var(--sp-theme-dark-alt)\"/><text x=\"300.0\" y=\"113.8\" text-anchor=\"middle\" class=\"sp-chart__value\">37</text><text x=\"300.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">Q3</text><rect x=\"388.0\" y=\"24.0\" width=\"64.0\" height=\"200.0\" style=\"fill:var(--sp-theme-tertiary)\"/><text x=\"420.0\" y=\"18.0\" text-anchor=\"middle\" class=\"sp-chart__value\">71</text><text x=\"420.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">Q4</text></svg></div></div>"
+    },
+    {
+     "id": "pie",
+     "label": "Pie",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Quick chart</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-chart\" data-chart=\"pie\"><div class=\"sp-chart__pie\"><svg class=\"sp-chart__svg sp-chart__svg--pie\" viewBox=\"0 0 220 220\" role=\"img\" aria-label=\"Pie chart\"><path d=\"M110 110 L110.00 10.00 A100 100 0 0 1 205.47 80.25 Z\" style=\"fill:var(--sp-theme-primary)\"/><path d=\"M110 110 L205.47 80.25 A100 100 0 0 1 122.05 209.27 Z\" style=\"fill:var(--sp-theme-secondary)\"/><path d=\"M110 110 L122.05 209.27 A100 100 0 0 1 26.02 164.29 Z\" style=\"fill:var(--sp-theme-dark-alt)\"/><path d=\"M110 110 L26.02 164.29 A100 100 0 0 1 110.00 10.00 Z\" style=\"fill:var(--sp-theme-tertiary)\"/></svg><ul class=\"sp-chart__legend\"><li><span class=\"sp-chart__swatch\" style=\"background:var(--sp-theme-primary)\"></span><span>Q1</span><span class=\"sp-meta\">42</span></li><li><span class=\"sp-chart__swatch\" style=\"background:var(--sp-theme-secondary)\"></span><span>Q2</span><span class=\"sp-meta\">58</span></li><li><span class=\"sp-chart__swatch\" style=\"background:var(--sp-theme-dark-alt)\"></span><span>Q3</span><span class=\"sp-meta\">37</span></li><li><span class=\"sp-chart__swatch\" style=\"background:var(--sp-theme-tertiary)\"></span><span>Q4</span><span class=\"sp-meta\">71</span></li></ul></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Quick chart",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-weather",
+   "slug": "weather",
+   "name": "Weather",
+   "category": "Content",
+   "keywords": [
+    "forecast",
+    "temperature",
+    "location"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it shows the forecast for the location you choose.",
+   "defaultVariant": "forecast",
+   "variants": [
+    {
+     "id": "forecast",
+     "label": "Weather",
+     "html": "<div class=\"sp-wp sp-weather sp-card\"><div class=\"sp-weather__now\"><svg class=\"sp-icon sp-weather__icon\" width=\"48\" height=\"48\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M10 2c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6m7.5-2.5a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1zM10 16c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m-6.5-5.5a.5.5 0 0 0 0-1H2.46a.5.5 0 0 0 0 1zm.65-6.35c.2-.2.5-.2.7 0l1 1a.5.5 0 1 1-.7.7l-1-1a.5.5 0 0 1 0-.7m.7 11.7a.5.5 0 0 1-.7-.7l1-1a.5.5 0 0 1 .7.7zm11-11.7a.5.5 0 0 0-.7 0l-1 1a.5.5 0 0 0 .7.7l1-1a.5.5 0 0 0 0-.7m-.7 11.7a.5.5 0 0 0 .7-.7l-1-1a.5.5 0 0 0-.7.7z\"/></svg><div><div class=\"sp-weather__temp\"><span data-edit=\"temp\">24°</span></div><div class=\"sp-weather__place\" data-edit=\"place\">Sydney</div><div class=\"sp-meta\" data-edit=\"condition\">Sunny</div></div></div><ul class=\"sp-weather__days\" data-optional=\"forecast\"><li><span data-edit=\"day1\">Mon</span><svg class=\"sp-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M10 2c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6m7.5-2.5a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1zM10 16c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m-6.5-5.5a.5.5 0 0 0 0-1H2.46a.5.5 0 0 0 0 1zm.65-6.35c.2-.2.5-.2.7 0l1 1a.5.5 0 1 1-.7.7l-1-1a.5.5 0 0 1 0-.7m.7 11.7a.5.5 0 0 1-.7-.7l1-1a.5.5 0 0 1 .7.7zm11-11.7a.5.5 0 0 0-.7 0l-1 1a.5.5 0 0 0 .7.7l1-1a.5.5 0 0 0 0-.7m-.7 11.7a.5.5 0 0 0 .7-.7l-1-1a.5.5 0 0 0-.7.7z\"/></svg><span data-edit=\"high1\">22°</span></li><li><span data-edit=\"day2\">Tue</span><svg class=\"sp-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M11 6c2.46 0 3.86 1.57 4.07 3.47h.06A2.8 2.8 0 0 1 18 12.24 2.8 2.8 0 0 1 15.13 15h-.7l-.01.04-1.49 2.7a.5.5 0 0 1-.91-.4l.03-.07L13.3 15h-1.85l-.02.04-1.49 2.7a.5.5 0 0 1-.91-.4l.04-.07L10.3 15H8.44l-1.5 2.75a.5.5 0 0 1-.9-.4l.03-.08L7.3 15h-.43A2.8 2.8 0 0 1 4 12.24a2.8 2.8 0 0 1 2.87-2.77h.06C7.13 7.57 8.53 6 11 6m0 1a3.04 3.04 0 0 0-3.09 3.02c0 .28-.25.5-.54.5h-.55c-1 0-1.82.78-1.82 1.74S5.81 14 6.82 14h8.36c1 0 1.82-.78 1.82-1.74s-.81-1.74-1.82-1.74h-.55c-.29 0-.54-.22-.54-.5A3 3 0 0 0 11 7M3.8 8.7a.5.5 0 0 1-.22.6l-.09.04-.8.27a.5.5 0 0 1-.4-.9l.08-.04.8-.28a.5.5 0 0 1 .63.31m5.12-4.2q.5.24.87.62-.6.13-1.13.37l-.18-.1A2.28 2.28 0 0 0 5.65 8.8q-.5.15-.93.42a3.28 3.28 0 0 1 4.2-4.72m-6 .17L3 4.7l.76.37a.5.5 0 0 1-.35.93l-.09-.03-.76-.37a.5.5 0 0 1 .36-.93M9.99 2.3c.22.1.33.35.26.58l-.03.08-.37.77a.5.5 0 0 1-.93-.36l.03-.08.37-.76a.5.5 0 0 1 .67-.23m-3.8-.04.05.09.27.8a.5.5 0 0 1-.9.4l-.04-.08-.28-.8a.5.5 0 0 1 .9-.4\"/></svg><span data-edit=\"high2\">23°</span></li><li><span data-edit=\"day3\">Wed</span><svg class=\"sp-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M10 2c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6m7.5-2.5a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1zM10 16c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m-6.5-5.5a.5.5 0 0 0 0-1H2.46a.5.5 0 0 0 0 1zm.65-6.35c.2-.2.5-.2.7 0l1 1a.5.5 0 1 1-.7.7l-1-1a.5.5 0 0 1 0-.7m.7 11.7a.5.5 0 0 1-.7-.7l1-1a.5.5 0 0 1 .7.7zm11-11.7a.5.5 0 0 0-.7 0l-1 1a.5.5 0 0 0 .7.7l1-1a.5.5 0 0 0 0-.7m-.7 11.7a.5.5 0 0 0 .7-.7l-1-1a.5.5 0 0 0-.7.7z\"/></svg><span data-edit=\"high3\">24°</span></li><li><span data-edit=\"day4\">Thu</span><svg class=\"sp-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M11 6c2.46 0 3.86 1.57 4.07 3.47h.06A2.8 2.8 0 0 1 18 12.24 2.8 2.8 0 0 1 15.13 15h-.7l-.01.04-1.49 2.7a.5.5 0 0 1-.91-.4l.03-.07L13.3 15h-1.85l-.02.04-1.49 2.7a.5.5 0 0 1-.91-.4l.04-.07L10.3 15H8.44l-1.5 2.75a.5.5 0 0 1-.9-.4l.03-.08L7.3 15h-.43A2.8 2.8 0 0 1 4 12.24a2.8 2.8 0 0 1 2.87-2.77h.06C7.13 7.57 8.53 6 11 6m0 1a3.04 3.04 0 0 0-3.09 3.02c0 .28-.25.5-.54.5h-.55c-1 0-1.82.78-1.82 1.74S5.81 14 6.82 14h8.36c1 0 1.82-.78 1.82-1.74s-.81-1.74-1.82-1.74h-.55c-.29 0-.54-.22-.54-.5A3 3 0 0 0 11 7M3.8 8.7a.5.5 0 0 1-.22.6l-.09.04-.8.27a.5.5 0 0 1-.4-.9l.08-.04.8-.28a.5.5 0 0 1 .63.31m5.12-4.2q.5.24.87.62-.6.13-1.13.37l-.18-.1A2.28 2.28 0 0 0 5.65 8.8q-.5.15-.93.42a3.28 3.28 0 0 1 4.2-4.72m-6 .17L3 4.7l.76.37a.5.5 0 0 1-.35.93l-.09-.03-.76-.37a.5.5 0 0 1 .36-.93M9.99 2.3c.22.1.33.35.26.58l-.03.08-.37.77a.5.5 0 0 1-.93-.36l.03-.08.37-.76a.5.5 0 0 1 .67-.23m-3.8-.04.05.09.27.8a.5.5 0 0 1-.9.4l-.04-.08-.28-.8a.5.5 0 0 1 .9-.4\"/></svg><span data-edit=\"high4\">25°</span></li><li><span data-edit=\"day5\">Fri</span><svg class=\"sp-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M10 2c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6m7.5-2.5a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1zM10 16c.28 0 .5.22.5.5v1a.5.5 0 0 1-1 0v-1c0-.28.22-.5.5-.5m-6.5-5.5a.5.5 0 0 0 0-1H2.46a.5.5 0 0 0 0 1zm.65-6.35c.2-.2.5-.2.7 0l1 1a.5.5 0 1 1-.7.7l-1-1a.5.5 0 0 1 0-.7m.7 11.7a.5.5 0 0 1-.7-.7l1-1a.5.5 0 0 1 .7.7zm11-11.7a.5.5 0 0 0-.7 0l-1 1a.5.5 0 0 0 .7.7l1-1a.5.5 0 0 0 0-.7m-.7 11.7a.5.5 0 0 0 .7-.7l-1-1a.5.5 0 0 0-.7.7z\"/></svg><span data-edit=\"high5\">26°</span></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "temp",
+     "default": "24°",
+     "multiline": false
+    },
+    {
+     "key": "place",
+     "default": "Sydney",
+     "multiline": false
+    },
+    {
+     "key": "condition",
+     "default": "Sunny",
+     "multiline": false
+    },
+    {
+     "key": "day1",
+     "default": "Mon",
+     "multiline": false
+    },
+    {
+     "key": "high1",
+     "default": "22°",
+     "multiline": false
+    },
+    {
+     "key": "day2",
+     "default": "Tue",
+     "multiline": false
+    },
+    {
+     "key": "high2",
+     "default": "23°",
+     "multiline": false
+    },
+    {
+     "key": "day3",
+     "default": "Wed",
+     "multiline": false
+    },
+    {
+     "key": "high3",
+     "default": "24°",
+     "multiline": false
+    },
+    {
+     "key": "day4",
+     "default": "Thu",
+     "multiline": false
+    },
+    {
+     "key": "high4",
+     "default": "25°",
+     "multiline": false
+    },
+    {
+     "key": "day5",
+     "default": "Fri",
+     "multiline": false
+    },
+    {
+     "key": "high5",
+     "default": "26°",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "forecast",
+     "label": "Show the forecast"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-world-clock",
+   "slug": "world-clock",
+   "name": "World clock",
+   "category": "Content",
+   "keywords": [
+    "time",
+    "zones",
+    "city"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint the clocks show the live time in each place.",
+   "defaultVariant": "clocks",
+   "variants": [
+    {
+     "id": "clocks",
+     "label": "World clock",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">World clock</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-clocks\"><div class=\"sp-clock\"><span class=\"sp-clock__face\" aria-hidden=\"true\"><span class=\"sp-clock__hand sp-clock__hand--hour\"></span><span class=\"sp-clock__hand sp-clock__hand--minute\"></span></span><span class=\"sp-clock__city\" data-edit=\"city1\">Sydney</span><span class=\"sp-meta\" data-edit=\"time1\">9:41 am</span></div><div class=\"sp-clock\"><span class=\"sp-clock__face\" aria-hidden=\"true\"><span class=\"sp-clock__hand sp-clock__hand--hour\"></span><span class=\"sp-clock__hand sp-clock__hand--minute\"></span></span><span class=\"sp-clock__city\" data-edit=\"city2\">London</span><span class=\"sp-meta\" data-edit=\"time2\">11:41 pm</span></div><div class=\"sp-clock\"><span class=\"sp-clock__face\" aria-hidden=\"true\"><span class=\"sp-clock__hand sp-clock__hand--hour\"></span><span class=\"sp-clock__hand sp-clock__hand--minute\"></span></span><span class=\"sp-clock__city\" data-edit=\"city3\">New York</span><span class=\"sp-meta\" data-edit=\"time3\">6:41 pm</span></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "World clock",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "city1",
+     "default": "Sydney",
+     "multiline": false
+    },
+    {
+     "key": "time1",
+     "default": "9:41 am",
+     "multiline": false
+    },
+    {
+     "key": "city2",
+     "default": "London",
+     "multiline": false
+    },
+    {
+     "key": "time2",
+     "default": "11:41 pm",
+     "multiline": false
+    },
+    {
+     "key": "city3",
+     "default": "New York",
+     "multiline": false
+    },
+    {
+     "key": "time3",
+     "default": "6:41 pm",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-sites",
+   "slug": "sites",
+   "name": "Sites",
+   "category": "Navigation and links",
+   "keywords": [
+    "sites",
+    "follow",
+    "links"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it lists the sites you follow or choose.",
+   "defaultVariant": "sites",
+   "variants": [
+    {
+     "id": "sites",
+     "label": "Sites",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Sites</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-sites\"><a class=\"sp-site-tile sp-card\" href=\"#\"><span class=\"sp-site-tile__logo\" style=\"background:#0f6cbd\">F</span><span class=\"sp-site-tile__name\" data-edit=\"site1\">Finance</span></a><a class=\"sp-site-tile sp-card\" href=\"#\"><span class=\"sp-site-tile__logo\" style=\"background:#8764b8\">P</span><span class=\"sp-site-tile__name\" data-edit=\"site2\">People and culture</span></a><a class=\"sp-site-tile sp-card\" href=\"#\"><span class=\"sp-site-tile__logo\" style=\"background:#0e7a6a\">T</span><span class=\"sp-site-tile__name\" data-edit=\"site3\">Technology</span></a><a class=\"sp-site-tile sp-card\" href=\"#\"><span class=\"sp-site-tile__logo\" style=\"background:#c4562b\">C</span><span class=\"sp-site-tile__name\" data-edit=\"site4\">Communications</span></a></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Sites",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "site1",
+     "default": "Finance",
+     "multiline": false
+    },
+    {
+     "key": "site2",
+     "default": "People and culture",
+     "multiline": false
+    },
+    {
+     "key": "site3",
+     "default": "Technology",
+     "multiline": false
+    },
+    {
+     "key": "site4",
+     "default": "Communications",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-recent-documents",
+   "slug": "recent-documents",
+   "name": "Recent documents",
+   "category": "Data",
+   "keywords": [
+    "files",
+    "recent",
+    "documents"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it lists the files you opened or changed recently.",
+   "defaultVariant": "recent",
+   "variants": [
+    {
+     "id": "recent",
+     "label": "Recent documents",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Recent documents</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><ul class=\"sp-rows\"><li class=\"sp-row\"><span class=\"sp-filetype sp-filetype--word\" aria-hidden=\"true\">W</span><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"name1\">Annual report 2026.docx</span><span class=\"sp-meta\" data-edit=\"when1\">Edited today</span></span></li><li class=\"sp-row\"><span class=\"sp-filetype sp-filetype--excel\" aria-hidden=\"true\">X</span><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"name2\">Budget forecast.xlsx</span><span class=\"sp-meta\" data-edit=\"when2\">Edited yesterday</span></span></li><li class=\"sp-row\"><span class=\"sp-filetype sp-filetype--powerpoint\" aria-hidden=\"true\">P</span><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"name3\">All-hands slides.pptx</span><span class=\"sp-meta\" data-edit=\"when3\">Opened 14 Oct</span></span></li><li class=\"sp-row\"><span class=\"sp-filetype sp-filetype--pdf\" aria-hidden=\"true\">PDF</span><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"name4\">Travel policy.pdf</span><span class=\"sp-meta\" data-edit=\"when4\">Opened 9 Oct</span></span></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Recent documents",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "name1",
+     "default": "Annual report 2026.docx",
+     "multiline": false
+    },
+    {
+     "key": "when1",
+     "default": "Edited today",
+     "multiline": false
+    },
+    {
+     "key": "name2",
+     "default": "Budget forecast.xlsx",
+     "multiline": false
+    },
+    {
+     "key": "when2",
+     "default": "Edited yesterday",
+     "multiline": false
+    },
+    {
+     "key": "name3",
+     "default": "All-hands slides.pptx",
+     "multiline": false
+    },
+    {
+     "key": "when3",
+     "default": "Opened 14 Oct",
+     "multiline": false
+    },
+    {
+     "key": "name4",
+     "default": "Travel policy.pdf",
+     "multiline": false
+    },
+    {
+     "key": "when4",
+     "default": "Opened 9 Oct",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-site-activity",
+   "slug": "site-activity",
+   "name": "Site activity",
+   "category": "Data",
+   "keywords": [
+    "feed",
+    "changes",
+    "updates"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it shows what has just changed on this site.",
+   "defaultVariant": "activity",
+   "variants": [
+    {
+     "id": "activity",
+     "label": "Site activity",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Site activity</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><ul class=\"sp-rows\"><li class=\"sp-row\"><span class=\"sp-avatar sp-avatar--small\" style=\"background:#8764b8;color:#fff\" role=\"img\" aria-label=\"PN\">PN</span><span class=\"sp-row__main\"><span><strong data-edit=\"who1\">Priya Nair</strong> <span data-edit=\"what1\">edited Budget forecast.xlsx</span></span><span class=\"sp-meta\" data-edit=\"when1\">10 minutes ago</span></span></li><li class=\"sp-row\"><span class=\"sp-avatar sp-avatar--small\" style=\"background:#0e7a6a;color:#fff\" role=\"img\" aria-label=\"SO\">SO</span><span class=\"sp-row__main\"><span><strong data-edit=\"who2\">Sam Okafor</strong> <span data-edit=\"what2\">added Release notes.docx</span></span><span class=\"sp-meta\" data-edit=\"when2\">1 hour ago</span></span></li><li class=\"sp-row\"><span class=\"sp-avatar sp-avatar--small\" style=\"background:#c4562b;color:#fff\" role=\"img\" aria-label=\"ML\">ML</span><span class=\"sp-row__main\"><span><strong data-edit=\"who3\">Mei Lin</strong> <span data-edit=\"what3\">created the page Onboarding guide</span></span><span class=\"sp-meta\" data-edit=\"when3\">Yesterday</span></span></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Site activity",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "who1",
+     "default": "Priya Nair",
+     "multiline": false
+    },
+    {
+     "key": "what1",
+     "default": "edited Budget forecast.xlsx",
+     "multiline": false
+    },
+    {
+     "key": "when1",
+     "default": "10 minutes ago",
+     "multiline": false
+    },
+    {
+     "key": "who2",
+     "default": "Sam Okafor",
+     "multiline": false
+    },
+    {
+     "key": "what2",
+     "default": "added Release notes.docx",
+     "multiline": false
+    },
+    {
+     "key": "when2",
+     "default": "1 hour ago",
+     "multiline": false
+    },
+    {
+     "key": "who3",
+     "default": "Mei Lin",
+     "multiline": false
+    },
+    {
+     "key": "what3",
+     "default": "created the page Onboarding guide",
+     "multiline": false
+    },
+    {
+     "key": "when3",
+     "default": "Yesterday",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-saved-for-later",
+   "slug": "saved-for-later",
+   "name": "Saved for later",
+   "category": "Data",
+   "keywords": [
+    "bookmarks",
+    "saved",
+    "read later"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it lists the news and pages you saved.",
+   "defaultVariant": "saved",
+   "variants": [
+    {
+     "id": "saved",
+     "label": "Saved for later",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Saved for later</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><ul class=\"sp-rows\"><li class=\"sp-row\"><svg class=\"sp-icon sp-row__icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 4.5A2.5 2.5 0 0 1 6.5 2h7A2.5 2.5 0 0 1 16 4.5v13a.5.5 0 0 1-.8.4L10 14.12 4.8 17.9a.5.5 0 0 1-.8-.4zM6.5 3C5.67 3 5 3.67 5 4.5v12.02l4.7-3.42a.5.5 0 0 1 .6 0l4.7 3.42V4.5c0-.83-.67-1.5-1.5-1.5z\"/></svg><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"title1\">Remote working guide</span><span class=\"sp-meta\" data-edit=\"when1\">Saved 1 day ago</span></span></li><li class=\"sp-row\"><svg class=\"sp-icon sp-row__icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 4.5A2.5 2.5 0 0 1 6.5 2h7A2.5 2.5 0 0 1 16 4.5v13a.5.5 0 0 1-.8.4L10 14.12 4.8 17.9a.5.5 0 0 1-.8-.4zM6.5 3C5.67 3 5 3.67 5 4.5v12.02l4.7-3.42a.5.5 0 0 1 .6 0l4.7 3.42V4.5c0-.83-.67-1.5-1.5-1.5z\"/></svg><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"title2\">Meet the 2026 innovation winners</span><span class=\"sp-meta\" data-edit=\"when2\">Saved 2 days ago</span></span></li><li class=\"sp-row\"><svg class=\"sp-icon sp-row__icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 4.5A2.5 2.5 0 0 1 6.5 2h7A2.5 2.5 0 0 1 16 4.5v13a.5.5 0 0 1-.8.4L10 14.12 4.8 17.9a.5.5 0 0 1-.8-.4zM6.5 3C5.67 3 5 3.67 5 4.5v12.02l4.7-3.42a.5.5 0 0 1 .6 0l4.7 3.42V4.5c0-.83-.67-1.5-1.5-1.5z\"/></svg><span class=\"sp-row__main\"><span class=\"sp-row__title\" data-edit=\"title3\">Changes to the expenses process</span><span class=\"sp-meta\" data-edit=\"when3\">Saved 3 days ago</span></span></li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Saved for later",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "title1",
+     "default": "Remote working guide",
+     "multiline": false
+    },
+    {
+     "key": "when1",
+     "default": "Saved 1 day ago",
+     "multiline": false
+    },
+    {
+     "key": "title2",
+     "default": "Meet the 2026 innovation winners",
+     "multiline": false
+    },
+    {
+     "key": "when2",
+     "default": "Saved 2 days ago",
+     "multiline": false
+    },
+    {
+     "key": "title3",
+     "default": "Changes to the expenses process",
+     "multiline": false
+    },
+    {
+     "key": "when3",
+     "default": "Saved 3 days ago",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-group-calendar",
+   "slug": "group-calendar",
+   "name": "Group calendar",
+   "category": "Data",
+   "keywords": [
+    "calendar",
+    "events",
+    "month",
+    "outlook"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it shows a Microsoft 365 group calendar.",
+   "defaultVariant": "month",
+   "variants": [
+    {
+     "id": "month",
+     "label": "Month",
+     "html": "<div class=\"sp-wp sp-calendar sp-card\"><div class=\"sp-calendar__head\"><span data-edit=\"month\">October 2026</span></div><div class=\"sp-calendar__grid\"><span class=\"sp-calendar__dow\">M</span><span class=\"sp-calendar__dow\">T</span><span class=\"sp-calendar__dow\">W</span><span class=\"sp-calendar__dow\">T</span><span class=\"sp-calendar__dow\">F</span><span class=\"sp-calendar__dow\">S</span><span class=\"sp-calendar__dow\">S</span><span class=\"sp-calendar__day is-out\"></span><span class=\"sp-calendar__day is-out\"></span><span class=\"sp-calendar__day is-out\"></span><span class=\"sp-calendar__day is-out\"></span><span class=\"sp-calendar__day\">1</span><span class=\"sp-calendar__day\">2</span><span class=\"sp-calendar__day\">3</span><span class=\"sp-calendar__day\">4</span><span class=\"sp-calendar__day\">5</span><span class=\"sp-calendar__day\">6</span><span class=\"sp-calendar__day\">7</span><span class=\"sp-calendar__day\">8<span class=\"sp-calendar__event\"></span></span><span class=\"sp-calendar__day\">9</span><span class=\"sp-calendar__day\">10</span><span class=\"sp-calendar__day\">11</span><span class=\"sp-calendar__day\">12</span><span class=\"sp-calendar__day\">13</span><span class=\"sp-calendar__day\">14<span class=\"sp-calendar__event\"></span></span><span class=\"sp-calendar__day\">15</span><span class=\"sp-calendar__day\">16</span><span class=\"sp-calendar__day\">17</span><span class=\"sp-calendar__day\">18</span><span class=\"sp-calendar__day\">19</span><span class=\"sp-calendar__day is-today\">20</span><span class=\"sp-calendar__day\">21<span class=\"sp-calendar__event\"></span></span><span class=\"sp-calendar__day\">22</span><span class=\"sp-calendar__day\">23</span><span class=\"sp-calendar__day\">24</span><span class=\"sp-calendar__day\">25</span><span class=\"sp-calendar__day\">26</span><span class=\"sp-calendar__day\">27</span><span class=\"sp-calendar__day\">28<span class=\"sp-calendar__event\"></span></span><span class=\"sp-calendar__day\">29</span><span class=\"sp-calendar__day\">30</span><span class=\"sp-calendar__day\">31</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "month",
+     "default": "October 2026",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-org-chart",
+   "slug": "organization-chart",
+   "name": "Organisation chart",
+   "category": "Content",
+   "keywords": [
+    "organisation",
+    "organization",
+    "hierarchy",
+    "reports"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint the chart comes from the directory.",
+   "defaultVariant": "chart",
+   "variants": [
+    {
+     "id": "chart",
+     "label": "Organisation chart",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Organisation chart</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-org\"><div class=\"sp-org__top\"><div class=\"sp-org__box sp-card\"><span class=\"sp-avatar\" style=\"background:#0f6cbd;color:#fff\" role=\"img\" aria-label=\"AT\">AT</span><div><div class=\"sp-person__name\" data-edit=\"name1\">Alex Taylor</div><div class=\"sp-person__title\" data-edit=\"role1\">Communications lead</div></div></div></div><div class=\"sp-org__row\"><div class=\"sp-org__box sp-card\"><span class=\"sp-avatar\" style=\"background:#8764b8;color:#fff\" role=\"img\" aria-label=\"PN\">PN</span><div><div class=\"sp-person__name\" data-edit=\"name2\">Priya Nair</div><div class=\"sp-person__title\" data-edit=\"role2\">Head of finance</div></div></div><div class=\"sp-org__box sp-card\"><span class=\"sp-avatar\" style=\"background:#0e7a6a;color:#fff\" role=\"img\" aria-label=\"SO\">SO</span><div><div class=\"sp-person__name\" data-edit=\"name3\">Sam Okafor</div><div class=\"sp-person__title\" data-edit=\"role3\">Service desk manager</div></div></div><div class=\"sp-org__box sp-card\"><span class=\"sp-avatar\" style=\"background:#c4562b;color:#fff\" role=\"img\" aria-label=\"ML\">ML</span><div><div class=\"sp-person__name\" data-edit=\"name4\">Mei Lin</div><div class=\"sp-person__title\" data-edit=\"role4\">People partner</div></div></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Organisation chart",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "name1",
+     "default": "Alex Taylor",
+     "multiline": false
+    },
+    {
+     "key": "role1",
+     "default": "Communications lead",
+     "multiline": false
+    },
+    {
+     "key": "name2",
+     "default": "Priya Nair",
+     "multiline": false
+    },
+    {
+     "key": "role2",
+     "default": "Head of finance",
+     "multiline": false
+    },
+    {
+     "key": "name3",
+     "default": "Sam Okafor",
+     "multiline": false
+    },
+    {
+     "key": "role3",
+     "default": "Service desk manager",
+     "multiline": false
+    },
+    {
+     "key": "name4",
+     "default": "Mei Lin",
+     "multiline": false
+    },
+    {
+     "key": "role4",
+     "default": "People partner",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-markdown",
+   "slug": "markdown",
+   "name": "Markdown",
+   "category": "Text and media",
+   "keywords": [
+    "formatting",
+    "text"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint you type Markdown and it shows the formatted result.",
+   "defaultVariant": "markdown",
+   "variants": [
+    {
+     "id": "markdown",
+     "label": "Markdown",
+     "html": "<div class=\"sp-markdown\"><h2 data-edit=\"heading\">Release notes</h2><p data-edit=\"intro\" data-multiline>What changed in this version, in plain words.</p><ul><li data-edit=\"item1\">Faster search</li><li data-edit=\"item2\">New page templates</li></ul></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "heading",
+     "default": "Release notes",
+     "multiline": false
+    },
+    {
+     "key": "intro",
+     "default": "What changed in this version, in plain words.",
+     "multiline": true
+    },
+    {
+     "key": "item1",
+     "default": "Faster search",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "New page templates",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-code-snippet",
+   "slug": "code-snippet",
+   "name": "Code snippet",
+   "category": "Text and media",
+   "keywords": [
+    "code",
+    "programming",
+    "source"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "code",
+   "variants": [
+    {
+     "id": "code",
+     "label": "Code snippet",
+     "html": "<div class=\"sp-code-wrap\"><div class=\"sp-code__lang\" data-optional=\"language\" data-edit=\"language\">JavaScript</div><pre class=\"sp-code\"><code data-edit=\"code\" data-multiline>function greet(name) {\n  return \"Hello, \" + name;\n}</code></pre></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "language",
+     "default": "JavaScript",
+     "multiline": false
+    },
+    {
+     "key": "code",
+     "default": "function greet(name) {\n  return \"Hello, \" + name;\n}",
+     "multiline": true
+    }
+   ],
+   "optional": [
+    {
+     "key": "language",
+     "label": "Show the language"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-embed",
+   "slug": "embed",
+   "name": "Embed",
+   "category": "Text and media",
+   "keywords": [
+    "iframe",
+    "website",
+    "html"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it shows the page or content at the address you give.",
+   "defaultVariant": "embed",
+   "variants": [
+    {
+     "id": "embed",
+     "label": "Embed",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-preview sp-card\"><span class=\"sp-preview__icon\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M10 18q.34 0 .67-.03a2 2 0 0 1-1.56-1.32 4 4 0 0 1-1.13-1.56q-.33-.7-.56-1.59H9v-1H7.2a15 15 0 0 1 0-5h5.6q.2 1.17.2 2.5h1q0-1.31-.2-2.5h2.74Q17 8.68 17 10h1a8 8 0 1 0-8 8m0-15c.66 0 1.4.59 2.02 1.9q.33.71.56 1.6H7.42q.23-.89.56-1.6C8.59 3.6 9.34 3 10 3M7.07 4.49q-.4.9-.68 2.01H3.94A7 7 0 0 1 7.7 3.38q-.36.5-.64 1.1M6.2 7.5a16 16 0 0 0 0 5H3.46a7 7 0 0 1 0-5zm.2 6q.26 1.12.68 2.01.28.61.64 1.1a7 7 0 0 1-3.77-3.11zm5.9-10.12a7 7 0 0 1 3.77 3.12h-2.45a11 11 0 0 0-.68-2.01q-.28-.61-.64-1.1M10 12a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2v1h.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1h.5v-1h-2a1 1 0 0 1-1-1z\"/></svg></span><div class=\"sp-preview__body\"><div class=\"sp-preview__title\" data-edit=\"title\">Embedded content</div><div class=\"sp-preview__text\" data-edit=\"text\" data-multiline>The page at this address shows here: https://example.com/dashboard</div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Embedded content",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "The page at this address shows here: https://example.com/dashboard",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-youtube",
+   "slug": "youtube",
+   "name": "YouTube",
+   "category": "Text and media",
+   "keywords": [
+    "video",
+    "play"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint the video plays in the page.",
+   "defaultVariant": "video",
+   "variants": [
+    {
+     "id": "video",
+     "label": "YouTube",
+     "html": "<div class=\"sp-video sp-ratio-16x9\"><img class=\"sp-media\" data-image=\"poster\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22540%22%20viewBox%3D%220%200%20960%20540%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23c4562b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f2b999%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20cx%3D%22681.5999999999999%22%20cy%3D%22162%22%20r%3D%22243%22%20fill%3D%22%23fff%22%20opacity%3D%22.10%22%2F%3E%3Ccircle%20cx%3D%22816%22%20cy%3D%22513%22%20r%3D%22324%22%20fill%3D%22%23fff%22%20opacity%3D%22.08%22%2F%3E%3Cpath%20d%3D%22M0%20540%20L288%20297%20L480%20432%20L691.1999999999999%20270%20L960%20459%20L960%20540%20Z%22%20fill%3D%22%23000%22%20opacity%3D%22.12%22%2F%3E%3C%2Fsvg%3E\" alt=\"Video poster\"><span class=\"sp-video__play\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M17.22 8.69a1.5 1.5 0 0 1 0 2.62l-10 5.5A1.5 1.5 0 0 1 5 15.5v-11A1.5 1.5 0 0 1 7.22 3.2zm-.48 1.75a.5.5 0 0 0 0-.88l-10-5.5A.5.5 0 0 0 6 4.5v11c0 .38.4.62.74.44z\"/></svg></span><span class=\"sp-video__title\" data-edit=\"title\">Welcome from our CEO</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Welcome from our CEO",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-file-media",
+   "slug": "file-and-media",
+   "name": "File and media",
+   "category": "Text and media",
+   "keywords": [
+    "file",
+    "pdf",
+    "document",
+    "preview",
+    "video"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it previews a file from a library.",
+   "defaultVariant": "file",
+   "variants": [
+    {
+     "id": "file",
+     "label": "File and media",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-filecard sp-card\"><div class=\"sp-filecard__page\" aria-hidden=\"true\"><span></span><span></span><span></span><span></span></div><div class=\"sp-filecard__name\"><span class=\"sp-filetype sp-filetype--word\" aria-hidden=\"true\">W</span><span data-edit=\"name\">Annual report 2026.docx</span></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "name",
+     "default": "Annual report 2026.docx",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-forms",
+   "slug": "microsoft-forms",
+   "name": "Microsoft Forms",
+   "category": "Content",
+   "keywords": [
+    "survey",
+    "quiz",
+    "poll",
+    "form"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint the form or its results show here.",
+   "defaultVariant": "form",
+   "variants": [
+    {
+     "id": "form",
+     "label": "Microsoft Forms",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-preview sp-card\"><span class=\"sp-preview__icon\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12.85 9.85a.5.5 0 0 0-.7-.7L9 12.29l-1.15-1.14a.5.5 0 0 0-.7.7l1.5 1.5c.2.2.5.2.7 0zM8.5 2c-.65 0-1.2.42-1.41 1H5.5C4.67 3 4 3.67 4 4.5v12c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-12c0-.83-.67-1.5-1.5-1.5h-1.59c-.2-.58-.76-1-1.41-1zM8 3.5c0-.28.22-.5.5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5M5.5 4h1.59c.2.58.76 1 1.41 1h3c.65 0 1.2-.42 1.41-1h1.59c.28 0 .5.22.5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-12c0-.28.22-.5.5-.5\"/></svg></span><div class=\"sp-preview__body\"><div class=\"sp-preview__title\" data-edit=\"title\">Staff survey</div><div class=\"sp-preview__text\" data-edit=\"text\" data-multiline>Tell us how the new office is working for you. It takes about two minutes.</div><a class=\"sp-button sp-button--primary\" href=\"#\"><span data-edit=\"button\">Start</span></a></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Staff survey",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "Tell us how the new office is working for you. It takes about two minutes.",
+     "multiline": true
+    },
+    {
+     "key": "button",
+     "default": "Start",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-power-bi",
+   "slug": "power-bi",
+   "name": "Power BI",
+   "category": "Data",
+   "keywords": [
+    "report",
+    "dashboard",
+    "analytics"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint a Power BI report shows here.",
+   "defaultVariant": "report",
+   "variants": [
+    {
+     "id": "report",
+     "label": "Power BI report",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-report sp-card\"><div class=\"sp-report__title\" data-edit=\"title\">Sales dashboard</div><div class=\"sp-chart\" data-chart=\"column\"><svg class=\"sp-chart__svg\" viewBox=\"0 0 480 260\" role=\"img\" aria-label=\"Column chart\"><line x1=\"0\" y1=\"224\" x2=\"480\" y2=\"224\" class=\"sp-chart__axis\"/><rect x=\"28.0\" y=\"64.0\" width=\"64.0\" height=\"160.0\" style=\"fill:var(--sp-theme-primary)\"/><text x=\"60.0\" y=\"58.0\" text-anchor=\"middle\" class=\"sp-chart__value\">64</text><text x=\"60.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">North</text><rect x=\"148.0\" y=\"129.0\" width=\"64.0\" height=\"95.0\" style=\"fill:var(--sp-theme-secondary)\"/><text x=\"180.0\" y=\"123.0\" text-anchor=\"middle\" class=\"sp-chart__value\">38</text><text x=\"180.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">South</text><rect x=\"268.0\" y=\"94.0\" width=\"64.0\" height=\"130.0\" style=\"fill:var(--sp-theme-dark-alt)\"/><text x=\"300.0\" y=\"88.0\" text-anchor=\"middle\" class=\"sp-chart__value\">52</text><text x=\"300.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">East</text><rect x=\"388.0\" y=\"24.0\" width=\"64.0\" height=\"200.0\" style=\"fill:var(--sp-theme-tertiary)\"/><text x=\"420.0\" y=\"18.0\" text-anchor=\"middle\" class=\"sp-chart__value\">80</text><text x=\"420.0\" y=\"246\" text-anchor=\"middle\" class=\"sp-chart__label\">West</text></svg></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Sales dashboard",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-power-apps",
+   "slug": "power-apps",
+   "name": "Power Apps",
+   "category": "Content",
+   "keywords": [
+    "app",
+    "low code"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint your app runs in the page.",
+   "defaultVariant": "app",
+   "variants": [
+    {
+     "id": "app",
+     "label": "Power Apps",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-preview sp-card\"><span class=\"sp-preview__icon\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M6 3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h1v-1H6a2 2 0 0 1-2-2V7h13V6a3 3 0 0 0-3-3zM4 6c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2zm10.75 2C13.78 8 13 8.78 13 9.75V13H9.75C8.78 13 8 13.78 8 14.75v2.5c0 .97.78 1.75 1.75 1.75h6.75a2.5 2.5 0 0 0 2.5-2.5V9.75C19 8.78 18.22 8 17.25 8zM18 16.5c0 .83-.67 1.5-1.5 1.5H14v-4h4zm-4-6.75c0-.41.34-.75.75-.75h2.5c.41 0 .75.34.75.75V13h-4zM9.75 14H13v4H9.75a.75.75 0 0 1-.75-.75v-2.5c0-.41.34-.75.75-.75\"/></svg></span><div class=\"sp-preview__body\"><div class=\"sp-preview__title\" data-edit=\"title\">Leave request app</div><div class=\"sp-preview__text\" data-edit=\"text\" data-multiline>Your Power Apps app shows here. Staff can use it without leaving the page.</div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Leave request app",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "Your Power Apps app shows here. Staff can use it without leaving the page.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-maps",
+   "slug": "maps",
+   "name": "Maps",
+   "category": "Text and media",
+   "keywords": [
+    "map",
+    "location",
+    "pin",
+    "address"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint an interactive map with pins shows here.",
+   "defaultVariant": "map",
+   "variants": [
+    {
+     "id": "map",
+     "label": "Maps",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-map sp-ratio-16x9\"><span class=\"sp-map__pin\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M5.05 4.05a7 7 0 1 1 9.9 9.9l-1.13 1.12-2.43 2.37a2 2 0 0 1-2.64.12l-.14-.12-2.04-1.99-1.52-1.5a7 7 0 0 1 0-9.9m9.2.7a6 6 0 0 0-8.67 8.32l.17.18.58.57 2.98 2.9.09.08a1 1 0 0 0 1.2 0l.1-.08 2.22-2.17 1.32-1.3.18-.18a6 6 0 0 0-.18-8.31M10 6.26a2.75 2.75 0 1 1 0 5.5 2.75 2.75 0 0 1 0-5.5m0 1a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5\"/></svg></span><span class=\"sp-map__label\" data-edit=\"place\">Head office, 1 Example Street</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "place",
+     "default": "Head office, 1 Example Street",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sp-planner",
+   "slug": "planner",
+   "name": "Planner",
+   "category": "Data",
+   "keywords": [
+    "plan",
+    "tasks",
+    "board",
+    "kanban"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint your plan’s board shows here.",
+   "defaultVariant": "plan",
+   "variants": [
+    {
+     "id": "plan",
+     "label": "Planner",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Open day plan</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-board\"><div class=\"sp-board__col\"><div class=\"sp-board__head\" data-edit=\"bucket1\">To do</div><div class=\"sp-board__card sp-card\" data-edit=\"task11\">Book the venue</div><div class=\"sp-board__card sp-card\" data-edit=\"task12\">Send invitations</div></div><div class=\"sp-board__col\"><div class=\"sp-board__head\" data-edit=\"bucket2\">In progress</div><div class=\"sp-board__card sp-card\" data-edit=\"task21\">Print signs</div></div><div class=\"sp-board__col\"><div class=\"sp-board__head\" data-edit=\"bucket3\">Done</div><div class=\"sp-board__card sp-card\" data-edit=\"task31\">Confirm catering</div><div class=\"sp-board__card sp-card\" data-edit=\"task32\">Choose a date</div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Open day plan",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "bucket1",
+     "default": "To do",
+     "multiline": false
+    },
+    {
+     "key": "task11",
+     "default": "Book the venue",
+     "multiline": false
+    },
+    {
+     "key": "task12",
+     "default": "Send invitations",
+     "multiline": false
+    },
+    {
+     "key": "bucket2",
+     "default": "In progress",
+     "multiline": false
+    },
+    {
+     "key": "task21",
+     "default": "Print signs",
+     "multiline": false
+    },
+    {
+     "key": "bucket3",
+     "default": "Done",
+     "multiline": false
+    },
+    {
+     "key": "task31",
+     "default": "Confirm catering",
+     "multiline": false
+    },
+    {
+     "key": "task32",
+     "default": "Choose a date",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-conversations",
+   "slug": "conversations",
+   "name": "Conversations (Viva Engage)",
+   "category": "Content",
+   "keywords": [
+    "viva engage",
+    "yammer",
+    "posts",
+    "discussion"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint live Viva Engage conversations show here.",
+   "defaultVariant": "feed",
+   "variants": [
+    {
+     "id": "feed",
+     "label": "Conversations",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Conversations</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-posts\"><div class=\"sp-post sp-card\"><span class=\"sp-avatar\" style=\"background:#c4562b;color:#fff\" role=\"img\" aria-label=\"ML\">ML</span><div class=\"sp-post__body\"><strong data-edit=\"who1\">Mei Lin</strong><div data-edit=\"post1\" data-multiline>Does anyone have the new brand templates?</div><span class=\"sp-meta\" data-edit=\"meta1\">4 replies</span></div></div><div class=\"sp-post sp-card\"><span class=\"sp-avatar\" style=\"background:#a4262c;color:#fff\" role=\"img\" aria-label=\"JB\">JB</span><div class=\"sp-post__body\"><strong data-edit=\"who2\">Jordan Blake</strong><div data-edit=\"post2\" data-multiline>Great turnout at the open day. Thank you all!</div><span class=\"sp-meta\" data-edit=\"meta2\">12 likes</span></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Conversations",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "who1",
+     "default": "Mei Lin",
+     "multiline": false
+    },
+    {
+     "key": "post1",
+     "default": "Does anyone have the new brand templates?",
+     "multiline": true
+    },
+    {
+     "key": "meta1",
+     "default": "4 replies",
+     "multiline": false
+    },
+    {
+     "key": "who2",
+     "default": "Jordan Blake",
+     "multiline": false
+    },
+    {
+     "key": "post2",
+     "default": "Great turnout at the open day. Thank you all!",
+     "multiline": true
+    },
+    {
+     "key": "meta2",
+     "default": "12 likes",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-highlights",
+   "slug": "highlights",
+   "name": "Highlights (Viva Engage)",
+   "category": "Content",
+   "keywords": [
+    "viva engage",
+    "yammer",
+    "posts"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint highlighted Viva Engage posts show here.",
+   "defaultVariant": "highlights",
+   "variants": [
+    {
+     "id": "highlights",
+     "label": "Highlights",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-wp__head\" data-optional=\"titleRow\"><h2 class=\"sp-wp__title\" data-edit=\"title\">Highlights</h2><a class=\"sp-wp__seeall\" href=\"#\" data-optional=\"seeAll\"><span data-edit=\"seeAll\">See all</span></a></div><div class=\"sp-posts\"><div class=\"sp-post sp-card\"><svg class=\"sp-icon sp-row__icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M7.4 12.8a1.04 1.04 0 0 0 1.59-.51l.45-1.37a2.3 2.3 0 0 1 1.47-1.48l1.4-.45A1.04 1.04 0 0 0 12.25 7l-1.37-.45A2.3 2.3 0 0 1 9.4 5.08L8.95 3.7a1 1 0 0 0-.82-.68 1.04 1.04 0 0 0-1.15.7l-.46 1.4a2.3 2.3 0 0 1-1.44 1.45L3.7 7a1.04 1.04 0 0 0 .02 1.97l1.37.45a2.3 2.3 0 0 1 1.48 1.48l.46 1.4q.1.3.38.5m.08-7.4.53-1.38.44 1.37a3.3 3.3 0 0 0 2.12 2.12l1.4.53-1.38.45a3.3 3.3 0 0 0-2.11 2.11l-.53 1.38-.45-1.38a3.3 3.3 0 0 0-2.1-2.12L4 7.96 5.4 7.5a3.4 3.4 0 0 0 2.08-2.12m6.06 11.45a.8.8 0 0 0 1.22-.4l.25-.76a1.1 1.1 0 0 1 .68-.68l.77-.25a.8.8 0 0 0-.02-1.52l-.77-.25a1.1 1.1 0 0 1-.68-.68l-.25-.77a.8.8 0 0 0-1.52.01l-.24.76a1.1 1.1 0 0 1-.67.68l-.77.25a.8.8 0 0 0 0 1.52l.77.25a1.1 1.1 0 0 1 .68.68l.25.77q.09.25.3.4m-.92-2.8-.18-.05.19-.06a2.1 2.1 0 0 0 1.3-1.32l.06-.18.05.18a2 2 0 0 0 1.32 1.32l.2.06-.18.06a2 2 0 0 0-1.32 1.32l-.06.18-.06-.18a2 2 0 0 0-1.32-1.32\"/></svg><div class=\"sp-post__body\"><div data-edit=\"post1\" data-multiline>Our values in action: stories from this quarter</div><span class=\"sp-meta\" data-edit=\"meta1\">40 reactions</span></div></div><div class=\"sp-post sp-card\"><svg class=\"sp-icon sp-row__icon\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M7.4 12.8a1.04 1.04 0 0 0 1.59-.51l.45-1.37a2.3 2.3 0 0 1 1.47-1.48l1.4-.45A1.04 1.04 0 0 0 12.25 7l-1.37-.45A2.3 2.3 0 0 1 9.4 5.08L8.95 3.7a1 1 0 0 0-.82-.68 1.04 1.04 0 0 0-1.15.7l-.46 1.4a2.3 2.3 0 0 1-1.44 1.45L3.7 7a1.04 1.04 0 0 0 .02 1.97l1.37.45a2.3 2.3 0 0 1 1.48 1.48l.46 1.4q.1.3.38.5m.08-7.4.53-1.38.44 1.37a3.3 3.3 0 0 0 2.12 2.12l1.4.53-1.38.45a3.3 3.3 0 0 0-2.11 2.11l-.53 1.38-.45-1.38a3.3 3.3 0 0 0-2.1-2.12L4 7.96 5.4 7.5a3.4 3.4 0 0 0 2.08-2.12m6.06 11.45a.8.8 0 0 0 1.22-.4l.25-.76a1.1 1.1 0 0 1 .68-.68l.77-.25a.8.8 0 0 0-.02-1.52l-.77-.25a1.1 1.1 0 0 1-.68-.68l-.25-.77a.8.8 0 0 0-1.52.01l-.24.76a1.1 1.1 0 0 1-.67.68l-.77.25a.8.8 0 0 0 0 1.52l.77.25a1.1 1.1 0 0 1 .68.68l.25.77q.09.25.3.4m-.92-2.8-.18-.05.19-.06a2.1 2.1 0 0 0 1.3-1.32l.06-.18.05.18a2 2 0 0 0 1.32 1.32l.2.06-.18.06a2 2 0 0 0-1.32 1.32l-.06.18-.06-.18a2 2 0 0 0-1.32-1.32\"/></svg><div class=\"sp-post__body\"><div data-edit=\"post2\" data-multiline>Welcome to the 12 people who joined in October</div><span class=\"sp-meta\" data-edit=\"meta2\">49 reactions</span></div></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Highlights",
+     "multiline": false
+    },
+    {
+     "key": "seeAll",
+     "default": "See all",
+     "multiline": false
+    },
+    {
+     "key": "post1",
+     "default": "Our values in action: stories from this quarter",
+     "multiline": true
+    },
+    {
+     "key": "meta1",
+     "default": "40 reactions",
+     "multiline": false
+    },
+    {
+     "key": "post2",
+     "default": "Welcome to the 12 people who joined in October",
+     "multiline": true
+    },
+    {
+     "key": "meta2",
+     "default": "49 reactions",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "titleRow",
+     "label": "Show title and commands"
+    },
+    {
+     "key": "seeAll",
+     "label": "Show “See all”"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sp-agent-link",
+   "slug": "agent-link",
+   "name": "Agent link",
+   "category": "Navigation and links",
+   "keywords": [
+    "agent",
+    "copilot",
+    "assistant",
+    "chat",
+    "ai"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "A static preview. In SharePoint it opens a conversation with an agent.",
+   "defaultVariant": "agent",
+   "variants": [
+    {
+     "id": "agent",
+     "label": "Agent link",
+     "html": "<div class=\"sp-wp\"><div class=\"sp-preview sp-card\"><span class=\"sp-preview__icon\"><svg class=\"sp-icon\" width=\"28\" height=\"28\" viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M7.4 12.8a1.04 1.04 0 0 0 1.59-.51l.45-1.37a2.3 2.3 0 0 1 1.47-1.48l1.4-.45A1.04 1.04 0 0 0 12.25 7l-1.37-.45A2.3 2.3 0 0 1 9.4 5.08L8.95 3.7a1 1 0 0 0-.82-.68 1.04 1.04 0 0 0-1.15.7l-.46 1.4a2.3 2.3 0 0 1-1.44 1.45L3.7 7a1.04 1.04 0 0 0 .02 1.97l1.37.45a2.3 2.3 0 0 1 1.48 1.48l.46 1.4q.1.3.38.5m.08-7.4.53-1.38.44 1.37a3.3 3.3 0 0 0 2.12 2.12l1.4.53-1.38.45a3.3 3.3 0 0 0-2.11 2.11l-.53 1.38-.45-1.38a3.3 3.3 0 0 0-2.1-2.12L4 7.96 5.4 7.5a3.4 3.4 0 0 0 2.08-2.12m6.06 11.45a.8.8 0 0 0 1.22-.4l.25-.76a1.1 1.1 0 0 1 .68-.68l.77-.25a.8.8 0 0 0-.02-1.52l-.77-.25a1.1 1.1 0 0 1-.68-.68l-.25-.77a.8.8 0 0 0-1.52.01l-.24.76a1.1 1.1 0 0 1-.67.68l-.77.25a.8.8 0 0 0 0 1.52l.77.25a1.1 1.1 0 0 1 .68.68l.25.77q.09.25.3.4m-.92-2.8-.18-.05.19-.06a2.1 2.1 0 0 0 1.3-1.32l.06-.18.05.18a2 2 0 0 0 1.32 1.32l.2.06-.18.06a2 2 0 0 0-1.32 1.32l-.06.18-.06-.18a2 2 0 0 0-1.32-1.32\"/></svg></span><div class=\"sp-preview__body\"><div class=\"sp-preview__title\" data-edit=\"title\">Ask the HR assistant</div><div class=\"sp-preview__text\" data-edit=\"text\" data-multiline>Get quick answers about leave, pay and policies.</div><a class=\"sp-button sp-button--primary\" href=\"#\"><span data-edit=\"button\">Chat now</span></a></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Ask the HR assistant",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "Get quick answers about leave, pay and policies.",
+     "multiline": true
+    },
+    {
+     "key": "button",
+     "default": "Chat now",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
   }
  ]
 }

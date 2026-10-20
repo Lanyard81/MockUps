@@ -242,3 +242,11 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Sample content is made up and generated**: pictures are gradient SVGs made in code (no photo is bundled), people and headlines are invented. This keeps the single file small and avoids using anyone's likeness or text.
 - **Counts are show/hide, not new variants**: a hero's 1 to 5 items, quick links, news stories and list rows are `data-optional` parts, labelled "Item 3", "Link 4" and so on.
 - **Behaviour in Preview** is one delegated listener in the kit's script (carousel slides and dots, filmstrip scrolling, menus, collapsible sections); in Edit nothing runs, and carousels show the first slide.
+
+## 047: More web parts, templates and build notes (Milestone S5)
+
+- **Static previews are first-class and honest.** A web part that needs live data or a service is built as a believable static preview, marked `static` with a note ("A static preview. In SharePoint ..."), so the library shows a "Static" badge and the build notes repeat it. Their text is editable so a mockup reads correctly.
+- **Charts are drawn from data, not stored as pictures.** `Kit.enhanceComponent` (a hook called after a component's options are applied) redraws the chart from `props.chart`; the variant markup carries default data so thumbnails and the library work without a node. Data is cleaned on every read (at most eight points, finite non-negative numbers, short labels) and all text is escaped.
+- **Templates are data built with a small DSL** (`templateDsl.ts`) from real web parts, and a test checks every template against the kit's own rules (a page never has a full-width and a vertical section; a team site has no full-width section). That test caught a mistake in the first intranet template.
+- **Build notes take the catalogue as a parameter** (`BuildNotesTools`) so a kit file imports no app code; the app passes the tools in (`export/buildNotes.ts`). The text is plain English with SharePoint's names and is deterministic, so it can be diffed.
+- **Menus follow the kit.** The frame menu's page parts come from `Kit.pageParts`, and the build-notes entries appear only for kits that have them.

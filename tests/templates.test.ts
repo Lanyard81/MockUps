@@ -15,9 +15,10 @@ import {
 const s = () => useStore.getState();
 
 describe('official templates', () => {
-  it('has all 22, in known groups, with unique ids', () => {
-    expect(OFFICIAL_TEMPLATES).toHaveLength(22);
-    expect(new Set(OFFICIAL_TEMPLATES.map((t) => t.id)).size).toBe(22);
+  it('has all 22 NSW and 7 SharePoint templates, in known groups, with unique ids', () => {
+    expect(OFFICIAL_TEMPLATES.filter((t) => t.kitId === 'nsw')).toHaveLength(22);
+    expect(OFFICIAL_TEMPLATES.filter((t) => t.kitId === 'sharepoint')).toHaveLength(7);
+    expect(new Set(OFFICIAL_TEMPLATES.map((t) => t.id)).size).toBe(OFFICIAL_TEMPLATES.length);
     for (const t of OFFICIAL_TEMPLATES) expect(templateGroups(t.kitId)).toContain(t.group);
   });
 
@@ -25,7 +26,7 @@ describe('official templates', () => {
     it(`${def.id} builds a valid tree of real components`, () => {
       const t = instantiateOfficial(def);
       expect(t.root.length).toBeGreaterThan(0);
-      expect(() => cleanTree(t.nodes, [t.root])).not.toThrow();
+      expect(() => cleanTree(t.nodes, [t.root], [t.kitId])).not.toThrow();
       for (const n of Object.values(t.nodes)) {
         if (n.type !== 'component') continue;
         const comp = getComponent(n.componentId!);

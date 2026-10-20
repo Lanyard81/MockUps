@@ -1,4 +1,5 @@
-import { getComponent } from '../../catalogue';
+import { getComponent, kitOfComponent } from '../../catalogue';
+import { KIT_PANELS } from '../kitPanels';
 import type { OptionDef } from '../../catalogue/types';
 import { getFrameElement } from '../../canvas/registry';
 import { copySelectionHtml } from '../../export/copy';
@@ -208,6 +209,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
   const options = variant && comp ? optionsForVariant(variant.html, comp.options) : NO_OPTIONS;
   const st = useStore.getState;
   if (!node || !comp || !variant || !parts) return null;
+  const KitPanel = KIT_PANELS[kitOfComponent(comp.id) ?? '']?.component?.[comp.id];
 
   const partLabel = (key: string) =>
     comp.optional.find((o) => o.key === key)?.label ?? titleCase(key);
@@ -232,6 +234,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
       </Section>
 
       <NodeSettings nodeId={nodeId} frameId={frameId} />
+      {KitPanel && <KitPanel nodeId={nodeId} />}
 
       {options.length > 0 && (
         <Section title="Options">

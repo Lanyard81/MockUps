@@ -1,3 +1,4 @@
+import { SP_MORE_CSS } from './stylesMore';
 import { SP_WEBPART_CSS } from './stylesWebParts';
 
 /**
@@ -212,4 +213,5 @@ export const SP_CSS = [
   responsive,
   text,
   SP_WEBPART_CSS,
+  SP_MORE_CSS,
 ].join('\n');

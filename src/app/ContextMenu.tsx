@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { startFirstTextEdit, startTextEdit } from '../canvas/textEdit';
+import { copyBuildNotes, downloadBuildNotes } from '../export/buildNotes';
 import { copySelectionHtml } from '../export/copy';
+import { getKit } from '../kits';
 import { getComponent } from '../catalogue';
 import { parentOf } from '../layout/ops';
 import { useStore } from '../store/store';
@@ -135,6 +137,7 @@ export function ContextMenu() {
       },
     ];
   } else {
+    const frameKit = getKit(doc.frames.find((f) => f.id === frameId)?.kitId);
     items = [
       { label: 'Rename frame', onSelect: () => st().requestRename(frameId) },
       {
@@ -147,12 +150,11 @@ export function ContextMenu() {
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
         onSelect: () => st().setDialog('saveTemplate', frameId),
       },
-      {
-        label: 'Add masthead + header',
-        separatorBefore: true,
-        onSelect: () => st().addPageParts(frameId, 'top'),
-      },
-      { label: 'Add footer', onSelect: () => st().addPageParts(frameId, 'footer') },
+      ...frameKit.pageParts.map((part, i) => ({
+        label: part.label,
+        separatorBefore: i === 0,
+        onSelect: () => st().addPageParts(frameId, part.id),
+      })),
       {
         label: 'Paste',
         shortcut: `${MOD}V`,
@@ -160,6 +162,16 @@ export function ContextMenu() {
         separatorBefore: true,
         onSelect: () => st().pasteClipboard(),
       },
+      ...(frameKit.buildNotes
+        ? [
+            {
+              label: `Copy as ${frameKit.buildNotes.label}`,
+              separatorBefore: true,
+              onSelect: () => void copyBuildNotes(frameId),
+            },
+            { label: 'Download build notes (.md)', onSelect: () => downloadBuildNotes(frameId) },
+          ]
+        : []),
       {
         label: 'Delete frame',
         shortcut: 'Del',

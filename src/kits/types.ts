@@ -1,5 +1,5 @@
 import type { Catalogue } from '../catalogue/types';
-import type { DeviceId, DocNode, MockupDoc, NodeType } from '../store/types';
+import type { DeviceId, DocNode, Frame, MockupDoc, NodeType } from '../store/types';
 import type { TemplateDef } from '../templates/types';
 
 /**
@@ -174,6 +174,23 @@ export interface KitSample {
   build: () => MockupDoc;
 }
 
+/** What a kit's build notes need from the catalogue; passed in so kits import no app code. */
+export interface BuildNotesTools {
+  getComponent: (id: string) => import('../catalogue/types').CatalogueComponent | undefined;
+  getVariant: (
+    componentId: string,
+    variantId?: string,
+  ) => import('../catalogue/types').CatalogueVariant | undefined;
+  describeVariant: (html: string) => {
+    editable: { key: string; default: string }[];
+    optional: string[];
+  };
+  optionsForVariant: (
+    html: string,
+    options: import('../catalogue/types').OptionDef[],
+  ) => import('../catalogue/types').OptionDef[];
+}
+
 export interface Kit {
   id: KitId;
   name: string;
@@ -207,8 +224,15 @@ export interface Kit {
     init: string;
   };
   settings: KitSettings;
+  /** Final touches to a component's markup that data can't describe (a chart drawn from its numbers). */
+  enhanceComponent?: (root: ParentNode, node: DocNode) => void;
   /** Markup for one of the kit's icons by name (see the `iconSlot` option), and the names it offers. */
   icons?: { render: (name: string) => string; names: readonly string[] };
+  /** A plain-English Markdown spec of a frame for someone to follow in the real product (SharePoint build notes). */
+  buildNotes?: {
+    label: string;
+    build: (doc: MockupDoc, frame: Frame, tools: BuildNotesTools) => string;
+  };
   /** Values frame settings have when unset, for lists a user edits in place (a default menu...). */
   frameDefaults?: (settings: Record<string, unknown> | undefined) => Record<string, unknown>;
   templates: TemplateDef[];
