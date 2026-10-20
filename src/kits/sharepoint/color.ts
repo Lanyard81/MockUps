@@ -43,10 +43,10 @@ export function normaliseHex(value: unknown, fallback: string): string {
 }
 
 export function rgb2hsv({ r, g, b }: Rgb): Hsv {
-  let h = NaN;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const delta = max - min;
+  let h: number;
   if (delta === 0) h = 0;
   else if (r === max) h = ((g - b) / delta) % 6;
   else if (g === max) h = (b - r) / delta + 2;
@@ -126,7 +126,7 @@ export function getShade(color: Rgb, shade: ShadeStep, isInverted = false): Rgb 
   const i = shade - 1;
   const soften = isInverted ? darken : lighten;
   const strongen = isInverted ? lighten : darken;
-  let hsv = base;
+  let hsv: Hsv;
   if (color.r === MAX && color.g === MAX && color.b === MAX)
     hsv = darken(base, WhiteShadeTable[i]!);
   else if (color.r === 0 && color.g === 0 && color.b === 0) hsv = lighten(base, BlackTintTable[i]!);
