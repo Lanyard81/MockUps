@@ -5,3 +5,5 @@ package-lock.json
 src/catalogue/generated
 docs/BUILD-PROMPT.md
 docs/NSW-DESIGN-SYSTEM.md
+docs/SHAREPOINT-OOB.md
+docs/SHAREPOINT-PROMPT.md
