@@ -151,3 +151,12 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] PNG and HTML export work for SharePoint frames (kit CSS and script included; tested)
 - [x] Frame menu page parts now come from the kit (NSW masthead and footer no longer appear on SharePoint frames)
 - [x] Tests: charts, templates (including the section rules), build notes (Vitest); templates, chart editing, build notes and exports (Playwright)
+
+## Milestone S6: Convert a frame between kits
+
+- [x] "Convert to SharePoint" and "Convert to NSW" in the frame menu and the frame panel: a converted copy is made beside the original (never destructive, one undo step)
+- [x] A mapping table in each kit (`kits/sharepoint/convertFromNsw.ts`, `kits/nsw/convertFromSharePoint.ts`): headings, paragraphs and lists to Text; buttons to Button (links and styles kept); link lists to Quick links; cards to Link cards; hero banners to Hero; images to Image; tables to Text tables; accordions and tabs to collapsible sections, and the reverse
+- [x] Page furniture becomes site settings (masthead, header, menu and footer to site title, menu and footer) and back
+- [x] Section structure maps to the nearest layout (one, two or three columns, one-third left or right, full width), including column widths; backgrounds map to the nearest equivalent
+- [x] Text and pictures carry across; anything without an equivalent becomes a clearly labelled placeholder showing the original name (a SharePoint Placeholder web part; an NSW in-page alert), and a summary lists what could not be mapped
+- [x] Tests: the mapping both ways, structure, placeholders, one undo step and an untouched original (Vitest); the flows in the browser (Playwright)

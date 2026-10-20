@@ -2,6 +2,7 @@ import type { Catalogue } from '../../catalogue/types';
 import data from './catalogue/generated/catalogue.json';
 import { SP_LAYOUT_BLOCKS } from './blocks';
 import { buildSharePointNotes } from './buildNotes';
+import { nswToSharePoint } from './convertFromNsw';
 import { SP_ICON_NAMES, spIcon } from './icons';
 import { SP_CATEGORIES } from './categories';
 import { chartMarkup, readChart } from './charts';
@@ -9,7 +10,7 @@ import { renderSpFrame, renderSpLayout } from './render';
 import { SECTION_LAYOUTS } from './sections';
 import { FRAME_SETTINGS, KIT_SETTINGS, SECTION_SETTINGS } from './settings';
 import { spShell } from './shell';
-import { defaultNav } from './site';
+import { defaultNav, readSite } from './site';
 import { SP_TEMPLATES } from './templates';
 import { SP_VERSION } from './version';
 import type { Kit } from '../types';
@@ -49,6 +50,28 @@ export const sharepointKit: Kit = {
     const kind = el.getAttribute('data-chart') === 'pie' ? 'pie' : 'column';
     el.innerHTML = chartMarkup(kind, readChart(node.props?.chart));
   },
+  readChrome: (frame) => {
+    const site = readSite(frame.settings);
+    return {
+      siteTitle: site.header.showTitle ? site.header.title : undefined,
+      showNav: site.nav.visible,
+      navLabels: site.nav.items.map((i) => i.label).filter(Boolean),
+      showFooter: site.footer.visible,
+      footerLinks: site.footer.links,
+      title: site.titleArea.visible
+        ? {
+            text: site.titleArea.title,
+            byline: [
+              site.titleArea.showAuthor ? site.titleArea.author : '',
+              site.titleArea.showDate ? site.titleArea.date : '',
+            ]
+              .filter(Boolean)
+              .join(' · '),
+          }
+        : undefined,
+    };
+  },
+  conversions: [nswToSharePoint],
   buildNotes: { label: 'SharePoint build notes', build: buildSharePointNotes },
   icons: { render: (name) => spIcon(name), names: SP_ICON_NAMES },
   export: { cdn: null, init: 'window.SPK&&SPK.init()' },

@@ -3,6 +3,7 @@ import { startFirstTextEdit, startTextEdit } from '../canvas/textEdit';
 import { copyBuildNotes, downloadBuildNotes } from '../export/buildNotes';
 import { copySelectionHtml } from '../export/copy';
 import { getKit } from '../kits';
+import { conversionTargets } from '../layout/convert';
 import { getComponent } from '../catalogue';
 import { parentOf } from '../layout/ops';
 import { useStore } from '../store/store';
@@ -162,6 +163,12 @@ export function ContextMenu() {
         separatorBefore: true,
         onSelect: () => st().pasteClipboard(),
       },
+      ...conversionTargets(frameKit.id).map((id, i) => ({
+        label: `Convert to ${getKit(id).shortLabel}`,
+        separatorBefore: i === 0,
+        disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
+        onSelect: () => st().convertFrame(frameId, id),
+      })),
       ...(frameKit.buildNotes
         ? [
             {

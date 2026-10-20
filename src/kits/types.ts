@@ -174,6 +174,60 @@ export interface KitSample {
   build: () => MockupDoc;
 }
 
+/** The page furniture of a frame in kit-neutral terms, so conversions can carry it across. */
+export interface PageChrome {
+  siteTitle?: string;
+  showNav: boolean;
+  navLabels: string[];
+  showFooter: boolean;
+  footerLinks: string[];
+  /** The page's own title and byline, when the page shows them. */
+  title?: { text: string; byline?: string };
+}
+
+/** A frame being converted from another kit. */
+export interface ConversionSource {
+  frame: Frame;
+  nodes: Record<string, DocNode>;
+  images: MockupDoc['images'];
+  /** The source frame's page furniture, when its kit describes it (`Kit.readChrome`). */
+  chrome: PageChrome | null;
+  /** The text of a component's region: what was typed, or the component's default. */
+  textOf: (node: DocNode, key: string) => string;
+  /** A component's variant id, falling back to its default. */
+  variantOf: (node: DocNode) => string;
+  /** A component's name, for placeholders. */
+  nameOf: (node: DocNode) => string;
+}
+
+/** Keeps score while converting: what was brought across and what became a placeholder. */
+export interface ConversionContext {
+  makeId: (prefix: string) => string;
+  /** Count something brought across. */
+  mapped: () => void;
+  /** Count something with no equivalent, by its original name. */
+  unmapped: (name: string) => void;
+  /** Something the person should know about the result ("columns were stacked"). */
+  note: (text: string) => void;
+}
+
+/** The page a conversion produces: its top-level nodes, all its nodes, and the frame's settings. */
+export interface ConvertedPage {
+  root: string[];
+  nodes: Record<string, DocNode>;
+  settings?: Record<string, unknown>;
+}
+
+/**
+ * How to bring a frame of another kit into this one. Each kit holds its own mapping tables (this
+ * component becomes that one), so adding a kit adds its conversions with it.
+ */
+export interface FrameConversion {
+  /** The kit this converts from. */
+  from: KitId;
+  convert: (source: ConversionSource, ctx: ConversionContext) => ConvertedPage;
+}
+
 /** What a kit's build notes need from the catalogue; passed in so kits import no app code. */
 export interface BuildNotesTools {
   getComponent: (id: string) => import('../catalogue/types').CatalogueComponent | undefined;
@@ -228,6 +282,10 @@ export interface Kit {
   enhanceComponent?: (root: ParentNode, node: DocNode) => void;
   /** Markup for one of the kit's icons by name (see the `iconSlot` option), and the names it offers. */
   icons?: { render: (name: string) => string; names: readonly string[] };
+  /** Describe a frame's page furniture (title, menu, footer) in kit-neutral terms, for conversions out of this kit. */
+  readChrome?: (frame: Frame) => PageChrome;
+  /** Conversions into this kit, from other kits (Milestone S6). */
+  conversions?: FrameConversion[];
   /** A plain-English Markdown spec of a frame for someone to follow in the real product (SharePoint build notes). */
   buildNotes?: {
     label: string;

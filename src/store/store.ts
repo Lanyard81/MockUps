@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { DEFAULT_KIT_ID, getKit } from '../kits';
 import { patchAtPath } from '../lib/settingsPath';
+import { convertFrame as runConversion, type ConversionReport } from '../layout/convert';
 import { settingContextFor } from '../layout/kitContext';
 import { componentFitsKit, kitMismatchMessage, subtreesFitKit } from '../layout/kitGuard';
 import type { KitId } from '../kits/types';
@@ -127,6 +128,8 @@ interface State {
   leftTab: 'library' | 'layers' | 'templates';
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
   newFrameKitId: KitId;
+  /** The summary of the last frame conversion, shown until dismissed (UI only). */
+  conversionReport: (ConversionReport & { newFrameName: string }) | null;
   /** A kit the user switched the library to for one frame (otherwise the library follows the selected frame's kit). */
   libraryKit: { kitId: KitId; frameId: string | null } | null;
   /** While dragging a template: the frame it is over (it would replace its content), or just the canvas. */
@@ -171,6 +174,9 @@ interface Actions {
   setDialog: (dialog: State['dialog'], frameId?: string) => void;
   setLeftTab: (tab: State['leftTab']) => void;
   setNewFrameKit: (kitId: KitId) => void;
+  /** Convert a frame into another kit as a new frame beside it (one undo step; the original is untouched). */
+  convertFrame: (frameId: string, targetKitId: KitId) => void;
+  dismissConversionReport: () => void;
   setLibraryKit: (kitId: KitId | null) => void;
   setTemplateDrop: (drop: State['templateDrop']) => void;
   /** Put a template on the canvas as a new frame (undoable). Returns the frame's id. */
@@ -386,6 +392,7 @@ export const useStore = create<Store>((set, get) => ({
   leftTab: 'library',
   newFrameKitId: readLastKit(),
   libraryKit: null,
+  conversionReport: null,
   templateDrop: null,
   confirm: null,
   fitRequested: true,
@@ -423,6 +430,23 @@ export const useStore = create<Store>((set, get) => ({
   setStorageOk: (storageOk) => set({ storageOk }),
   setDialog: (dialog, frameId) => set({ dialog, dialogFrameId: frameId ?? null }),
   setLeftTab: (leftTab) => set({ leftTab }),
+  convertFrame: (frameId, targetKitId) =>
+    set((s) => {
+      const result = runConversion(s.doc, frameId, targetKitId, newId);
+      if (!result) return { notice: 'That frame can’t be converted to that style kit.' };
+      const { frame, nodes, report } = result;
+      return {
+        ...commit(s, {
+          ...withKitVersion(s.doc, frame.kitId),
+          frames: [...s.doc.frames, frame],
+          nodes: { ...s.doc.nodes, ...nodes },
+        }),
+        selectedFrameId: frame.id,
+        selectedNodeId: null,
+        conversionReport: { ...report, newFrameName: frame.name },
+      };
+    }),
+  dismissConversionReport: () => set({ conversionReport: null }),
   setNewFrameKit: (kitId) => {
     const id = getKit(kitId).id;
     writeLastKit(id);

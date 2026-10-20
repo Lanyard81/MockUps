@@ -3,6 +3,7 @@ import nswPkg from 'nsw-design-system/package.json';
 import data from './catalogue/generated/catalogue.json';
 import { buildContainer, buildGrid, buildSection } from './blocks';
 import { NSW_CATEGORIES } from './categories';
+import { sharePointToNsw } from './convertFromSharePoint';
 import { renderNswLayout } from './render';
 import { SECTION_BACKGROUNDS, SECTION_PADDINGS } from './sections';
 import { nswShell } from './shell';
@@ -121,6 +122,7 @@ export const nswKit: Kit = {
     },
     init: 'window.NSW.initSite()',
   },
+  conversions: [sharePointToNsw],
   settings: {
     node: {
       section: [

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { copyBuildNotes, downloadBuildNotes } from '../../export/buildNotes';
 import { getKit } from '../../kits';
+import { conversionTargets } from '../../layout/convert';
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
 import { KIT_PANELS } from '../kitPanels';
@@ -22,6 +23,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
   if (!frame) return null;
   const kit = getKit(frame.kitId);
   const KitFramePanel = KIT_PANELS[kit.id]?.frame;
+  const targets = conversionTargets(kit.id);
   const context = { frame: frame.settings ?? NO_VALUES, kit: kitSettings, topLevel };
   return (
     <>
@@ -94,6 +96,25 @@ export function FrameProps({ frameId }: { frameId: string }) {
           context={context}
           onChange={(key, value) => st().setKitSettings(kit.id, { [key]: value })}
         />
+      )}
+      {targets.length > 0 && (
+        <Section
+          title="Convert"
+          hint="Makes a converted copy next to this frame. Anything with no equivalent becomes a labelled placeholder. The original is never changed."
+        >
+          <div className="prop-actions">
+            {targets.map((id) => (
+              <button
+                key={id}
+                className="btn"
+                disabled={frame.root.length === 0}
+                onClick={() => st().convertFrame(frame.id, id)}
+              >
+                Convert to {getKit(id).shortLabel}
+              </button>
+            ))}
+          </div>
+        </Section>
       )}
       {kit.buildNotes && (
         <Section

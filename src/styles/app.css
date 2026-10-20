@@ -1754,3 +1754,12 @@ kbd {
   display: inline-flex;
   vertical-align: middle;
 }
+.modal__subtitle {
+  margin: var(--ed-space-4) 0 var(--ed-space-1);
+  font-size: var(--ed-font-size);
+  font-weight: 600;
+}
+.modal__list {
+  margin: 0;
+  padding-left: var(--ed-space-5);
+}

@@ -7,6 +7,10 @@ export const SP_MORE_CSS = `
 .sp-preview__title{font-size:16px;line-height:22px;font-weight:600}
 .sp-preview__text{color:var(--sp-neutral-secondary)}
 .sp-preview .sp-button{align-self:flex-start;margin-top:8px}
+.sp-placeholder{display:flex;flex-direction:column;gap:4px;padding:16px;border:2px dashed var(--sp-neutral-tertiary);border-radius:2px;background:var(--sp-neutral-lighter-alt);color:var(--sp-neutral-primary)}
+.sp-placeholder__tag{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--sp-neutral-secondary)}
+.sp-placeholder__name{font-size:16px}
+.sp-placeholder__text{color:var(--sp-neutral-secondary)}
 .sp-chart{display:block}
 .sp-chart__svg{display:block;width:100%;max-width:560px;height:auto}
 .sp-chart__axis{stroke:var(--sp-neutral-quaternary-alt);stroke-width:1}

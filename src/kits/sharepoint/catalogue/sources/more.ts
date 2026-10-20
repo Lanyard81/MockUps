@@ -23,6 +23,21 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
 export const more: ComponentSource[] = [
   {
+    id: 'sp-placeholder',
+    slug: 'placeholder',
+    name: 'Placeholder',
+    category: 'Content',
+    fidelity: STATIC,
+    note: 'Stands in for something that has no SharePoint web part (for example a component brought across from NSW).',
+    variants: [
+      {
+        id: 'placeholder',
+        label: 'Placeholder',
+        html: `<div class="sp-placeholder"><span class="sp-placeholder__tag">Not converted</span><strong class="sp-placeholder__name" data-edit="name">Component name</strong><span class="sp-placeholder__text" data-edit="text" data-multiline>This had no SharePoint equivalent. Replace it with a web part, or rebuild it.</span></div>`,
+      },
+    ],
+  },
+  {
     id: 'sp-quick-chart',
     slug: 'quick-chart',
     name: 'Quick chart',

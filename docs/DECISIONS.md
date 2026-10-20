@@ -250,3 +250,11 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Templates are data built with a small DSL** (`templateDsl.ts`) from real web parts, and a test checks every template against the kit's own rules (a page never has a full-width and a vertical section; a team site has no full-width section). That test caught a mistake in the first intranet template.
 - **Build notes take the catalogue as a parameter** (`BuildNotesTools`) so a kit file imports no app code; the app passes the tools in (`export/buildNotes.ts`). The text is plain English with SharePoint's names and is deterministic, so it can be diffed.
 - **Menus follow the kit.** The frame menu's page parts come from `Kit.pageParts`, and the build-notes entries appear only for kits that have them.
+
+## 048: Converting a frame between kits (Milestone S6)
+
+- **Never destructive.** A conversion adds a new frame beside the original (`Home (SharePoint)`) in one history entry; the original's nodes are not touched (a test compares them before and after), and Undo removes the copy.
+- **Mapping tables live in the kit that receives the page** (`Kit.conversions`, each with the kit it converts `from`), so adding a kit adds its conversions with it. Each table says what an element becomes; the kit also owns how page structure maps (columns and spans to a section layout, and back).
+- **Kits stay independent.** A conversion gets everything it needs about the source through a small `ConversionSource` (the nodes, text with defaults filled in, the variant, the component's name, and the page furniture in kit-neutral form from `Kit.readChrome`), so neither converter imports the other kit.
+- **No silent loss.** Anything without an equivalent becomes a labelled placeholder (a SharePoint Placeholder web part saying "Not converted"; an NSW in-page alert "Not converted: Name") and is counted by original name in a summary the person sees. Lossy decisions (extra columns merged, rows stacked, collapsible sections flattened to a heading, a vertical section moved to the end, a background picture dropped) are listed as notes.
+- **Rules are respected.** Converted SharePoint pages never contain a vertical section, so a full-width section (a hero) is always allowed; the result is an ordinary document that passes the same validation as any other.
