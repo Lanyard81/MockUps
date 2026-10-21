@@ -96,9 +96,9 @@ test('space + drag pans the canvas, dragging a label moves a frame as one undo s
   const vp = (await page.getByTestId('viewport').boundingBox())!;
   const before = await read();
   await page.keyboard.down('Space');
-  await page.mouse.move(vp.x + 600, vp.y + 300);
+  await page.mouse.move(vp.x + 300, vp.y + 300);
   await page.mouse.down();
-  await page.mouse.move(vp.x + 700, vp.y + 350, { steps: 4 });
+  await page.mouse.move(vp.x + 400, vp.y + 350, { steps: 4 });
   await page.mouse.up();
   await page.keyboard.up('Space');
   await expect.poll(read).not.toBe(before);

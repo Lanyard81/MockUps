@@ -43,6 +43,10 @@ Each frame is built with one style kit. **NSW** uses the real NSW Design System.
 
 For SharePoint frames you get a theme (ready-made, Organisation or custom), site settings (site type, header, navigation, footer, page title area), sections (one to three columns, one-third left or right, full width, vertical, flexible, collapsible), 40 web parts, seven page templates, and **Copy as SharePoint build notes**: a plain-English spec a site owner can follow to build the page. **Convert to SharePoint** and **Convert to NSW** make a converted copy of a frame; anything with no equivalent becomes a labelled placeholder and is listed in a summary. See `docs/SHAREPOINT-OOB.md` for what is and isn't modelled.
 
+## Look and theme
+
+The editor uses the DevDan Startup design system: frosted glass panels over an aurora backdrop, pill controls, Inter and JetBrains Mono (bundled, so the single file still works offline). It opens dark; the sun/moon button in the toolbar switches to light and remembers the choice. Only the editor changes: mockups look exactly as the NSW or SharePoint kit draws them.
+
 ## Freeform frames for sketching
 
 For loose ideas, make a frame **Freeform** (Properties → Layout, or Freeform in the Add frame menu). Components land exactly where you drop them and move anywhere, with no grid or snapping: drag to move (Shift locks a direction), drag the side handles to resize, arrow keys nudge, and Alt+↑/↓ changes what is in front. Switch a frame back to **Flow** to tidy it into sections.

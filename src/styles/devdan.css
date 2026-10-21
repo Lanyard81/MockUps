@@ -1,0 +1,367 @@
+/*
+ * DevDan Startup look for the editor chrome: an aurora backdrop, frosted glass panels, pill controls
+ * and mono eyebrow labels. Loaded after app.css so it only restyles; layout rules stay in app.css.
+ * Nothing here reaches into a frame: mockups are drawn by their own kit.
+ */
+
+/* Aurora backdrop: the only place gradients are used. */
+body {
+  background:
+    radial-gradient(
+      46vw 46vh at 8% 12%,
+      color-mix(
+        in srgb,
+        var(--dd-aurora-indigo) calc(55% * var(--dd-aurora-strength)),
+        transparent
+      ),
+      transparent 70%
+    ),
+    radial-gradient(
+      44vw 44vh at 92% 88%,
+      color-mix(in srgb, var(--dd-aurora-blue) calc(50% * var(--dd-aurora-strength)), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      30vw 30vh at 74% 6%,
+      color-mix(in srgb, var(--dd-aurora-teal) calc(38% * var(--dd-aurora-strength)), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      20vw 22vh at 30% 96%,
+      color-mix(in srgb, var(--dd-aurora-pink) calc(22% * var(--dd-aurora-strength)), transparent),
+      transparent 70%
+    ),
+    var(--dd-bg);
+  color: var(--ed-text);
+  font-family: var(--ed-font);
+  -webkit-font-smoothing: antialiased;
+}
+:root[data-theme='light'] {
+  --dd-aurora-strength: 0.5;
+}
+
+/* The floating layout: a pill toolbar and glass panels with the canvas between them. */
+.app {
+  padding: var(--ed-space-3);
+  gap: var(--ed-space-3);
+}
+.toolbar,
+.left,
+.properties {
+  background: var(--dd-glass-strong);
+  border: 1px solid var(--dd-glass-border);
+  box-shadow: var(--dd-shadow-glass);
+}
+/* The panels sit on the static aurora, where a blur is invisible but costs a repaint whenever their
+   contents change (the library scrolls, tiles highlight), so only the small toolbar pill blurs. */
+.toolbar {
+  -webkit-backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
+  backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
+  /* Its menus drop over the panels below, and each glass surface is its own stacking context. */
+  position: relative;
+  z-index: 30;
+  border-radius: 999px;
+  padding: 0 var(--ed-space-3) 0 var(--ed-space-5);
+}
+.left,
+.properties {
+  border-radius: var(--ed-radius-lg);
+  overflow: hidden;
+}
+.library,
+.layers,
+.templates {
+  background: transparent;
+  border-right: 0;
+}
+.library__category {
+  background: transparent;
+  -webkit-backdrop-filter: blur(var(--dd-blur));
+  backdrop-filter: blur(var(--dd-blur));
+}
+.viewport {
+  border-radius: var(--ed-radius-lg);
+  border: 1px solid var(--dd-glass-border);
+  background-color: rgba(7, 7, 11, 0.38);
+  box-shadow: var(--dd-shadow-glass);
+}
+:root[data-theme='light'] .viewport {
+  background-color: rgba(255, 255, 255, 0.32);
+}
+
+/* Wordmark */
+.toolbar__title {
+  font: 700 17px/1 var(--ed-font);
+  letter-spacing: -0.01em;
+}
+.toolbar__doc {
+  border-left-color: var(--ed-border);
+}
+
+/* Controls: pill buttons (16px radius at 32px high), glass inputs */
+.btn {
+  border-radius: var(--ed-radius);
+  background: var(--dd-glass-strong);
+  border-color: var(--dd-glass-border);
+  font-weight: 600;
+  transition:
+    background 200ms var(--ed-ease),
+    transform 200ms var(--ed-ease);
+}
+.btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--dd-glass-strong) 70%, var(--ed-text) 18%);
+}
+.btn--primary {
+  background: var(--dd-accent);
+  border-color: transparent;
+  color: #fff;
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--dd-accent);
+  filter: brightness(1.12);
+}
+.btn--danger {
+  color: var(--ed-danger);
+}
+input,
+select,
+textarea {
+  border-radius: var(--ed-radius);
+  background: var(--dd-glass);
+  border-color: var(--dd-glass-border);
+  color: var(--ed-text);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--dd-ink-3);
+}
+input[type='checkbox'],
+input[type='radio'],
+input[type='range'] {
+  accent-color: var(--dd-accent);
+}
+:is(button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--dd-accent);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 5px var(--dd-accent-soft);
+}
+select option {
+  background: var(--ed-surface);
+  color: var(--ed-text);
+}
+
+.segmented {
+  border-radius: 999px;
+  background: var(--dd-glass);
+  border-color: var(--dd-glass-border);
+}
+.segmented button {
+  border-radius: 999px;
+}
+.segmented .is-active {
+  background: var(--dd-glass-strong);
+  box-shadow:
+    0 0 0 1px var(--dd-glass-border),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+:root[data-theme='light'] .segmented .is-active {
+  background: #fff;
+}
+
+.chip {
+  border-radius: 999px;
+}
+.chip.is-active {
+  background: var(--dd-accent-soft);
+  border-color: var(--dd-accent);
+  color: var(--dd-link);
+}
+.tabs__tab.is-active {
+  color: var(--dd-link);
+}
+
+/* Section titles and other small labels: mono, uppercase (the "eyebrow" style) */
+.prop-section__title,
+.properties__title,
+.library__category,
+.prop-field__label {
+  font-family: var(--ed-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.prop-section__title,
+.library__category {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ed-text-muted);
+}
+.prop-field__label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.frame__size {
+  font-family: var(--ed-mono);
+  font-size: 11px;
+  color: var(--ed-text-muted);
+}
+kbd {
+  font-family: var(--ed-mono);
+  border-radius: 8px;
+}
+
+/* Tiles, cards and rows */
+.tile,
+.mockup-card,
+.template__main {
+  border-radius: var(--ed-radius);
+  background: var(--dd-glass);
+  border: 1px solid var(--dd-glass-border);
+}
+.tile:hover:not(:disabled) {
+  background: var(--dd-glass-strong);
+}
+.tile__thumb,
+.mockup-card__thumb,
+.template__thumb {
+  border-radius: 12px;
+}
+.layer-row {
+  border-radius: 10px;
+}
+.layer-row.is-selected,
+.layer-row--selected {
+  background: var(--dd-accent-soft);
+}
+
+/* Popups and dialogs: near-solid glass with a strong blur, so text stays legible over a white mockup */
+.menu__list,
+.context-menu,
+.icon-picker__pop,
+.toast,
+.sheet,
+.tour,
+.modal,
+.prototype__bar {
+  background: var(--dd-pop);
+  -webkit-backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
+  backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
+  border: 1px solid var(--dd-glass-border);
+  box-shadow: var(--dd-shadow-glass);
+  color: var(--ed-text);
+}
+.menu__list,
+.context-menu,
+.icon-picker__pop {
+  border-radius: var(--ed-radius);
+}
+.menu__list {
+  min-width: 300px;
+}
+.modal,
+.sheet,
+.tour {
+  border-radius: var(--ed-radius-xl);
+}
+.toast {
+  border-radius: 999px;
+}
+.menu__item:hover,
+.context-menu__item:hover:not(:disabled) {
+  background: var(--dd-accent-soft);
+}
+.sheet-backdrop {
+  background: rgba(7, 7, 11, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Canvas furniture */
+/* These sit over the live canvas and the drag ghost moves every frame: a blur behind them would be
+   recomputed constantly, so they use the near-solid popup fill instead. */
+.canvas-hint,
+.breadcrumb,
+.drag-ghost {
+  background: var(--dd-pop);
+  border: 1px solid var(--dd-glass-border);
+  border-radius: 999px;
+  color: var(--ed-text);
+}
+.frame__label {
+  color: var(--ed-text);
+}
+.frame--selected .frame__name {
+  background: var(--dd-accent);
+  color: #fff;
+  border-radius: 999px;
+}
+.frame__kit {
+  font-family: var(--ed-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 8px;
+}
+.frame__body {
+  border-radius: 6px;
+  outline-color: var(--dd-glass-border);
+}
+/* The frame's own surface is a mockup, white, whatever the editor theme: what is drawn on it keeps light colours. */
+.frame__empty {
+  background: rgb(255 255 255 / 0.92);
+  color: #5b5f66;
+}
+.frame__empty strong {
+  color: #1d1d1f;
+}
+.frame__empty .btn {
+  background: #fff;
+  color: #1d1d1f;
+  border-color: #c9ccd2;
+}
+
+/* Hover and press: raise one step; motion is translate and opacity only. */
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Fallbacks: no backdrop-filter, or the person asked for less transparency, gives solid glass. */
+@supports not (backdrop-filter: blur(1px)) {
+  .toolbar,
+  .left,
+  .properties,
+  .canvas-hint,
+  .breadcrumb {
+    background: var(--dd-pop);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .toolbar,
+  .left,
+  .properties,
+  .canvas-hint,
+  .breadcrumb,
+  .menu__list,
+  .context-menu,
+  .modal {
+    background: var(--ed-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Light theme: the white glass rim is decorative, so controls get a visible hairline. */
+:root[data-theme='light']
+  :is(.btn, input, select, textarea, .segmented, .chip, .tile, .mockup-card, .template__main) {
+  border-color: var(--ed-border-strong);
+}
+:root[data-theme='light'] :is(.btn--primary, .segmented .is-active) {
+  border-color: transparent;
+}
+:root[data-theme='light'] :is(.toolbar, .left, .properties, .viewport) {
+  border-color: rgba(255, 255, 255, 0.9);
+}

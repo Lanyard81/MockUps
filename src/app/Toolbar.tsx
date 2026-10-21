@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
@@ -5,6 +6,7 @@ import { copySelectionHtml } from '../export/copy';
 import { KITS, getKit } from '../kits';
 import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
+import { applyTheme, readTheme, type Theme } from './theme';
 import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
 
@@ -215,7 +217,27 @@ export function Toolbar() {
         >
           ?
         </button>
+        <ThemeToggle />
       </div>
     </header>
+  );
+}
+
+/** Dark (the default) or light editor theme. Only the editor changes; mockups are drawn by their kit. */
+function ThemeToggle() {
+  const [theme, setTheme] = useState<Theme>(readTheme);
+  const next: Theme = theme === 'dark' ? 'light' : 'dark';
+  return (
+    <button
+      className="btn btn--icon"
+      aria-label={`Switch to ${next} theme`}
+      title={`Switch to ${next} theme`}
+      onClick={() => {
+        applyTheme(next);
+        setTheme(next);
+      }}
+    >
+      {theme === 'dark' ? '☀' : '☾'}
+    </button>
   );
 }

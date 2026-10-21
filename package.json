@@ -23,6 +23,8 @@
     "icons:sp": "tsx scripts/generate-sp-icons.ts"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/public-sans": "^5.3.0",
     "dompurify": "^3.4.17",
     "html-to-image": "^1.11.13",

@@ -1,23 +1,54 @@
-/* Editor theme tokens. These style the editor UI only; NSW styles live inside frames. */
+/*
+ * Editor theme tokens: the DevDan Startup design system (frosted glass over an aurora backdrop).
+ * These style the editor UI only; NSW and SharePoint styles live inside frames.
+ * Dark is the default; `data-theme="light"` on <html> switches to the light values.
+ */
 :root {
-  --ed-bg: #f6f4f0;
-  --ed-surface: #fffefb;
-  --ed-surface-2: #efece6;
-  --ed-canvas: #e9e5de;
-  --ed-canvas-dot: #d3cdc2;
-  --ed-border: #ddd8cd;
-  --ed-border-strong: #c4bdae;
-  --ed-text: #2b2823;
-  --ed-text-muted: #6d675c;
-  --ed-accent: #1f5fd1;
-  --ed-accent-soft: #dfe9fb;
-  --ed-danger: #b3321f;
-  --ed-danger-soft: #f9e4df;
-  --ed-focus: #1f5fd1;
+  /* DevDan Startup tokens (dark) */
+  --dd-bg: #07070b;
+  --dd-glass: rgba(255, 255, 255, 0.08);
+  --dd-glass-strong: rgba(255, 255, 255, 0.14);
+  --dd-glass-border: rgba(255, 255, 255, 0.18);
+  --dd-ink: #f5f5f7;
+  --dd-ink-2: rgba(235, 235, 245, 0.64);
+  --dd-ink-3: rgba(235, 235, 245, 0.38);
+  --dd-accent: #0a84ff;
+  --dd-accent-soft: rgba(10, 132, 255, 0.18);
+  --dd-link: #64b5ff;
+  --dd-aurora-indigo: #5e5ce6;
+  --dd-aurora-blue: #0a84ff;
+  --dd-aurora-teal: #40c8e0;
+  --dd-aurora-pink: #ff375f;
+  --dd-success: #30d158;
+  --dd-warning: #ff9f0a;
+  --dd-danger: #ff453a;
+  --dd-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --dd-blur: 24px;
+  --dd-blur-strong: 40px;
+  /* Popups carry text over whatever is behind them (often a white mockup), so they are near solid. */
+  --dd-pop: rgba(28, 28, 38, 0.94);
+  --dd-aurora-strength: 1;
 
-  --ed-radius-sm: 4px;
-  --ed-radius: 8px;
-  --ed-radius-lg: 12px;
+  /* Editor tokens, mapped onto the above */
+  --ed-bg: rgba(255, 255, 255, 0.06);
+  --ed-surface: #1b1b25;
+  --ed-surface-2: rgba(255, 255, 255, 0.1);
+  --ed-canvas: #0b0b12;
+  --ed-canvas-dot: rgba(255, 255, 255, 0.16);
+  --ed-border: rgba(255, 255, 255, 0.14);
+  --ed-border-strong: rgba(255, 255, 255, 0.24);
+  --ed-text: #f5f5f7;
+  --ed-text-muted: rgba(235, 235, 245, 0.64);
+  --ed-accent: #0a84ff;
+  --ed-accent-soft: rgba(10, 132, 255, 0.18);
+  --ed-danger: #ff453a;
+  --ed-danger-soft: rgba(255, 69, 58, 0.16);
+  --ed-focus: #0a84ff;
+
+  --ed-radius-sm: 10px;
+  --ed-radius: 16px;
+  --ed-radius-lg: 24px;
+  --ed-radius-xl: 32px;
 
   --ed-space-1: 4px;
   --ed-space-2: 8px;
@@ -25,8 +56,50 @@
   --ed-space-4: 16px;
   --ed-space-5: 24px;
 
-  --ed-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ed-font:
+    'SF Pro Display', 'SF Pro Text', Inter, -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --ed-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
   --ed-font-size: 13px;
   --ed-toolbar-h: 52px;
   --ed-framebar-h: 48px;
+  --ed-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --dd-bg: #f2f2f7;
+  --dd-glass: rgba(255, 255, 255, 0.62);
+  --dd-glass-strong: rgba(255, 255, 255, 0.78);
+  --dd-glass-border: rgba(255, 255, 255, 0.7);
+  --dd-ink: #1d1d1f;
+  --dd-ink-2: rgba(60, 60, 67, 0.72);
+  --dd-ink-3: rgba(60, 60, 67, 0.45);
+  --dd-accent: #007aff;
+  --dd-accent-soft: rgba(0, 122, 255, 0.12);
+  --dd-link: #0066cc;
+  --dd-aurora-indigo: #7d7aff;
+  --dd-aurora-blue: #4da3ff;
+  --dd-aurora-teal: #5ad4e6;
+  --dd-aurora-pink: #ff6482;
+  --dd-success: #248a3d;
+  --dd-warning: #c93400;
+  --dd-danger: #d70015;
+  --dd-shadow-glass: 0 8px 32px rgba(40, 50, 90, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --dd-pop: rgba(250, 250, 253, 0.96);
+
+  --ed-bg: rgba(255, 255, 255, 0.55);
+  --ed-surface: #fbfbfe;
+  --ed-surface-2: rgba(60, 60, 67, 0.08);
+  --ed-canvas: #e8e8f0;
+  --ed-canvas-dot: rgba(60, 60, 67, 0.22);
+  --ed-border: rgba(60, 60, 67, 0.16);
+  --ed-border-strong: rgba(60, 60, 67, 0.3);
+  --ed-text: #1d1d1f;
+  --ed-text-muted: rgba(60, 60, 67, 0.72);
+  --ed-accent: #007aff;
+  --ed-accent-soft: rgba(0, 122, 255, 0.12);
+  --ed-danger: #d70015;
+  --ed-danger-soft: rgba(215, 0, 21, 0.1);
+  --ed-focus: #007aff;
+  color-scheme: light;
 }
