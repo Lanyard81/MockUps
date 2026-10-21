@@ -129,6 +129,7 @@ test.describe('reference image', () => {
     await frameLabel(page).click();
     await pasteImage(page, redPng(393, 300));
     const slider = page.getByLabel('Reference opacity');
+    await slider.scrollIntoViewIfNeeded();
     const box = (await slider.boundingBox())!;
     await page.mouse.move(box.x + box.width * 0.4, box.y + box.height / 2);
     await page.mouse.down();

@@ -7,8 +7,11 @@
  *
  *   v2 -> v3 (reference images): frames may have a `reference`. Nothing to convert; older frames
  *   simply have none.
+ *
+ *   v3 -> v4 (freeform frames): frames may have `layout: "free"` and components in them a `free` box.
+ *   Nothing to convert; older frames are flow frames.
  */
-export const DOC_VERSION = 3;
+export const DOC_VERSION = 4;
 
 const isObject = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -33,5 +36,6 @@ export function migrateDoc(raw: unknown): unknown {
   let doc = raw;
   if (doc.version === 1) doc = v1ToV2(doc);
   if (doc.version === 2) doc = { ...doc, version: 3 };
+  if (doc.version === 3) doc = { ...doc, version: 4 };
   return doc;
 }

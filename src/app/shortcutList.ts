@@ -13,6 +13,11 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
       { keys: 'Drag', action: 'Drag a component from the library onto a frame' },
       { keys: 'Click a tile', action: 'Add it next to the selection' },
       { keys: 'Drag an item', action: 'Move it, or move it to another frame' },
+      {
+        keys: 'Freeform frame',
+        action:
+          'Drop or drag components anywhere; Shift locks one direction; drag the side handles to resize',
+      },
       { keys: 'Right-click', action: 'Actions for the item under the pointer' },
     ],
   },
@@ -42,7 +47,11 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
       { keys: 'Delete', action: 'Delete the selected item or frame' },
       { keys: `${MOD}D`, action: 'Duplicate' },
       { keys: `${MOD}C  ${MOD}V`, action: 'Copy and paste, including between frames' },
-      { keys: `${ALT}↑  ${ALT}↓`, action: 'Move up or down' },
+      {
+        keys: `${ALT}↑  ${ALT}↓`,
+        action: 'Move up or down (on a freeform frame: forward or back)',
+      },
+      { keys: '←  ↑  →  ↓', action: 'Nudge an item on a freeform frame 1 pixel (Shift: 10)' },
       { keys: `${MOD}Z`, action: 'Undo' },
       { keys: `${SHIFT}${MOD}Z`, action: 'Redo' },
     ],

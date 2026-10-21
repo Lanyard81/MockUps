@@ -3,6 +3,7 @@ import type { Kit } from '../kits/types';
 import { renderFrameOf } from '../layout/render';
 import { getFontEmbedCss } from '../lib/fontData';
 import type { Frame, MockupDoc } from '../store/types';
+import { useStore } from '../store/store';
 import { cleanForExport } from './clean';
 import { slug, uniqueNames } from './download';
 
@@ -72,7 +73,11 @@ export async function buildFramePage(
 ): Promise<string> {
   const kit = getKit(frame.kitId);
   const { head, foot } = await assets(mode, kit);
-  const body = cleanForExport(renderFrameOf(doc, frame), { links });
+  // A freeform page is as tall as the editor measured it (or an estimate when it hasn't).
+  const body = cleanForExport(
+    renderFrameOf(doc, frame, useStore.getState().frameHeights[frame.id]),
+    { links },
+  );
   return shell(`${doc.name} – ${frame.name}`, head, body, foot);
 }
 

@@ -1,4 +1,5 @@
 import { getKit } from '../kits';
+import { FREE_NO_CONVERT, isFreeFrame } from '../layout/free';
 import { framesToSpecText } from '../pagespec';
 import { pageSpecInstructions } from '../pagespec/docs';
 import { useStore } from '../store/store';
@@ -8,6 +9,7 @@ import { downloadBlob, slug } from './download';
 /** Copy a frame as a page spec (JSON) and say so, including anything a page spec can't carry. */
 export async function copyFrameSpec(frameId: string): Promise<void> {
   const s = useStore.getState();
+  if (isFreeFrame(s.doc.frames.find((f) => f.id === frameId))) return s.setNotice(FREE_NO_CONVERT);
   const out = framesToSpecText(s.doc, [frameId]);
   if (!out) return s.setNotice('That frame could not be exported.');
   const ok = await copyText(out.text);
@@ -22,6 +24,7 @@ export async function copyFrameSpec(frameId: string): Promise<void> {
 export function downloadFrameSpec(frameId: string): void {
   const s = useStore.getState();
   const frame = s.doc.frames.find((f) => f.id === frameId);
+  if (isFreeFrame(frame)) return s.setNotice(FREE_NO_CONVERT);
   const out = framesToSpecText(s.doc, [frameId]);
   if (!frame || !out) return s.setNotice('That frame could not be exported.');
   const file = `${slug(frame.name, 'page')}.page.json`;

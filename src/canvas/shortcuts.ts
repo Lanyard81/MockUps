@@ -36,6 +36,26 @@ export function handleKeyDown(e: KeyboardEvent) {
     if (reference) s.updateFrameReference(s.selectedFrameId, { visible: !reference.visible });
     return;
   }
+  // Arrow keys nudge the selected item on a freeform frame (Shift: 10 pixels).
+  if (
+    !mod &&
+    !e.altKey &&
+    s.mode === 'edit' &&
+    s.selectedNodeId &&
+    /^Arrow(Up|Down|Left|Right)$/.test(e.key)
+  ) {
+    const frame = s.doc.frames.find((f) => f.root.includes(s.selectedNodeId!));
+    if (frame?.layout === 'free') {
+      e.preventDefault();
+      const step = e.shiftKey ? 10 : 1;
+      s.nudgeFree(
+        s.selectedNodeId,
+        e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : 0,
+        e.key === 'ArrowUp' ? -step : e.key === 'ArrowDown' ? step : 0,
+      );
+      return;
+    }
+  }
   if (mod && key === 'z') {
     e.preventDefault();
     if (e.shiftKey) s.redo();

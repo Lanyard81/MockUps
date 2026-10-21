@@ -185,3 +185,15 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Tests: spec to document for both kits, every forgiving rule, round trip, hostile input, docs up to date (Vitest); import by dialog, paste and drop, the report, undo, export and instructions (Playwright)
 
 ## Milestone R3: Import from screenshot (optional, not started)
+
+## Milestone F1: Freeform frames
+
+- [x] A frame can be Flow (sections, grids, columns: as before) or Freeform: set in Properties → Layout, or choose Freeform in the Add frame menu
+- [x] On a Freeform frame, drag a component from the library and it lands where it is dropped (centred on the pointer); clicking a tile adds it cascading from the last item
+- [x] Press an item and drag to move it anywhere with no snapping (Shift locks one direction); drag the side handles to resize its width; arrow keys nudge (Shift: 10 px); Alt+↑/↓ and the right-click menu (Bring to front, Send to back) change what is in front; Duplicate, Copy/Paste, Delete, text editing and Layers work
+- [x] A move, resize or nudge is one undo step, and nothing re-renders while dragging
+- [x] Switching a Flow frame to Freeform keeps each component where it is on screen; switching back puts them in reading order, each in its own section (both undoable, after a confirmation)
+- [x] Works with both kits; Preview, PNG and HTML export show the board as arranged (HTML export uses absolute positions)
+- [x] Document version 4 with migration and validation; `DATA-MODEL.md` updated
+- [x] Not on freeform frames, with a reason when tried: sections and grids, page parts, Convert, Copy as page spec, build notes, Save as template
+- [x] Tests: boxes, operations, rendering, files and store actions (Vitest); drop, move, shift-lock, resize, nudge, front/back, switching, Preview and reload (Playwright)

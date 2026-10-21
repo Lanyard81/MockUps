@@ -2,6 +2,7 @@ import { isDraggable, isWithin } from '../layout/ops';
 import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { DRAG_THRESHOLD, startDrag } from './drag';
+import { startFreeGesture } from './freeform';
 import { setImageFromFile } from '../app/imageUpload';
 import { addReferenceFromFile, isReferenceFile } from '../app/referenceUpload';
 import { startSettingEdit, startTextEdit } from './textEdit';
@@ -93,6 +94,13 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     iframe.ownerDocument.defaultView?.focus();
     const id = nodeIdAt(e.target);
     const origin = toScreen(e.clientX, e.clientY);
+
+    // A freeform frame: pressing an item selects it and moves it where the pointer goes, with no snapping.
+    if (id && s0.doc.frames.find((f) => f.id === frameId)?.layout === 'free') {
+      s0.selectNode(frameId, id);
+      startFreeGesture(frameId, id, 'move', origin, true);
+      return;
+    }
 
     // Grabbing inside the selected item moves the selection (so a section can be dragged once picked
     // from the breadcrumb); otherwise the innermost item under the pointer moves.

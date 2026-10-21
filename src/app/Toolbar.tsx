@@ -18,6 +18,7 @@ export function Toolbar() {
   const zoom = useStore((s) => s.doc.view.zoom);
   const hasSelection = useStore((s) => s.selectedNodeId !== null);
   const newFrameKit = useStore((s) => s.newFrameKitId);
+  const newFrameLayout = useStore((s) => s.newFrameLayout);
   const s = useStore;
   const pct = Math.round(zoom * 100);
   const options = ZOOM_PRESETS.includes(pct)
@@ -73,33 +74,59 @@ export function Toolbar() {
           icon="+"
           label="Add frame"
           header={
-            KITS.length > 1 ? (
+            <>
               <div
                 className="segmented segmented--block"
                 role="group"
-                aria-label="Style kit for the new frame"
+                aria-label="Layout for the new frame"
               >
-                {KITS.map((k) => (
+                {(['flow', 'free'] as const).map((l) => (
                   <button
-                    key={k.id}
-                    className={k.id === newFrameKit ? 'is-active' : ''}
-                    aria-pressed={k.id === newFrameKit}
-                    title={k.name}
+                    key={l}
+                    className={l === newFrameLayout ? 'is-active' : ''}
+                    aria-pressed={l === newFrameLayout}
+                    title={
+                      l === 'flow'
+                        ? 'Sections, grids and columns, like a real page'
+                        : 'Drag components anywhere, with no grid'
+                    }
                     onClick={(e) => {
                       e.stopPropagation();
-                      s.getState().setNewFrameKit(k.id);
+                      s.getState().setNewFrameLayout(l);
                     }}
                   >
-                    {k.shortLabel}
+                    {l === 'flow' ? 'Flow' : 'Freeform'}
                   </button>
                 ))}
               </div>
-            ) : undefined
+              {KITS.length > 1 ? (
+                <div
+                  className="segmented segmented--block"
+                  role="group"
+                  aria-label="Style kit for the new frame"
+                >
+                  {KITS.map((k) => (
+                    <button
+                      key={k.id}
+                      className={k.id === newFrameKit ? 'is-active' : ''}
+                      aria-pressed={k.id === newFrameKit}
+                      title={k.name}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        s.getState().setNewFrameKit(k.id);
+                      }}
+                    >
+                      {k.shortLabel}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </>
           }
           items={getKit(newFrameKit).devices.map((d) => ({
             label: DEVICES[d].label,
             hint: d === 'custom' ? 'any width' : `${DEVICES[d].width}px`,
-            onSelect: () => s.getState().addFrame(d, newFrameKit),
+            onSelect: () => s.getState().addFrame(d, newFrameKit, newFrameLayout),
           }))}
         />
         <button

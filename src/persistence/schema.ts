@@ -1,5 +1,6 @@
 import { hasKit } from '../kits';
 import type { KitId } from '../kits/types';
+import { FREE_DEFAULT_WIDTH, clampBox } from '../layout/free';
 import { canContain, schemaOfKit } from '../layout/ops';
 import { DOC_VERSION, migrateDoc } from './migrate';
 import {
@@ -105,6 +106,12 @@ function cleanNode(key: string, raw: unknown): DocNode {
     }
   }
   if (typeof raw.hidden === 'boolean') node.hidden = raw.hidden;
+  if (type === 'component' && isObject(raw.free))
+    node.free = clampBox({
+      x: num(raw.free.x, 0),
+      y: num(raw.free.y, 0),
+      width: num(raw.free.width, FREE_DEFAULT_WIDTH),
+    });
   const name = str(raw.name);
   if (name) node.name = name;
   return node;
@@ -132,6 +139,8 @@ export function cleanTree(
   roots: string[][],
   /** The kit of each root list, in the same order (NSW when omitted). */
   kitIds: (KitId | undefined)[] = [],
+  /** Which root lists belong to freeform frames, in the same order: they hold components only. */
+  freeRoots: boolean[] = [],
 ): Record<string, DocNode> {
   if (!isObject(rawNodes)) throw new FileError('The file has no layout.');
   const keys = Object.keys(rawNodes).filter((k) => !FORBIDDEN_KEYS.has(k));
@@ -156,7 +165,23 @@ export function cleanTree(
   };
   roots.forEach((list, i) => {
     const schema = schemaOfKit(kitIds[i]);
-    for (const id of list) visit(id, null, schema);
+    for (const id of list) {
+      if (!freeRoots[i]) {
+        visit(id, null, schema);
+        continue;
+      }
+      // A freeform frame holds components directly, with no layers around them.
+      const node = nodes[id];
+      if (!node)
+        throw new FileError('The file’s layout is damaged (it refers to a layer that is missing).');
+      if (seen.has(id))
+        throw new FileError('The file’s layout is damaged (a layer is used twice).');
+      if (node.type !== 'component')
+        throw new FileError(
+          'The file’s layout breaks the rules (a freeform frame holds components only).',
+        );
+      seen.add(id);
+    }
   });
 
   // Anything not reachable from a frame is leftover: drop it.
@@ -203,6 +228,7 @@ function cleanFrame(raw: unknown, index: number): Frame {
     );
   const settings = cleanSettings(raw.settings);
   const reference = cleanReference(raw.reference);
+  const layout = raw.layout === 'free' ? ('free' as const) : undefined;
   return {
     id: str(raw.id, 100) || `f_${index}`,
     name: str(raw.name) || `Frame ${index + 1}`,
@@ -213,6 +239,7 @@ function cleanFrame(raw: unknown, index: number): Frame {
     x: num(raw.x, 0),
     y: num(raw.y, 0),
     root: Array.isArray(raw.root) ? raw.root.filter((c): c is string => typeof c === 'string') : [],
+    ...(layout ? { layout } : {}),
     ...(reference ? { reference } : {}),
   };
 }
@@ -271,6 +298,7 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     raw.nodes,
     frames.map((f) => f.root),
     frames.map((f) => f.kitId),
+    frames.map((f) => f.layout === 'free'),
   );
   const view = isObject(raw.view) ? raw.view : {};
   const defaultKitId = hasKit(str(raw.defaultKitId, 40) ?? '') ? str(raw.defaultKitId, 40)! : 'nsw';

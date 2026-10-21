@@ -21,6 +21,13 @@ export const DEVICES: Record<DeviceId, DevicePreset> = {
 
 export type NodeType = 'section' | 'container' | 'grid' | 'column' | 'component';
 
+/** Where a component sits on a freeform frame, in the frame's own pixels. Height follows the content. */
+export interface FreeBox {
+  x: number;
+  y: number;
+  width: number;
+}
+
 export interface DocNode {
   id: string;
   type: NodeType;
@@ -33,6 +40,8 @@ export interface DocNode {
   hidden?: boolean;
   /** A name the user gave this layer. Shown in the Layers panel instead of the default label. */
   name?: string;
+  /** Position on a freeform frame (Milestone F1). Only components directly in a freeform frame's root have one. */
+  free?: FreeBox;
 }
 
 /** A screenshot shown on a frame as a tracing guide. Edit mode only: never in Preview, exports or templates. */
@@ -65,12 +74,17 @@ export interface Frame {
   y: number;
   /** Ids of top-level sections, top to bottom. */
   root: string[];
+  /**
+   * How the frame is laid out: `flow` (sections, grids and columns, the default) or `free` (components
+   * placed anywhere, Milestone F1). A freeform frame's root holds components only, back to front.
+   */
+  layout?: 'flow' | 'free';
   /** A screenshot to trace over (Milestone R1). */
   reference?: FrameReference;
 }
 
 export interface MockupDoc {
-  version: 3;
+  version: 4;
   id: string;
   name: string;
   /** The kit used for the first frame of the mockup, and a new frame's starting choice. */
@@ -109,6 +123,8 @@ export interface Placement {
   index: number;
   /** When set, create the missing layers from this depth down (see `buildChain`). */
   chainFrom: number | null;
+  /** Set when the frame is freeform: where in the frame (its pixels) the pointer is. */
+  free?: { x: number; y: number };
 }
 
 /** Where a drop would land, with the geometry to draw it (in frame coordinates). */

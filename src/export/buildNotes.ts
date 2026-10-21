@@ -1,6 +1,7 @@
 import { getComponent, getVariant } from '../catalogue';
 import { getKit } from '../kits';
 import type { BuildNotesTools } from '../kits/types';
+import { isFreeFrame } from '../layout/free';
 import { describeVariant, optionsForVariant } from '../layout/component';
 import { useStore } from '../store/store';
 import { copyText } from './copy';
@@ -14,7 +15,7 @@ export function buildNotesFor(
 ): { text: string; label: string; file: string } | null {
   const { doc } = useStore.getState();
   const frame = doc.frames.find((f) => f.id === frameId);
-  const notes = frame ? getKit(frame.kitId).buildNotes : undefined;
+  const notes = frame && !isFreeFrame(frame) ? getKit(frame.kitId).buildNotes : undefined;
   if (!frame || !notes) return null;
   return {
     text: notes.build(doc, frame, tools),

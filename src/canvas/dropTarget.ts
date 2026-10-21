@@ -1,6 +1,7 @@
 import { getComponent } from '../catalogue';
 import { getKit } from '../kits';
 import type { KitSchema } from '../kits/types';
+import { defaultWidth, isFreeFrame } from '../layout/free';
 import { depthOf, isWithin, parentOf, schemaOfFrame, type Doc } from '../layout/ops';
 import type { DragPayload, DropTarget, IndicatorRect } from '../store/types';
 import { getFrameElement, nodeRect, toFramePoint } from './registry';
@@ -148,6 +149,25 @@ export function computeDropTarget(
 
   const { x, y } = toFramePoint(iframe, clientX, clientY);
   const frameWidth = iframe.offsetWidth;
+
+  // A freeform frame takes components anywhere: the drop is simply where the pointer is.
+  if (isFreeFrame(frame)) {
+    const node = payload.kind === 'move' ? doc.nodes[payload.nodeId] : undefined;
+    if (payload.kind === 'new-layout' || (payload.kind === 'move' && node?.type !== 'component'))
+      return null;
+    const width =
+      payload.kind === 'new-component'
+        ? defaultWidth(payload.componentId, frame.width)
+        : (node?.free?.width ?? defaultWidth(node?.componentId, frame.width));
+    return {
+      frameId: frame.id,
+      parentId: null,
+      index: frame.root.length,
+      chainFrom: null,
+      free: { x, y },
+      indicator: { kind: 'box', rect: { x: x - width / 2, y: y - 16, width, height: 96 } },
+    };
+  }
   const exclude = leaf.exclude;
 
   let hitId: string | null =

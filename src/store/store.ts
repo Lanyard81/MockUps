@@ -10,6 +10,21 @@ import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
 import {
+  FREE_NO_CONVERT,
+  FREE_NO_LAYOUT,
+  defaultWidth,
+  flowToFree,
+  freeToFlow,
+  isFreeFrame,
+  moveToFree,
+  nextPosition,
+  placeFree,
+  readBox,
+  reorder,
+  setBox,
+  withoutBox,
+} from '../layout/free';
+import {
   importPageSpec,
   type ImportedPage,
   type ImportSummary,
@@ -46,6 +61,7 @@ import {
   type Placement,
   type Frame,
   type FrameReference,
+  type FreeBox,
   type MockupDoc,
 } from './types';
 import type { InstantiatedTemplate } from '../templates/types';
@@ -82,7 +98,7 @@ function writeLastKit(id: KitId) {
 
 export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
-    version: 3,
+    version: 4,
     id: newId('doc'),
     name: 'Untitled mockup',
     defaultKitId: kitId,
@@ -137,6 +153,8 @@ interface State {
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
   newFrameKitId: KitId;
   /** The summary of the last frame conversion, shown until dismissed (UI only). */
+  /** The layout a frame added from the toolbar starts with. */
+  newFrameLayout: 'flow' | 'free';
   conversionReport: (ConversionReport & { newFrameName: string }) | null;
   /** What each imported frame's page spec did, until dismissed (not saved). */
   importReports: Record<string, PageImportReport>;
@@ -186,6 +204,7 @@ interface Actions {
   setDialog: (dialog: State['dialog'], frameId?: string) => void;
   setLeftTab: (tab: State['leftTab']) => void;
   setNewFrameKit: (kitId: KitId) => void;
+  setNewFrameLayout: (layout: 'flow' | 'free') => void;
   /** Convert a frame into another kit as a new frame beside it (one undo step; the original is untouched). */
   convertFrame: (frameId: string, targetKitId: KitId) => void;
   dismissConversionReport: () => void;
@@ -221,7 +240,19 @@ interface Actions {
   setView: (view: View) => void;
   zoomToFit: () => void;
 
-  addFrame: (device: DeviceId, kitId?: KitId) => void;
+  addFrame: (device: DeviceId, kitId?: KitId, layout?: 'flow' | 'free') => void;
+  /** Move or resize an item on a freeform frame. One undo step. */
+  setFreeBox: (nodeId: string, patch: Partial<FreeBox>) => void;
+  /** Nudge an item on a freeform frame by whole pixels. One undo step. */
+  nudgeFree: (nodeId: string, dx: number, dy: number) => void;
+  /** Bring an item to the front, or send it to the back, of a freeform frame. */
+  reorderFree: (nodeId: string, to: 'front' | 'back') => void;
+  /** Switch a frame between flow and freeform. `boxes` are the positions to give a flow frame's components (measured on screen). One undo step. */
+  setFrameLayout: (
+    frameId: string,
+    layout: 'flow' | 'free',
+    boxes?: Record<string, FreeBox>,
+  ) => void;
   duplicateFrame: (id: string) => void;
   deleteFrame: (id: string) => void;
   renameFrame: (id: string, name: string) => void;
@@ -421,6 +452,7 @@ export const useStore = create<Store>((set, get) => ({
   leftTab: 'library',
   newFrameKitId: readLastKit(),
   libraryKit: null,
+  newFrameLayout: 'flow',
   conversionReport: null,
   importReports: {},
   importSummary: null,
@@ -463,6 +495,8 @@ export const useStore = create<Store>((set, get) => ({
   setLeftTab: (leftTab) => set({ leftTab }),
   convertFrame: (frameId, targetKitId) =>
     set((s) => {
+      if (isFreeFrame(s.doc.frames.find((f) => f.id === frameId)))
+        return { notice: FREE_NO_CONVERT };
       const result = runConversion(s.doc, frameId, targetKitId, newId);
       if (!result) return { notice: 'That frame can’t be converted to that style kit.' };
       const { frame, nodes, report } = result;
@@ -535,6 +569,7 @@ export const useStore = create<Store>((set, get) => ({
       return { importReports: rest };
     }),
   dismissImportSummary: () => set({ importSummary: null }),
+  setNewFrameLayout: (newFrameLayout) => set({ newFrameLayout }),
   setNewFrameKit: (kitId) => {
     const id = getKit(kitId).id;
     writeLastKit(id);
@@ -672,7 +707,7 @@ export const useStore = create<Store>((set, get) => ({
     get().setView(fitView(bounds, viewport.width, viewport.height));
   },
 
-  addFrame: (device, kitId) =>
+  addFrame: (device, kitId, layout) =>
     set((s) => {
       const preset = DEVICES[device];
       const kit = getKit(kitId ?? s.doc.defaultKitId).id;
@@ -686,6 +721,7 @@ export const useStore = create<Store>((set, get) => ({
         x: right + FRAME_GAP,
         y: s.doc.frames[0]?.y ?? 0,
         root: [],
+        ...(layout === 'free' ? { layout: 'free' as const } : {}),
       };
       return {
         ...commit(s, { ...withKitVersion(s.doc, kit), frames: [...s.doc.frames, frame] }),
@@ -754,6 +790,38 @@ export const useStore = create<Store>((set, get) => ({
       return commit(s, updateFrame(s.doc, id, { width: w, device: 'custom' }));
     }),
 
+  setFreeBox: (nodeId, patch) =>
+    set((s) => {
+      const doc = setBox(s.doc, nodeId, patch);
+      return doc === s.doc ? s : commit(s, doc);
+    }),
+
+  nudgeFree: (nodeId, dx, dy) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.root.includes(nodeId));
+      if (!isFreeFrame(frame)) return s;
+      const box = readBox(s.doc.nodes[nodeId], frame!.width);
+      const doc = setBox(s.doc, nodeId, { x: box.x + dx, y: box.y + dy });
+      return doc === s.doc ? s : commit(s, doc);
+    }),
+
+  reorderFree: (nodeId, to) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.root.includes(nodeId));
+      if (!isFreeFrame(frame)) return s;
+      const doc = reorder(s.doc, nodeId, to);
+      return doc === s.doc ? s : commit(s, doc);
+    }),
+
+  setFrameLayout: (frameId, layout, boxes = {}) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!frame || isFreeFrame(frame) === (layout === 'free')) return s;
+      const doc =
+        layout === 'free' ? flowToFree(s.doc, frameId, boxes) : freeToFlow(s.doc, frameId, newId);
+      return { ...commit(s, doc), selectedFrameId: frameId, selectedNodeId: null };
+    }),
+
   addComponent: (frameId, componentId, variantId) =>
     set((s) => {
       const comp = getComponent(componentId);
@@ -762,6 +830,16 @@ export const useStore = create<Store>((set, get) => ({
       if (!componentFitsKit(componentId, frame.kitId))
         return { notice: kitMismatchMessage(frame.kitId) };
       const leaf = newComponentNode(componentId, variantId ?? comp.defaultVariant);
+      if (isFreeFrame(frame)) {
+        const at = nextPosition(frame);
+        const doc = placeFree(
+          { ...s.doc, nodes: { ...s.doc.nodes, [leaf.id]: leaf } },
+          frameId,
+          leaf.id,
+          { ...at, width: defaultWidth(componentId, frame.width) },
+        );
+        return { ...commit(s, doc), selectedFrameId: frameId, selectedNodeId: leaf.id };
+      }
       return insertLeaf(s, frameId, { [leaf.id]: leaf }, leaf.id);
     }),
 
@@ -769,6 +847,7 @@ export const useStore = create<Store>((set, get) => ({
     set((s) => {
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
+      if (isFreeFrame(frame)) return { notice: FREE_NO_LAYOUT };
       const reason = blockUnavailable(s.doc, frame.id, kind, columns);
       if (reason) return { notice: reason };
       const built = buildLayoutBlock(frame.kitId, kind, columns);
@@ -788,6 +867,8 @@ export const useStore = create<Store>((set, get) => ({
             getKit(payload.kitId).id !== getKit(targetFrame.kitId).id))
       )
         return { notice: kitMismatchMessage(targetFrame.kitId) };
+      if (isFreeFrame(targetFrame) && payload.kind === 'new-layout')
+        return { notice: FREE_NO_LAYOUT };
       let nodes: Record<string, DocNode>;
       let leafId: string;
       if (payload.kind === 'new-component') {
@@ -808,13 +889,25 @@ export const useStore = create<Store>((set, get) => ({
         nodes = built.nodes;
         leafId = built.rootId;
       }
-      const doc = applyInsertion(
-        { ...s.doc, nodes: { ...s.doc.nodes, ...nodes } },
-        target.frameId,
-        target,
-        leafId,
-        newId,
-      );
+      const withNodes = { ...s.doc, nodes: { ...s.doc.nodes, ...nodes } };
+      if (targetFrame && isFreeFrame(targetFrame)) {
+        const at = target.free ?? nextPosition(targetFrame);
+        const width = defaultWidth(
+          payload.kind === 'new-component' ? payload.componentId : undefined,
+          targetFrame.width,
+        );
+        const box = {
+          x: target.free ? at.x - width / 2 : at.x,
+          y: target.free ? at.y - 16 : at.y,
+          width,
+        };
+        return {
+          ...commit(s, placeFree(withNodes, target.frameId, leafId, box)),
+          selectedFrameId: target.frameId,
+          selectedNodeId: leafId,
+        };
+      }
+      const doc = applyInsertion(withNodes, target.frameId, target, leafId, newId);
       return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: leafId };
     }),
 
@@ -839,8 +932,32 @@ export const useStore = create<Store>((set, get) => ({
       const fromKit = s.doc.frames.find((f) => f.id === fromFrame)?.kitId;
       if (toFrame && fromKit && getKit(fromKit).id !== getKit(toFrame.kitId).id)
         return { notice: kitMismatchMessage(toFrame.kitId) };
-      const doc = applyInsertion(detachNode(s.doc, nodeId), target.frameId, target, nodeId, newId);
-      return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: nodeId };
+      if (toFrame && isFreeFrame(toFrame)) {
+        // Onto a freeform frame: only components, placed where the pointer is (or kept, when reordered in the Layers panel).
+        if (node.type !== 'component') return { notice: FREE_NO_LAYOUT };
+        const width = node.free?.width ?? defaultWidth(node.componentId, toFrame.width);
+        const box = target.free
+          ? { x: target.free.x - width / 2, y: target.free.y - 16, width }
+          : readBox(node, toFrame.width);
+        const index = target.free ? undefined : target.index;
+        return {
+          ...commit(s, moveToFree(s.doc, nodeId, toFrame.id, box, index)),
+          selectedFrameId: toFrame.id,
+          selectedNodeId: nodeId,
+        };
+      }
+      const moved = applyInsertion(
+        detachNode(s.doc, nodeId),
+        target.frameId,
+        target,
+        nodeId,
+        newId,
+      );
+      // Leaving a freeform frame: the node forgets its position.
+      const out = moved.nodes[nodeId]?.free
+        ? { ...moved, nodes: { ...moved.nodes, [nodeId]: withoutBox(moved.nodes[nodeId]!) } }
+        : moved;
+      return { ...commit(s, out), selectedFrameId: target.frameId, selectedNodeId: nodeId };
     }),
 
   deleteNode: (nodeId) =>
@@ -864,8 +981,20 @@ export const useStore = create<Store>((set, get) => ({
       const frameId = frameOfNode(s.doc, nodeId);
       if (!node || !loc || !frameId || !isDraggable(node)) return s;
       const copy = cloneSubtrees(s.doc.nodes, [nodeId], newId);
+      const withCopy = { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } };
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (frame && isFreeFrame(frame)) {
+        // A copy on a freeform frame sits just down and to the right, on top.
+        const box = readBox(node, frame.width);
+        const doc = placeFree(withCopy, frameId, copy.roots[0]!, {
+          ...box,
+          x: box.x + 24,
+          y: box.y + 24,
+        });
+        return { ...commit(s, doc), selectedNodeId: copy.roots[0]! };
+      }
       const doc = applyInsertion(
-        { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } },
+        withCopy,
         frameId,
         { parentId: loc.parentId, index: loc.index + 1, chainFrom: null },
         copy.roots[0]!,
@@ -899,6 +1028,22 @@ export const useStore = create<Store>((set, get) => ({
       const copy = cloneSubtrees(clip.nodes, [clip.rootId], newId);
       const leafId = copy.roots[0]!;
       const doc0 = { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } };
+      if (targetFrame && isFreeFrame(targetFrame)) {
+        const leaf = doc0.nodes[leafId]!;
+        if (leaf.type !== 'component') return { notice: FREE_NO_LAYOUT };
+        const at = leaf.free
+          ? { x: leaf.free.x + 24, y: leaf.free.y + 24 }
+          : nextPosition(targetFrame);
+        const box = {
+          ...at,
+          width: leaf.free?.width ?? defaultWidth(leaf.componentId, targetFrame.width),
+        };
+        return {
+          ...commit(s, placeFree(doc0, frameId, leafId, box)),
+          selectedFrameId: frameId,
+          selectedNodeId: leafId,
+        };
+      }
       const ins = resolveInsertion(doc0, frameId, s.selectedNodeId, doc0.nodes[leafId]!);
       return {
         ...commit(s, applyInsertion(doc0, frameId, ins, leafId, newId)),
@@ -1161,6 +1306,8 @@ export const useStore = create<Store>((set, get) => ({
     set((s) => {
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
+      if (isFreeFrame(frame))
+        return { notice: 'Page parts need a Flow frame. Switch this frame to Flow first.' };
       const def = getKit(frame.kitId).pageParts.find((p) => p.id === part);
       if (!def) return s;
       const specs = def.components;
@@ -1184,7 +1331,9 @@ export const useStore = create<Store>((set, get) => ({
   moveSelected: (dir) =>
     set((s) => {
       if (!s.selectedNodeId) return s;
-      const doc = moveAmongSiblings(s.doc, s.selectedNodeId, dir);
+      // On a freeform frame "up" means forward (towards the front), which is later in the root list.
+      const free = isFreeFrame(s.doc.frames.find((f) => f.root.includes(s.selectedNodeId!)));
+      const doc = moveAmongSiblings(s.doc, s.selectedNodeId, free ? (-dir as -1 | 1) : dir);
       return doc === s.doc ? s : commit(s, doc);
     }),
 

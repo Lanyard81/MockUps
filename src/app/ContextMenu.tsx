@@ -6,6 +6,7 @@ import { copySelectionHtml } from '../export/copy';
 import { getKit } from '../kits';
 import { conversionTargets } from '../layout/convert';
 import { getComponent } from '../catalogue';
+import { isFreeFrame } from '../layout/free';
 import { parentOf } from '../layout/ops';
 import { useStore } from '../store/store';
 import { ALT, MOD, SHIFT } from './platform';
@@ -106,19 +107,33 @@ export function ContextMenu() {
         onSelect: () => st().pasteClipboard(),
       },
       { label: 'Copy HTML', onSelect: () => void copySelectionHtml(nodeId) },
-      {
-        label: 'Move up',
-        shortcut: `${ALT}↑`,
-        disabled: !loc || loc.index === 0,
-        separatorBefore: true,
-        onSelect: () => st().moveSelected(-1),
-      },
-      {
-        label: 'Move down',
-        shortcut: `${ALT}↓`,
-        disabled: !loc || loc.index >= count - 1,
-        onSelect: () => st().moveSelected(1),
-      },
+      ...(isFreeFrame(doc.frames.find((f) => f.id === frameId))
+        ? [
+            {
+              label: 'Bring to front',
+              separatorBefore: true,
+              onSelect: () => st().reorderFree(nodeId, 'front'),
+            },
+            { label: 'Send to back', onSelect: () => st().reorderFree(nodeId, 'back') },
+          ]
+        : []),
+      ...(isFreeFrame(doc.frames.find((f) => f.id === frameId))
+        ? []
+        : [
+            {
+              label: 'Move up',
+              shortcut: `${ALT}↑`,
+              disabled: !loc || loc.index === 0,
+              separatorBefore: true,
+              onSelect: () => st().moveSelected(-1),
+            },
+            {
+              label: 'Move down',
+              shortcut: `${ALT}↓`,
+              disabled: !loc || loc.index >= count - 1,
+              onSelect: () => st().moveSelected(1),
+            },
+          ]),
       {
         label: 'Select parent',
         shortcut: 'Esc',

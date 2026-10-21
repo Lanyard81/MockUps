@@ -20,14 +20,28 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
   const nodes = useStore((s) => s.doc.nodes);
   const images = useStore((s) => s.doc.images);
   const kitSettings = useStore((s) => s.doc.kitSettings[frame.kitId]);
+  const frameHeight = useStore((s) => s.frameHeights[frame.id]);
   const html = useMemo(
     () =>
       renderFrameHtml(nodes, frame.root, images, {
         kitId: frame.kitId,
         settings: frame.settings,
         kitSettings,
+        layout: frame.layout,
+        width: frame.width,
+        boardHeight: frameHeight,
       }),
-    [nodes, frame.root, images, frame.kitId, frame.settings, kitSettings],
+    [
+      nodes,
+      frame.root,
+      images,
+      frame.kitId,
+      frame.settings,
+      kitSettings,
+      frame.layout,
+      frame.width,
+      frameHeight,
+    ],
   );
   const kit = getKit(frame.kitId);
   const iframeRef = useRef<HTMLIFrameElement>(null);

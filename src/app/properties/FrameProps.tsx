@@ -6,10 +6,12 @@ import { conversionTargets } from '../../layout/convert';
 import { useStore } from '../../store/store';
 import { DEVICES, type DeviceId, type DocNode } from '../../store/types';
 import { KIT_PANELS } from '../kitPanels';
+import { switchFrameLayout } from '../frameLayout';
 import { PageParts } from '../PageParts';
+import { isFreeFrame } from '../../layout/free';
 import { ImportReportView } from '../ImportReportView';
 import { ReferenceProps } from './ReferenceProps';
-import { CommitInput, Field, Section } from './controls';
+import { CommitInput, Field, Section, Segmented } from './controls';
 import { SettingsPanel } from './SettingsPanel';
 
 const NO_VALUES: Record<string, unknown> = {};
@@ -27,7 +29,8 @@ export function FrameProps({ frameId }: { frameId: string }) {
   if (!frame) return null;
   const kit = getKit(frame.kitId);
   const KitFramePanel = KIT_PANELS[kit.id]?.frame;
-  const targets = conversionTargets(kit.id);
+  const free = isFreeFrame(frame);
+  const targets = free ? [] : conversionTargets(kit.id);
   const context = { frame: frame.settings ?? NO_VALUES, kit: kitSettings, topLevel };
   return (
     <>
@@ -75,6 +78,29 @@ export function FrameProps({ frameId }: { frameId: string }) {
         <p className="prop-hint">
           The width decides which {kit.shortLabel} layout is used, just as on a real device.
         </p>
+        <Segmented
+          label="Layout"
+          value={free ? 'free' : 'flow'}
+          options={[
+            {
+              id: 'flow',
+              label: 'Flow',
+              title: 'Sections, grids and columns, like a real page',
+            },
+            {
+              id: 'free',
+              label: 'Freeform',
+              title: 'Drag components anywhere, with no grid. Good for sketching ideas.',
+            },
+          ]}
+          onChange={(layout) => switchFrameLayout(frame.id, layout)}
+        />
+        {free && (
+          <p className="prop-hint">
+            Components sit exactly where you put them. Drag to move (Shift locks one direction),
+            drag the side handles to resize, arrow keys nudge, Alt+↑/↓ changes what is in front.
+          </p>
+        )}
       </Section>
       {importReport && (
         <Section
@@ -90,7 +116,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
         </Section>
       )}
       <ReferenceProps frameId={frame.id} />
-      {kit.pageParts.length > 0 && (
+      {!free && kit.pageParts.length > 0 && (
         <Section
           title="Page parts"
           hint={`Start a page with the standard ${kit.shortLabel} furniture.`}
@@ -98,7 +124,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           <PageParts frameId={frame.id} kitId={kit.id} />
         </Section>
       )}
-      {kit.settings.frame.length > 0 && (
+      {!free && kit.settings.frame.length > 0 && (
         <SettingsPanel
           defs={kit.settings.frame}
           values={frame.settings ?? NO_VALUES}
@@ -106,7 +132,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           onChange={(key, value) => st().setFrameSettings(frame.id, { [key]: value })}
         />
       )}
-      {KitFramePanel && <KitFramePanel frameId={frame.id} />}
+      {!free && KitFramePanel && <KitFramePanel frameId={frame.id} />}
       {kit.settings.kit.length > 0 && (
         <SettingsPanel
           defs={kit.settings.kit}
@@ -134,20 +160,22 @@ export function FrameProps({ frameId }: { frameId: string }) {
           </div>
         </Section>
       )}
-      <Section
-        title="Page spec"
-        hint="The page as compact JSON: paste it into a Claude chat to change it, then import the answer (File, Import page spec)."
-      >
-        <div className="prop-actions">
-          <button className="btn" onClick={() => void copyFrameSpec(frame.id)}>
-            Copy as page spec
-          </button>
-          <button className="btn" onClick={() => downloadFrameSpec(frame.id)}>
-            Download (.page.json)
-          </button>
-        </div>
-      </Section>
-      {kit.buildNotes && (
+      {!free && (
+        <Section
+          title="Page spec"
+          hint="The page as compact JSON: paste it into a Claude chat to change it, then import the answer (File, Import page spec)."
+        >
+          <div className="prop-actions">
+            <button className="btn" onClick={() => void copyFrameSpec(frame.id)}>
+              Copy as page spec
+            </button>
+            <button className="btn" onClick={() => downloadFrameSpec(frame.id)}>
+              Download (.page.json)
+            </button>
+          </div>
+        </Section>
+      )}
+      {!free && kit.buildNotes && (
         <Section
           title={kit.buildNotes.label}
           hint="A plain-English spec you can follow in SharePoint: site settings, then each section and web part."
@@ -165,7 +193,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
       <div className="prop-actions">
         <button
           className="btn"
-          disabled={frame.root.length === 0}
+          disabled={free || frame.root.length === 0}
           onClick={() => st().setDialog('saveTemplate', frame.id)}
           title="Keep this frame to start new frames from later"
         >

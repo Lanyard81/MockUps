@@ -33,8 +33,19 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         kitId: frame.kitId,
         settings: frame.settings,
         kitSettings,
+        layout: frame.layout,
+        width: frame.width,
       }),
-    [nodes, frame.root, images, frame.kitId, frame.settings, kitSettings],
+    [
+      nodes,
+      frame.root,
+      images,
+      frame.kitId,
+      frame.settings,
+      kitSettings,
+      frame.layout,
+      frame.width,
+    ],
   );
   const height = useStore((s) => s.frameHeights[frame.id] ?? DEVICES[frame.device].screenHeight);
   const selected = useStore((s) => s.selectedFrameId === frame.id);
@@ -73,11 +84,24 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     const fit = () => store.getState().setFitWarnings(frame.id, applyTextFit(doc, fitTargets));
     fit();
     void doc.fonts.ready.then(fit);
-    const measure = () =>
+    // A freeform board is as tall as its lowest item plus room to grow into.
+    const board = root.querySelector<HTMLElement>('[data-free-board]');
+    const sizeBoard = () => {
+      if (!board) return;
+      let bottom = 0;
+      board.querySelectorAll<HTMLElement>('[data-free]').forEach((el) => {
+        bottom = Math.max(bottom, el.offsetTop + el.offsetHeight);
+      });
+      board.style.height = `${Math.max(screenHeight, bottom + 240)}px`;
+    };
+    const measure = () => {
+      sizeBoard();
       store.getState().setFrameHeight(frame.id, Math.max(screenHeight, root.offsetHeight));
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(root);
+    board?.querySelectorAll('[data-free]').forEach((el) => ro.observe(el));
     return () => ro.disconnect();
   }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store, kit]);
 
@@ -179,6 +203,15 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         <span className="frame__kit" title={kit.name} data-testid="frame-kit">
           {kit.shortLabel}
         </span>
+        {frame.layout === 'free' && (
+          <span
+            className="frame__kit"
+            title="Freeform: components placed anywhere"
+            data-testid="frame-free"
+          >
+            Freeform
+          </span>
+        )}
         <span className="frame__size">{frame.width}px</span>
       </div>
       <div className="frame__body" style={{ height }}>

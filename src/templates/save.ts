@@ -1,4 +1,5 @@
 import { renderThumbnail } from '../export/png';
+import { FREE_NO_CONVERT, isFreeFrame } from '../layout/free';
 import { collectIds } from '../layout/tree';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
@@ -30,6 +31,10 @@ export async function saveFrameAsTemplate(frameId: string, name: string): Promis
   const frame = s.doc.frames.find((f) => f.id === frameId);
   const label = name.trim();
   if (!frame || !label) return false;
+  if (isFreeFrame(frame)) {
+    s.setNotice(FREE_NO_CONVERT);
+    return false;
+  }
   if (frame.root.length === 0) {
     s.setNotice('That frame is empty, so there is nothing to save as a template.');
     return false;

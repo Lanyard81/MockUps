@@ -3,6 +3,7 @@ import { isDraggable } from '../layout/ops';
 import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { beginPendingDrag } from './drag';
+import { OVERLAY_REFRESH, startFreeGesture } from './freeform';
 import { getFrameElement, nodeRect } from './registry';
 
 interface Props {
@@ -43,6 +44,7 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   const movable = !!node && isDraggable(node);
   const editing = useStore((s) => s.editing?.frameId === frameId);
   const edit = mode === 'edit' && !editing;
+  const free = useStore((s) => s.doc.frames.find((f) => f.id === frameId)?.layout === 'free');
 
   // Measure after the frame has rendered its content (the frame's own effect runs after ours).
   useEffect(() => {
@@ -54,6 +56,25 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
     });
     return () => cancelAnimationFrame(raf);
   }, [frameId, selectedId, hoverId, edit, dragging, layoutKey]);
+
+  // While an item is being moved or resized (see `startFreeGesture`) the selection box follows it.
+  useEffect(() => {
+    const follow = () => {
+      const idoc = getFrameElement(frameId)?.contentDocument;
+      place(selectRef.current, edit && idoc && selectedId ? nodeRect(idoc, selectedId) : null);
+    };
+    window.addEventListener(OVERLAY_REFRESH, follow);
+    return () => window.removeEventListener(OVERLAY_REFRESH, follow);
+  }, [frameId, selectedId, edit]);
+
+  const onHandleDown = (e: React.PointerEvent, edge: 'e' | 'w') => {
+    if (e.button !== 0 || !selectedId) return;
+    e.stopPropagation();
+    e.preventDefault();
+    // Keep the pointer on the handle for the whole gesture, whatever it moves over (including a frame).
+    e.currentTarget.setPointerCapture(e.pointerId);
+    startFreeGesture(frameId, selectedId, edge, { x: e.clientX, y: e.clientY }, false);
+  };
 
   const onChipDown = (e: React.PointerEvent) => {
     e.stopPropagation();
@@ -79,6 +100,22 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
           )}
           {label}
         </div>
+        {free && (
+          <>
+            <div
+              className="ov-handle ov-handle--w"
+              data-testid="resize-handle-w"
+              title="Drag to resize"
+              onPointerDown={(e) => onHandleDown(e, 'w')}
+            />
+            <div
+              className="ov-handle ov-handle--e"
+              data-testid="resize-handle-e"
+              title="Drag to resize"
+              onPointerDown={(e) => onHandleDown(e, 'e')}
+            />
+          </>
+        )}
       </div>
       {replacing && (
         <div

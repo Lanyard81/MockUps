@@ -3,6 +3,7 @@ import type { DocNode, Frame, MockupDoc } from '../store/types';
 import { getKit } from '../kits';
 import type { Kit, RenderContext } from '../kits/types';
 import { renderComponent } from './component';
+import { estimateBoardHeight, readBox } from './free';
 
 type Nodes = Record<string, DocNode>;
 type Images = MockupDoc['images'];
@@ -28,6 +29,8 @@ const SANITISE = {
   ADD_TAGS: ['iframe'],
   ADD_ATTR: [
     'data-node',
+    'data-free',
+    'data-free-board',
     'data-empty',
     'data-edit',
     'data-optional',
@@ -50,6 +53,12 @@ export interface RenderOptions {
   settings?: Record<string, unknown>;
   /** The document-wide settings of the frame's kit. */
   kitSettings?: Record<string, unknown>;
+  /** `free` draws the root's components where their boxes put them (Milestone F1). */
+  layout?: 'flow' | 'free';
+  /** The frame's width, for the default width of a freeform item that has no box. */
+  width?: number;
+  /** The height of a freeform board, if known; otherwise room is left below the lowest item. */
+  boardHeight?: number;
 }
 
 const NO_SETTINGS: Record<string, unknown> = {};
@@ -67,6 +76,21 @@ export function renderFrameHtml(
     settings: options.settings ?? NO_SETTINGS,
     kitSettings: options.kitSettings ?? NO_SETTINGS,
   };
+  if (options.layout === 'free') {
+    const items = root
+      .map((id) => {
+        const node = nodes[id];
+        if (!node || node.hidden || node.type !== 'component') return '';
+        const box = readBox(node, options.width ?? 1440);
+        return `<div data-node="${node.id}" data-free style="position:absolute;left:${box.x}px;top:${box.y}px;width:${box.width}px">${renderComponent(node, images)}</div>`;
+      })
+      .join('');
+    const height = options.boardHeight ?? estimateBoardHeight(nodes, root);
+    return DOMPurify.sanitize(
+      `<div data-free-board style="position:relative;height:${height}px">${items}</div>`,
+      SANITISE,
+    );
+  }
   const children = root
     .map((id) => ({ node: nodes[id], html: renderNode(nodes, images, id, kit, ctx) }))
     .filter((c): c is { node: DocNode; html: string } => !!c.node);
@@ -79,11 +103,15 @@ export function renderFrameHtml(
 /** Render one frame of a document. */
 export function renderFrameOf(
   doc: Pick<MockupDoc, 'nodes' | 'images' | 'kitSettings'>,
-  frame: Pick<Frame, 'root' | 'kitId' | 'settings'>,
+  frame: Pick<Frame, 'root' | 'kitId' | 'settings' | 'layout' | 'width'>,
+  boardHeight?: number,
 ): string {
   return renderFrameHtml(doc.nodes, frame.root, doc.images, {
     kitId: frame.kitId,
     settings: frame.settings,
+    layout: frame.layout,
+    width: frame.width,
+    boardHeight,
     kitSettings: doc.kitSettings[getKit(frame.kitId).id],
   });
 }

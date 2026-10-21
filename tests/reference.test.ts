@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { referenceBox, suggestFrameWidth } from '../src/lib/reference';
-import { migrateDoc } from '../src/persistence/migrate';
+import { DOC_VERSION, migrateDoc } from '../src/persistence/migrate';
 import { validateDoc } from '../src/persistence/schema';
 import { createDoc, useStore } from '../src/store/store';
 
@@ -75,10 +75,10 @@ describe('reference migration and validation', () => {
     images: {},
   });
 
-  it('upgrades version 2 to 3 without touching the input', () => {
+  it('upgrades version 2 to the current version without touching the input', () => {
     const old = v2();
     const out = migrateDoc(old) as { version: number };
-    expect(out.version).toBe(3);
+    expect(out.version).toBe(DOC_VERSION);
     expect(old.version).toBe(2);
     expect(validateDoc(old).frames[0]?.reference).toBeUndefined();
   });

@@ -1814,3 +1814,26 @@ kbd {
   cursor: pointer;
   margin: 4px 0;
 }
+
+.ov-handle {
+  position: absolute;
+  top: 50%;
+  width: calc(10px * var(--inv-zoom, 1));
+  height: calc(28px * var(--inv-zoom, 1));
+  margin-top: calc(-14px * var(--inv-zoom, 1));
+  border-radius: calc(4px * var(--inv-zoom, 1));
+  background: #fff;
+  border: calc(2px * var(--inv-zoom, 1)) solid var(--ed-accent);
+  pointer-events: auto;
+  cursor: ew-resize;
+}
+.ov-handle--w {
+  left: calc(-6px * var(--inv-zoom, 1));
+}
+.ov-handle--e {
+  right: calc(-6px * var(--inv-zoom, 1));
+}
+
+body.is-free-gesture .frame__iframe {
+  pointer-events: none;
+}

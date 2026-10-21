@@ -2,6 +2,7 @@ import { useStore } from '../store/store';
 import type { DragPayload, DropTarget } from '../store/types';
 import { isOverCanvas, screenToWorld, templateAsNewFrame, templateOnFrame } from '../templates/use';
 import { computeDropTarget, frameAtPoint } from './dropTarget';
+import { FREE_NO_LAYOUT, isFreeFrame } from '../layout/free';
 import { kitMismatchMessage } from '../layout/kitGuard';
 import { frameScale } from './registry';
 
@@ -125,7 +126,9 @@ export function startDrag(
     if (!target) {
       // Released over a frame of another kit: say why nothing happened.
       const over = commit ? frameAtPoint(s.doc, latest.x, latest.y) : null;
-      if (over && (payload.kind === 'new-component' || payload.kind === 'new-layout'))
+      if (over && isFreeFrame(over.frame) && payload.kind !== 'new-component')
+        s.setNotice(FREE_NO_LAYOUT);
+      else if (over && (payload.kind === 'new-component' || payload.kind === 'new-layout'))
         s.setNotice(kitMismatchMessage(over.frame.kitId));
       return;
     }
