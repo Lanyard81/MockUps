@@ -7,7 +7,7 @@ Tick items as they are completed. Work stops after each milestone until the user
 - [x] Vite + React + TypeScript (strict) + Zustand project
 - [x] Folder structure from the brief
 - [x] ESLint, Prettier, Vitest, Playwright
-- [x] `build:single` produces `dist-single/nsw-mockup-builder.html`
+- [x] `build:single` produces `dist-single/mockmaker.html`
 - [x] GitHub Actions: checks, Pages deploy, single-file artifact, release attachment on tags
 - [x] README, CLAUDE.md, MILESTONES, DECISIONS, DATA-MODEL, NSW-DESIGN-SYSTEM, LICENSE, .gitignore
 - [ ] GitHub Pages enabled in repository settings (needs the owner: Settings → Pages → Source: GitHub Actions)

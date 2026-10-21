@@ -23,7 +23,10 @@ import {
 export class FileError extends Error {}
 
 export const FILE_VERSION = 1;
-export const FILE_APP = 'nsw-mockup-builder';
+export const FILE_APP = 'mockmaker';
+/** The name files were saved under before the app was called MockMaker; still opened. */
+const OLD_FILE_APP = 'nsw-mockup-builder';
+const isOurFile = (app: unknown) => app === FILE_APP || app === OLD_FILE_APP;
 export const MAX_FILE_BYTES = 200 * 1024 * 1024;
 const MAX_NODES = 20_000;
 const MAX_FRAMES = 200;
@@ -380,10 +383,10 @@ export function parseMockupFile(text: string): MockupFile {
   }
   if (!isObject(raw)) throw new FileError('That file isn’t a mockup file.');
   // Accept both the envelope and a bare document.
-  const docRaw = raw.app === FILE_APP ? raw.doc : raw;
+  const docRaw = isOurFile(raw.app) ? raw.doc : raw;
   const doc = validateDoc(docRaw);
   const templates: SavedTemplate[] = [];
-  if (raw.app === FILE_APP && Array.isArray(raw.templates)) {
+  if (isOurFile(raw.app) && Array.isArray(raw.templates)) {
     for (const t of raw.templates.slice(0, 500)) {
       try {
         templates.push(validateTemplate(t));

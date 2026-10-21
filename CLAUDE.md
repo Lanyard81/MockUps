@@ -1,6 +1,6 @@
 # CLAUDE.md: conventions for this repository
 
-NSW Mockup Builder: a Vite + React + TypeScript (strict) app where people drag real NSW Design System components onto device frames. The full brief is `docs/BUILD-PROMPT.md`; progress is in `docs/MILESTONES.md`.
+MockMaker: a Vite + React + TypeScript (strict) app where people drag real NSW Design System components onto device frames. The full brief is `docs/BUILD-PROMPT.md`; progress is in `docs/MILESTONES.md`.
 
 ## Folder structure
 
@@ -55,7 +55,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 ## Testing expectations
 
 - Unit tests (Vitest) for pure logic: geometry, tree operations, store actions and undo, text fitting.
-- Playwright e2e for each milestone's user-visible behaviour (listed per milestone in the brief). The single-file e2e opens `dist-single/nsw-mockup-builder.html` from disk, offline.
+- Playwright e2e for each milestone's user-visible behaviour (listed per milestone in the brief). The single-file e2e opens `dist-single/mockmaker.html` from disk, offline.
 - Before pushing: `npm run lint && npm run format:check && npm run typecheck && npm test && npm run build:single && npm run test:e2e`.
 - Playwright needs a Chromium: set `PW_CHROMIUM=/opt/pw-browsers/chromium` in the cloud sandbox.
 

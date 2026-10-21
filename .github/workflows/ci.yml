@@ -45,8 +45,8 @@ jobs:
       - name: Upload single-file build
         uses: actions/upload-artifact@v4
         with:
-          name: nsw-mockup-builder
-          path: dist-single/nsw-mockup-builder.html
+          name: mockmaker
+          path: dist-single/mockmaker.html
           if-no-files-found: error
 
   deploy-pages:
@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: nsw-mockup-builder
+          name: mockmaker
       - uses: softprops/action-gh-release@v2
         with:
-          files: nsw-mockup-builder.html
+          files: mockmaker.html

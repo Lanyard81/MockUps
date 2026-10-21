@@ -1,6 +1,6 @@
 # What to test by hand (Milestones 0–8)
 
-Open the Pages site or `dist-single/nsw-mockup-builder.html` (try the single file with Wi-Fi off).
+Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi-Fi off).
 
 **Building**
 

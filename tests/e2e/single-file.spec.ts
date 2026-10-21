@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const file = resolve('dist-single/nsw-mockup-builder.html');
+const file = resolve('dist-single/mockmaker.html');
 
 test('single file works from disk with no network', async ({ page, context }) => {
   test.skip(!existsSync(file), 'run npm run build:single first');

@@ -107,7 +107,7 @@ A `.mockup.json` is an envelope:
 
 ```json
 {
-  "app": "nsw-mockup-builder",
+  "app": "mockmaker",
   "fileVersion": 1,
   "savedAt": "2026-10-20T00:00:00.000Z",
   "doc": { "version": 1, "...": "..." },

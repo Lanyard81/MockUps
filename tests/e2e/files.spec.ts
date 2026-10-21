@@ -66,7 +66,7 @@ test.describe('files', () => {
     const saved = await download(page, () => fileMenu(page, /Save to file/));
     expect(saved.name).toBe('untitled-mockup.mockup.json');
     const json = JSON.parse(saved.bytes.toString('utf8'));
-    expect(json.app).toBe('nsw-mockup-builder');
+    expect(json.app).toBe('mockmaker');
     expect(Object.values(json.doc.images)[0]).toMatchObject({
       dataUrl: expect.stringMatching(/^data:image\/png/),
     });

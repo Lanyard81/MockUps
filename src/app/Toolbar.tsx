@@ -28,7 +28,7 @@ export function Toolbar() {
   return (
     <header className="toolbar">
       <div className="toolbar__group">
-        <strong className="toolbar__title">NSW Mockup Builder</strong>
+        <strong className="toolbar__title">MockMaker</strong>
         <DocName />
         <Menu
           plain

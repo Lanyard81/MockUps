@@ -1,4 +1,4 @@
-# NSW Mockup Builder
+# MockMaker
 
 A browser-based tool for making screen mockups from the official [NSW Government Design System](https://designsystem.nsw.gov.au). Drag real NSW components onto device frames, edit their text and options, then save and share the screens.
 
@@ -17,15 +17,15 @@ npm run dev        # http://localhost:5173/MockUps/
 
 Other scripts:
 
-| Script                 | What it does                                                        |
-| ---------------------- | ------------------------------------------------------------------- |
-| `npm run lint`         | ESLint                                                              |
-| `npm run format`       | Prettier (write). `format:check` only checks                        |
-| `npm run typecheck`    | TypeScript in strict mode                                           |
-| `npm test`             | Vitest unit tests                                                   |
-| `npm run test:e2e`     | Playwright end-to-end tests (builds the site first)                 |
-| `npm run build`        | GitHub Pages build into `dist/`                                     |
-| `npm run build:single` | Single self-contained file at `dist-single/nsw-mockup-builder.html` |
+| Script                 | What it does                                               |
+| ---------------------- | ---------------------------------------------------------- |
+| `npm run lint`         | ESLint                                                     |
+| `npm run format`       | Prettier (write). `format:check` only checks               |
+| `npm run typecheck`    | TypeScript in strict mode                                  |
+| `npm test`             | Vitest unit tests                                          |
+| `npm run test:e2e`     | Playwright end-to-end tests (builds the site first)        |
+| `npm run build`        | GitHub Pages build into `dist/`                            |
+| `npm run build:single` | Single self-contained file at `dist-single/mockmaker.html` |
 
 Playwright needs a Chromium. Run `npx playwright install chromium`, or point `PW_CHROMIUM` at an existing binary.
 
@@ -65,7 +65,7 @@ If your browser won't keep data for the page (private windows, some `file://` se
 
 ## The single-file version
 
-`npm run build:single` produces `dist-single/nsw-mockup-builder.html`. The app, NSW CSS and JavaScript, fonts and icons are all inlined, so you can open it straight from disk with no internet connection. Every push to `main` uploads it as a build artifact in GitHub Actions, and pushing a version tag (for example `v0.1.0`) attaches it to a GitHub Release.
+`npm run build:single` produces `dist-single/mockmaker.html`. The app, NSW CSS and JavaScript, fonts and icons are all inlined, so you can open it straight from disk with no internet connection. Every push to `main` uploads it as a build artifact in GitHub Actions, and pushing a version tag (for example `v0.1.0`) attaches it to a GitHub Release.
 
 ## Deploying
 

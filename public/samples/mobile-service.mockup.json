@@ -1,9 +1,9 @@
 {
- "app": "nsw-mockup-builder",
+ "app": "mockmaker",
  "fileVersion": 1,
  "savedAt": "2026-10-20T00:00:00.000Z",
  "doc": {
-  "version": 3,
+  "version": 4,
   "id": "doc_sample_mobile-service",
   "name": "Mobile service",
   "defaultKitId": "nsw",

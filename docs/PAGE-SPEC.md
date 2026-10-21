@@ -13,7 +13,7 @@ The importer is forgiving and reports what it did: an unknown component becomes 
 Paste this, then the reference for the kit you need (File → Copy page spec instructions copies both), with your screenshot:
 
 ```text
-Recreate the attached screenshot as a page spec for the NSW Mockup Builder.
+Recreate the attached screenshot as a page spec for the MockMaker.
 
 1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages.
 2. Use only the components, variants, text keys, options and settings listed in that kit's reference below. Use the closest variant when nothing matches exactly.
