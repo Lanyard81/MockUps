@@ -1,6 +1,7 @@
 import { newId } from '../lib/ids';
 import type { MockupDoc } from '../store/types';
 import { FileError, validateDoc } from './schema';
+import { deleteAllVersions } from './versions';
 import { safeDel, safeGet, safeSet } from './storage';
 
 /** The user's saved mockups: one record per mockup plus a small index for the list. */
@@ -66,6 +67,7 @@ export async function setMockupThumbnail(id: string, thumbnail: string): Promise
 
 export async function deleteMockup(id: string): Promise<void> {
   await safeDel(docKey(id));
+  await deleteAllVersions(id);
   await writeIndex((list) => list.filter((m) => m.id !== id));
   if ((await safeGet<string>(LAST)) === id) await safeDel(LAST);
 }

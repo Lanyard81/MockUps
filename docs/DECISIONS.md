@@ -342,3 +342,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Start frame is document data** (`startFrameId`, validated against the frames); unset means the first frame, so older mockups behave as before. Deleting that frame clears it.
 - **Transitions belong to the link** (`props.transition`, one of `fade`, `slide`, `rise`), because that is what a person is designing: how this click moves on. It becomes a `data-transition` attribute next to `data-goto`; unknown values are ignored. The Play viewer animates the incoming frame with CSS (opacity and translate only, off under reduced motion); the viewer file does the same.
 - **Hover and tab states were not added as features:** in Preview and Play the real kit scripts run, so hover, focus, tabs, menus and accordions already behave as they would on a site. Making a different frame appear _on_ hover would be a separate interaction model; it is not built.
+
+## 060: Version history (Milestone G7)
+
+- **Whole-document snapshots, in browser storage, per mockup.** A version is a copy of the whole mockup (images included) under `versions:<mockup id>`, at most 30, oldest dropped. It is simple, always restores exactly, and needs no merge logic. The cost is size, which is why they stay out of the `.mockup.json` file and are capped.
+- **Restore is an ordinary edit.** It replaces the document's content in one history entry (keeping the mockup's id, name and canvas view), so Undo undoes it; and before it runs, the current state is saved as a "Before restoring…" version so nothing is lost even if the page is then closed.
+- **Compare is by ids.** Frames and components keep their ids for as long as they live, so a changed text is "edited", not "removed and added". The comparison is a short summary and per-frame phrases, not a visual diff.
+- **No automatic versions.** Autosave already keeps the latest state; automatic snapshots would need rules (when, how many) that people didn't ask for. Named versions are the person's decision.

@@ -149,7 +149,7 @@ interface State {
   /** Can this page keep data between visits? Null until checked. */
   storageOk: boolean | null;
   /** The open dialog, if any. */
-  dialog: 'mockups' | 'export' | 'saveTemplate' | 'saveComponent' | 'importSpec' | null;
+  dialog: 'mockups' | 'export' | 'saveTemplate' | 'saveComponent' | 'importSpec' | 'history' | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
   /** The node a dialog is about (Save as component). */
@@ -244,6 +244,8 @@ interface Actions {
   clearFitRequest: () => void;
   /** Replace the whole document (opening a mockup or file). Starts a fresh undo history. */
   loadDoc: (doc: MockupDoc) => void;
+  /** Put an earlier version's content back (keeping this mockup's id, name and view). One undo step. */
+  restoreDoc: (snapshot: MockupDoc) => void;
   newDoc: () => void;
   renameDoc: (name: string) => void;
   setHelpOpen: (open: boolean) => void;
@@ -822,6 +824,15 @@ export const useStore = create<Store>((set, get) => ({
       saveState: 'saved',
     }),
   // A new mockup starts in the kit used for the last new frame.
+  restoreDoc: (snapshot) =>
+    set((s) => ({
+      ...commit(s, { ...snapshot, id: s.doc.id, name: s.doc.name, view: s.doc.view }),
+      selectedFrameId: null,
+      selectedNodeId: null,
+      activeCommentId: null,
+      prototype: null,
+      fitRequested: true,
+    })),
   newDoc: () => get().loadDoc(createDoc(get().newFrameKitId)),
   renameDoc: (name) =>
     set((s) => {

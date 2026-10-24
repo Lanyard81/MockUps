@@ -46,6 +46,11 @@ export function Toolbar() {
           items={[
             { label: 'New mockup', onSelect: () => s.getState().newDoc() },
             { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
+            {
+              label: 'Version history…',
+              hint: 'save and restore',
+              onSelect: () => s.getState().setDialog('history'),
+            },
             ...KITS.flatMap((k) => k.samples).map((d, i) => ({
               label: `Sample: ${d.name}`,
               separatorBefore: i === 0,

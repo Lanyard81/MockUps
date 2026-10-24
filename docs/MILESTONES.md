@@ -248,3 +248,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Hover and tab states already work live in Preview and Play because components run the kit's own scripts
 - [x] Document version 7 (`startFrameId`), migration and validation
 - [x] Tests: start frame, transitions, validation, viewer (Vitest); play, transition, back, start frame and undo (Playwright)
+
+## Milestone G7: Version history
+
+- [x] File → Version history… (and ⌘K): save a named version of the mockup, kept in this browser (the newest 30 per mockup)
+- [x] Each version says what has changed since ("1 frame changed, 1 frame added"), with the detail one click away: frames added, removed, renamed or resized, components added, removed or edited, rearranged pieces, comments
+- [x] Restore puts a version's content back as one undo step (after saving what was there first as "Before restoring…"); "Open as new mockup" makes a separate copy; delete removes one
+- [x] Versions go when their mockup is deleted; they are not part of the mockup file
+- [x] Tests: saving, limits, deleting, restoring, comparing (Vitest); save, compare, restore, undo, reload, open as new, delete (Playwright)

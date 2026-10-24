@@ -5,6 +5,7 @@ import { handleKeyDown, handleKeyUp } from '../canvas/shortcuts';
 import { looksLikePageSpec } from '../pagespec';
 import { openMockupFile } from '../persistence/file';
 import { useStore } from '../store/store';
+import { HistoryDialog } from './HistoryDialog';
 import { CommandPalette } from './CommandPalette';
 import { ConfirmDialog } from './ConfirmDialog';
 import { ContextMenu } from './ContextMenu';
@@ -105,6 +106,7 @@ export function App() {
       <ConversionSummary />
       <ImportPageSpecDialog />
       <CommandPalette />
+      <HistoryDialog />
       <ImportSummary />
       <ConfirmDialog />
       <Tour />

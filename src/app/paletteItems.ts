@@ -73,6 +73,13 @@ export function buildPaletteItems(): PaletteItem[] {
     undefined,
     'open saved',
   );
+  act(
+    'history',
+    'Version history…',
+    () => useStore.getState().setDialog('history'),
+    undefined,
+    'save version restore snapshot',
+  );
   act('open', 'Open file…', pickMockupFile, undefined, 'mockup.json');
   act('save', 'Save to file', saveToFile, undefined, 'download mockup.json');
   act(

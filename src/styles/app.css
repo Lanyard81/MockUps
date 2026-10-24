@@ -2141,3 +2141,50 @@ body.is-free-gesture .frame__iframe {
 .prototype__stage--back {
   animation: proto-back 260ms var(--ed-ease, ease) both;
 }
+
+.history__save {
+  display: flex;
+  gap: var(--ed-space-2);
+  margin: var(--ed-space-3) 0;
+}
+.history__save input {
+  flex: 1;
+}
+.history__list,
+.history__diff {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.history__list {
+  display: grid;
+  gap: var(--ed-space-3);
+  max-height: 46vh;
+  overflow: auto;
+}
+.history__row {
+  padding: var(--ed-space-3);
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius-sm);
+  background: var(--ed-bg);
+}
+.history__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ed-space-3);
+  align-items: flex-start;
+}
+.history__when,
+.history__summary {
+  font-size: 12px;
+  color: var(--ed-text-muted);
+}
+.history__summary {
+  text-align: right;
+}
+.history__diff {
+  margin: var(--ed-space-2) 0;
+  font-size: 12px;
+  display: grid;
+  gap: 2px;
+}

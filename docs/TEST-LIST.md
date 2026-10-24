@@ -48,3 +48,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **Search (G5)** 49. Press Ctrl/⌘ K anywhere. Type "card", "dashboard", "export", "light", "go to": add a component, add a template, open Export, switch theme, jump to a frame. Check arrows, Enter and Esc.
 
 **Click-through (G6)** 50. Make two frames with a button on the first set to Go to frame (Properties) and pick a Transition. Press ▶ Play: click the button (the next frame animates in), Back, Esc. Set the second frame as the start (right-click its name) and Play again; export the viewer file and check it opens there too.
+
+**Version history (G7)** 51. File → Version history…, save "Draft 1". Change the page (add, delete, edit text, add a frame). Reopen the history: it says what changed; click "What changed". Restore the version, then Undo. Reload and check it is still listed; Open as new mockup; Delete it.
