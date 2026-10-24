@@ -4,7 +4,7 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 
 ```json
 {
-  "version": 5,
+  "version": 6,
   "id": "doc_x",
   "name": "Untitled mockup",
   "defaultKitId": "nsw",
@@ -55,6 +55,8 @@ The mockup document is plain JSON. The TypeScript types are in `src/store/types.
 **Frame**: `kitId` is the style kit the frame is built with (`nsw`, `sharepoint`); `settings` (optional) are that kit's frame-level settings, such as a SharePoint site type, header and navigation. `device` is `iphone | android | tablet | desktop | custom`; `width` is in CSS px (240–3000; setting it by hand switches `device` to `custom`); `x`, `y` are canvas world coordinates; `root` is the ordered list of top-level node ids: usually sections, or full-width components (masthead, header, footer and so on) that sit outside any section. Frame height is not stored: it comes from the content, with a minimum of the device screen height (iPhone 852, Android 915, Tablet 1180, Desktop 900, Custom 800).
 
 **Layout** (`frame.layout`, optional, Milestone F1): `"flow"` (the default, when missing) or `"free"`. A freeform frame's `root` holds **components only**, back to front (later is in front), with no sections, containers, grids or columns. Each such component has `free: { x, y, width }` in the frame's own pixels (whole numbers, `x` and `y` between -10000 and 10000, `width` from 48 to 4000); its height follows its content. A component with no `free` box is shown at 0, 0 with a default width. On a freeform frame, `freeGrid` (8, 16 or 24) draws and snaps to a grid and `freeSnap` (true) snaps moves to alignment guides; both mean nothing on a flow frame and are dropped there. Freeform frames are validated on load: a section (or anything but a component) in one is refused. Moving a component to a flow frame drops its box.
+
+**Comments** (`doc.comments`, optional, Milestone G3): notes pinned to frames, `{ id, frameId, x, y, text (≤2000), resolved, createdAt }`, positions in the frame's pixels (clamped to ±20000). A note whose frame doesn't exist, a repeated id and anything malformed is dropped on load. Shown in the editor only.
 
 **Reference image** (`frame.reference`, optional, Milestone R1): a screenshot to trace over, in the editor only. `{ imageId, opacity (0–1, default 0.4), placement: 'over' | 'behind' | 'beside', fit: 'width' | 'actual', offsetX, offsetY, visible, pixelRatio }`. `imageId` is a key in `doc.images`; `pixelRatio` is stored-image pixels per CSS pixel (2 for a 2× screenshot, so "Actual size" halves it). It is drawn in the editor document in Edit mode only and is never part of Preview, thumbnails, PNG or HTML export, build notes, templates or conversions. On load a reference whose image is missing or whose values are damaged is dropped or clamped.
 
@@ -123,7 +125,7 @@ Stored mockups are the same document, validated again each time they are loaded.
 
 ## Versions and migration
 
-`version` is the document version (now **5**). Files are upgraded on load by `src/persistence/migrate.ts` before they are validated, so any earlier file opens.
+`version` is the document version (now **6**). Files are upgraded on load by `src/persistence/migrate.ts` before they are validated, so any earlier file opens.
 
 - **1 → 2** (style kits): every frame gets `kitId: "nsw"`; `defaultKitId: "nsw"`, `kitVersions: { nsw: <old nswVersion> }` and `kitSettings: {}` are added; `nswVersion` is removed.
 
@@ -132,6 +134,8 @@ Stored mockups are the same document, validated again each time they are loaded.
 - **3 → 4** (freeform frames): `frame.layout` and `node.free` may exist. Nothing is converted; older frames are flow frames.
 
 - **4 → 5** (freeform grid and snapping): `frame.freeGrid` and `frame.freeSnap` may exist. Nothing is converted.
+
+- **5 → 6** (comments): the document may have `comments`. Nothing is converted.
 
 A frame whose `kitId` this build doesn't have is refused with a message (rather than shown with the wrong styles). Kit settings (`frame.settings`, `kitSettings`) are plain data: strings, numbers, booleans, lists and nested objects of limited size and depth; anything else is dropped on load. The envelope of a saved file (`fileVersion`) is unchanged.
 

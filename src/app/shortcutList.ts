@@ -19,6 +19,10 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
           'Drop or drag components anywhere; Shift locks one direction; drag the side handles to resize',
       },
       { keys: 'Right-click', action: 'Actions for the item under the pointer' },
+      {
+        keys: 'Comments tab',
+        action: 'Add a comment, then click a spot on a frame to pin a note (Esc cancels)',
+      },
     ],
   },
   {

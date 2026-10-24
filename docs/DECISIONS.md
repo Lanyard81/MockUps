@@ -315,3 +315,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **One insertion path.** Paste and "add saved component" share `pasteInto` in the store, so kit checks, layer creation, freeform placement and images behave the same; a drag uses a `saved` drag payload and the same drop targets as a library component.
 - **What can be saved.** A component, or a section of a flow frame (with everything inside it): the units that stand on their own under the layout rules. A container, grid or column can't stand alone, so they're refused with a message. A position from a freeform frame is dropped when the component goes on a flow frame.
 - **No rename in the list yet.** The store supports it; the list offers add and delete only.
+
+## 056: Comments (Milestone G3)
+
+- **Pinned to a frame position, not to a component.** A note is `{frameId, x, y}` in the frame's pixels, so it stays where it was put if the content changes around it; moving content under a pin is the person's call. (Anchoring to a component would be lost when it is deleted or moved between frames.)
+- **Editor only.** Pins are drawn in the editor over a frame, like the selection, so Preview, PNG (unless the option is on) and HTML export never include them. The PNG option draws numbered dots with canvas after the image is made.
+- **Stored in the document**, so they travel with the file and undo like everything else. Orphans (a note whose frame is gone) are dropped on load. Version 6.
+- **No authors, replies or live sync.** There is one person and no server; a note is plain text and a Done flag. The shareable viewer (G4) carries notes read-only.

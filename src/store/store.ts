@@ -61,6 +61,7 @@ import {
   type ContextMenuState,
   type DropTarget,
   type Placement,
+  type Comment,
   type Frame,
   type FrameReference,
   type FreeBox,
@@ -100,7 +101,7 @@ function writeLastKit(id: KitId) {
 
 export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
-    version: 5,
+    version: 6,
     id: newId('doc'),
     name: 'Untitled mockup',
     defaultKitId: kitId,
@@ -153,10 +154,14 @@ interface State {
   /** The node a dialog is about (Save as component). */
   dialogNodeId: string | null;
   /** Which tab of the left panel is showing. */
-  leftTab: 'library' | 'layers' | 'templates';
+  leftTab: 'library' | 'layers' | 'templates' | 'comments';
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
   newFrameKitId: KitId;
   /** The summary of the last frame conversion, shown until dismissed (UI only). */
+  /** The comment tool is on: a click on a frame pins a note there. */
+  commentTool: boolean;
+  /** The comment whose note is open. */
+  activeCommentId: string | null;
   /** The layout a frame added from the toolbar starts with. */
   newFrameLayout: 'flow' | 'free';
   conversionReport: (ConversionReport & { newFrameName: string }) | null;
@@ -209,6 +214,13 @@ interface Actions {
   setLeftTab: (tab: State['leftTab']) => void;
   setNewFrameKit: (kitId: KitId) => void;
   setNewFrameLayout: (layout: 'flow' | 'free') => void;
+  setCommentTool: (on: boolean) => void;
+  setActiveComment: (id: string | null) => void;
+  /** Pin a new, empty note at a point on a frame (frame pixels) and open it. One undo step. Returns its id. */
+  addComment: (frameId: string, x: number, y: number) => string | null;
+  /** Change a note's text, or resolve or reopen it. One undo step. */
+  updateComment: (id: string, patch: { text?: string; resolved?: boolean }) => void;
+  deleteComment: (id: string) => void;
   /** Convert a frame into another kit as a new frame beside it (one undo step; the original is untouched). */
   convertFrame: (frameId: string, targetKitId: KitId) => void;
   dismissConversionReport: () => void;
@@ -550,6 +562,8 @@ export const useStore = create<Store>((set, get) => ({
   newFrameKitId: readLastKit(),
   libraryKit: null,
   newFrameLayout: 'flow',
+  commentTool: false,
+  activeCommentId: null,
   conversionReport: null,
   importReports: {},
   importSummary: null,
@@ -668,6 +682,50 @@ export const useStore = create<Store>((set, get) => ({
     }),
   dismissImportSummary: () => set({ importSummary: null }),
   setNewFrameLayout: (newFrameLayout) => set({ newFrameLayout }),
+  setCommentTool: (commentTool) => set({ commentTool }),
+  setActiveComment: (activeCommentId) => set({ activeCommentId }),
+  addComment: (frameId, x, y) => {
+    const s = get();
+    if (!s.doc.frames.some((f) => f.id === frameId)) return null;
+    const id = newId('c');
+    const comment: Comment = {
+      id,
+      frameId,
+      x: Math.round(x),
+      y: Math.round(y),
+      text: '',
+      resolved: false,
+      createdAt: Date.now(),
+    };
+    set({
+      ...commit(s, { ...s.doc, comments: [...(s.doc.comments ?? []), comment] }),
+      activeCommentId: id,
+      commentTool: false,
+    });
+    return id;
+  },
+  updateComment: (id, patch) =>
+    set((s) => {
+      const list = s.doc.comments ?? [];
+      const c = list.find((x) => x.id === id);
+      if (!c) return s;
+      const next = {
+        ...c,
+        ...(patch.text !== undefined ? { text: patch.text.slice(0, 2000) } : {}),
+        ...(patch.resolved !== undefined ? { resolved: patch.resolved } : {}),
+      };
+      if (next.text === c.text && next.resolved === c.resolved) return s;
+      return commit(s, { ...s.doc, comments: list.map((x) => (x.id === id ? next : x)) });
+    }),
+  deleteComment: (id) =>
+    set((s) => {
+      const list = s.doc.comments ?? [];
+      if (!list.some((x) => x.id === id)) return s;
+      return {
+        ...commit(s, { ...s.doc, comments: list.filter((x) => x.id !== id) }),
+        activeCommentId: s.activeCommentId === id ? null : s.activeCommentId,
+      };
+    }),
   setNewFrameKit: (kitId) => {
     const id = getKit(kitId).id;
     writeLastKit(id);
@@ -858,6 +916,9 @@ export const useStore = create<Store>((set, get) => ({
           ...s.doc,
           frames: s.doc.frames.filter((f) => f.id !== id),
           nodes: removeSubtrees(s.doc.nodes, src.root),
+          ...(s.doc.comments?.some((c) => c.frameId === id)
+            ? { comments: s.doc.comments.filter((c) => c.frameId !== id) }
+            : {}),
         }),
         selectedFrameId: s.selectedFrameId === id ? null : s.selectedFrameId,
         selectedNodeId: s.selectedFrameId === id ? null : s.selectedNodeId,

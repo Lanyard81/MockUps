@@ -5,6 +5,7 @@ import { applyTextFit } from '../lib/textFit';
 import { useStore } from '../store/store';
 import { DEVICES, type Frame as FrameModel } from '../store/types';
 import { getKit } from '../kits';
+import { CommentPins } from './CommentPins';
 import { FrameOverlay } from './FrameOverlay';
 import { attachFrameInput } from './input';
 import { ReferenceLayer } from './ReferenceLayer';
@@ -104,6 +105,14 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     board?.querySelectorAll('[data-free]').forEach((el) => ro.observe(el));
     return () => ro.disconnect();
   }, [ready, html, mode, fitTargets, frame.id, frame.width, screenHeight, store, kit]);
+
+  // While placing a comment the pointer is a crosshair, inside the frame too.
+  const commentTool = useStore((s) => s.commentTool);
+  useEffect(() => {
+    const doc = iframeRef.current?.contentDocument;
+    if (!ready || !doc) return;
+    doc.documentElement.style.cursor = commentTool ? 'crosshair' : '';
+  }, [ready, commentTool]);
 
   // A reference "behind" the content needs the page itself see-through (editor affordance only).
   const showRef = mode === 'edit' && !!frame.reference?.visible;
@@ -229,6 +238,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
           data-mode={mode}
         />
         {showRef && !behind && <ReferenceLayer frame={frame} />}
+        {mode === 'edit' && <CommentPins frameId={frame.id} />}
         <FrameOverlay
           frameId={frame.id}
           layoutKey={`${html.length}:${height}:${frame.width}:${ready}`}

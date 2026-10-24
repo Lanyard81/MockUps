@@ -77,3 +77,40 @@ export async function renderThumbnail(frameId: string, targetWidth = 240): Promi
     else idoc.body.dataset.mode = mode;
   }
 }
+
+export interface Pin {
+  x: number;
+  y: number;
+  n: number;
+}
+
+/** Mark comment pins on a PNG of a frame (positions in the frame's pixels, `scale` the PNG's size). */
+export async function addPinsToPng(blob: Blob, pins: Pin[], scale: number): Promise<Blob> {
+  if (pins.length === 0) return blob;
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement('canvas');
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return blob;
+  ctx.drawImage(bitmap, 0, 0);
+  const r = 13 * scale;
+  for (const p of pins) {
+    const cx = p.x * scale + r;
+    const cy = p.y * scale - r;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a84ff';
+    ctx.fill();
+    ctx.lineWidth = 2 * scale;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `700 ${12 * scale}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(p.n), cx, cy + 0.5 * scale);
+  }
+  bitmap.close();
+  return (await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'))) ?? blob;
+}

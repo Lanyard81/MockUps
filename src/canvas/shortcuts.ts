@@ -29,6 +29,12 @@ export function handleKeyDown(e: KeyboardEvent) {
     s.setHelpOpen(!s.helpOpen);
     return;
   }
+  if (key === 'escape' && (s.commentTool || s.activeCommentId)) {
+    // Put the comment tool away, or close the open note, before anything else.
+    s.setCommentTool(false);
+    s.setActiveComment(null);
+    return;
+  }
   if (mod && e.shiftKey && key === 'r' && s.selectedFrameId) {
     // Show or hide the selected frame's reference image.
     const reference = s.doc.frames.find((f) => f.id === s.selectedFrameId)?.reference;

@@ -95,6 +95,12 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     const id = nodeIdAt(e.target);
     const origin = toScreen(e.clientX, e.clientY);
 
+    // The comment tool: a click pins a note at that spot.
+    if (s0.commentTool) {
+      s0.addComment(frameId, e.clientX, e.clientY);
+      return;
+    }
+
     // A freeform frame: pressing an item selects it and moves it where the pointer goes, with no snapping.
     if (id && s0.doc.frames.find((f) => f.id === frameId)?.layout === 'free') {
       s0.selectNode(frameId, id);

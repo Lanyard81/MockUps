@@ -1,4 +1,5 @@
 import { useStore } from '../store/store';
+import { Comments } from './Comments';
 import { Layers } from './Layers';
 import { Library } from './Library';
 import { Templates } from './Templates';
@@ -10,7 +11,7 @@ export function LeftPanel() {
   return (
     <div className="left">
       <div className="tabs" role="tablist" aria-label="Left panel">
-        {(['library', 'templates', 'layers'] as const).map((t) => (
+        {(['library', 'templates', 'layers', 'comments'] as const).map((t) => (
           <button
             key={t}
             role="tab"
@@ -20,7 +21,13 @@ export function LeftPanel() {
             className={`tabs__tab${tab === t ? ' is-active' : ''}`}
             onClick={() => setTab(t)}
           >
-            {t === 'library' ? 'Library' : t === 'templates' ? 'Templates' : 'Layers'}
+            {t === 'library'
+              ? 'Library'
+              : t === 'templates'
+                ? 'Templates'
+                : t === 'layers'
+                  ? 'Layers'
+                  : 'Comments'}
           </button>
         ))}
       </div>
@@ -51,6 +58,15 @@ export function LeftPanel() {
         className="left__body left__body--layers"
       >
         <Layers />
+      </div>
+      <div
+        id="panel-comments"
+        role="tabpanel"
+        aria-labelledby="tab-comments"
+        hidden={tab !== 'comments'}
+        className="left__body"
+      >
+        <Comments />
       </div>
     </div>
   );

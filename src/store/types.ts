@@ -87,8 +87,19 @@ export interface Frame {
   reference?: FrameReference;
 }
 
+/** A note pinned to a point on a frame, in the frame's own pixels. */
+export interface Comment {
+  id: string;
+  frameId: string;
+  x: number;
+  y: number;
+  text: string;
+  resolved: boolean;
+  createdAt: number;
+}
+
 export interface MockupDoc {
-  version: 5;
+  version: 6;
   id: string;
   name: string;
   /** The kit used for the first frame of the mockup, and a new frame's starting choice. */
@@ -100,6 +111,8 @@ export interface MockupDoc {
   view: View;
   frames: Frame[];
   nodes: Record<string, DocNode>;
+  /** Notes pinned to spots on frames (Milestone G3). Edit mode only; never in Preview or HTML export. */
+  comments?: Comment[];
   /** Uploaded images by content-derived id. Each use (and its alt text) is in the node's `props.images`. */
   images: Record<string, { dataUrl: string; name?: string }>;
 }

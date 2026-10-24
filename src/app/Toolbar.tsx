@@ -21,6 +21,7 @@ export function Toolbar() {
   const hasSelection = useStore((s) => s.selectedNodeId !== null);
   const newFrameKit = useStore((s) => s.newFrameKitId);
   const newFrameLayout = useStore((s) => s.newFrameLayout);
+  const commentTool = useStore((s) => s.commentTool);
   const s = useStore;
   const pct = Math.round(zoom * 100);
   const options = ZOOM_PRESETS.includes(pct)
@@ -138,6 +139,17 @@ export function Toolbar() {
           title="Undo (Ctrl/⌘ Z)"
         >
           Undo
+        </button>
+        <button
+          className={`btn${commentTool ? ' btn--primary' : ''}`}
+          aria-pressed={commentTool}
+          title="Comment: click a spot on a frame to pin a note (Esc cancels)"
+          onClick={() => {
+            s.getState().setCommentTool(!commentTool);
+            if (!commentTool) s.getState().setMode('edit');
+          }}
+        >
+          Comment
         </button>
         <button
           className="btn"

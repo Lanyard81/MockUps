@@ -213,3 +213,12 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] The copy keeps its text and options, gets fresh ids and brings its pictures; one undo step; kits never mix; a section can't go on a freeform frame
 - [x] Stored in the browser like saved templates, and carried in `.mockup.json` files (merged without duplicates when opened)
 - [x] Tests: saving, adding, dropping, freeform, kit rules, files, validation (Vitest); save, click, drag, reload, delete and kit separation (Playwright)
+
+## Milestone G3: Comments
+
+- [x] Pin a note to a spot on a frame: Comment in the toolbar (or "Add a comment" in the Comments tab), then click; Esc cancels
+- [x] Numbered pins on the canvas open a note: edit the text, mark it Done or Reopen, delete it; an empty note is not kept
+- [x] Comments tab: the list (open notes, or with Show done), click to open one, copy or download all as Markdown
+- [x] PNG export can mark the open comments on the image (option in the Export dialog)
+- [x] Saved with the mockup (document version 6), shown while editing only: never in Preview or HTML export; deleting a frame takes its notes with it; every change is one undo step
+- [x] Tests: actions, undo, validation, Markdown (Vitest); pinning, list, done, delete, undo, Esc, reload, Preview, Markdown download and PNG marks (Playwright)

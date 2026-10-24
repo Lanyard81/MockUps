@@ -3,7 +3,7 @@
  "fileVersion": 1,
  "savedAt": "2026-10-20T00:00:00.000Z",
  "doc": {
-  "version": 5,
+  "version": 6,
   "id": "doc_sample_licence-renewal",
   "name": "Licence renewal journey",
   "defaultKitId": "nsw",

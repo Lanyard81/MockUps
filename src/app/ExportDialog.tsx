@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { downloadBlob, slug, uniqueNames } from '../export/download';
-import { ExportError, renderFramePng } from '../export/png';
+import { ExportError, addPinsToPng, renderFramePng } from '../export/png';
+import { commentsOf } from '../lib/comments';
 import { exportHtmlFiles, type HtmlMode } from '../export/page';
 import { createZip } from '../export/zip';
 import { useStore } from '../store/store';
@@ -25,6 +26,7 @@ function Inner() {
   );
   const [scale, setScale] = useState<1 | 2>(2);
   const [mode, setMode] = useState<Exclude<HtmlMode, 'shared'>>('inline');
+  const [pins, setPins] = useState(true);
   const [busy, setBusy] = useState(false);
   const st = useStore.getState;
   const close = () => st().setDialog(null);
@@ -38,7 +40,16 @@ function Inner() {
       const base = slug(doc.name);
       if (format === 'png') {
         const blobs = [];
-        for (const f of frames) blobs.push({ f, blob: await renderFramePng(f.id, scale) });
+        for (const f of frames) {
+          const png = await renderFramePng(f.id, scale);
+          const marks = pins
+            ? commentsOf(doc)
+                .map((c, i) => ({ c, n: i + 1 }))
+                .filter(({ c }) => c.frameId === f.id && !c.resolved)
+                .map(({ c, n }) => ({ x: c.x, y: c.y, n }))
+            : [];
+          blobs.push({ f, blob: await addPinsToPng(png, marks, scale) });
+        }
         const suffix = scale === 2 ? '@2x' : '';
         if (!many)
           downloadBlob(
@@ -157,6 +168,12 @@ function Inner() {
           <legend>Size</legend>
           {radio('scale', 1, scale, setScale, '1× (normal)')}
           {radio('scale', 2, scale, setScale, '2× (sharper, for retina screens and slides)')}
+          {commentsOf(doc).some((c) => !c.resolved) && (
+            <label className="prop-toggle" style={{ marginTop: 8 }}>
+              <input type="checkbox" checked={pins} onChange={(e) => setPins(e.target.checked)} />
+              <span>Mark open comments on the image</span>
+            </label>
+          )}
         </fieldset>
       ) : (
         <fieldset className="field-group">

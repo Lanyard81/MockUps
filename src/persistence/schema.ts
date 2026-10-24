@@ -6,6 +6,7 @@ import { DOC_VERSION, migrateDoc } from './migrate';
 import {
   DEVICES,
   type DeviceId,
+  type Comment,
   type DocNode,
   type Frame,
   type FrameReference,
@@ -289,6 +290,33 @@ export function validateDoc(raw: unknown): MockupDoc {
   return validateCurrent(doc);
 }
 
+const MAX_COMMENTS = 500;
+
+/** Pinned notes: only those on a frame that exists, with sane positions and text. */
+function cleanComments(raw: unknown, frameIds: Set<string>): Comment[] {
+  if (!Array.isArray(raw)) return [];
+  const out: Comment[] = [];
+  const seen = new Set<string>();
+  for (const c of raw.slice(0, MAX_COMMENTS)) {
+    if (!isObject(c)) continue;
+    const id = str(c.id, 100);
+    const frameId = str(c.frameId, 100);
+    if (!id || !frameId || seen.has(id) || FORBIDDEN_KEYS.has(id) || !frameIds.has(frameId))
+      continue;
+    seen.add(id);
+    out.push({
+      id,
+      frameId,
+      x: clamp(num(c.x, 0), -20000, 20000),
+      y: clamp(num(c.y, 0), -20000, 20000),
+      text: typeof c.text === 'string' ? c.text.slice(0, 2000) : '',
+      resolved: c.resolved === true,
+      createdAt: num(c.createdAt, 0),
+    });
+  }
+  return out;
+}
+
 function validateCurrent(raw: Record<string, unknown>): MockupDoc {
   if (!Array.isArray(raw.frames)) throw new FileError('This mockup has no frames.');
   if (raw.frames.length > MAX_FRAMES)
@@ -309,6 +337,7 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     frames.map((f) => f.kitId),
     frames.map((f) => f.layout === 'free'),
   );
+  const comments = cleanComments(raw.comments, new Set(frames.map((f) => f.id)));
   const view = isObject(raw.view) ? raw.view : {};
   const defaultKitId = hasKit(str(raw.defaultKitId, 40) ?? '') ? str(raw.defaultKitId, 40)! : 'nsw';
   const kitVersions: Record<string, string> = {};
@@ -333,6 +362,7 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     view: { x: num(view.x, 80), y: num(view.y, 80), zoom: clamp(num(view.zoom, 1), 0.1, 4) },
     frames,
     nodes,
+    ...(comments.length ? { comments } : {}),
     images,
   };
 }

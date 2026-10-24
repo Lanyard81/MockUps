@@ -110,9 +110,9 @@ test.describe('reference image', () => {
     await expect(reference(page).locator('img')).toHaveCSS('opacity', '1');
     await page.getByRole('button', { name: 'Over', exact: true }).click();
 
-    await page.getByLabel('Show', { exact: false }).first().uncheck();
+    await page.getByLabel(/^Show \(/).uncheck();
     await expect(reference(page)).toHaveCount(0);
-    await page.getByLabel('Show', { exact: false }).first().check();
+    await page.getByLabel(/^Show \(/).check();
     await expect(reference(page)).toHaveCount(1);
 
     await page.getByLabel('Offset x').fill('12');
