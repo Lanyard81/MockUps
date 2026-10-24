@@ -322,3 +322,11 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Editor only.** Pins are drawn in the editor over a frame, like the selection, so Preview, PNG (unless the option is on) and HTML export never include them. The PNG option draws numbered dots with canvas after the image is made.
 - **Stored in the document**, so they travel with the file and undo like everything else. Orphans (a note whose frame is gone) are dropped on load. Version 6.
 - **No authors, replies or live sync.** There is one person and no server; a note is plain text and a Done flag. The shareable viewer (G4) carries notes read-only.
+
+## 057: Sharing as a viewer file, not a hosted link (Milestone G4)
+
+- **Why a file.** A shareable link needs somewhere to host the mockup and (for comments) somewhere to keep them, so a server, accounts and a privacy decision about where people's mockups live. MockMaker is built to run offline from one file, so it doesn't have any of that. The viewer file gives the same result for the common cases: it opens in any browser from an email attachment, a shared drive or any web server, including the GitHub Pages site.
+- **What it is.** A static page with the viewer's own small script and the mockup embedded as JSON: each frame's cleaned export markup, plus each kit's CSS (fonts inlined), JavaScript and initialiser once. A frame is shown in an iframe built from that data, so components work (menus, accordions); links to other frames are rewritten to `#goto:<id>` and passed up by `postMessage`.
+- **Read-only, and comments are a snapshot.** People can't change the mockup or reply to notes; they see the notes as they were when the file was made. Two-way comments would need the server.
+- **Safe to embed.** The data is JSON with `<`, `>` and `&` escaped, so nothing in a frame name, text or note can close the script or start a tag.
+- **Not built:** a hosted link, live comments, access control. If a server is ever added, this file's data is the format it would serve.

@@ -222,3 +222,12 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] PNG export can mark the open comments on the image (option in the Export dialog)
 - [x] Saved with the mockup (document version 6), shown while editing only: never in Preview or HTML export; deleting a frame takes its notes with it; every change is one undo step
 - [x] Tests: actions, undo, validation, Markdown (Vitest); pinning, list, done, delete, undo, Esc, reload, Preview, Markdown download and PNG marks (Playwright)
+
+## Milestone G4: Share as a viewer file
+
+- [x] File → Export… → "Viewer file (to share)": the whole mockup in one self-contained, read-only HTML file
+- [x] Tabs for every frame, working click-through links between frames with a Back button, wide frames scaled to fit the window
+- [x] Optional comments: pins on the frame and a list, shown on request
+- [x] Kit styles, scripts and fonts are embedded once per kit; no network needed to open it (tested offline from disk); text in the mockup can't break out of the file
+- [x] Tests: contents, links, comments, escaping, no external references (Vitest); export, open offline, tabs, click-through, Back, comments (Playwright)
+- [ ] A hosted link people can open from a URL: needs a server, which this offline-first app doesn't have (see `DECISIONS.md` 057)

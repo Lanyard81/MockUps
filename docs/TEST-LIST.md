@@ -42,3 +42,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **My components (G2)** 44. Build a card or a section the way you like it, right-click → Save as component…, give it a name. It appears under My components at the top of the Library. Click it to add a copy, drag it onto a frame (try a freeform frame), then Undo. Reload: it is still there. Delete it and check pages that use it are unchanged. 45. File → Save to file, then open that file in a private window: your components come with it.
 
 **Comments (G3)** 46. Click Comment in the toolbar, click a spot on a frame, type a note and Close. A numbered pin appears. Add two more, then open the Comments tab: open one, mark it Done, show done notes, delete one, Undo. 47. Preview: no pins. Export a PNG with and without "Mark open comments on the image". Copy or download the comments as Markdown and read them.
+
+**Viewer file (G4)** 48. Make a mockup with two frames, a button that goes to the second (Properties → Go to frame) and a comment. File → Export… → Viewer file. Open the downloaded file with Wi-Fi off: switch frames with the tabs, click the button, press Back, and turn Comments on.

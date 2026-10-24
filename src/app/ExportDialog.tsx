@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { downloadBlob, slug, uniqueNames } from '../export/download';
+import { buildViewerFile } from '../export/viewer';
 import { ExportError, addPinsToPng, renderFramePng } from '../export/png';
 import { commentsOf } from '../lib/comments';
 import { exportHtmlFiles, type HtmlMode } from '../export/page';
@@ -7,7 +8,7 @@ import { createZip } from '../export/zip';
 import { useStore } from '../store/store';
 import { Modal } from './Modal';
 
-type Format = 'png' | 'html';
+type Format = 'png' | 'html' | 'viewer';
 
 /** Export frames as PNG images or clickable HTML pages. */
 export function ExportDialog() {
@@ -27,6 +28,7 @@ function Inner() {
   const [scale, setScale] = useState<1 | 2>(2);
   const [mode, setMode] = useState<Exclude<HtmlMode, 'shared'>>('inline');
   const [pins, setPins] = useState(true);
+  const [withNotes, setWithNotes] = useState(true);
   const [busy, setBusy] = useState(false);
   const st = useStore.getState;
   const close = () => st().setDialog(null);
@@ -38,7 +40,10 @@ function Inner() {
     setBusy(true);
     try {
       const base = slug(doc.name);
-      if (format === 'png') {
+      if (format === 'viewer') {
+        const file = `${base}-viewer.html`;
+        downloadBlob(await buildViewerFile(doc, { comments: withNotes }), file, 'text/html');
+      } else if (format === 'png') {
         const blobs = [];
         for (const f of frames) {
           const png = await renderFramePng(f.id, scale);
@@ -125,7 +130,7 @@ function Inner() {
         </>
       }
     >
-      <fieldset className="field-group">
+      <fieldset className="field-group" hidden={format === 'viewer'}>
         <legend>What to export</legend>
         {radio(
           'scope',
@@ -162,8 +167,35 @@ function Inner() {
           'HTML page',
           'A real, clickable web page built with the NSW Design System.',
         )}
+        {radio(
+          'format',
+          'viewer',
+          format,
+          setFormat,
+          'Viewer file (to share)',
+          'The whole mockup in one read-only file, with links between frames and your comments.',
+        )}
       </fieldset>
-      {format === 'png' ? (
+      {format === 'viewer' ? (
+        <fieldset className="field-group">
+          <legend>Viewer file</legend>
+          <p className="modal__note">
+            One HTML file with every frame in this mockup, the links between frames working, and no
+            editing. Send it by email or put it on any web page; it needs no internet connection to
+            open.
+          </p>
+          {commentsOf(doc).length > 0 && (
+            <label className="prop-toggle">
+              <input
+                type="checkbox"
+                checked={withNotes}
+                onChange={(e) => setWithNotes(e.target.checked)}
+              />
+              <span>Include comments</span>
+            </label>
+          )}
+        </fieldset>
+      ) : format === 'png' ? (
         <fieldset className="field-group">
           <legend>Size</legend>
           {radio('scale', 1, scale, setScale, '1× (normal)')}
