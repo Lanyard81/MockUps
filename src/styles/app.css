@@ -2104,3 +2104,40 @@ body.is-free-gesture .frame__iframe {
   padding: 16px;
   color: var(--ed-text-muted);
 }
+
+/* Click-through transitions: the next frame animates in; motion is translate and opacity only. */
+@keyframes proto-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes proto-slide {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+}
+@keyframes proto-rise {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+}
+@keyframes proto-back {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+}
+.prototype__stage--fade {
+  animation: proto-fade 260ms var(--ed-ease, ease) both;
+}
+.prototype__stage--slide {
+  animation: proto-slide 260ms var(--ed-ease, ease) both;
+}
+.prototype__stage--rise {
+  animation: proto-rise 260ms var(--ed-ease, ease) both;
+}
+.prototype__stage--back {
+  animation: proto-back 260ms var(--ed-ease, ease) both;
+}

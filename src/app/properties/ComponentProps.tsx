@@ -30,6 +30,7 @@ function LinkControl({
   set: (v: unknown) => void;
 }) {
   const goto = useStore((s) => s.doc.nodes[nodeId]?.props?.goto);
+  const transition = useStore((s) => s.doc.nodes[nodeId]?.props?.transition);
   const frames = useStore((s) => s.doc.frames);
   const target = typeof goto === 'string' ? goto : '';
   const exists = frames.some((f) => f.id === target);
@@ -51,6 +52,22 @@ function LinkControl({
           ))}
         </select>
       </Field>
+      {exists && (
+        <Field label="Transition">
+          <select
+            aria-label="Transition"
+            value={typeof transition === 'string' ? transition : ''}
+            onChange={(e) =>
+              useStore.getState().setNodeProps(nodeId, { transition: e.target.value || undefined })
+            }
+          >
+            <option value="">None</option>
+            <option value="fade">Fade</option>
+            <option value="slide">Slide in</option>
+            <option value="rise">Rise</option>
+          </select>
+        </Field>
+      )}
       {!exists && (
         <Field label={opt.label}>
           <CommitInput

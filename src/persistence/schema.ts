@@ -363,6 +363,9 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     frames,
     nodes,
     ...(comments.length ? { comments } : {}),
+    ...(typeof raw.startFrameId === 'string' && frames.some((f) => f.id === raw.startFrameId)
+      ? { startFrameId: raw.startFrameId as string }
+      : {}),
     images,
   };
 }

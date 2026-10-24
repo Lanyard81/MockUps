@@ -30,6 +30,15 @@ body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;backgro
 .v-note.is-done{opacity:.6}
 .v-n{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:999px;background:#0a84ff;color:#fff;font-size:11px;font-weight:700}
 .v-none{color:rgba(235,235,245,.64)}
+@keyframes v-fade{from{opacity:0}}
+@keyframes v-slide{from{opacity:0;margin-left:48px}}
+@keyframes v-rise{from{opacity:0;margin-top:48px}}
+@keyframes v-back{from{opacity:0;margin-left:-48px}}
+.v-t-fade{animation:v-fade .26s ease both}
+.v-t-slide{animation:v-slide .26s ease both}
+.v-t-rise{animation:v-rise .26s ease both}
+.v-t-back{animation:v-back .26s ease both}
+@media (prefers-reduced-motion:reduce){.v-frame{animation:none!important}}
 @media (max-width:760px){.v-main{grid-template-columns:1fr}.v-notes{max-width:none;width:auto;border-left:0;border-top:1px solid rgba(255,255,255,.14)}}
 `;
 
@@ -41,7 +50,8 @@ export const VIEWER_JS = `
   var frames = data.frames;
   var byId = {};
   frames.forEach(function (f) { byId[f.id] = f; });
-  var current = frames.length ? frames[0].id : null;
+  var current = byId[data.start] ? data.start : frames.length ? frames[0].id : null;
+  var motion = '';
   var history = [];
   var showNotes = false;
   var active = null;
@@ -54,7 +64,7 @@ export const VIEWER_JS = `
   function srcdocFor(f) {
     var kit = kits[f.kit] || {};
     // Links to other frames are caught here and passed up to the viewer.
-    var nav = '<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a)return;var h=a.getAttribute("href")||"";if(h.indexOf("#goto:")===0){e.preventDefault();parent.postMessage({mmGoto:h.slice(6)},"*")}else if(h==="#"){e.preventDefault()}},true);<\\/script>';
+    var nav = '<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a)return;var h=a.getAttribute("href")||"";if(h.indexOf("#goto:")===0){e.preventDefault();parent.postMessage({mmGoto:h.slice(6),t:a.getAttribute("data-mm-t")},"*")}else if(h==="#"){e.preventDefault()}},true);<\\/script>';
     return '<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' + (kit.css || '') + '</style><style>html{overflow:hidden}body{margin:0}</style></head><body><div id="root">' + f.html + '</div><script>' + (kit.js || '') + '<\\/script>' + (kit.init ? '<script>' + kit.init + '<\\/script>' : '') + nav + '</body></html>';
   }
 
@@ -99,7 +109,7 @@ export const VIEWER_JS = `
     backBtn.disabled = history.length === 0;
     stage.innerHTML = '';
     var box = document.createElement('div');
-    box.className = 'v-frame';
+    box.className = 'v-frame' + (motion ? ' v-t-' + motion : '');
     box.style.width = f.width + 'px';
     var iframe = document.createElement('iframe');
     iframe.title = f.name;
@@ -141,22 +151,23 @@ export const VIEWER_JS = `
     renderNotes(f);
   }
 
-  function go(id, fromTab) {
+  function go(id, fromTab, t) {
     if (!byId[id] || id === current) return;
     if (!fromTab) history.push(current);
     else history = [];
+    motion = !fromTab && /^(fade|slide|rise)$/.test(t || '') ? t : '';
     current = id;
     active = null;
     show();
   }
 
   window.addEventListener('message', function (e) {
-    if (e.data && typeof e.data.mmGoto === 'string') go(e.data.mmGoto, false);
+    if (e.data && typeof e.data.mmGoto === 'string') go(e.data.mmGoto, false, e.data.t);
   });
   window.addEventListener('resize', function () { show(); });
   backBtn.onclick = function () {
     var prev = history.pop();
-    if (prev) { current = prev; active = null; show(); }
+    if (prev) { current = prev; active = null; motion = 'back'; show(); }
   };
   notesBtn.onclick = function () {
     showNotes = !showNotes;

@@ -54,6 +54,9 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   const mode = useStore((s) => s.mode);
   const store = useStore;
   const kit = getKit(frame.kitId);
+  const startFrame = useStore(
+    (s) => (s.doc.startFrameId ?? s.doc.frames[0]?.id) === frame.id && s.doc.frames.length > 1,
+  );
   const screenHeight = DEVICES[frame.device].screenHeight;
 
   useEffect(() => {
@@ -212,6 +215,15 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         <span className="frame__kit" title={kit.name} data-testid="frame-kit">
           {kit.shortLabel}
         </span>
+        {startFrame && (
+          <span
+            className="frame__kit"
+            title="The click-through starts here"
+            data-testid="frame-start"
+          >
+            ▶ Start
+          </span>
+        )}
         {frame.layout === 'free' && (
           <span
             className="frame__kit"

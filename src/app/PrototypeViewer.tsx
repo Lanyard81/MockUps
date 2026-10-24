@@ -21,6 +21,7 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
   const images = useStore((s) => s.doc.images);
   const kitSettings = useStore((s) => s.doc.kitSettings[frame.kitId]);
   const frameHeight = useStore((s) => s.frameHeights[frame.id]);
+  const motion = useStore((s) => s.prototypeMotion);
   const html = useMemo(
     () =>
       renderFrameHtml(nodes, frame.root, images, {
@@ -82,7 +83,9 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
         const target = (e.target as Element | null)?.closest?.('[data-goto]');
         if (target) {
           e.preventDefault();
-          useStore.getState().prototypeGo(target.getAttribute('data-goto')!);
+          useStore
+            .getState()
+            .prototypeGo(target.getAttribute('data-goto')!, target.getAttribute('data-transition'));
           return;
         }
         const a = (e.target as Element | null)?.closest?.('a[href]');
@@ -117,7 +120,11 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
           Close
         </button>
       </div>
-      <div className="prototype__stage" style={{ height: stageH }}>
+      <div
+        className={`prototype__stage prototype__stage--${motion}`}
+        style={{ height: stageH }}
+        data-motion={motion}
+      >
         <iframe
           ref={iframeRef}
           title={`Preview of ${frame.name}`}

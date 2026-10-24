@@ -185,6 +185,11 @@ export function ContextMenu() {
             },
           ]
         : []),
+      {
+        label: doc.startFrameId === frameId ? 'Clear start frame' : 'Set as start frame',
+        separatorBefore: true,
+        onSelect: () => st().setStartFrame(doc.startFrameId === frameId ? null : frameId),
+      },
       ...frameKit.pageParts.map((part, i) => ({
         label: part.label,
         separatorBefore: i === 0,

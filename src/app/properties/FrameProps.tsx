@@ -12,7 +12,7 @@ import { isFreeFrame } from '../../layout/free';
 import { ImportReportView } from '../ImportReportView';
 import { FreeFrameSettings } from './FreeProps';
 import { ReferenceProps } from './ReferenceProps';
-import { CommitInput, Field, Section, Segmented } from './controls';
+import { CommitInput, Field, Section, Segmented, Toggle } from './controls';
 import { SettingsPanel } from './SettingsPanel';
 
 const NO_VALUES: Record<string, unknown> = {};
@@ -26,6 +26,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
     [frame?.root, nodes],
   );
   const importReport = useStore((s) => s.importReports[frameId]);
+  const doc = useStore((s) => s.doc);
   const st = useStore.getState;
   if (!frame) return null;
   const kit = getKit(frame.kitId);
@@ -102,6 +103,17 @@ export function FrameProps({ frameId }: { frameId: string }) {
             drag the side handles to resize, arrow keys nudge, Alt+↑/↓ changes what is in front.
           </p>
         )}
+      </Section>
+      <Section
+        title="Click-through"
+        hint="Play starts here. Links set to “Go to frame” move between frames, with the transition you choose."
+      >
+        <Toggle
+          label="Start frame"
+          checked={(doc.startFrameId ?? doc.frames[0]?.id) === frame.id}
+          disabled={(doc.startFrameId ?? doc.frames[0]?.id) === frame.id && !doc.startFrameId}
+          onChange={(on) => st().setStartFrame(on ? frame.id : null)}
+        />
       </Section>
       {importReport && (
         <Section

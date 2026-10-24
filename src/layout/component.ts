@@ -46,12 +46,16 @@ function retag(el: Element, tag: string): Element {
   return next;
 }
 
+/** How a "go to frame" link can move to the next frame. */
+export const TRANSITIONS = ['fade', 'slide', 'rise'];
+
 function applyOption(
   root: ParentNode,
   opt: OptionDef,
   value: unknown,
   goto: unknown,
   iconRenderer?: (name: string) => string,
+  transition?: unknown,
 ) {
   if (opt.type === 'href' && typeof goto === 'string' && goto) {
     // A "go to frame" link: a real link in the markup, followed by Preview and by HTML export.
@@ -63,6 +67,9 @@ function applyOption(
     }
     el?.setAttribute('href', '#');
     el?.setAttribute('data-goto', goto);
+    // How the click-through moves to the next frame: only the values the viewer knows.
+    if (typeof transition === 'string' && TRANSITIONS.includes(transition))
+      el?.setAttribute('data-transition', transition);
     return;
   }
   if (value === undefined || value === null || value === false || value === '') return;
@@ -187,7 +194,8 @@ export function renderComponent(node: DocNode, images: Images): string {
 
   // Options first: some retag elements, and the rest of the steps look elements up afterwards.
   const iconRenderer = getKit(kitOfComponent(comp.id)).icons?.render;
-  for (const opt of comp.options) applyOption(root, opt, props[opt.key], props.goto, iconRenderer);
+  for (const opt of comp.options)
+    applyOption(root, opt, props[opt.key], props.goto, iconRenderer, props.transition);
   getKit(kitOfComponent(comp.id)).enhanceComponent?.(root, node);
 
   const hidden = Array.isArray(props.hiddenParts) ? props.hiddenParts.map(String) : [];

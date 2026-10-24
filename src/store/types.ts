@@ -99,7 +99,7 @@ export interface Comment {
 }
 
 export interface MockupDoc {
-  version: 6;
+  version: 7;
   id: string;
   name: string;
   /** The kit used for the first frame of the mockup, and a new frame's starting choice. */
@@ -111,6 +111,8 @@ export interface MockupDoc {
   view: View;
   frames: Frame[];
   nodes: Record<string, DocNode>;
+  /** The frame the click-through starts on (Play, and the viewer file). Missing means the first frame. */
+  startFrameId?: string;
   /** Notes pinned to spots on frames (Milestone G3). Edit mode only; never in Preview or HTML export. */
   comments?: Comment[];
   /** Uploaded images by content-derived id. Each use (and its alt text) is in the node's `props.images`. */

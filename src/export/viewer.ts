@@ -19,6 +19,15 @@ const safeJson = (value: unknown) =>
     .replace(new RegExp('\\u2028', 'g'), '\\u2028')
     .replace(new RegExp('\\u2029', 'g'), '\\u2029');
 
+/** Keep each link's transition in a form the viewer reads (`data-transition` is an editor marker and is stripped). */
+function carryTransitions(html: string): string {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  for (const el of tpl.content.querySelectorAll('[data-goto][data-transition]'))
+    el.setAttribute('data-mm-t', el.getAttribute('data-transition')!);
+  return tpl.innerHTML;
+}
+
 export interface ViewerOptions {
   /** Carry the open notes (and done ones, marked) into the file. */
   comments: boolean;
@@ -51,7 +60,7 @@ export async function buildViewerFile(
     width: frame.width,
     height: heights[frame.id],
     kit: getKit(frame.kitId).id,
-    html: cleanForExport(renderFrameOf(doc, frame, heights[frame.id]), { links }),
+    html: cleanForExport(carryTransitions(renderFrameOf(doc, frame, heights[frame.id])), { links }),
     comments: options.comments
       ? all
           .map((c, i) => ({ c, n: i + 1 }))
@@ -59,7 +68,12 @@ export async function buildViewerFile(
           .map(({ c, n }) => ({ id: c.id, n, x: c.x, y: c.y, text: c.text, done: c.resolved }))
       : [],
   }));
-  const data = { kits, frames, comments: options.comments ? all : [] };
+  const data = {
+    kits,
+    frames,
+    start: doc.frames.find((f) => f.id === doc.startFrameId)?.id ?? doc.frames[0]?.id,
+    comments: options.comments ? all : [],
+  };
 
   return `<!doctype html>
 <html lang="en-AU">

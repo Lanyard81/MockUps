@@ -14,8 +14,10 @@
  *   v4 -> v5 (freeform grid and snapping): frames may have `freeGrid` and `freeSnap`. Nothing to convert.
  *
  *   v5 -> v6 (comments): the document may have `comments`. Nothing to convert.
+ *
+ *   v6 -> v7 (start frame): the document may have `startFrameId`. Nothing to convert.
  */
-export const DOC_VERSION = 6;
+export const DOC_VERSION = 7;
 
 const isObject = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -43,5 +45,6 @@ export function migrateDoc(raw: unknown): unknown {
   if (doc.version === 3) doc = { ...doc, version: 4 };
   if (doc.version === 4) doc = { ...doc, version: 5 };
   if (doc.version === 5) doc = { ...doc, version: 6 };
+  if (doc.version === 6) doc = { ...doc, version: 7 };
   return doc;
 }

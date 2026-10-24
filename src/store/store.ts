@@ -10,6 +10,7 @@ import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
 import { imagesUsedBy } from '../layout/imagesUsed';
+import { TRANSITIONS } from '../layout/component';
 import { useSavedComponents } from './savedComponents';
 import {
   FREE_NO_CONVERT,
@@ -101,7 +102,7 @@ function writeLastKit(id: KitId) {
 
 export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
-    version: 6,
+    version: 7,
     id: newId('doc'),
     name: 'Untitled mockup',
     defaultKitId: kitId,
@@ -158,6 +159,8 @@ interface State {
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
   newFrameKitId: KitId;
   /** The summary of the last frame conversion, shown until dismissed (UI only). */
+  /** How the click-through just moved: the next frame animates in this way. */
+  prototypeMotion: string;
   /** The command palette (⌘K) is open. */
   paletteOpen: boolean;
   /** The comment tool is on: a click on a frame pins a note there. */
@@ -246,7 +249,11 @@ interface Actions {
   setHelpOpen: (open: boolean) => void;
   /** Open the click-through viewer on a frame, step to another, go back, or close. */
   openPrototype: (frameId: string) => void;
-  prototypeGo: (frameId: string) => void;
+  /** Play the click-through from the start frame (the first frame unless one is set). */
+  playPrototype: () => void;
+  /** Set (or with null clear) the frame the click-through starts on. One undo step. */
+  setStartFrame: (frameId: string | null) => void;
+  prototypeGo: (frameId: string, motion?: string | null) => void;
   prototypeBack: () => void;
   closePrototype: () => void;
   setFitWarnings: (frameId: string, warnings: FitWarning[]) => void;
@@ -566,6 +573,7 @@ export const useStore = create<Store>((set, get) => ({
   libraryKit: null,
   newFrameLayout: 'flow',
   paletteOpen: false,
+  prototypeMotion: 'none',
   commentTool: false,
   activeCommentId: null,
   conversionReport: null,
@@ -823,15 +831,32 @@ export const useStore = create<Store>((set, get) => ({
   setHelpOpen: (helpOpen) => set({ helpOpen }),
   openPrototype: (frameId) =>
     set((s) => (s.doc.frames.some((f) => f.id === frameId) ? { prototype: [frameId] } : s)),
-  prototypeGo: (frameId) =>
+  playPrototype: () =>
+    set((s) => {
+      const start = s.doc.frames.find((f) => f.id === s.doc.startFrameId) ?? s.doc.frames[0];
+      return start ? { prototype: [start.id], prototypeMotion: 'none', mode: 'edit' } : s;
+    }),
+  setStartFrame: (frameId) =>
+    set((s) => {
+      if (frameId !== null && !s.doc.frames.some((f) => f.id === frameId)) return s;
+      if ((s.doc.startFrameId ?? null) === frameId) return s;
+      const { startFrameId: _old, ...rest } = s.doc; // eslint-disable-line @typescript-eslint/no-unused-vars
+      return commit(s, frameId === null ? rest : { ...rest, startFrameId: frameId });
+    }),
+  prototypeGo: (frameId, motion) =>
     set((s) =>
       s.prototype && s.doc.frames.some((f) => f.id === frameId)
-        ? { prototype: [...s.prototype, frameId] }
+        ? {
+            prototype: [...s.prototype, frameId],
+            prototypeMotion: motion && TRANSITIONS.includes(motion) ? motion : 'none',
+          }
         : s,
     ),
   prototypeBack: () =>
     set((s) =>
-      s.prototype && s.prototype.length > 1 ? { prototype: s.prototype.slice(0, -1) } : s,
+      s.prototype && s.prototype.length > 1
+        ? { prototype: s.prototype.slice(0, -1), prototypeMotion: 'back' }
+        : s,
     ),
   closePrototype: () => set({ prototype: null }),
   setFitWarnings: (frameId, warnings) =>
@@ -921,6 +946,7 @@ export const useStore = create<Store>((set, get) => ({
           ...s.doc,
           frames: s.doc.frames.filter((f) => f.id !== id),
           nodes: removeSubtrees(s.doc.nodes, src.root),
+          ...(s.doc.startFrameId === id ? { startFrameId: undefined } : {}),
           ...(s.doc.comments?.some((c) => c.frameId === id)
             ? { comments: s.doc.comments.filter((c) => c.frameId !== id) }
             : {}),

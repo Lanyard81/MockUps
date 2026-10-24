@@ -46,3 +46,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **Viewer file (G4)** 48. Make a mockup with two frames, a button that goes to the second (Properties → Go to frame) and a comment. File → Export… → Viewer file. Open the downloaded file with Wi-Fi off: switch frames with the tabs, click the button, press Back, and turn Comments on.
 
 **Search (G5)** 49. Press Ctrl/⌘ K anywhere. Type "card", "dashboard", "export", "light", "go to": add a component, add a template, open Export, switch theme, jump to a frame. Check arrows, Enter and Esc.
+
+**Click-through (G6)** 50. Make two frames with a button on the first set to Go to frame (Properties) and pick a Transition. Press ▶ Play: click the button (the next frame animates in), Back, Esc. Set the second frame as the start (right-click its name) and Play again; export the viewer file and check it opens there too.

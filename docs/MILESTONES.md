@@ -238,3 +238,13 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Finds actions (undo, zoom, export, theme, add a frame of a device, switch layout...), frames (jump to one), components of the selected frame's kit (every variant), templates and samples, your saved components and templates, and comments; arrows move, Enter runs, Esc closes
 - [x] Words can be in any order; matches at the start of a word rank first
 - [x] Tests: ranking (Vitest); finding and running, keys, toggling, nothing found (Playwright)
+
+## Milestone G6: Better click-through prototypes
+
+- [x] A start frame: set it from the frame's menu or Properties (the first frame is the start by default); a "▶ Start" badge marks it
+- [x] "▶ Play" in the toolbar (and ⌘K) runs the click-through full screen from the start frame; Esc closes
+- [x] A transition on each "Go to frame" link (None, Fade, Slide in, Rise); going Back has its own motion; transitions honour reduced motion
+- [x] The viewer file opens on the start frame and keeps each link's transition
+- [x] Hover and tab states already work live in Preview and Play because components run the kit's own scripts
+- [x] Document version 7 (`startFrameId`), migration and validation
+- [x] Tests: start frame, transitions, validation, viewer (Vitest); play, transition, back, start frame and undo (Playwright)

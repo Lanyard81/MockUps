@@ -57,6 +57,13 @@ export function buildPaletteItems(): PaletteItem[] {
     undefined,
     'click through',
   );
+  act(
+    'play',
+    'Play the click-through',
+    () => useStore.getState().playPrototype(),
+    undefined,
+    'prototype preview start',
+  );
   act('edit', 'Edit mode', () => useStore.getState().setMode('edit'));
   act('new', 'New mockup', () => useStore.getState().newDoc());
   act(

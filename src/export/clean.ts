@@ -4,6 +4,7 @@
  */
 const EDITOR_ATTRS = [
   'data-node',
+  'data-transition',
   'data-free',
   'data-free-board',
   'data-empty',

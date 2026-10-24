@@ -187,6 +187,17 @@ export function Toolbar() {
         </button>
       </div>
 
+      <div className="toolbar__group">
+        <button
+          className="btn"
+          title="Play the click-through full screen, from the start frame"
+          disabled={!s.getState().doc.frames.length}
+          onClick={() => s.getState().playPrototype()}
+        >
+          ▶ Play
+        </button>
+      </div>
+
       <div className="toolbar__group zoom">
         <button
           className="btn btn--icon"

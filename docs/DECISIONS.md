@@ -336,3 +336,9 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Built from the app's own data when it opens.** The items come from the same sources as the panels (the kit catalogue, templates, saved components, frames, comments), so there is no second list to keep up to date; each item runs the same store action a button would, after the palette closes.
 - **Current kit.** Components and templates are those of the selected frame's kit (or the first frame's), because the others couldn't be added anyway.
 - **Ranking is deliberately small:** every word must appear; the label starting with a word beats a word inside it beats the group or hidden keywords; shorter labels win ties. No fuzzy matching, so results are predictable.
+
+## 059: Start frame and transitions (Milestone G6)
+
+- **Start frame is document data** (`startFrameId`, validated against the frames); unset means the first frame, so older mockups behave as before. Deleting that frame clears it.
+- **Transitions belong to the link** (`props.transition`, one of `fade`, `slide`, `rise`), because that is what a person is designing: how this click moves on. It becomes a `data-transition` attribute next to `data-goto`; unknown values are ignored. The Play viewer animates the incoming frame with CSS (opacity and translate only, off under reduced motion); the viewer file does the same.
+- **Hover and tab states were not added as features:** in Preview and Play the real kit scripts run, so hover, focus, tabs, menus and accordions already behave as they would on a site. Making a different frame appear _on_ hover would be a separate interaction model; it is not built.

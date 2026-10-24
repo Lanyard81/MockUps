@@ -37,6 +37,7 @@ const SANITISE = {
     'data-image',
     'data-multiline',
     'data-goto',
+    'data-transition',
     'data-tooltip-content',
     'data-popover-id',
     'data-popover-position',
