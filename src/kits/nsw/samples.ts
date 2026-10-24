@@ -259,7 +259,7 @@ export function buildSample(def: SampleDef): MockupDoc {
   });
 
   return {
-    version: 4,
+    version: 5,
     id: `doc_sample_${def.id}`,
     name: def.name,
     defaultKitId: 'nsw',

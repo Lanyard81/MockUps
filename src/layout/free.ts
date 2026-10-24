@@ -174,7 +174,8 @@ export function freeToFlow<T extends Doc>(doc: T, frameId: string, makeId: MakeI
       root.push(chain.topId);
     }
   }
-  const { layout: _layout, ...frameRest } = frame; // eslint-disable-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { layout: _layout, freeGrid: _grid, freeSnap: _snap, ...frameRest } = frame;
   return {
     ...doc,
     nodes,

@@ -79,12 +79,16 @@ export interface Frame {
    * placed anywhere, Milestone F1). A freeform frame's root holds components only, back to front.
    */
   layout?: 'flow' | 'free';
+  /** Freeform frames: draw and snap to a grid of this many pixels (8, 16 or 24). Missing means no grid. */
+  freeGrid?: number;
+  /** Freeform frames: snap a moved item to the alignment guides (other items, the frame's edges and middle). */
+  freeSnap?: boolean;
   /** A screenshot to trace over (Milestone R1). */
   reference?: FrameReference;
 }
 
 export interface MockupDoc {
-  version: 4;
+  version: 5;
   id: string;
   name: string;
   /** The kit used for the first frame of the mockup, and a new frame's starting choice. */

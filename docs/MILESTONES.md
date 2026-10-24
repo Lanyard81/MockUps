@@ -197,3 +197,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Document version 4 with migration and validation; `DATA-MODEL.md` updated
 - [x] Not on freeform frames, with a reason when tried: sections and grids, page parts, Convert, Copy as page spec, build notes, Save as template
 - [x] Tests: boxes, operations, rendering, files and store actions (Vitest); drop, move, shift-lock, resize, nudge, front/back, switching, Preview and reload (Playwright)
+
+## Milestone G1: Freeform alignment
+
+- [x] Pink alignment guides while moving an item: lines up with the frame's edges and middle, or another item's edges and middle (hints only: nothing is forced)
+- [x] Optional per-frame grid (8, 16 or 24 px) drawn on the frame, and optional "Snap to guides"; hold Alt while dragging to ignore snapping
+- [x] Position panel for an item on a freeform frame: X, Y and width as numbers, align left, centre or right in the frame, bring to front and send to back
+- [x] Document version 5 (`frame.freeGrid`, `frame.freeSnap`), migration and validation
+- [x] Tests: guide and snap maths, settings, validation (Vitest); guides, grid and the Position panel (Playwright)

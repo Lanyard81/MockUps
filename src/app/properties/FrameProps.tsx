@@ -10,6 +10,7 @@ import { switchFrameLayout } from '../frameLayout';
 import { PageParts } from '../PageParts';
 import { isFreeFrame } from '../../layout/free';
 import { ImportReportView } from '../ImportReportView';
+import { FreeFrameSettings } from './FreeProps';
 import { ReferenceProps } from './ReferenceProps';
 import { CommitInput, Field, Section, Segmented } from './controls';
 import { SettingsPanel } from './SettingsPanel';
@@ -115,6 +116,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           </div>
         </Section>
       )}
+      <FreeFrameSettings frameId={frame.id} />
       <ReferenceProps frameId={frame.id} />
       {!free && kit.pageParts.length > 0 && (
         <Section

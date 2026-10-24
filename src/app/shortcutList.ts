@@ -51,6 +51,10 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
         keys: `${ALT}↑  ${ALT}↓`,
         action: 'Move up or down (on a freeform frame: forward or back)',
       },
+      {
+        keys: `Alt while dragging`,
+        action: 'On a freeform frame, ignore grid and guide snapping for that drag',
+      },
       { keys: '←  ↑  →  ↓', action: 'Nudge an item on a freeform frame 1 pixel (Shift: 10)' },
       { keys: `${MOD}Z`, action: 'Undo' },
       { keys: `${SHIFT}${MOD}Z`, action: 'Redo' },

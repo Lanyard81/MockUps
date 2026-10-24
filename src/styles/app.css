@@ -1837,3 +1837,24 @@ kbd {
 body.is-free-gesture .frame__iframe {
   pointer-events: none;
 }
+
+.ov-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(10 132 255 / 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(10 132 255 / 0.16) 1px, transparent 1px);
+}
+.ov-guide {
+  position: absolute;
+  pointer-events: none;
+  background: var(--dd-aurora-pink, #ff375f);
+  z-index: 3;
+}
+.ov-guide--x {
+  width: calc(1px * var(--inv-zoom, 1));
+}
+.ov-guide--y {
+  height: calc(1px * var(--inv-zoom, 1));
+}

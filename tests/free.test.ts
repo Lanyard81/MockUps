@@ -9,7 +9,7 @@ import {
   setBox,
 } from '../src/layout/free';
 import { renderFrameHtml } from '../src/layout/render';
-import { migrateDoc } from '../src/persistence/migrate';
+import { DOC_VERSION, migrateDoc } from '../src/persistence/migrate';
 import { validateDoc } from '../src/persistence/schema';
 import { createDoc, useStore } from '../src/store/store';
 import type { DocNode, DropTarget, MockupDoc } from '../src/store/types';
@@ -124,7 +124,7 @@ describe('freeform files', () => {
       },
       images: {},
     };
-    expect((migrateDoc(raw) as { version: number }).version).toBe(4);
+    expect((migrateDoc(raw) as { version: number }).version).toBe(DOC_VERSION);
     const doc = validateDoc(raw);
     expect(doc.frames[0]!.layout).toBe('free');
     expect(doc.nodes.n!.free).toEqual({ x: 5, y: 0, width: 4000 });

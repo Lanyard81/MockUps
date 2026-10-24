@@ -98,7 +98,7 @@ function writeLastKit(id: KitId) {
 
 export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
   return {
-    version: 4,
+    version: 5,
     id: newId('doc'),
     name: 'Untitled mockup',
     defaultKitId: kitId,
@@ -247,6 +247,8 @@ interface Actions {
   nudgeFree: (nodeId: string, dx: number, dy: number) => void;
   /** Bring an item to the front, or send it to the back, of a freeform frame. */
   reorderFree: (nodeId: string, to: 'front' | 'back') => void;
+  /** Grid and snapping for a freeform frame. One undo step. */
+  setFrameFree: (frameId: string, patch: { freeGrid?: number | null; freeSnap?: boolean }) => void;
   /** Switch a frame between flow and freeform. `boxes` are the positions to give a flow frame's components (measured on screen). One undo step. */
   setFrameLayout: (
     frameId: string,
@@ -803,6 +805,26 @@ export const useStore = create<Store>((set, get) => ({
       const box = readBox(s.doc.nodes[nodeId], frame!.width);
       const doc = setBox(s.doc, nodeId, { x: box.x + dx, y: box.y + dy });
       return doc === s.doc ? s : commit(s, doc);
+    }),
+
+  setFrameFree: (frameId, patch) =>
+    set((s) => {
+      const frame = s.doc.frames.find((f) => f.id === frameId);
+      if (!isFreeFrame(frame)) return s;
+      const next = { ...frame! };
+      if (patch.freeGrid !== undefined) {
+        if (patch.freeGrid && [8, 16, 24].includes(patch.freeGrid)) next.freeGrid = patch.freeGrid;
+        else delete next.freeGrid;
+      }
+      if (patch.freeSnap !== undefined) {
+        if (patch.freeSnap) next.freeSnap = true;
+        else delete next.freeSnap;
+      }
+      if (next.freeGrid === frame!.freeGrid && next.freeSnap === frame!.freeSnap) return s;
+      return commit(s, {
+        ...s.doc,
+        frames: s.doc.frames.map((f) => (f.id === frameId ? next : f)),
+      });
     }),
 
   reorderFree: (nodeId, to) =>

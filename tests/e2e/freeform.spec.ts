@@ -191,3 +191,82 @@ test('Preview shows a freeform frame as it is arranged, and positions survive a 
   await expect(page.getByTestId('frame-Desktop 2').getByTestId('frame-free')).toBeVisible();
   expect(await box(page)).toEqual(edit);
 });
+
+test('alignment guides show when an item lines up, and the grid and snapping are opt-in', async ({
+  page,
+}) => {
+  await addFreeFrame(page);
+  await addFromLibrary(page, 'card', 'Default');
+  await addFromLibrary(page, 'button', 'Brand Dark');
+  // Give the two items the same left edge by typing it in.
+  await page.getByLabel('X', { exact: true }).fill('120');
+  await page.getByLabel('X', { exact: true }).press('Enter');
+  await frame(page)
+    .locator('[data-free]')
+    .nth(0)
+    .evaluate((el) => el.scrollIntoView());
+  await page.getByTestId('frame-Desktop 2').locator('.frame__label').click();
+  await expect(page.getByRole('button', { name: 'No grid' })).toBeVisible();
+
+  // Grid: shown on the frame, and a move lands on it.
+  await page
+    .getByRole('group', { name: 'Grid' })
+    .getByRole('button', { name: '16', exact: true })
+    .click();
+  await expect(page.getByTestId('free-grid')).toBeVisible();
+  const k = await scale(page);
+  const from = await centre(item(page, 0));
+  await dragBetween(page, from, { x: from.x + 61 * k, y: from.y + 37 * k });
+  const b = await box(page, 0);
+  expect(b.x % 16).toBe(0);
+  expect(await item(page, 0).evaluate((el) => (el as HTMLElement).offsetTop % 16)).toBe(0);
+
+  // Without a grid the same move is not snapped.
+  await page.getByTestId('frame-Desktop 2').locator('.frame__label').click();
+  await page.getByRole('group', { name: 'Grid' }).getByRole('button', { name: 'No grid' }).click();
+  await expect(page.getByTestId('free-grid')).toHaveCount(0);
+});
+
+test('the Position panel sets exact numbers and aligns in the frame', async ({ page }) => {
+  await addFreeFrame(page);
+  await addFromLibrary(page, 'card', 'Default');
+  await page.getByLabel('X', { exact: true }).fill('77');
+  await page.getByLabel('X', { exact: true }).press('Enter');
+  await page.getByLabel('Y', { exact: true }).fill('55');
+  await page.getByLabel('Y', { exact: true }).press('Enter');
+  await page.getByLabel('Width', { exact: true }).fill('500');
+  await page.getByLabel('Width', { exact: true }).press('Enter');
+  expect(await box(page)).toMatchObject({ x: 77, y: 55, width: 500 });
+  await page
+    .getByRole('group', { name: 'Align in frame' })
+    .getByRole('button', { name: 'Centre' })
+    .click();
+  expect((await box(page)).x).toBe(470);
+  await page
+    .getByRole('group', { name: 'Align in frame' })
+    .getByRole('button', { name: 'Right' })
+    .click();
+  expect((await box(page)).x).toBe(940);
+  await page.getByRole('button', { name: 'Undo' }).click();
+  expect((await box(page)).x).toBe(470);
+});
+
+test('a pink guide appears while dragging an item that lines up with another', async ({ page }) => {
+  await addFreeFrame(page);
+  await addFromLibrary(page, 'card', 'Default');
+  await addFromLibrary(page, 'button', 'Brand Dark');
+  await page.getByLabel('X', { exact: true }).fill('120'); // the button
+  await page.getByLabel('X', { exact: true }).press('Enter');
+  await frame(page).locator('.nsw-card__title').first().click();
+  await page.getByLabel('X', { exact: true }).fill('120'); // the card
+  await page.getByLabel('X', { exact: true }).press('Enter');
+  const from = await centre(item(page, 0));
+  await page.keyboard.down('Shift'); // vertical only, so the left edges stay together
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(from.x, from.y + 60, { steps: 6 });
+  await expect(page.getByTestId('alignment-guide').first()).toBeVisible();
+  await page.mouse.up();
+  await page.keyboard.up('Shift');
+  await expect(page.getByTestId('alignment-guide')).toHaveCount(0);
+});

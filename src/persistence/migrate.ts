@@ -10,8 +10,10 @@
  *
  *   v3 -> v4 (freeform frames): frames may have `layout: "free"` and components in them a `free` box.
  *   Nothing to convert; older frames are flow frames.
+ *
+ *   v4 -> v5 (freeform grid and snapping): frames may have `freeGrid` and `freeSnap`. Nothing to convert.
  */
-export const DOC_VERSION = 4;
+export const DOC_VERSION = 5;
 
 const isObject = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
@@ -37,5 +39,6 @@ export function migrateDoc(raw: unknown): unknown {
   if (doc.version === 1) doc = v1ToV2(doc);
   if (doc.version === 2) doc = { ...doc, version: 3 };
   if (doc.version === 3) doc = { ...doc, version: 4 };
+  if (doc.version === 4) doc = { ...doc, version: 5 };
   return doc;
 }

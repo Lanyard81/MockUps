@@ -232,6 +232,9 @@ function cleanFrame(raw: unknown, index: number): Frame {
   const settings = cleanSettings(raw.settings);
   const reference = cleanReference(raw.reference);
   const layout = raw.layout === 'free' ? ('free' as const) : undefined;
+  const freeGrid =
+    layout && [8, 16, 24].includes(raw.freeGrid as number) ? (raw.freeGrid as number) : undefined;
+  const freeSnap = layout && raw.freeSnap === true ? true : undefined;
   return {
     id: str(raw.id, 100) || `f_${index}`,
     name: str(raw.name) || `Frame ${index + 1}`,
@@ -243,6 +246,8 @@ function cleanFrame(raw: unknown, index: number): Frame {
     y: num(raw.y, 0),
     root: Array.isArray(raw.root) ? raw.root.filter((c): c is string => typeof c === 'string') : [],
     ...(layout ? { layout } : {}),
+    ...(freeGrid ? { freeGrid } : {}),
+    ...(freeSnap ? { freeSnap } : {}),
     ...(reference ? { reference } : {}),
   };
 }

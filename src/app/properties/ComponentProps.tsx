@@ -6,6 +6,7 @@ import { copySelectionHtml } from '../../export/copy';
 import { describeVariant, optionsForVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
 import { useStore } from '../../store/store';
+import { FreePosition } from './FreeProps';
 import { ImageField } from './ImageField';
 import { NodeSettings } from './NodeSettings';
 import { IconPicker, type IconValue } from './IconPicker';
@@ -233,6 +234,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
         )}
       </Section>
 
+      <FreePosition nodeId={nodeId} />
       <NodeSettings nodeId={nodeId} frameId={frameId} />
       {KitPanel && <KitPanel nodeId={nodeId} />}
 

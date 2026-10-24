@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isDraggable } from '../layout/ops';
 import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { beginPendingDrag } from './drag';
-import { OVERLAY_REFRESH, startFreeGesture } from './freeform';
+import { GUIDES_EVENT, OVERLAY_REFRESH, startFreeGesture, type GuidesDetail } from './freeform';
+import type { Guide } from '../layout/guides';
 import { getFrameElement, nodeRect } from './registry';
 
 interface Props {
@@ -45,6 +46,16 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   const editing = useStore((s) => s.editing?.frameId === frameId);
   const edit = mode === 'edit' && !editing;
   const free = useStore((s) => s.doc.frames.find((f) => f.id === frameId)?.layout === 'free');
+  const grid = useStore((s) => s.doc.frames.find((f) => f.id === frameId)?.freeGrid);
+  const [guides, setGuides] = useState<Guide[]>([]);
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<GuidesDetail>).detail;
+      if (d.frameId === frameId) setGuides(d.guides);
+    };
+    window.addEventListener(GUIDES_EVENT, on);
+    return () => window.removeEventListener(GUIDES_EVENT, on);
+  }, [frameId]);
 
   // Measure after the frame has rendered its content (the frame's own effect runs after ours).
   useEffect(() => {
@@ -85,6 +96,25 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   const parent = drop?.indicator.parent;
   return (
     <div className="overlay" aria-hidden="true">
+      {free && grid && edit && (
+        <div
+          className="ov-grid"
+          data-testid="free-grid"
+          style={{ backgroundSize: `${grid}px ${grid}px` }}
+        />
+      )}
+      {guides.map((g) => (
+        <div
+          key={`${g.axis}${g.pos}`}
+          className={`ov-guide ov-guide--${g.axis}`}
+          data-testid="alignment-guide"
+          style={
+            g.axis === 'x'
+              ? { left: g.pos, top: g.from, height: g.to - g.from }
+              : { top: g.pos, left: g.from, width: g.to - g.from }
+          }
+        />
+      ))}
       <div ref={hoverRef} className="ov-hover" />
       <div ref={selectRef} className="ov-select">
         <div className="ov-chip">

@@ -302,3 +302,9 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Blur is spent where it shows.** Only the toolbar pill and transient popups use `backdrop-filter`. The side panels sit on the static aurora, where a blur is invisible, and blurring them made a drag over a 40-component page miss the "no long tasks" test (every repaint of a panel recomputed the blur), so they use the glass fill and border without it. The pills over the live canvas (hint, breadcrumb, drag ghost) use the near-solid popup fill for the same reason.
 - **Layout.** The toolbar becomes a floating pill and the panels and canvas rounded glass cards (24px) with 12px gaps; the toolbar sits above the panels (`z-index`) so its menus open over them. Radii follow the system (10, 16, 24, 32px, pill); buttons and inputs are pill-like at the editor's 32px control height.
 - **Brand.** The wordmark is "MockMaker" in the toolbar, with an inline SVG favicon (glass over an aurora) and a dark `theme-color`.
+
+## 054: Freeform guides, grid and position (Milestone G1)
+
+- **Hints first.** Guides appear when an item is within 1 px of a line; snapping (to guides, within 6 px) is a per-frame opt-in, off by default, because the point of Freeform is no forced snapping. With a grid set, the item snaps to the grid instead and guides still show. Alt ignores snapping for one drag.
+- **Measured from the frame.** Other items' boxes and the frame's height are read from the frame's DOM when a drag starts; the maths (`layout/guides.ts`) is pure. Guides are drawn by the overlay from an event, so nothing re-renders in the frame.
+- **Multi-select and "distribute evenly" are not built.** Selection is one item at a time everywhere in the app; adding multi-select touches every action, so alignment is to the frame and to other items by guides.
