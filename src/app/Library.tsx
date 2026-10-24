@@ -10,6 +10,7 @@ import { beginPendingDrag, consumeDragClick } from '../canvas/drag';
 import { getKit } from '../kits';
 import type { KitId, LayoutBlock } from '../kits/types';
 import { blockUnavailable, useStore } from '../store/store';
+import { MyComponents } from './MyComponents';
 import { KitSwitcher } from './KitSwitcher';
 import { PageParts } from './PageParts';
 import { useLibraryKit } from './useLibraryKit';
@@ -77,6 +78,9 @@ export function Library() {
       </div>
 
       <div className="library__scroll" data-testid="library-scroll">
+        {query.trim() === '' && (
+          <MyComponents kitId={kit.id} frameId={mismatch ? undefined : target?.id} />
+        )}
         {grouped.map(({ category, items }) => (
           <section key={category} className="library__group" aria-label={category}>
             <h2 className="library__category">{category}</h2>

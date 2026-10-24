@@ -111,7 +111,8 @@ export type DragPayload =
   | { kind: 'new-component'; componentId: string; variantId: string; label: string }
   | { kind: 'new-layout'; kitId: KitId; block: string; columns?: number; label: string }
   | { kind: 'move'; nodeId: string; label: string }
-  | { kind: 'template'; source: 'official' | 'mine'; templateId: string; label: string };
+  | { kind: 'template'; source: 'official' | 'mine'; templateId: string; label: string }
+  | { kind: 'saved'; savedId: string; label: string };
 
 export interface IndicatorRect {
   x: number;
@@ -179,4 +180,16 @@ export interface ConfirmRequest {
   confirmLabel: string;
   danger?: boolean;
   onConfirm: () => void;
+}
+
+/** A component or section saved for reuse (Milestone G2): a subtree with its images. Lives in browser storage, not in a mockup. */
+export interface SavedComponent {
+  id: string;
+  name: string;
+  createdAt: number;
+  kitId: KitId;
+  /** The top node: a component, or a section of a flow frame. */
+  rootId: string;
+  nodes: Record<string, DocNode>;
+  images: MockupDoc['images'];
 }

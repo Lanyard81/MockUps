@@ -9,6 +9,8 @@ import { getComponent, hasVariant } from '../catalogue';
 import { readSpans, type BreakpointId } from '../kits/nsw/spans';
 import type { FitWarning } from '../lib/textFit';
 import { newId } from '../lib/ids';
+import { imagesUsedBy } from '../layout/imagesUsed';
+import { useSavedComponents } from './savedComponents';
 import {
   FREE_NO_CONVERT,
   FREE_NO_LAYOUT,
@@ -145,9 +147,11 @@ interface State {
   /** Can this page keep data between visits? Null until checked. */
   storageOk: boolean | null;
   /** The open dialog, if any. */
-  dialog: 'mockups' | 'export' | 'saveTemplate' | 'importSpec' | null;
+  dialog: 'mockups' | 'export' | 'saveTemplate' | 'saveComponent' | 'importSpec' | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
+  /** The node a dialog is about (Save as component). */
+  dialogNodeId: string | null;
   /** Which tab of the left panel is showing. */
   leftTab: 'library' | 'layers' | 'templates';
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
@@ -201,7 +205,7 @@ interface Actions {
   openContextMenu: (menu: ContextMenuState | null) => void;
   setSaveState: (state: State['saveState']) => void;
   setStorageOk: (ok: boolean) => void;
-  setDialog: (dialog: State['dialog'], frameId?: string) => void;
+  setDialog: (dialog: State['dialog'], frameId?: string, nodeId?: string) => void;
   setLeftTab: (tab: State['leftTab']) => void;
   setNewFrameKit: (kitId: KitId) => void;
   setNewFrameLayout: (layout: 'flow' | 'free') => void;
@@ -272,6 +276,10 @@ interface Actions {
   duplicateNode: (nodeId: string) => void;
   copyNode: (nodeId: string) => void;
   pasteClipboard: () => void;
+  /** Save a component, or a section of a flow frame, for reuse. Returns false (with a notice) if it can't be. */
+  saveAsComponent: (nodeId: string, name: string) => boolean;
+  /** Put a saved component into a frame, next to the selection (or at a freeform frame's next spot). One undo step. */
+  insertSaved: (frameId: string, savedId: string) => void;
   /** Set one editable text region. One call is one undo step (an edit session commits once). */
   setText: (nodeId: string, key: string, text: string) => void;
   /** Switch a component's variant. Its text is kept, keyed by region name. */
@@ -434,6 +442,92 @@ function insertLeaf(s: Store, frameId: string, nodes: Record<string, DocNode>, l
   };
 }
 
+/**
+ * Put a copied or saved subtree into a frame with fresh ids: next to the selection on a flow frame
+ * (creating the layers it needs), or at the next spot on a freeform frame. Kits must match.
+ */
+function pasteInto(
+  s: Store,
+  frameId: string,
+  clip: Clipboard,
+  images?: MockupDoc['images'],
+): Partial<Store> {
+  const targetFrame = s.doc.frames.find((f) => f.id === frameId);
+  if (!targetFrame) return s;
+  // Layout nodes belong to the kit they were copied from, so the whole paste has to match.
+  if (
+    (clip.kitId && getKit(clip.kitId).id !== getKit(targetFrame.kitId).id) ||
+    !subtreesFitKit(clip.nodes, [clip.rootId], targetFrame.kitId)
+  )
+    return { notice: kitMismatchMessage(targetFrame.kitId) };
+  const copy = cloneSubtrees(clip.nodes, [clip.rootId], newId);
+  const leafId = copy.roots[0]!;
+  const doc0 = {
+    ...s.doc,
+    images: images ? { ...s.doc.images, ...images } : s.doc.images,
+    nodes: { ...s.doc.nodes, ...copy.nodes },
+  };
+  if (isFreeFrame(targetFrame)) {
+    const leaf = doc0.nodes[leafId]!;
+    if (leaf.type !== 'component') return { notice: FREE_NO_LAYOUT };
+    const at = leaf.free ? { x: leaf.free.x + 24, y: leaf.free.y + 24 } : nextPosition(targetFrame);
+    const box = {
+      ...at,
+      width: leaf.free?.width ?? defaultWidth(leaf.componentId, targetFrame.width),
+    };
+    return {
+      ...commit(s, placeFree(doc0, frameId, leafId, box)),
+      selectedFrameId: frameId,
+      selectedNodeId: leafId,
+    };
+  }
+  // A position on a freeform frame means nothing on a flow frame.
+  const leaf = doc0.nodes[leafId]!;
+  if (leaf.free) doc0.nodes[leafId] = withoutBox(leaf);
+  const anchor = s.selectedFrameId === frameId ? s.selectedNodeId : null;
+  const ins = resolveInsertion(doc0, frameId, anchor, doc0.nodes[leafId]!);
+  return {
+    ...commit(s, applyInsertion(doc0, frameId, ins, leafId, newId)),
+    selectedFrameId: frameId,
+    selectedNodeId: leafId,
+  };
+}
+
+/** Drop a saved component at an exact position. */
+function dropSaved(s: Store, savedId: string, target: DropTarget): Partial<Store> {
+  const saved = useSavedComponents.getState().components.find((c) => c.id === savedId);
+  const frame = s.doc.frames.find((f) => f.id === target.frameId);
+  if (!saved || !frame) return s;
+  if (getKit(saved.kitId).id !== getKit(frame.kitId).id)
+    return { notice: kitMismatchMessage(frame.kitId) };
+  const copy = cloneSubtrees(saved.nodes, [saved.rootId], newId);
+  const leafId = copy.roots[0]!;
+  const withNodes = {
+    ...s.doc,
+    images: { ...s.doc.images, ...saved.images },
+    nodes: { ...s.doc.nodes, ...copy.nodes },
+  };
+  const leaf = withNodes.nodes[leafId]!;
+  if (isFreeFrame(frame)) {
+    if (leaf.type !== 'component') return { notice: FREE_NO_LAYOUT };
+    const width = leaf.free?.width ?? defaultWidth(leaf.componentId, frame.width);
+    const at = target.free ?? nextPosition(frame);
+    const box = {
+      x: target.free ? at.x - width / 2 : at.x,
+      y: target.free ? at.y - 16 : at.y,
+      width,
+    };
+    return {
+      ...commit(s, placeFree(withNodes, frame.id, leafId, box)),
+      selectedFrameId: frame.id,
+      selectedNodeId: leafId,
+    };
+  }
+  if (leaf.free) withNodes.nodes[leafId] = withoutBox(leaf);
+  const doc = applyInsertion(withNodes, target.frameId, target, leafId, newId);
+  return { ...commit(s, doc), selectedFrameId: target.frameId, selectedNodeId: leafId };
+}
+
 export const useStore = create<Store>((set, get) => ({
   doc: createDoc(),
   past: [],
@@ -451,6 +545,7 @@ export const useStore = create<Store>((set, get) => ({
   storageOk: null,
   dialog: null,
   dialogFrameId: null,
+  dialogNodeId: null,
   leftTab: 'library',
   newFrameKitId: readLastKit(),
   libraryKit: null,
@@ -493,7 +588,8 @@ export const useStore = create<Store>((set, get) => ({
   openContextMenu: (contextMenu) => set({ contextMenu }),
   setSaveState: (saveState) => set({ saveState }),
   setStorageOk: (storageOk) => set({ storageOk }),
-  setDialog: (dialog, frameId) => set({ dialog, dialogFrameId: frameId ?? null }),
+  setDialog: (dialog, frameId, nodeId) =>
+    set({ dialog, dialogFrameId: frameId ?? null, dialogNodeId: nodeId ?? null }),
   setLeftTab: (leftTab) => set({ leftTab }),
   convertFrame: (frameId, targetKitId) =>
     set((s) => {
@@ -880,6 +976,7 @@ export const useStore = create<Store>((set, get) => ({
   dropNew: (payload, target) =>
     set((s) => {
       if (payload.kind === 'move' || payload.kind === 'template') return s;
+      if (payload.kind === 'saved') return dropSaved(s, payload.savedId, target);
       const targetFrame = s.doc.frames.find((f) => f.id === target.frameId);
       if (
         targetFrame &&
@@ -1039,39 +1136,45 @@ export const useStore = create<Store>((set, get) => ({
       const clip = s.clipboard;
       const frameId = s.selectedFrameId ?? s.doc.frames[0]?.id;
       if (!clip || !frameId) return s;
-      const targetFrame = s.doc.frames.find((f) => f.id === frameId);
-      // Layout nodes belong to the kit they were copied from, so the whole paste has to match.
-      if (
-        targetFrame &&
-        ((clip.kitId && getKit(clip.kitId).id !== getKit(targetFrame.kitId).id) ||
-          !subtreesFitKit(clip.nodes, [clip.rootId], targetFrame.kitId))
-      )
-        return { notice: kitMismatchMessage(targetFrame.kitId) };
-      const copy = cloneSubtrees(clip.nodes, [clip.rootId], newId);
-      const leafId = copy.roots[0]!;
-      const doc0 = { ...s.doc, nodes: { ...s.doc.nodes, ...copy.nodes } };
-      if (targetFrame && isFreeFrame(targetFrame)) {
-        const leaf = doc0.nodes[leafId]!;
-        if (leaf.type !== 'component') return { notice: FREE_NO_LAYOUT };
-        const at = leaf.free
-          ? { x: leaf.free.x + 24, y: leaf.free.y + 24 }
-          : nextPosition(targetFrame);
-        const box = {
-          ...at,
-          width: leaf.free?.width ?? defaultWidth(leaf.componentId, targetFrame.width),
-        };
-        return {
-          ...commit(s, placeFree(doc0, frameId, leafId, box)),
-          selectedFrameId: frameId,
-          selectedNodeId: leafId,
-        };
-      }
-      const ins = resolveInsertion(doc0, frameId, s.selectedNodeId, doc0.nodes[leafId]!);
-      return {
-        ...commit(s, applyInsertion(doc0, frameId, ins, leafId, newId)),
-        selectedFrameId: frameId,
-        selectedNodeId: leafId,
-      };
+      return pasteInto(s, frameId, clip);
+    }),
+
+  saveAsComponent: (nodeId, name) => {
+    const s = get();
+    const node = s.doc.nodes[nodeId];
+    const frameId = frameOfNode(s.doc, nodeId);
+    const frame = s.doc.frames.find((f) => f.id === frameId);
+    const label = name.trim();
+    if (!node || !frame || !label) return false;
+    if (node.type !== 'component' && node.type !== 'section') {
+      set({ notice: 'Select a component or a section to save it for reuse.' });
+      return false;
+    }
+    const { nodes, rootId } = extractSubtree(s.doc, nodeId);
+    useSavedComponents.getState().add({
+      name: label,
+      kitId: frame.kitId,
+      rootId,
+      nodes,
+      images: imagesUsedBy(nodes, s.doc.images),
+    });
+    set({
+      leftTab: 'library',
+      notice: `Saved “${label}”. It’s in the Library, under My components.`,
+    });
+    return true;
+  },
+
+  insertSaved: (frameId, savedId) =>
+    set((s) => {
+      const saved = useSavedComponents.getState().components.find((c) => c.id === savedId);
+      if (!saved) return { notice: 'That saved component isn’t available any more.' };
+      return pasteInto(
+        s,
+        frameId,
+        { nodes: saved.nodes, rootId: saved.rootId, kitId: saved.kitId },
+        saved.images,
+      );
     }),
 
   setText: (nodeId, key, text) =>

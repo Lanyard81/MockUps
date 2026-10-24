@@ -1,6 +1,7 @@
 import { downloadBlob, slug } from '../export/download';
 import { newId } from '../lib/ids';
 import { useStore } from '../store/store';
+import { useSavedComponents } from '../store/savedComponents';
 import { useTemplates } from '../store/templates';
 import { KITS } from '../kits';
 import { looksLikePageSpec } from '../pagespec';
@@ -9,7 +10,12 @@ import { FileError, parseMockupFile, serialiseMockupFile } from './schema';
 /** Save the open mockup (images embedded) and the user's templates as one portable file. */
 export function saveToFile() {
   const { doc } = useStore.getState();
-  const text = serialiseMockupFile(doc, useTemplates.getState().templates);
+  const text = serialiseMockupFile(
+    doc,
+    useTemplates.getState().templates,
+    undefined,
+    useSavedComponents.getState().components,
+  );
   downloadBlob(text, `${slug(doc.name)}.mockup.json`, 'application/json');
   useStore.getState().setNotice(`Saved ${slug(doc.name)}.mockup.json to your downloads.`);
 }
@@ -24,11 +30,16 @@ export async function openMockupFile(file: File): Promise<boolean> {
     const text = await file.text();
     // A page spec (.page.json) isn't a mockup: it becomes new frames in the current one.
     if (looksLikePageSpec(text)) return s.importPageSpecText(text);
-    const { doc, templates } = parseMockupFile(text);
+    const { doc, templates, components } = parseMockupFile(text);
     s.loadDoc({ ...doc, id: newId('doc') });
     const added = useTemplates.getState().merge(templates);
+    const addedComponents = useSavedComponents.getState().merge(components);
+    const extras = [
+      added ? `${added} template${added > 1 ? 's' : ''}` : '',
+      addedComponents ? `${addedComponents} component${addedComponents > 1 ? 's' : ''}` : '',
+    ].filter(Boolean);
     s.setNotice(
-      `Opened “${doc.name}”${added ? ` and added ${added} template${added > 1 ? 's' : ''}` : ''}.`,
+      `Opened “${doc.name}”${extras.length ? ` and added ${extras.join(' and ')}` : ''}.`,
     );
     return true;
   } catch (err) {

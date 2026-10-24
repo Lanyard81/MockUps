@@ -205,3 +205,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Position panel for an item on a freeform frame: X, Y and width as numbers, align left, centre or right in the frame, bring to front and send to back
 - [x] Document version 5 (`frame.freeGrid`, `frame.freeSnap`), migration and validation
 - [x] Tests: guide and snap maths, settings, validation (Vitest); guides, grid and the Position panel (Playwright)
+
+## Milestone G2: My components
+
+- [x] Save a component or a whole section for reuse: right-click → Save as component…, or the button in Properties
+- [x] A "My components" list at the top of the Library (for the library's kit): click to add next to the selection, or drag onto a frame (freeform frames take components where dropped); delete asks first
+- [x] The copy keeps its text and options, gets fresh ids and brings its pictures; one undo step; kits never mix; a section can't go on a freeform frame
+- [x] Stored in the browser like saved templates, and carried in `.mockup.json` files (merged without duplicates when opened)
+- [x] Tests: saving, adding, dropping, freeform, kit rules, files, validation (Vitest); save, click, drag, reload, delete and kit separation (Playwright)

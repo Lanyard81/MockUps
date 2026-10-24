@@ -1,3 +1,4 @@
+import { useSavedComponents } from '../store/savedComponents';
 import { useStore } from '../store/store';
 import { useTemplates } from '../store/templates';
 import { startAutosave } from './autosave';
@@ -14,6 +15,7 @@ export async function initPersistence(): Promise<void> {
     const doc = id ? await loadMockup(id) : null;
     if (doc) s.loadDoc(doc);
     await useTemplates.getState().load();
+    await useSavedComponents.getState().load();
   }
   startAutosave();
 }

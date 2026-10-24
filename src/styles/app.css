@@ -1858,3 +1858,43 @@ body.is-free-gesture .frame__iframe {
 .ov-guide--y {
   height: calc(1px * var(--inv-zoom, 1));
 }
+
+.mine {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--ed-space-4) var(--ed-space-3);
+  display: grid;
+  gap: var(--ed-space-2);
+}
+.mine__row {
+  display: flex;
+  gap: var(--ed-space-2);
+  align-items: stretch;
+}
+.mine__main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ed-space-2);
+  padding: 8px 12px;
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius-sm);
+  background: var(--ed-bg);
+  color: var(--ed-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: none;
+}
+.mine__main:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.mine__name {
+  font-weight: 600;
+}
+.mine__kind {
+  font-size: 11px;
+  color: var(--ed-text-muted);
+}

@@ -11,6 +11,7 @@ import {
   type FrameReference,
   type MockupDoc,
   type NodeType,
+  type SavedComponent,
   type SavedTemplate,
 } from '../store/types';
 
@@ -362,6 +363,33 @@ export function validateTemplate(raw: unknown): SavedTemplate {
 export interface MockupFile {
   doc: MockupDoc;
   templates: SavedTemplate[];
+  /** The user's saved components (Milestone G2). */
+  components: SavedComponent[];
+}
+
+/** Check a saved component read from storage or an opened file. */
+export function validateSavedComponent(raw: unknown): SavedComponent {
+  if (!isObject(raw)) throw new FileError('A saved component is damaged.');
+  const kitId = str(raw.kitId, 40) ?? 'nsw';
+  if (!hasKit(kitId)) throw new FileError('A saved component uses an unknown style kit.');
+  const rootId = str(raw.rootId, 100);
+  if (!rootId || !isObject(raw.nodes) || !isObject(raw.nodes[rootId]))
+    throw new FileError('A saved component has no content.');
+  const isComponent = raw.nodes[rootId].type === 'component';
+  // A component sits on its own (as on a freeform frame); a section is checked against the kit's layers.
+  const nodes = cleanTree(raw.nodes, [[rootId]], [kitId], [isComponent]);
+  const top = nodes[rootId]!;
+  if (top.type !== 'component' && top.type !== 'section')
+    throw new FileError('A saved component must be a component or a section.');
+  return {
+    id: str(raw.id, 100) || `cmp_${Date.now().toString(36)}`,
+    name: str(raw.name) || 'Untitled component',
+    createdAt: num(raw.createdAt, Date.now()),
+    kitId,
+    rootId,
+    nodes,
+    images: cleanImages(raw.images),
+  };
 }
 
 /** The on-disk format of a `.mockup.json`: the document, with images embedded, plus the user's templates. */
@@ -369,9 +397,10 @@ export function serialiseMockupFile(
   doc: MockupDoc,
   templates: SavedTemplate[] = [],
   savedAt: string = new Date().toISOString(),
+  components: SavedComponent[] = [],
 ): string {
   return JSON.stringify(
-    { app: FILE_APP, fileVersion: FILE_VERSION, savedAt, doc, templates },
+    { app: FILE_APP, fileVersion: FILE_VERSION, savedAt, doc, templates, components },
     null,
     1,
   );
@@ -400,5 +429,15 @@ export function parseMockupFile(text: string): MockupFile {
       }
     }
   }
-  return { doc, templates };
+  const components: SavedComponent[] = [];
+  if (isOurFile(raw.app) && Array.isArray(raw.components)) {
+    for (const c of raw.components.slice(0, 500)) {
+      try {
+        components.push(validateSavedComponent(c));
+      } catch {
+        /* skip a damaged component */
+      }
+    }
+  }
+  return { doc, templates, components };
 }

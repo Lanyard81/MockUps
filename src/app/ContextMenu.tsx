@@ -107,6 +107,14 @@ export function ContextMenu() {
         onSelect: () => st().pasteClipboard(),
       },
       { label: 'Copy HTML', onSelect: () => void copySelectionHtml(nodeId) },
+      ...(node.type === 'component' || node.type === 'section'
+        ? [
+            {
+              label: 'Save as component…',
+              onSelect: () => st().setDialog('saveComponent', frameId, nodeId),
+            },
+          ]
+        : []),
       ...(isFreeFrame(doc.frames.find((f) => f.id === frameId))
         ? [
             {

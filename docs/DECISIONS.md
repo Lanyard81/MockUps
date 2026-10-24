@@ -308,3 +308,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Hints first.** Guides appear when an item is within 1 px of a line; snapping (to guides, within 6 px) is a per-frame opt-in, off by default, because the point of Freeform is no forced snapping. With a grid set, the item snaps to the grid instead and guides still show. Alt ignores snapping for one drag.
 - **Measured from the frame.** Other items' boxes and the frame's height are read from the frame's DOM when a drag starts; the maths (`layout/guides.ts`) is pure. Guides are drawn by the overlay from an event, so nothing re-renders in the frame.
 - **Multi-select and "distribute evenly" are not built.** Selection is one item at a time everywhere in the app; adding multi-select touches every action, so alignment is to the frame and to other items by guides.
+
+## 055: My components (Milestone G2)
+
+- **Same storage story as templates.** Saved components live in browser storage (`store/savedComponents.ts`), outside the document and outside undo, and are written into `.mockup.json` as an optional `components` list (an older file has none; damaged entries are skipped). No schema bump: the mockup document itself is unchanged.
+- **One insertion path.** Paste and "add saved component" share `pasteInto` in the store, so kit checks, layer creation, freeform placement and images behave the same; a drag uses a `saved` drag payload and the same drop targets as a library component.
+- **What can be saved.** A component, or a section of a flow frame (with everything inside it): the units that stand on their own under the layout rules. A container, grid or column can't stand alone, so they're refused with a message. A position from a freeform frame is dropped when the component goes on a flow frame.
+- **No rename in the list yet.** The store supports it; the list offers add and delete only.

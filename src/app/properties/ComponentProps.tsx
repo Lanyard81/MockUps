@@ -235,6 +235,15 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
       </Section>
 
       <FreePosition nodeId={nodeId} />
+      <div className="prop-actions">
+        <button
+          className="btn"
+          title="Keep this to add to any frame later"
+          onClick={() => st().setDialog('saveComponent', frameId, nodeId)}
+        >
+          Save as component…
+        </button>
+      </div>
       <NodeSettings nodeId={nodeId} frameId={frameId} />
       {KitPanel && <KitPanel nodeId={nodeId} />}
 

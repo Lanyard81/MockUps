@@ -126,9 +126,19 @@ export function startDrag(
     if (!target) {
       // Released over a frame of another kit: say why nothing happened.
       const over = commit ? frameAtPoint(s.doc, latest.x, latest.y) : null;
-      if (over && isFreeFrame(over.frame) && payload.kind !== 'new-component')
+      if (
+        over &&
+        isFreeFrame(over.frame) &&
+        payload.kind !== 'new-component' &&
+        payload.kind !== 'saved'
+      )
         s.setNotice(FREE_NO_LAYOUT);
-      else if (over && (payload.kind === 'new-component' || payload.kind === 'new-layout'))
+      else if (
+        over &&
+        (payload.kind === 'new-component' ||
+          payload.kind === 'new-layout' ||
+          payload.kind === 'saved')
+      )
         s.setNotice(kitMismatchMessage(over.frame.kitId));
       return;
     }

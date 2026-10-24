@@ -13,6 +13,7 @@ import { MyMockups } from './MyMockups';
 import { Properties } from './Properties';
 import { ConversionSummary } from './ConversionSummary';
 import { PrototypeViewer } from './PrototypeViewer';
+import { SaveComponentDialog } from './SaveComponentDialog';
 import { SaveTemplateDialog } from './SaveTemplateDialog';
 import { ShortcutsSheet } from './ShortcutsSheet';
 import { StorageBanner } from './StorageBanner';
@@ -98,6 +99,7 @@ export function App() {
       <MyMockups />
       <ExportDialog />
       <SaveTemplateDialog />
+      <SaveComponentDialog />
       <PrototypeViewer />
       <ConversionSummary />
       <ImportPageSpecDialog />

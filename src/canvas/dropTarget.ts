@@ -1,5 +1,6 @@
 import { getComponent } from '../catalogue';
 import { getKit } from '../kits';
+import { useSavedComponents } from '../store/savedComponents';
 import type { KitSchema } from '../kits/types';
 import { defaultWidth, isFreeFrame } from '../layout/free';
 import { depthOf, isWithin, parentOf, schemaOfFrame, type Doc } from '../layout/ops';
@@ -37,6 +38,12 @@ function leafInfo(
     case 'move': {
       const node = doc.nodes[payload.nodeId];
       return node ? { depth: depthOf(node, schema), exclude: node.id } : null;
+    }
+    case 'saved': {
+      const saved = useSavedComponents.getState().components.find((c) => c.id === payload.savedId);
+      const top = saved?.nodes[saved.rootId];
+      if (!saved || !top || getKit(saved.kitId).id !== getKit(kitId).id) return null;
+      return { depth: depthOf(top, schema) };
     }
     case 'template':
       return null; // templates drop onto whole frames or the canvas: see `frameAtPoint`
@@ -152,8 +159,20 @@ export function computeDropTarget(
 
   // A freeform frame takes components anywhere: the drop is simply where the pointer is.
   if (isFreeFrame(frame)) {
-    const node = payload.kind === 'move' ? doc.nodes[payload.nodeId] : undefined;
-    if (payload.kind === 'new-layout' || (payload.kind === 'move' && node?.type !== 'component'))
+    const saved =
+      payload.kind === 'saved'
+        ? useSavedComponents.getState().components.find((c) => c.id === payload.savedId)
+        : undefined;
+    const node =
+      payload.kind === 'move'
+        ? doc.nodes[payload.nodeId]
+        : saved
+          ? saved.nodes[saved.rootId]
+          : undefined;
+    if (
+      payload.kind === 'new-layout' ||
+      ((payload.kind === 'move' || payload.kind === 'saved') && node?.type !== 'component')
+    )
       return null;
     const width =
       payload.kind === 'new-component'
