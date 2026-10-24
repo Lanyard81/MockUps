@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { downloadBlob, slug, uniqueNames } from '../export/download';
 import { buildViewerFile } from '../export/viewer';
+import { buildPdf, pngToJpegPage } from '../export/pdf';
 import { ExportError, addPinsToPng, renderFramePng } from '../export/png';
 import { commentsOf } from '../lib/comments';
 import { exportHtmlFiles, type HtmlMode } from '../export/page';
@@ -8,7 +9,7 @@ import { createZip } from '../export/zip';
 import { useStore } from '../store/store';
 import { Modal } from './Modal';
 
-type Format = 'png' | 'html' | 'viewer';
+type Format = 'png' | 'pdf' | 'html' | 'viewer';
 
 /** Export frames as PNG images or clickable HTML pages. */
 export function ExportDialog() {
@@ -43,6 +44,14 @@ function Inner() {
       if (format === 'viewer') {
         const file = `${base}-viewer.html`;
         downloadBlob(await buildViewerFile(doc, { comments: withNotes }), file, 'text/html');
+      } else if (format === 'pdf') {
+        const pages = [];
+        for (const f of frames) pages.push(await pngToJpegPage(await renderFramePng(f.id, 1)));
+        downloadBlob(
+          buildPdf(pages),
+          many ? `${base}.pdf` : `${base}-${slug(frame!.name, 'frame')}.pdf`,
+          'application/pdf',
+        );
       } else if (format === 'png') {
         const blobs = [];
         for (const f of frames) {
@@ -146,7 +155,7 @@ function Inner() {
           scope,
           setScope,
           `All frames (${doc.frames.length})`,
-          'Downloaded together as a zip file.',
+          'Downloaded together (a zip file, or one PDF with a page per frame).',
         )}
       </fieldset>
       <fieldset className="field-group">
@@ -158,6 +167,14 @@ function Inner() {
           setFormat,
           'PNG image',
           'The full height of the page, as it looks on the canvas.',
+        )}
+        {radio(
+          'format',
+          'pdf',
+          format,
+          setFormat,
+          'PDF document',
+          'A page for each frame, each as tall as the frame. Good for sharing a whole flow.',
         )}
         {radio(
           'format',

@@ -268,3 +268,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 
 - [x] "Check accessibility…" (frame context menu, Frame panel, command palette) lists problems in a frame's page: skipped heading levels, missing or repeated h1, empty headings, links and buttons with no name, form fields with no label, uploaded pictures with no alt text, and text with too little colour contrast (WCAG AA, 4.5:1, or 3:1 for large text).
 - [x] Each problem names the component; click it to select it in the editor.
+
+## G10: Quick wins
+
+- [x] Add frame menu: A4 page, social post, social card, 16:9 and 4:3 slides (`lib/frameSizes.ts`).
+- [x] Right-click a frame → "Duplicate as phone / tablet / desktop" copies it at that device's width.
+- [x] Export → PDF document: one page per frame, as tall as the frame (`export/pdf.ts`, no library).
+- [x] The empty state in the Properties panel welcomes you and offers the sample mockups.

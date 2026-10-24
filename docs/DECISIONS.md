@@ -360,3 +360,7 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 ## 062. Accessibility checks are our own, not axe-core
 
 The checks (`src/lib/a11y.ts`) are about 200 lines over a rendered copy of the frame. Adding axe-core would be a large dependency for a handful of rules, and it would flag the NSW components themselves. Contrast is judged from computed colours; text over a picture or gradient is skipped because a colour can't judge it. Results are advice, not a certificate.
+
+## 063. PDF export is a small writer, not a dependency
+
+A PDF can carry a JPEG untouched, so `export/pdf.ts` (about 60 lines) writes one page per frame picture. The pages are images, so text isn't selectable; for selectable text use the HTML export. Duplicate-at-another-width keeps the page content and only changes the width, so it is a way to eyeball a layout, not to design a separate mobile version.

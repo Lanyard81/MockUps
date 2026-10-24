@@ -2,7 +2,8 @@ import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { ComponentProps } from './properties/ComponentProps';
 import { FrameProps } from './properties/FrameProps';
-import { getKit } from '../kits';
+import { KITS, getKit } from '../kits';
+import { loadSample } from '../persistence/file';
 import { KIT_PANELS } from './kitPanels';
 import { NodeSettings } from './properties/NodeSettings';
 
@@ -10,6 +11,7 @@ import { NodeSettings } from './properties/NodeSettings';
 export function Properties() {
   const frameId = useStore((s) => s.selectedFrameId);
   const node = useStore((s) => (s.selectedNodeId ? s.doc.nodes[s.selectedNodeId] : undefined));
+  const blank = useStore((s) => s.doc.frames.every((f) => f.root.length === 0));
   const frameKit = useStore((s) => s.doc.frames.find((f) => f.id === s.selectedFrameId)?.kitId);
 
   let body: React.ReactNode;
@@ -21,6 +23,24 @@ export function Properties() {
           <strong>Nothing selected</strong>
         </p>
         <p>Click a frame name, or click something inside a frame, to see its options here.</p>
+        {blank && (
+          <div className="welcome" data-testid="welcome">
+            <p>
+              <strong>Welcome to MockMaker</strong>
+            </p>
+            <p>
+              Drag components from the left onto a frame, or start from a sample and change it to
+              suit.
+            </p>
+            <div className="welcome__samples">
+              {KITS.flatMap((k) => k.samples).map((d) => (
+                <button key={d.id} className="btn" onClick={() => loadSample(d.id)}>
+                  {d.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   } else if (!node) {

@@ -1,3 +1,4 @@
+import { DEVICES } from '../store/types';
 import { useEffect, useRef } from 'react';
 import { startFirstTextEdit, startTextEdit } from '../canvas/textEdit';
 import { copyFrameSpec, downloadFrameSpec } from '../export/pageSpec';
@@ -171,6 +172,15 @@ export function ContextMenu() {
         shortcut: `${MOD}D`,
         onSelect: () => st().duplicateFrame(frameId),
       },
+      ...(['iphone', 'tablet', 'desktop'] as const)
+        .filter(
+          (d) =>
+            frameKit.devices.includes(d) && doc.frames.find((f) => f.id === frameId)?.device !== d,
+        )
+        .map((d) => ({
+          label: `Duplicate as ${DEVICES[d].label.toLowerCase()} (${DEVICES[d].width}px)`,
+          onSelect: () => st().duplicateFrame(frameId, d),
+        })),
       {
         label: 'Save as template…',
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,

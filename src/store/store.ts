@@ -277,7 +277,12 @@ interface Actions {
   setView: (view: View) => void;
   zoomToFit: () => void;
 
-  addFrame: (device: DeviceId, kitId?: KitId, layout?: 'flow' | 'free') => void;
+  addFrame: (
+    device: DeviceId,
+    kitId?: KitId,
+    layout?: 'flow' | 'free',
+    size?: { label: string; width: number },
+  ) => void;
   /** Move or resize an item on a freeform frame. One undo step. */
   setFreeBox: (nodeId: string, patch: Partial<FreeBox>) => void;
   /** Nudge an item on a freeform frame by whole pixels. One undo step. */
@@ -292,7 +297,8 @@ interface Actions {
     layout: 'flow' | 'free',
     boxes?: Record<string, FreeBox>,
   ) => void;
-  duplicateFrame: (id: string) => void;
+  /** Copy a frame; with a device, the copy is at that device's width (to see the same page narrower or wider). */
+  duplicateFrame: (id: string, device?: DeviceId) => void;
   deleteFrame: (id: string) => void;
   renameFrame: (id: string, name: string) => void;
   setFrameDevice: (id: string, device: DeviceId) => void;
@@ -913,17 +919,17 @@ export const useStore = create<Store>((set, get) => ({
     get().setView(fitView(bounds, viewport.width, viewport.height));
   },
 
-  addFrame: (device, kitId, layout) =>
+  addFrame: (device, kitId, layout, size) =>
     set((s) => {
       const preset = DEVICES[device];
       const kit = getKit(kitId ?? s.doc.defaultKitId).id;
       const right = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width));
       const frame: Frame = {
         id: newId('f'),
-        name: `${preset.label} ${s.doc.frames.length + 1}`,
+        name: `${size?.label ?? preset.label} ${s.doc.frames.length + 1}`,
         kitId: kit,
-        device,
-        width: preset.width,
+        device: size ? 'custom' : device,
+        width: size?.width ?? preset.width,
         x: right + FRAME_GAP,
         y: s.doc.frames[0]?.y ?? 0,
         root: [],
@@ -935,7 +941,7 @@ export const useStore = create<Store>((set, get) => ({
       };
     }),
 
-  duplicateFrame: (id) =>
+  duplicateFrame: (id, device) =>
     set((s) => {
       const src = s.doc.frames.find((f) => f.id === id);
       if (!src) return s;
@@ -943,7 +949,8 @@ export const useStore = create<Store>((set, get) => ({
       const frame: Frame = {
         ...src,
         id: newId('f'),
-        name: `${src.name} copy`,
+        name: device ? `${src.name} (${DEVICES[device].label})` : `${src.name} copy`,
+        ...(device ? { device, width: DEVICES[device].width } : {}),
         x: src.x + src.width + FRAME_GAP,
         root: cloned.roots,
       };

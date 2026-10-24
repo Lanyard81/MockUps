@@ -4,6 +4,7 @@ import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
 import { KITS, getKit } from '../kits';
+import { FRAME_SIZES } from '../lib/frameSizes';
 import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
 import { DocName } from './DocName';
 import { applyTheme, readTheme, type Theme } from './theme';
@@ -71,7 +72,7 @@ export function Toolbar() {
             })),
             {
               label: 'Export…',
-              hint: 'PNG, HTML',
+              hint: 'PNG, PDF, HTML',
               separatorBefore: true,
               onSelect: () => s.getState().setDialog('export'),
             },
@@ -138,11 +139,19 @@ export function Toolbar() {
               ) : null}
             </>
           }
-          items={getKit(newFrameKit).devices.map((d) => ({
-            label: DEVICES[d].label,
-            hint: d === 'custom' ? 'any width' : `${DEVICES[d].width}px`,
-            onSelect: () => s.getState().addFrame(d, newFrameKit, newFrameLayout),
-          }))}
+          items={[
+            ...getKit(newFrameKit).devices.map((d) => ({
+              label: DEVICES[d].label,
+              hint: d === 'custom' ? 'any width' : `${DEVICES[d].width}px`,
+              onSelect: () => s.getState().addFrame(d, newFrameKit, newFrameLayout),
+            })),
+            ...FRAME_SIZES.map((z, i) => ({
+              label: z.label,
+              hint: z.hint,
+              separatorBefore: i === 0,
+              onSelect: () => s.getState().addFrame('custom', newFrameKit, newFrameLayout, z),
+            })),
+          ]}
         />
         <button
           className="btn"

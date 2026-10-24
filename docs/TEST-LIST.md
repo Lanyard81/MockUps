@@ -54,3 +54,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **Responsive view (G8)** 52. Right-click a frame name → Check responsive layouts…. Check the page at the three widths. Add something wide (a long word in a heading, a wide table) and see it flagged on the phone; click the named component to select it. Try a SharePoint frame too.
 
 **Accessibility (G9)** 53. Right-click a frame name → Check accessibility…. Add a Heading 1 and a Heading 4 and see the skipped level flagged; add a button/image with no description and pale text on a pale background (a Card with a light tint) and see them listed; click a named component to select it. A tidy page says "No problems found".
+
+**Quick wins (G10)** 54. Add frame → A4 page, Slide (16:9). Right-click a frame name → Duplicate as desktop. File → Export… → PDF document (one frame, then All frames) and open the PDF. With a blank mockup, look at the Properties panel for the welcome and the sample buttons.
