@@ -186,6 +186,10 @@ export function ContextMenu() {
           ]
         : []),
       {
+        label: 'Check responsive layouts…',
+        onSelect: () => st().setDialog('responsive', frameId),
+      },
+      {
         label: doc.startFrameId === frameId ? 'Clear start frame' : 'Set as start frame',
         separatorBefore: true,
         onSelect: () => st().setStartFrame(doc.startFrameId === frameId ? null : frameId),

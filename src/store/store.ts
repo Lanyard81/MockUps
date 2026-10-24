@@ -149,7 +149,15 @@ interface State {
   /** Can this page keep data between visits? Null until checked. */
   storageOk: boolean | null;
   /** The open dialog, if any. */
-  dialog: 'mockups' | 'export' | 'saveTemplate' | 'saveComponent' | 'importSpec' | 'history' | null;
+  dialog:
+    | 'mockups'
+    | 'export'
+    | 'saveTemplate'
+    | 'saveComponent'
+    | 'importSpec'
+    | 'history'
+    | 'responsive'
+    | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
   /** The node a dialog is about (Save as component). */

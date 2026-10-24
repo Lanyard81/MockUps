@@ -256,3 +256,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Restore puts a version's content back as one undo step (after saving what was there first as "Before restoring…"); "Open as new mockup" makes a separate copy; delete removes one
 - [x] Versions go when their mockup is deleted; they are not part of the mockup file
 - [x] Tests: saving, limits, deleting, restoring, comparing (Vitest); save, compare, restore, undo, reload, open as new, delete (Playwright)
+
+## Milestone G8: Responsive preview
+
+- [x] "Check responsive layouts…" (frame menu, Properties, ⌘K): the frame's page at phone (393), tablet (820) and desktop (1440) widths side by side, each drawn by the kit as that device would
+- [x] Problems listed under each width: content wider than the screen (the page would scroll sideways) and, on a phone, buttons and links smaller than 24px; each names the components involved and selects one in the editor when clicked
+- [x] A freeform frame says it has a fixed width instead
+- [x] Tests: the checks (Vitest); three widths, an overflow found and selected, freeform message (Playwright)

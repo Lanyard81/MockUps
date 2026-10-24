@@ -142,6 +142,13 @@ export function buildPaletteItems(): PaletteItem[] {
       undefined,
       'layout',
     );
+    act(
+      'responsive',
+      'Check responsive layouts',
+      () => useStore.getState().setDialog('responsive', frame.id),
+      undefined,
+      'phone tablet desktop breakpoints',
+    );
     act('duplicate-frame', 'Duplicate this frame', () =>
       useStore.getState().duplicateFrame(frame.id),
     );

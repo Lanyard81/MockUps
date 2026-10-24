@@ -349,3 +349,10 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Restore is an ordinary edit.** It replaces the document's content in one history entry (keeping the mockup's id, name and canvas view), so Undo undoes it; and before it runs, the current state is saved as a "Before restoring…" version so nothing is lost even if the page is then closed.
 - **Compare is by ids.** Frames and components keep their ids for as long as they live, so a changed text is "edited", not "removed and added". The comparison is a short summary and per-frame phrases, not a visual diff.
 - **No automatic versions.** Autosave already keeps the latest state; automatic snapshots would need rules (when, how many) that people didn't ask for. Named versions are the person's decision.
+
+## 061: Responsive preview (Milestone G8)
+
+- **Real rendering, measured.** Each width is an ordinary frame iframe with the kit's own styles and scripts, rendered at that width, so the NSW grid and the SharePoint breakpoints do what they would on a device. The checks read the result (an element's contents reaching past the right edge, a button's size), not the document, so they catch what a person would see.
+- **Two checks, on purpose.** Sideways overflow and small touch targets (24px, the WCAG 2.2 AA minimum) are the failures that are objectively wrong and that this tool can measure reliably. Judging "looks cramped" or "text too small" is subjective and is left to the eye; the three panes are there for that.
+- **Names components, not layout boxes.** A problem is attributed to the component whose content sticks out (a section that merely contains it isn't blamed), so the list says what to fix.
+- **Freeform frames are excluded**: they have a fixed width by design.

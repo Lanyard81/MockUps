@@ -105,6 +105,16 @@ export function FrameProps({ frameId }: { frameId: string }) {
         )}
       </Section>
       <Section
+        title="Responsive"
+        hint="See this page at phone, tablet and desktop widths, with layout problems listed."
+      >
+        <div className="prop-actions">
+          <button className="btn" onClick={() => st().setDialog('responsive', frame.id)}>
+            Check responsive layouts…
+          </button>
+        </div>
+      </Section>
+      <Section
         title="Click-through"
         hint="Play starts here. Links set to “Go to frame” move between frames, with the transition you choose."
       >
