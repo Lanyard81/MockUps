@@ -157,6 +157,7 @@ interface State {
     | 'importSpec'
     | 'history'
     | 'responsive'
+    | 'accessibility'
     | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;

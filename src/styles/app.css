@@ -2244,3 +2244,26 @@ body.is-free-gesture .frame__iframe {
   margin: 0 6px 6px 0;
   height: 26px;
 }
+
+.a11y__probe {
+  position: absolute;
+  left: -99999px;
+  height: 1200px;
+  border: 0;
+  visibility: hidden;
+}
+.a11y__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.a11y__list li {
+  padding: 8px 10px;
+  border: 1px solid var(--ed-border);
+  border-radius: var(--ed-radius);
+}
+.a11y__list li[data-severity='error'] {
+  border-left: 3px solid var(--ed-danger, #d7153a);
+}

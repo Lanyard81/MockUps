@@ -106,11 +106,14 @@ export function FrameProps({ frameId }: { frameId: string }) {
       </Section>
       <Section
         title="Responsive"
-        hint="See this page at phone, tablet and desktop widths, with layout problems listed."
+        hint="See this page at phone, tablet and desktop widths, and check headings, labels, picture descriptions and colour contrast."
       >
         <div className="prop-actions">
           <button className="btn" onClick={() => st().setDialog('responsive', frame.id)}>
             Check responsive layouts…
+          </button>
+          <button className="btn" onClick={() => st().setDialog('accessibility', frame.id)}>
+            Check accessibility…
           </button>
         </div>
       </Section>

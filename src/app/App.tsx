@@ -6,6 +6,7 @@ import { looksLikePageSpec } from '../pagespec';
 import { openMockupFile } from '../persistence/file';
 import { useStore } from '../store/store';
 import { ResponsiveDialog } from './ResponsiveDialog';
+import { AccessibilityDialog } from './AccessibilityDialog';
 import { HistoryDialog } from './HistoryDialog';
 import { CommandPalette } from './CommandPalette';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -109,6 +110,7 @@ export function App() {
       <CommandPalette />
       <HistoryDialog />
       <ResponsiveDialog />
+      <AccessibilityDialog />
       <ImportSummary />
       <ConfirmDialog />
       <Tour />

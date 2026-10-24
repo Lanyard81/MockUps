@@ -356,3 +356,7 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Two checks, on purpose.** Sideways overflow and small touch targets (24px, the WCAG 2.2 AA minimum) are the failures that are objectively wrong and that this tool can measure reliably. Judging "looks cramped" or "text too small" is subjective and is left to the eye; the three panes are there for that.
 - **Names components, not layout boxes.** A problem is attributed to the component whose content sticks out (a section that merely contains it isn't blamed), so the list says what to fix.
 - **Freeform frames are excluded**: they have a fixed width by design.
+
+## 062. Accessibility checks are our own, not axe-core
+
+The checks (`src/lib/a11y.ts`) are about 200 lines over a rendered copy of the frame. Adding axe-core would be a large dependency for a handful of rules, and it would flag the NSW components themselves. Contrast is judged from computed colours; text over a picture or gradient is skipped because a colour can't judge it. Results are advice, not a certificate.

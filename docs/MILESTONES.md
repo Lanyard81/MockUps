@@ -263,3 +263,8 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Problems listed under each width: content wider than the screen (the page would scroll sideways) and, on a phone, buttons and links smaller than 24px; each names the components involved and selects one in the editor when clicked
 - [x] A freeform frame says it has a fixed width instead
 - [x] Tests: the checks (Vitest); three widths, an overflow found and selected, freeform message (Playwright)
+
+## G9: Accessibility checks
+
+- [x] "Check accessibility…" (frame context menu, Frame panel, command palette) lists problems in a frame's page: skipped heading levels, missing or repeated h1, empty headings, links and buttons with no name, form fields with no label, uploaded pictures with no alt text, and text with too little colour contrast (WCAG AA, 4.5:1, or 3:1 for large text).
+- [x] Each problem names the component; click it to select it in the editor.

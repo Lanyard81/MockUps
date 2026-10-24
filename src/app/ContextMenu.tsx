@@ -186,6 +186,10 @@ export function ContextMenu() {
           ]
         : []),
       {
+        label: 'Check accessibility…',
+        onSelect: () => st().setDialog('accessibility', frameId),
+      },
+      {
         label: 'Check responsive layouts…',
         onSelect: () => st().setDialog('responsive', frameId),
       },

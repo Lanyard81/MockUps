@@ -143,6 +143,13 @@ export function buildPaletteItems(): PaletteItem[] {
       'layout',
     );
     act(
+      'accessibility',
+      'Check accessibility',
+      () => useStore.getState().setDialog('accessibility', frame.id),
+      undefined,
+      'a11y alt text contrast headings wcag',
+    );
+    act(
       'responsive',
       'Check responsive layouts',
       () => useStore.getState().setDialog('responsive', frame.id),
