@@ -74,6 +74,7 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
       { keys: `${MOD}${SHIFT}R`, action: 'Show or hide the selected frame’s reference image' },
       { keys: `${MOD}V`, action: 'With only a frame selected, paste an image as its reference' },
       { keys: `${MOD}V`, action: 'Pasting page spec JSON adds its pages as new frames' },
+      { keys: `${MOD}K`, action: 'Search everything: actions, frames, components, templates' },
       { keys: '?', action: 'Show or hide this sheet' },
     ],
   },

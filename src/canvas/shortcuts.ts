@@ -11,6 +11,13 @@ const isTyping = (t: EventTarget | null): boolean => {
 let spaceHeld = false;
 
 export function handleKeyDown(e: KeyboardEvent) {
+  // The command palette opens from anywhere, even while typing.
+  if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const st = useStore.getState();
+    st.setPaletteOpen(!st.paletteOpen);
+    return;
+  }
   if (isTyping(e.target)) return;
   const s = useStore.getState();
   const mod = e.metaKey || e.ctrlKey;

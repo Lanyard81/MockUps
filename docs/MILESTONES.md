@@ -231,3 +231,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Kit styles, scripts and fonts are embedded once per kit; no network needed to open it (tested offline from disk); text in the mockup can't break out of the file
 - [x] Tests: contents, links, comments, escaping, no external references (Vitest); export, open offline, tabs, click-through, Back, comments (Playwright)
 - [ ] A hosted link people can open from a URL: needs a server, which this offline-first app doesn't have (see `DECISIONS.md` 057)
+
+## Milestone G5: Search everything (⌘K)
+
+- [x] ⌘/Ctrl+K (or the Search button) opens a palette over the editor; it opens from anywhere, even while typing, and the same key closes it
+- [x] Finds actions (undo, zoom, export, theme, add a frame of a device, switch layout...), frames (jump to one), components of the selected frame's kit (every variant), templates and samples, your saved components and templates, and comments; arrows move, Enter runs, Esc closes
+- [x] Words can be in any order; matches at the start of a word rank first
+- [x] Tests: ranking (Vitest); finding and running, keys, toggling, nothing found (Playwright)

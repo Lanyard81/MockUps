@@ -158,6 +158,8 @@ interface State {
   /** The kit chosen for the next new frame; remembered between visits (UI preference, not in the document). */
   newFrameKitId: KitId;
   /** The summary of the last frame conversion, shown until dismissed (UI only). */
+  /** The command palette (⌘K) is open. */
+  paletteOpen: boolean;
   /** The comment tool is on: a click on a frame pins a note there. */
   commentTool: boolean;
   /** The comment whose note is open. */
@@ -214,6 +216,7 @@ interface Actions {
   setLeftTab: (tab: State['leftTab']) => void;
   setNewFrameKit: (kitId: KitId) => void;
   setNewFrameLayout: (layout: 'flow' | 'free') => void;
+  setPaletteOpen: (open: boolean) => void;
   setCommentTool: (on: boolean) => void;
   setActiveComment: (id: string | null) => void;
   /** Pin a new, empty note at a point on a frame (frame pixels) and open it. One undo step. Returns its id. */
@@ -562,6 +565,7 @@ export const useStore = create<Store>((set, get) => ({
   newFrameKitId: readLastKit(),
   libraryKit: null,
   newFrameLayout: 'flow',
+  paletteOpen: false,
   commentTool: false,
   activeCommentId: null,
   conversionReport: null,
@@ -682,6 +686,7 @@ export const useStore = create<Store>((set, get) => ({
     }),
   dismissImportSummary: () => set({ importSummary: null }),
   setNewFrameLayout: (newFrameLayout) => set({ newFrameLayout }),
+  setPaletteOpen: (paletteOpen) => set({ paletteOpen, contextMenu: null }),
   setCommentTool: (commentTool) => set({ commentTool }),
   setActiveComment: (activeCommentId) => set({ activeCommentId }),
   addComment: (frameId, x, y) => {

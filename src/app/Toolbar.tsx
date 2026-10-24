@@ -33,6 +33,13 @@ export function Toolbar() {
       <div className="toolbar__group">
         <strong className="toolbar__title">MockMaker</strong>
         <DocName />
+        <button
+          className="btn"
+          title="Search everything (Ctrl/⌘ K)"
+          onClick={() => s.getState().setPaletteOpen(true)}
+        >
+          Search
+        </button>
         <Menu
           plain
           label="File"

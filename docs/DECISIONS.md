@@ -330,3 +330,9 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Read-only, and comments are a snapshot.** People can't change the mockup or reply to notes; they see the notes as they were when the file was made. Two-way comments would need the server.
 - **Safe to embed.** The data is JSON with `<`, `>` and `&` escaped, so nothing in a frame name, text or note can close the script or start a tag.
 - **Not built:** a hosted link, live comments, access control. If a server is ever added, this file's data is the format it would serve.
+
+## 058: Command palette (Milestone G5)
+
+- **Built from the app's own data when it opens.** The items come from the same sources as the panels (the kit catalogue, templates, saved components, frames, comments), so there is no second list to keep up to date; each item runs the same store action a button would, after the palette closes.
+- **Current kit.** Components and templates are those of the selected frame's kit (or the first frame's), because the others couldn't be added anyway.
+- **Ranking is deliberately small:** every word must appear; the label starting with a word beats a word inside it beats the group or hidden keywords; shorter labels win ties. No fuzzy matching, so results are predictable.

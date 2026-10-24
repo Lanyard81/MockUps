@@ -44,3 +44,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **Comments (G3)** 46. Click Comment in the toolbar, click a spot on a frame, type a note and Close. A numbered pin appears. Add two more, then open the Comments tab: open one, mark it Done, show done notes, delete one, Undo. 47. Preview: no pins. Export a PNG with and without "Mark open comments on the image". Copy or download the comments as Markdown and read them.
 
 **Viewer file (G4)** 48. Make a mockup with two frames, a button that goes to the second (Properties → Go to frame) and a comment. File → Export… → Viewer file. Open the downloaded file with Wi-Fi off: switch frames with the tabs, click the button, press Back, and turn Comments on.
+
+**Search (G5)** 49. Press Ctrl/⌘ K anywhere. Type "card", "dashboard", "export", "light", "go to": add a component, add a template, open Export, switch theme, jump to a frame. Check arrows, Enter and Esc.
