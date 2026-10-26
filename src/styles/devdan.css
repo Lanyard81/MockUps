@@ -388,14 +388,10 @@ kbd {
   }
 }
 .tabs {
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar {
-  display: none;
+  flex-wrap: wrap;
+  row-gap: 0;
 }
 .tabs__tab {
-  flex: none;
   white-space: nowrap;
 }
 @media (max-width: 900px) {
