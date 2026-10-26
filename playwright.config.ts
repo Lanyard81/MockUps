@@ -4,6 +4,8 @@ export default defineConfig({
   testDir: 'tests/e2e',
   use: {
     baseURL: 'http://localhost:4173/MockUps/',
+    // Wide enough that every toolbar button shows; the narrow case has its own test.
+    viewport: { width: 1700, height: 1000 },
     // The first-run tour is dismissed in every test except the one that is about the tour.
     storageState: {
       cookies: [],

@@ -366,46 +366,72 @@ kbd {
   border-color: rgba(255, 255, 255, 0.9);
 }
 
-/* Narrow windows: the toolbar wraps onto more rows and the tabs scroll, so nothing is cut off. */
-.app {
-  grid-template-rows: auto auto minmax(0, 1fr);
-}
-.toolbar {
-  flex-wrap: wrap;
-  min-height: var(--ed-toolbar-h);
-  height: auto;
-  padding-top: var(--ed-space-2);
-  padding-bottom: var(--ed-space-2);
-  row-gap: var(--ed-space-2);
-}
-.toolbar__group {
-  flex-wrap: wrap;
+/* Narrow windows: what doesn't fit goes into a "More" menu (see Overflow.tsx). */
+.overflow {
+  display: flex;
+  align-items: center;
+  gap: var(--ed-space-2);
   min-width: 0;
 }
-@media (max-width: 1100px) {
-  .toolbar {
-    border-radius: var(--ed-radius-lg);
-  }
+.overflow__item {
+  flex: none;
+  display: flex;
+  align-items: center;
 }
-.tabs {
+.overflow__more {
+  position: relative;
+  flex: none;
+}
+.overflow__pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  display: flex;
   flex-wrap: wrap;
-  row-gap: 0;
+  gap: var(--ed-space-2);
+  width: max-content;
+  max-width: 340px;
+  padding: var(--ed-space-3);
+  background: var(--dd-glass-strong);
+  border: 1px solid var(--dd-glass-border);
+  border-radius: var(--ed-radius-lg);
+  box-shadow: var(--dd-shadow-glass);
+  -webkit-backdrop-filter: blur(var(--dd-blur-strong));
+  backdrop-filter: blur(var(--dd-blur-strong));
+}
+.toolbar__overflow {
+  flex: 1 1 0;
+  justify-content: flex-end;
+}
+.tabs.overflow {
+  gap: 2px;
+}
+.tabs .overflow__pop {
+  right: auto;
+  left: var(--ed-space-2);
+  flex-direction: column;
+  align-items: stretch;
+}
+.tabs .overflow__more .btn {
+  height: auto;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ed-text-muted);
+}
+.tabs .overflow__more .btn.is-active {
+  border-bottom-color: var(--ed-accent);
+  color: var(--ed-text);
+  font-weight: 600;
 }
 .tabs__tab {
   white-space: nowrap;
+  padding: 6px 9px;
+  font-size: 13px;
 }
-@media (max-width: 900px) {
-  .app {
-    grid-template-columns: 200px minmax(0, 1fr) 220px;
-  }
-}
-@media (max-width: 1100px) {
-  .tabs {
-    padding-left: var(--ed-space-2);
-    padding-right: var(--ed-space-2);
-  }
-  .tabs__tab {
-    padding: 6px 8px;
-    font-size: 13px;
-  }
+.tabs.overflow {
+  padding-left: var(--ed-space-2);
+  padding-right: var(--ed-space-2);
 }

@@ -1,8 +1,16 @@
 import { useStore } from '../store/store';
 import { Comments } from './Comments';
 import { Layers } from './Layers';
+import { Overflow } from './Overflow';
 import { Library } from './Library';
 import { Templates } from './Templates';
+
+const TABS = [
+  ['library', 'Library'],
+  ['templates', 'Templates'],
+  ['layers', 'Layers'],
+  ['comments', 'Comments'],
+] as const;
 
 /** Left side: the component library, with the layers tree in a tab beside it. */
 export function LeftPanel() {
@@ -10,27 +18,26 @@ export function LeftPanel() {
   const setTab = useStore((s) => s.setLeftTab);
   return (
     <div className="left">
-      <div className="tabs" role="tablist" aria-label="Left panel">
-        {(['library', 'templates', 'layers', 'comments'] as const).map((t) => (
-          <button
-            key={t}
-            role="tab"
-            id={`tab-${t}`}
-            aria-selected={tab === t}
-            aria-controls={`panel-${t}`}
-            className={`tabs__tab${tab === t ? ' is-active' : ''}`}
-            onClick={() => setTab(t)}
-          >
-            {t === 'library'
-              ? 'Library'
-              : t === 'templates'
-                ? 'Templates'
-                : t === 'layers'
-                  ? 'Layers'
-                  : 'Comments'}
-          </button>
-        ))}
-      </div>
+      <Overflow
+        className="tabs"
+        activeKey={tab}
+        items={TABS.map(([t, label]) => ({
+          key: t,
+          label,
+          node: (
+            <button
+              role="tab"
+              id={`tab-${t}`}
+              aria-selected={tab === t}
+              aria-controls={`panel-${t}`}
+              className={`tabs__tab${tab === t ? ' is-active' : ''}`}
+              onClick={() => setTab(t)}
+            >
+              {label}
+            </button>
+          ),
+        }))}
+      />
       {/* Both stay mounted so the library keeps its scroll position, search and thumbnails. */}
       <div
         id="panel-library"

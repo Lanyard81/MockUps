@@ -54,3 +54,14 @@ test('the toolbar toggle sets the default layout for new frames, and is remember
     page.getByRole('group', { name: 'Default layout' }).getByRole('button', { name: 'Freeform' }),
   ).toHaveAttribute('aria-pressed', 'true');
 });
+
+test('on a narrow window the toolbar and tabs tuck extras into a More menu', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+  await page.setViewportSize({ width: 800, height: 700 });
+  await expect(page.getByRole('button', { name: 'Zoom in' })).toHaveCount(0);
+  const more = page.locator('.toolbar').getByRole('button', { name: /More/ });
+  await more.click();
+  await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+  await page.setViewportSize({ width: 1700, height: 1000 });
+  await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+});

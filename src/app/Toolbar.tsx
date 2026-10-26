@@ -10,6 +10,7 @@ import { DocName } from './DocName';
 import { applyTheme, readTheme, type Theme } from './theme';
 import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
+import { Overflow, type OverflowItem } from './Overflow';
 
 const ZOOM_PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
 
@@ -29,63 +30,11 @@ export function Toolbar() {
     ? ZOOM_PRESETS
     : [...ZOOM_PRESETS, pct].sort((a, b) => a - b);
 
-  return (
-    <header className="toolbar">
-      <div className="toolbar__group">
-        <strong className="toolbar__title">MockMaker</strong>
-        <DocName />
-        <button
-          className="btn"
-          title="Search everything (Ctrl/⌘ K)"
-          onClick={() => s.getState().setPaletteOpen(true)}
-        >
-          Search
-        </button>
-        <Menu
-          plain
-          label="File"
-          items={[
-            { label: 'New mockup', onSelect: () => s.getState().newDoc() },
-            { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
-            {
-              label: 'Version history…',
-              hint: 'save and restore',
-              onSelect: () => s.getState().setDialog('history'),
-            },
-            ...KITS.flatMap((k) => k.samples).map((d, i) => ({
-              label: `Sample: ${d.name}`,
-              separatorBefore: i === 0,
-              onSelect: () => loadSample(d.id),
-            })),
-            { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
-            { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
-            {
-              label: 'Import page spec…',
-              hint: '.page.json',
-              separatorBefore: true,
-              onSelect: () => s.getState().setDialog('importSpec'),
-            },
-            ...KITS.map((k) => ({
-              label: `Copy page spec instructions (${k.shortLabel})`,
-              hint: 'for a Claude chat',
-              onSelect: () => void copyPageSpecInstructions(k.id),
-            })),
-            {
-              label: 'Export…',
-              hint: 'PNG, PDF, HTML',
-              separatorBefore: true,
-              onSelect: () => s.getState().setDialog('export'),
-            },
-            {
-              label: 'Copy HTML of selection',
-              disabled: !hasSelection,
-              onSelect: () => void copySelectionHtml(),
-            },
-          ]}
-        />
-      </div>
-
-      <div className="toolbar__group">
+  const items: OverflowItem[] = [
+    {
+      key: 'add',
+      label: 'Add frame',
+      node: (
         <Menu
           icon="+"
           label="Add frame"
@@ -153,6 +102,12 @@ export function Toolbar() {
             })),
           ]}
         />
+      ),
+    },
+    {
+      key: 'undo',
+      label: 'Undo',
+      node: (
         <button
           className="btn"
           disabled={!canUndo}
@@ -161,6 +116,12 @@ export function Toolbar() {
         >
           Undo
         </button>
+      ),
+    },
+    {
+      key: 'comment',
+      label: 'Comment',
+      node: (
         <button
           className={`btn${commentTool ? ' btn--primary' : ''}`}
           aria-pressed={commentTool}
@@ -172,6 +133,12 @@ export function Toolbar() {
         >
           Comment
         </button>
+      ),
+    },
+    {
+      key: 'redo',
+      label: 'Redo',
+      node: (
         <button
           className="btn"
           disabled={!canRedo}
@@ -180,28 +147,36 @@ export function Toolbar() {
         >
           Redo
         </button>
-      </div>
-
-      <div className="segmented" role="group" aria-label="Mode">
-        <button
-          className={mode === 'edit' ? 'is-active' : ''}
-          aria-pressed={mode === 'edit'}
-          onClick={() => setMode('edit')}
-          title="Edit: clicks select things"
-        >
-          Edit
-        </button>
-        <button
-          className={mode === 'preview' ? 'is-active' : ''}
-          aria-pressed={mode === 'preview'}
-          onClick={() => setMode('preview')}
-          title="Preview: components behave live"
-        >
-          Preview
-        </button>
-      </div>
-
-      <div className="toolbar__group">
+      ),
+    },
+    {
+      key: 'mode',
+      label: 'Edit / Preview',
+      node: (
+        <div className="segmented" role="group" aria-label="Mode">
+          <button
+            className={mode === 'edit' ? 'is-active' : ''}
+            aria-pressed={mode === 'edit'}
+            onClick={() => setMode('edit')}
+            title="Edit: clicks select things"
+          >
+            Edit
+          </button>
+          <button
+            className={mode === 'preview' ? 'is-active' : ''}
+            aria-pressed={mode === 'preview'}
+            onClick={() => setMode('preview')}
+            title="Preview: components behave live"
+          >
+            Preview
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: 'play',
+      label: 'Play',
+      node: (
         <button
           className="btn"
           title="Play the click-through full screen, from the start frame"
@@ -210,9 +185,12 @@ export function Toolbar() {
         >
           ▶ Play
         </button>
-      </div>
-
-      <div className="toolbar__group zoom">
+      ),
+    },
+    {
+      key: 'zout',
+      label: 'Zoom out',
+      node: (
         <button
           className="btn btn--icon"
           aria-label="Zoom out"
@@ -222,6 +200,12 @@ export function Toolbar() {
         >
           −
         </button>
+      ),
+    },
+    {
+      key: 'zsel',
+      label: 'Zoom',
+      node: (
         <select
           aria-label="Zoom level"
           value={pct}
@@ -241,6 +225,12 @@ export function Toolbar() {
             </option>
           ))}
         </select>
+      ),
+    },
+    {
+      key: 'zin',
+      label: 'Zoom in',
+      node: (
         <button
           className="btn btn--icon"
           aria-label="Zoom in"
@@ -250,9 +240,21 @@ export function Toolbar() {
         >
           +
         </button>
+      ),
+    },
+    {
+      key: 'fit',
+      label: 'Zoom to fit',
+      node: (
         <button className="btn" onClick={() => s.getState().zoomToFit()}>
           Zoom to fit
         </button>
+      ),
+    },
+    {
+      key: 'layout',
+      label: 'Layout',
+      node: (
         <div
           className="segmented"
           role="group"
@@ -275,6 +277,12 @@ export function Toolbar() {
             </button>
           ))}
         </div>
+      ),
+    },
+    {
+      key: 'help',
+      label: 'Help',
+      node: (
         <button
           className="btn btn--icon"
           aria-label="Keyboard shortcuts"
@@ -283,8 +291,68 @@ export function Toolbar() {
         >
           ?
         </button>
-        <ThemeToggle />
+      ),
+    },
+    { key: 'theme', label: 'Theme', node: <ThemeToggle /> },
+  ];
+
+  return (
+    <header className="toolbar">
+      <div className="toolbar__group">
+        <strong className="toolbar__title">MockMaker</strong>
+        <DocName />
+        <button
+          className="btn"
+          title="Search everything (Ctrl/⌘ K)"
+          onClick={() => s.getState().setPaletteOpen(true)}
+        >
+          Search
+        </button>
+        <Menu
+          plain
+          label="File"
+          items={[
+            { label: 'New mockup', onSelect: () => s.getState().newDoc() },
+            { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
+            {
+              label: 'Version history…',
+              hint: 'save and restore',
+              onSelect: () => s.getState().setDialog('history'),
+            },
+            ...KITS.flatMap((k) => k.samples).map((d, i) => ({
+              label: `Sample: ${d.name}`,
+              separatorBefore: i === 0,
+              onSelect: () => loadSample(d.id),
+            })),
+            { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
+            { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
+            {
+              label: 'Import page spec…',
+              hint: '.page.json',
+              separatorBefore: true,
+              onSelect: () => s.getState().setDialog('importSpec'),
+            },
+            ...KITS.map((k) => ({
+              label: `Copy page spec instructions (${k.shortLabel})`,
+              hint: 'for a Claude chat',
+              onSelect: () => void copyPageSpecInstructions(k.id),
+            })),
+            {
+              label: 'Export…',
+              hint: 'PNG, PDF, HTML',
+              separatorBefore: true,
+              onSelect: () => s.getState().setDialog('export'),
+            },
+            {
+              label: 'Copy HTML of selection',
+              disabled: !hasSelection,
+              onSelect: () => void copySelectionHtml(),
+            },
+          ]}
+        />
       </div>
+
+      <Overflow className="toolbar__overflow" items={items} />
     </header>
   );
 }
