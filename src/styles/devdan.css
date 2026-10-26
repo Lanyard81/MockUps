@@ -393,12 +393,10 @@ kbd {
   width: max-content;
   max-width: 340px;
   padding: var(--ed-space-3);
-  background: var(--dd-glass-strong);
+  background: var(--ed-surface);
   border: 1px solid var(--dd-glass-border);
   border-radius: var(--ed-radius-lg);
   box-shadow: var(--dd-shadow-glass);
-  -webkit-backdrop-filter: blur(var(--dd-blur-strong));
-  backdrop-filter: blur(var(--dd-blur-strong));
 }
 .toolbar__overflow {
   flex: 1 1 0;
