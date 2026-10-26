@@ -275,3 +275,4 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Right-click a frame → "Duplicate as phone / tablet / desktop" copies it at that device's width.
 - [x] Export → PDF document: one page per frame, as tall as the frame (`export/pdf.ts`, no library).
 - [x] The empty state in the Properties panel welcomes you and offers the sample mockups.
+- [x] Settings (⚙ in the toolbar, or search "Settings"): choose Flow or Freeform as the default layout for new frames and new mockups. Remembered per browser (`lib/layoutDefault.ts`); the Add frame menu toggle changes the same setting.

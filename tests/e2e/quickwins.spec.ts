@@ -43,3 +43,20 @@ test('exports every frame as one PDF', async ({ page }) => {
   expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
   expect(bytes.toString('latin1')).toContain('/Subtype /Image');
 });
+
+test('a default layout in Settings is used for new frames and mockups, and is remembered', async ({
+  page,
+}) => {
+  await page.getByRole('button', { name: 'Settings' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Settings' });
+  await dialog.getByLabel('Freeform').check();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await page.reload();
+  await page.getByRole('button', { name: 'Add frame' }).click();
+  await expect(
+    page
+      .getByRole('group', { name: 'Layout for the new frame' })
+      .getByRole('button', { name: 'Freeform' }),
+  ).toHaveAttribute('aria-pressed', 'true');
+});

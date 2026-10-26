@@ -262,6 +262,14 @@ export function Toolbar() {
           ?
         </button>
         <ThemeToggle />
+        <button
+          className="btn btn--icon"
+          aria-label="Settings"
+          title="Settings"
+          onClick={() => s.getState().setDialog('settings')}
+        >
+          ⚙
+        </button>
       </div>
     </header>
   );

@@ -1,3 +1,4 @@
+import { readDefaultLayout, saveDefaultLayout } from '../lib/layoutDefault';
 import { create } from 'zustand';
 import { DEFAULT_KIT_ID, getKit } from '../kits';
 import { patchAtPath } from '../lib/settingsPath';
@@ -100,7 +101,10 @@ function writeLastKit(id: KitId) {
   }
 }
 
-export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
+export function createDoc(
+  kitId: KitId = DEFAULT_KIT_ID,
+  layout: 'flow' | 'free' = readDefaultLayout(),
+): MockupDoc {
   return {
     version: 7,
     id: newId('doc'),
@@ -119,6 +123,7 @@ export function createDoc(kitId: KitId = DEFAULT_KIT_ID): MockupDoc {
         x: 0,
         y: 0,
         root: [],
+        ...(layout === 'free' ? { layout: 'free' as const } : {}),
       },
     ],
     nodes: {},
@@ -158,6 +163,7 @@ interface State {
     | 'history'
     | 'responsive'
     | 'accessibility'
+    | 'settings'
     | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
@@ -588,7 +594,7 @@ export const useStore = create<Store>((set, get) => ({
   leftTab: 'library',
   newFrameKitId: readLastKit(),
   libraryKit: null,
-  newFrameLayout: 'flow',
+  newFrameLayout: readDefaultLayout(),
   paletteOpen: false,
   prototypeMotion: 'none',
   commentTool: false,
@@ -710,7 +716,10 @@ export const useStore = create<Store>((set, get) => ({
       return { importReports: rest };
     }),
   dismissImportSummary: () => set({ importSummary: null }),
-  setNewFrameLayout: (newFrameLayout) => set({ newFrameLayout }),
+  setNewFrameLayout: (newFrameLayout) => {
+    saveDefaultLayout(newFrameLayout);
+    set({ newFrameLayout });
+  },
   setPaletteOpen: (paletteOpen) => set({ paletteOpen, contextMenu: null }),
   setCommentTool: (commentTool) => set({ commentTool }),
   setActiveComment: (activeCommentId) => set({ activeCommentId }),
