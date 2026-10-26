@@ -31,6 +31,11 @@ export function handleKeyDown(e: KeyboardEvent) {
     }
     return;
   }
+  if (key === 'h' && !mod && !e.altKey && !e.shiftKey) {
+    e.preventDefault();
+    s.setHandTool(!s.handTool);
+    return;
+  }
   if (e.key === '?' && !mod) {
     e.preventDefault();
     s.setHelpOpen(!s.helpOpen);

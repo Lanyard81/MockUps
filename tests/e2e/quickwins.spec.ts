@@ -65,3 +65,16 @@ test('on a narrow window the toolbar and tabs tuck extras into a More menu', asy
   await page.setViewportSize({ width: 1700, height: 1000 });
   await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
 });
+
+test('the hand button (and H) toggles panning', async ({ page }) => {
+  const hand = page.getByRole('button', { name: 'Hand tool' });
+  await hand.click();
+  await expect(hand).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('viewport')).toHaveClass(/viewport--panning/);
+  await page.keyboard.press('Space');
+  await page.keyboard.up('Space');
+  await expect(page.getByTestId('viewport')).toHaveClass(/viewport--panning/); // Space doesn't switch it off
+  await page.keyboard.press('h');
+  await expect(hand).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.getByTestId('viewport')).not.toHaveClass(/viewport--panning/);
+});

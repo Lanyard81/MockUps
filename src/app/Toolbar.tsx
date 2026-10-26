@@ -23,6 +23,7 @@ export function Toolbar() {
   const hasSelection = useStore((s) => s.selectedNodeId !== null);
   const newFrameKit = useStore((s) => s.newFrameKitId);
   const newFrameLayout = useStore((s) => s.newFrameLayout);
+  const handTool = useStore((s) => s.handTool);
   const commentTool = useStore((s) => s.commentTool);
   const s = useStore;
   const pct = Math.round(zoom * 100);
@@ -171,6 +172,21 @@ export function Toolbar() {
             Preview
           </button>
         </div>
+      ),
+    },
+    {
+      key: 'hand',
+      label: 'Hand',
+      node: (
+        <button
+          className={`btn btn--icon${handTool ? ' btn--primary' : ''}`}
+          aria-label="Hand tool"
+          aria-pressed={handTool}
+          title="Hand tool (H): drag to pan the canvas"
+          onClick={() => s.getState().setHandTool(!handTool)}
+        >
+          ✋
+        </button>
       ),
     },
     {

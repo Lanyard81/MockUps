@@ -68,6 +68,7 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
     title: 'Canvas',
     items: [
       { keys: 'Space + drag', action: 'Pan (or middle mouse button, or scroll)' },
+      { keys: 'H', action: 'Hand tool: switch panning on or off' },
       { keys: `${MOD}scroll`, action: 'Zoom (or pinch)' },
       { keys: `${MOD}+  ${MOD}−`, action: 'Zoom in and out' },
       { keys: `${MOD}0`, action: 'Zoom to fit' },

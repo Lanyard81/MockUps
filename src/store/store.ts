@@ -209,6 +209,8 @@ interface State {
   viewport: { width: number; height: number };
   /** True while the canvas is being panned (space held or middle mouse), so frames ignore the pointer. */
   panning: boolean;
+  /** The hand tool is switched on (the toolbar button or H): dragging pans until it is switched off. */
+  handTool: boolean;
   /** True once the initial "zoom to fit" has run. */
   fitted: boolean;
   /** Frame id whose name label should switch to rename mode. */
@@ -276,6 +278,7 @@ interface Actions {
   setFrameHeight: (id: string, height: number) => void;
   setViewport: (width: number, height: number) => void;
   setPanning: (panning: boolean) => void;
+  setHandTool: (on: boolean) => void;
   markFitted: () => void;
   requestRename: (id: string | null) => void;
 
@@ -611,6 +614,7 @@ export const useStore = create<Store>((set, get) => ({
   frameHeights: {},
   viewport: { width: 1000, height: 700 },
   panning: false,
+  handTool: false,
   fitted: false,
   renameRequest: null,
 
@@ -906,7 +910,8 @@ export const useStore = create<Store>((set, get) => ({
       s.frameHeights[id] === height ? s : { frameHeights: { ...s.frameHeights, [id]: height } },
     ),
   setViewport: (width, height) => set({ viewport: { width, height } }),
-  setPanning: (panning) => set({ panning }),
+  setPanning: (panning) => set((s) => ({ panning: panning || s.handTool })),
+  setHandTool: (handTool) => set({ handTool, panning: handTool }),
   markFitted: () => set({ fitted: true }),
   requestRename: (id) => set({ renameRequest: id }),
 
