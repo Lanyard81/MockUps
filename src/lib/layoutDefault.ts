@@ -1,6 +1,6 @@
 /** The layout new frames start with: Flow (sections and grids) or Freeform. A per-browser preference. */
 export type DefaultLayout = 'flow' | 'free';
-const KEY = 'mockmaker.layout';
+const KEY = 'pagewright.layout';
 
 export function readDefaultLayout(): DefaultLayout {
   try {

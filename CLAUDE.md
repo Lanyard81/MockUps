@@ -55,7 +55,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 ## Testing expectations
 
 - Unit tests (Vitest) for pure logic: geometry, tree operations, store actions and undo, text fitting.
-- Playwright e2e for each milestone's user-visible behaviour (listed per milestone in the brief). The single-file e2e opens `dist-single/mockmaker.html` from disk, offline.
+- Playwright e2e for each milestone's user-visible behaviour (listed per milestone in the brief). The single-file e2e opens `dist-single/pagewright.html` from disk, offline.
 - Before pushing: `npm run lint && npm run format:check && npm run catalogue:check && npm run page-spec-docs:check && npm run samples && git diff --exit-code public/samples && npm run typecheck && npm test && npm run build:single && npm run test:e2e` (the same steps CI runs, in its order). `catalogue:check`, `page-spec-docs:check` and the samples check compare generated files with what is committed, so run the generators and commit their output (a generator run on uncommitted files passes by mistake: check `git status` is clean afterwards).
 - Playwright needs a Chromium: set `PW_CHROMIUM=/opt/pw-browsers/chromium` in the cloud sandbox.
 

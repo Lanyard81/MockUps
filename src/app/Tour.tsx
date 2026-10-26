@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MOD } from './platform';
 
-const KEY = 'nswmb.tourDone';
+const KEY = 'pagewright.tourDone';
 
 const wasDone = (): boolean => {
   try {

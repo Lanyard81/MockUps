@@ -111,7 +111,7 @@ A `.mockup.json` is an envelope:
 
 ```json
 {
-  "app": "mockmaker",
+  "app": "pagewright",
   "fileVersion": 1,
   "savedAt": "2026-10-20T00:00:00.000Z",
   "doc": { "version": 1, "...": "..." },

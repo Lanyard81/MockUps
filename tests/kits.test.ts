@@ -313,7 +313,7 @@ describe('kits do not mix inside a frame', () => {
   it('remembers the kit chosen for new frames, and new mockups start in it', () => {
     s().setNewFrameKit('sharepoint');
     expect(s().newFrameKitId).toBe('sharepoint');
-    expect(localStorage.getItem('nswmb.lastKit')).toBe('sharepoint');
+    expect(localStorage.getItem('pagewright.lastKit')).toBe('sharepoint');
     s().newDoc();
     expect(s().doc.defaultKitId).toBe('sharepoint');
     expect(s().doc.frames[0]!.kitId).toBe('sharepoint');

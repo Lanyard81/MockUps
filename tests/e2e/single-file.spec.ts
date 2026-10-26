@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const file = resolve('dist-single/mockmaker.html');
+const file = resolve('dist-single/pagewright.html');
 
 test('single file works from disk with no network', async ({ page, context }) => {
   test.skip(!existsSync(file), 'run npm run build:single first');
@@ -11,7 +11,7 @@ test('single file works from disk with no network', async ({ page, context }) =>
     if (/^https?:/.test(r.url())) requests.push(r.url());
   });
   // A file:// page has its own storage: close the first-run tour for this test.
-  await page.addInitScript(() => localStorage.setItem('nswmb.tourDone', '1'));
+  await page.addInitScript(() => localStorage.setItem('pagewright.tourDone', '1'));
   await context.setOffline(true);
   await page.goto(`file://${file}`);
   await page

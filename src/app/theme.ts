@@ -1,6 +1,6 @@
 /** The editor theme: dark (the default) or light. A per-browser preference, never part of a mockup. */
 export type Theme = 'dark' | 'light';
-const KEY = 'mockmaker.theme';
+const KEY = 'pagewright.theme';
 
 export function readTheme(): Theme {
   try {

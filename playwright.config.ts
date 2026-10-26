@@ -10,7 +10,10 @@ export default defineConfig({
     storageState: {
       cookies: [],
       origins: [
-        { origin: 'http://localhost:4173', localStorage: [{ name: 'nswmb.tourDone', value: '1' }] },
+        {
+          origin: 'http://localhost:4173',
+          localStorage: [{ name: 'pagewright.tourDone', value: '1' }],
+        },
       ],
     },
     launchOptions: { executablePath: process.env.PW_CHROMIUM || undefined },

@@ -25,10 +25,11 @@ import {
 export class FileError extends Error {}
 
 export const FILE_VERSION = 1;
-export const FILE_APP = 'mockmaker';
-/** The name files were saved under before the app was called MockMaker; still opened. */
-const OLD_FILE_APP = 'nsw-mockup-builder';
-const isOurFile = (app: unknown) => app === FILE_APP || app === OLD_FILE_APP;
+export const FILE_APP = 'pagewright';
+/** The names files were saved under before the app was called Pagewright; still opened. */
+const OLD_FILE_APPS = ['mockmaker', 'nsw-mockup-builder'];
+const isOurFile = (app: unknown) =>
+  app === FILE_APP || (typeof app === 'string' && OLD_FILE_APPS.includes(app));
 export const MAX_FILE_BYTES = 200 * 1024 * 1024;
 const MAX_NODES = 20_000;
 const MAX_FRAMES = 200;

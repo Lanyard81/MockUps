@@ -81,7 +81,7 @@ export function kitVersionsFor(ids: KitId[]): Record<KitId, string> {
   return Object.fromEntries(ids.map((id) => [id, getKit(id).version]));
 }
 
-const LAST_KIT_KEY = 'nswmb.lastKit';
+const LAST_KIT_KEY = 'pagewright.lastKit';
 
 /** The kit used for the last new frame. Browser storage can be blocked, so every access is guarded. */
 function readLastKit(): KitId {

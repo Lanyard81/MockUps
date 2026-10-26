@@ -372,3 +372,7 @@ Renamed from MockMaker for the name shown to people (toolbar, page title, README
 ## 065. The Simple kit is a third kit, not a mode of an existing one
 
 Kits are self-contained (rule 3a), so "generic" parts live in their own `src/kits/simple/` folder with their own CSS (`sk-` classes, checked by `npm run catalogue`) and nothing shared with NSW or SharePoint. It uses the same section > column layout as SharePoint so the tree rules, layers and drag and drop work unchanged. System fonts only; the accent is validated as a hex colour before it reaches CSS. No conversions to or from other kits yet: pages are rebuilt rather than mapped, which keeps the kit small.
+
+## 066. Technical names follow the new name too
+
+With nobody using the app yet, decision 064's caution isn't needed: the single file is `pagewright.html`, saved files say `"app": "pagewright"`, browser storage keys start `pagewright.`, and the package is `pagewright`. Files saved as `mockmaker` or `nsw-mockup-builder` still open. The Pages address still follows the GitHub repository name (`/MockUps/`), which only renaming the repository changes.
