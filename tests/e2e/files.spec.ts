@@ -196,6 +196,7 @@ test.describe('my mockups', () => {
     await dialog.getByRole('button', { name: 'Open First' }).click();
     await expect(page.getByRole('button', { name: 'First' })).toBeVisible();
     await expect(home(page).locator('h1')).toHaveCount(1);
+    await expect(status(page)).toHaveText('Saved');
 
     // Rename and duplicate.
     await fileMenu(page, /My mockups/);

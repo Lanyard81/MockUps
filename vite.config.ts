@@ -6,7 +6,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 const single = process.env.SINGLE === '1';
 
 export default defineConfig({
-  base: single ? './' : (process.env.PAGES_BASE ?? '/MockUps/'),
+  base: single ? './' : (process.env.PAGES_BASE ?? '/PageWright/'),
   publicDir: single ? false : 'public',
   plugins: [react(), ...(single ? [viteSingleFile()] : [])],
   build: {

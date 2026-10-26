@@ -376,3 +376,7 @@ Kits are self-contained (rule 3a), so "generic" parts live in their own `src/kit
 ## 066. Technical names follow the new name too
 
 With nobody using the app yet, decision 064's caution isn't needed: the single file is `pagewright.html`, saved files say `"app": "pagewright"`, browser storage keys start `pagewright.`, and the package is `pagewright`. Files saved as `mockmaker` or `nsw-mockup-builder` still open. The Pages address still follows the GitHub repository name (`/MockUps/`), which only renaming the repository changes.
+
+## 067. The repository is PageWright, so the site address is /PageWright/
+
+Vite's `base`, the Playwright config and the docs now use `/PageWright/` (case-sensitive), matching the renamed GitHub repository.

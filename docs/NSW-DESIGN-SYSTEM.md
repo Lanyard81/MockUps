@@ -1,6 +1,6 @@
 # NSW Design System: reference for the mockup tool
 
-Gathered 20 October 2026 for the MockUps repo (https://github.com/Lanyard81/MockUps). The build brief is in `docs/BUILD-PROMPT.md`.
+Gathered 20 October 2026 for the PageWright repo (https://github.com/Lanyard81/PageWright). The build brief is in `docs/BUILD-PROMPT.md`.
 
 ## Key facts
 

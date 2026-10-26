@@ -2,7 +2,7 @@
 
 A browser-based tool for making screen mockups from the official [NSW Government Design System](https://designsystem.nsw.gov.au). Drag real NSW components onto device frames, edit their text and options, then save and share the screens.
 
-**Live site:** https://lanyard81.github.io/MockUps/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
+**Live site:** https://lanyard81.github.io/PageWright/ (available once GitHub Pages is switched on; see [Deploying](#deploying)).
 
 > Status: Milestones 0–8 and the style-kit milestones S1–S6 (SharePoint kit) are done (scaffolding, canvas and device frames, component library, drag and drop, editing, layers and polish, saving and export, templates and samples, click-through prototypes). See [`docs/MILESTONES.md`](docs/MILESTONES.md).
 
@@ -12,7 +12,7 @@ You need Node.js 22 or later.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/MockUps/
+npm run dev        # http://localhost:5173/PageWright/
 ```
 
 Other scripts:
@@ -83,7 +83,7 @@ CI (`.github/workflows/ci.yml`) runs lint, formatting, type-check, unit tests an
 
 One-off setup: in the repository go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 
-Vite's `base` is `/MockUps/` (the repository name). If you rename the repository, update the default in `vite.config.ts` and `playwright.config.ts`. The deploy job sets it automatically from the repository name.
+Vite's `base` is `/PageWright/` (the repository name). If you rename the repository, update the default in `vite.config.ts` and `playwright.config.ts`. The deploy job sets it automatically from the repository name.
 
 ## Updating the NSW Design System
 

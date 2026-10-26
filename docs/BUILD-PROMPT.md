@@ -6,8 +6,8 @@ The design system is open source (MIT), published on npm as `nsw-design-system` 
 
 ## Repository
 
-- **Repo**: https://github.com/Lanyard81/MockUps (public, default branch `main`). It currently holds a placeholder `README.md`, plus `docs/NSW-DESIGN-SYSTEM.md` and `docs/BUILD-PROMPT.md` (this prompt; keep it unchanged as the original brief).
-- **GitHub Pages URL**: https://lanyard81.github.io/MockUps/ — so Vite's `base` is `/MockUps/` (case-sensitive).
+- **Repo**: https://github.com/Lanyard81/PageWright (public, default branch `main`). It currently holds a placeholder `README.md`, plus `docs/NSW-DESIGN-SYSTEM.md` and `docs/BUILD-PROMPT.md` (this prompt; keep it unchanged as the original brief).
+- **GitHub Pages URL**: https://lanyard81.github.io/PageWright/ — so Vite's `base` is `/PageWright/` (case-sensitive).
 - Pages is not yet enabled. Deploy with the official `actions/upload-pages-artifact` and `actions/deploy-pages` actions. If the first deploy fails because Pages is off, tell me to go to **Settings → Pages → Build and deployment → Source: GitHub Actions**, then re-run the workflow.
 
 Work in **milestones**. After each milestone: update the docs, commit with a clear message, push, and **stop and summarise what to test before continuing**. Don't start the next milestone until I confirm.
@@ -18,7 +18,7 @@ Work in **milestones**. After each milestone: update the docs, commit with a cle
 
 - **Stack**: Vite + React + TypeScript (strict mode), with Zustand for state. Keep dependencies few and purposeful, and record each one and why in `docs/DECISIONS.md`. Expected ones: `nsw-design-system`, `@fontsource/public-sans`, `material-icons` (or the equivalent npm package for Material Icons), `dompurify`, `idb-keyval`, `html-to-image`, `vite-plugin-singlefile`. Write the drag-and-drop with plain pointer events rather than a drag-and-drop library, so it behaves exactly as described below.
 - **Two build outputs**, both produced by CI on every push to `main`:
-  1. **GitHub Pages site**: deployed by a GitHub Actions workflow to https://lanyard81.github.io/MockUps/, with Vite's `base` set to `/MockUps/` so asset paths work on Pages.
+  1. **GitHub Pages site**: deployed by a GitHub Actions workflow to https://lanyard81.github.io/PageWright/, with Vite's `base` set to `/PageWright/` so asset paths work on Pages.
   2. **Single self-contained file**: `npm run build:single` produces `dist-single/pagewright.html`, with the app, NSW CSS and JS, fonts, icons and component catalogue all inlined. It must work when opened directly from disk (`file://`) with no internet connection. CI uploads it as a build artifact and attaches it to GitHub Releases when a version tag is pushed.
 - **Real NSW components only**: use the official NSW markup and CSS classes unchanged. Never restyle or recreate NSW components with custom CSS. Upgrading the `nsw-design-system` package should update the library.
 - **Editor styling is separate from NSW styling**: the editor's own UI (panels, toolbars) is warm and flat: soft neutral background, clear hierarchy, generous spacing, subtle borders, with no glassmorphism or heavy shadows. Define its colours, radii and spacing as CSS custom properties on `:root`. NSW CSS must never leak into the editor UI, and editor CSS must never leak into the mockups.
@@ -122,7 +122,7 @@ Mockups use a **stacked layout**, like a real web page, rather than free positio
   - **HTML page**: a standalone, clickable page per frame (or one page linking all frames), using the real NSW CSS and JS. Offer "link to NSW from CDN" (small file) or "fully self-contained" (works offline).
   - **Copy HTML** of a selected component or section, for handing to developers.
 - **Single-file version**: confirm `dist-single/pagewright.html` works fully offline from disk, including saving. Test browser storage under `file://` in Chrome, Edge and Safari; where it isn't available, show a clear banner explaining that work must be saved as a file. Add a Playwright test that opens the single file from disk offline and builds and saves a simple screen.
-- Confirm the Pages deployment at https://lanyard81.github.io/MockUps/ works end to end, and put the live link in the README.
+- Confirm the Pages deployment at https://lanyard81.github.io/PageWright/ works end to end, and put the live link in the README.
 
 ## Milestone 7: Templates
 
