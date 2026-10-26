@@ -365,3 +365,51 @@ kbd {
 :root[data-theme='light'] :is(.toolbar, .left, .properties, .viewport) {
   border-color: rgba(255, 255, 255, 0.9);
 }
+
+/* Narrow windows: the toolbar wraps onto more rows and the tabs scroll, so nothing is cut off. */
+.app {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+.toolbar {
+  flex-wrap: wrap;
+  min-height: var(--ed-toolbar-h);
+  height: auto;
+  padding-top: var(--ed-space-2);
+  padding-bottom: var(--ed-space-2);
+  row-gap: var(--ed-space-2);
+}
+.toolbar__group {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+@media (max-width: 1100px) {
+  .toolbar {
+    border-radius: var(--ed-radius-lg);
+  }
+}
+.tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tabs__tab {
+  flex: none;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 200px minmax(0, 1fr) 220px;
+  }
+}
+@media (max-width: 1100px) {
+  .tabs {
+    padding-left: var(--ed-space-2);
+    padding-right: var(--ed-space-2);
+  }
+  .tabs__tab {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+}
