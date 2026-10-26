@@ -11,10 +11,11 @@ import type { Catalogue } from '../src/catalogue/types';
 import { buildCatalogue } from './lib/buildCatalogue';
 import { nswBuild, nswIcons } from './kits/nsw';
 import { spBuild } from './kits/sharepoint';
+import { simpleBuild } from './kits/simple';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-const kits = [nswBuild, spBuild];
+const kits = [nswBuild, spBuild, simpleBuild];
 let failed = false;
 
 for (const kit of kits) {

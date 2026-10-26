@@ -1,0 +1,2007 @@
+{
+ "version": "1.0.0",
+ "components": [
+  {
+   "id": "sk-heading",
+   "slug": "heading",
+   "name": "Heading",
+   "category": "Text",
+   "keywords": [
+    "title",
+    "h1",
+    "h2",
+    "heading"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "h1",
+   "variants": [
+    {
+     "id": "h1",
+     "label": "Heading 1",
+     "html": "<h1 class=\"sk-c sk-h sk-h--1\" data-edit=\"text\">Heading 1</h1>"
+    },
+    {
+     "id": "h2",
+     "label": "Heading 2",
+     "html": "<h2 class=\"sk-c sk-h sk-h--2\" data-edit=\"text\">Heading 2</h2>"
+    },
+    {
+     "id": "h3",
+     "label": "Heading 3",
+     "html": "<h3 class=\"sk-c sk-h sk-h--3\" data-edit=\"text\">Heading 3</h3>"
+    },
+    {
+     "id": "h4",
+     "label": "Heading 4",
+     "html": "<h4 class=\"sk-c sk-h sk-h--4\" data-edit=\"text\">Heading 4</h4>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Heading 1",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-c",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    },
+    {
+     "type": "headingLevel",
+     "key": "level",
+     "label": "Heading level",
+     "selector": ".sk-h",
+     "default": 1
+    }
+   ]
+  },
+  {
+   "id": "sk-paragraph",
+   "slug": "paragraph",
+   "name": "Paragraph",
+   "category": "Text",
+   "keywords": [
+    "text",
+    "body",
+    "copy"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "body",
+   "variants": [
+    {
+     "id": "body",
+     "label": "Body",
+     "html": "<p class=\"sk-c sk-p\" data-edit=\"text\" data-multiline>A short paragraph of text. Keep it to a couple of sentences so people can read it at a glance.</p>"
+    },
+    {
+     "id": "lead",
+     "label": "Lead",
+     "html": "<p class=\"sk-c sk-p sk-p--lead\" data-edit=\"text\" data-multiline>A larger introduction that sets up the page and says what it is for.</p>"
+    },
+    {
+     "id": "small",
+     "label": "Small print",
+     "html": "<p class=\"sk-c sk-p sk-p--small\" data-edit=\"text\" data-multiline>Smaller, quieter text for notes, captions and legal lines.</p>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "A short paragraph of text. Keep it to a couple of sentences so people can read it at a glance.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-c",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sk-eyebrow",
+   "slug": "eyebrow",
+   "name": "Eyebrow",
+   "category": "Text",
+   "keywords": [
+    "label",
+    "kicker",
+    "overline"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "eyebrow",
+   "variants": [
+    {
+     "id": "eyebrow",
+     "label": "Eyebrow",
+     "html": "<span class=\"sk-c sk-eyebrow\" data-edit=\"text\">Section label</span>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Section label",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-c",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sk-quote",
+   "slug": "quote",
+   "name": "Quote",
+   "category": "Text",
+   "keywords": [
+    "blockquote",
+    "pull quote"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "quote",
+   "variants": [
+    {
+     "id": "quote",
+     "label": "Quote",
+     "html": "<blockquote class=\"sk-c sk-quote\"><span data-edit=\"text\" data-multiline>Simple tools make it easier to get the idea across.</span><cite data-optional=\"source\" data-edit=\"source\">Alex Taylor, Designer</cite></blockquote>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Simple tools make it easier to get the idea across.",
+     "multiline": true
+    },
+    {
+     "key": "source",
+     "default": "Alex Taylor, Designer",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "source",
+     "label": "Show source"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-list",
+   "slug": "list",
+   "name": "List",
+   "category": "Text",
+   "keywords": [
+    "bullets",
+    "numbers",
+    "checklist",
+    "ticks"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "bullets",
+   "variants": [
+    {
+     "id": "bullets",
+     "label": "Bullets",
+     "html": "<ul class=\"sk-c sk-list\"><li data-edit=\"item1\">List item 1</li><li data-edit=\"item2\">List item 2</li><li data-edit=\"item3\">List item 3</li></ul>"
+    },
+    {
+     "id": "numbers",
+     "label": "Numbers",
+     "html": "<ol class=\"sk-c sk-list\"><li data-edit=\"item1\">Step 1</li><li data-edit=\"item2\">Step 2</li><li data-edit=\"item3\">Step 3</li></ol>"
+    },
+    {
+     "id": "checks",
+     "label": "Ticks",
+     "html": "<ul class=\"sk-c sk-list sk-list--check\"><li data-edit=\"item1\">Easy to start</li><li data-edit=\"item2\">Nothing to install</li><li data-edit=\"item3\">Works anywhere</li></ul>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "item1",
+     "default": "List item 1",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "List item 2",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "List item 3",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-badge",
+   "slug": "badge",
+   "name": "Badge",
+   "category": "Text",
+   "keywords": [
+    "tag",
+    "status",
+    "pill",
+    "label"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "neutral",
+   "variants": [
+    {
+     "id": "neutral",
+     "label": "Neutral",
+     "html": "<span class=\"sk-c sk-badge\" data-edit=\"text\">Draft</span>"
+    },
+    {
+     "id": "accent",
+     "label": "Accent",
+     "html": "<span class=\"sk-c sk-badge sk-badge--accent\" data-edit=\"text\">New</span>"
+    },
+    {
+     "id": "success",
+     "label": "Success",
+     "html": "<span class=\"sk-c sk-badge sk-badge--success\" data-edit=\"text\">Approved</span>"
+    },
+    {
+     "id": "warning",
+     "label": "Warning",
+     "html": "<span class=\"sk-c sk-badge sk-badge--warning\" data-edit=\"text\">Pending</span>"
+    },
+    {
+     "id": "danger",
+     "label": "Danger",
+     "html": "<span class=\"sk-c sk-badge sk-badge--danger\" data-edit=\"text\">Overdue</span>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "Draft",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-c",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sk-divider",
+   "slug": "divider",
+   "name": "Divider and space",
+   "category": "Text",
+   "keywords": [
+    "line",
+    "rule",
+    "spacer",
+    "gap",
+    "space"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "line",
+   "variants": [
+    {
+     "id": "line",
+     "label": "Line",
+     "html": "<hr class=\"sk-c sk-divider\">"
+    },
+    {
+     "id": "space-small",
+     "label": "Small space",
+     "html": "<span class=\"sk-c sk-spacer sk-spacer--small\"></span>"
+    },
+    {
+     "id": "space",
+     "label": "Space",
+     "html": "<span class=\"sk-c sk-spacer\"></span>"
+    },
+    {
+     "id": "space-large",
+     "label": "Large space",
+     "html": "<span class=\"sk-c sk-spacer sk-spacer--large\"></span>"
+    }
+   ],
+   "editable": [],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-button",
+   "slug": "button",
+   "name": "Button",
+   "category": "Actions",
+   "keywords": [
+    "cta",
+    "call to action",
+    "submit"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "primary",
+   "variants": [
+    {
+     "id": "primary",
+     "label": "Primary",
+     "html": "<button class=\"sk-c sk-button\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "secondary",
+     "label": "Secondary",
+     "html": "<button class=\"sk-c sk-button sk-button--secondary\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "outline",
+     "label": "Outline",
+     "html": "<button class=\"sk-c sk-button sk-button--outline\" data-edit=\"label\">Button</button>"
+    },
+    {
+     "id": "text",
+     "label": "Text",
+     "html": "<button class=\"sk-c sk-button sk-button--text\" data-edit=\"label\">Button</button>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Button",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".sk-button"
+    },
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-button",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    },
+    {
+     "type": "choice",
+     "key": "size",
+     "label": "Size",
+     "selector": ".sk-button",
+     "choices": [
+      {
+       "id": "medium",
+       "label": "Medium"
+      },
+      {
+       "id": "small",
+       "label": "Small",
+       "className": "sk-button--small"
+      },
+      {
+       "id": "large",
+       "label": "Large",
+       "className": "sk-button--large"
+      }
+     ]
+    },
+    {
+     "type": "toggleClass",
+     "key": "full",
+     "label": "Full width",
+     "selector": ".sk-button",
+     "className": "sk-button--full"
+    }
+   ]
+  },
+  {
+   "id": "sk-buttons",
+   "slug": "button-group",
+   "name": "Button pair",
+   "category": "Actions",
+   "keywords": [
+    "cta",
+    "actions",
+    "group"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "pair",
+   "variants": [
+    {
+     "id": "pair",
+     "label": "Primary and secondary",
+     "html": "<div class=\"sk-c sk-buttons\"><button class=\"sk-button\" data-edit=\"primary\">Get started</button><button class=\"sk-button sk-button--secondary\" data-edit=\"secondary\">Learn more</button></div>"
+    },
+    {
+     "id": "outline",
+     "label": "Primary and outline",
+     "html": "<div class=\"sk-c sk-buttons\"><button class=\"sk-button\" data-edit=\"primary\">Get started</button><button class=\"sk-button sk-button--outline\" data-edit=\"secondary\">Contact us</button></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "primary",
+     "default": "Get started",
+     "multiline": false
+    },
+    {
+     "key": "secondary",
+     "default": "Learn more",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "choice",
+     "key": "align",
+     "label": "Alignment",
+     "selector": ".sk-buttons",
+     "choices": [
+      {
+       "id": "left",
+       "label": "Left"
+      },
+      {
+       "id": "center",
+       "label": "Centre",
+       "className": "sk-align-center"
+      },
+      {
+       "id": "right",
+       "label": "Right",
+       "className": "sk-align-right"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sk-link",
+   "slug": "link",
+   "name": "Link",
+   "category": "Actions",
+   "keywords": [
+    "anchor",
+    "url"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "link",
+   "variants": [
+    {
+     "id": "link",
+     "label": "Link",
+     "html": "<a class=\"sk-c sk-link\" href=\"#\" data-edit=\"label\">A link to somewhere →</a>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "A link to somewhere →",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".sk-link"
+    }
+   ]
+  },
+  {
+   "id": "sk-card",
+   "slug": "card",
+   "name": "Card",
+   "category": "Content",
+   "keywords": [
+    "tile",
+    "panel",
+    "teaser"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "basic",
+   "variants": [
+    {
+     "id": "basic",
+     "label": "Basic",
+     "html": "<div class=\"sk-c sk-card\"><div class=\"sk-card__body\"><h3 class=\"sk-card__title\" data-edit=\"title\">Card title</h3><p class=\"sk-card__text\" data-edit=\"text\" data-multiline>A short description that explains what this card is about.</p><a class=\"sk-card__link\" href=\"#\" data-optional=\"link\" data-edit=\"link\">Read more →</a></div></div>"
+    },
+    {
+     "id": "image",
+     "label": "With picture",
+     "html": "<div class=\"sk-c sk-card\"><img class=\"sk-card__image\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23dbe4f5%22%2F%3E%3Ccircle%20cx%3D%22460.79999999999995%22%20cy%3D%22115.2%22%20r%3D%2250.400000000000006%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L204.8%20180%20L332.8%20273.6%20L448%20198.00000000000003%20L640%20324%20L640%20360%20Z%22%20fill%3D%22%239db5e3%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"><div class=\"sk-card__body\"><h3 class=\"sk-card__title\" data-edit=\"title\">Card title</h3><p class=\"sk-card__text\" data-edit=\"text\" data-multiline>A short description that explains what this card is about.</p><a class=\"sk-card__link\" href=\"#\" data-optional=\"link\" data-edit=\"link\">Read more →</a></div></div>"
+    },
+    {
+     "id": "horizontal",
+     "label": "Side by side",
+     "html": "<div class=\"sk-c sk-card sk-card--horizontal\"><img class=\"sk-card__image\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22360%22%20viewBox%3D%220%200%20480%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e3dcf3%22%2F%3E%3Ccircle%20cx%3D%22345.59999999999997%22%20cy%3D%22115.2%22%20r%3D%2250.400000000000006%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L153.6%20180%20L249.60000000000002%20273.6%20L336%20198.00000000000003%20L480%20324%20L480%20360%20Z%22%20fill%3D%22%23b7a5e3%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"><div class=\"sk-card__body\"><h3 class=\"sk-card__title\" data-edit=\"title\">Card title</h3><p class=\"sk-card__text\" data-edit=\"text\" data-multiline>A short description that explains what this card is about.</p><a class=\"sk-card__link\" href=\"#\" data-optional=\"link\" data-edit=\"link\">Read more →</a></div></div>"
+    },
+    {
+     "id": "flat",
+     "label": "Soft",
+     "html": "<div class=\"sk-c sk-card sk-card--flat\"><div class=\"sk-card__body\"><h3 class=\"sk-card__title\" data-edit=\"title\">Card title</h3><p class=\"sk-card__text\" data-edit=\"text\" data-multiline>A softer card with no border, good for grouping a few facts.</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Card title",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "A short description that explains what this card is about.",
+     "multiline": true
+    },
+    {
+     "key": "link",
+     "default": "Read more →",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "link",
+     "label": "Show link"
+    }
+   ],
+   "options": [
+    {
+     "type": "href",
+     "key": "href",
+     "label": "Link address",
+     "selector": ".sk-card__link"
+    }
+   ]
+  },
+  {
+   "id": "sk-hero",
+   "slug": "hero",
+   "name": "Hero",
+   "category": "Content",
+   "keywords": [
+    "banner",
+    "header",
+    "intro",
+    "landing"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "centre",
+   "variants": [
+    {
+     "id": "centre",
+     "label": "Centred",
+     "html": "<div class=\"sk-c sk-hero sk-hero--centre\"><h1 class=\"sk-hero__title\" data-edit=\"title\">A clear headline for the page</h1><p class=\"sk-hero__text\" data-edit=\"text\" data-multiline>One or two sentences that explain what this is and who it is for.</p><div class=\"sk-hero__actions\" data-optional=\"actions\"><button class=\"sk-button\" data-edit=\"primary\">Get started</button><button class=\"sk-button sk-button--secondary\" data-edit=\"secondary\">Learn more</button></div></div>"
+    },
+    {
+     "id": "left",
+     "label": "Left aligned",
+     "html": "<div class=\"sk-c sk-hero\"><h1 class=\"sk-hero__title\" data-edit=\"title\">A clear headline for the page</h1><p class=\"sk-hero__text\" data-edit=\"text\" data-multiline>One or two sentences that explain what this is and who it is for.</p><div class=\"sk-hero__actions\" data-optional=\"actions\"><button class=\"sk-button\" data-edit=\"primary\">Get started</button><button class=\"sk-button sk-button--secondary\" data-edit=\"secondary\">Learn more</button></div></div>"
+    },
+    {
+     "id": "split",
+     "label": "With picture",
+     "html": "<div class=\"sk-c sk-hero sk-hero--split\"><div class=\"sk-hero__copy\"><h1 class=\"sk-hero__title\" data-edit=\"title\">A clear headline for the page</h1><p class=\"sk-hero__text\" data-edit=\"text\" data-multiline>One or two sentences that explain what this is and who it is for.</p><div class=\"sk-hero__actions\" data-optional=\"actions\"><button class=\"sk-button\" data-edit=\"primary\">Get started</button></div></div><img class=\"sk-hero__image\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22480%22%20viewBox%3D%220%200%20640%20480%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23d7efe6%22%2F%3E%3Ccircle%20cx%3D%22460.79999999999995%22%20cy%3D%22153.6%22%20r%3D%2267.2%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20480%20L204.8%20240%20L332.8%20364.8%20L448%20264%20L640%20432%20L640%20480%20Z%22%20fill%3D%22%2391d3b8%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "A clear headline for the page",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "One or two sentences that explain what this is and who it is for.",
+     "multiline": true
+    },
+    {
+     "key": "primary",
+     "default": "Get started",
+     "multiline": false
+    },
+    {
+     "key": "secondary",
+     "default": "Learn more",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "actions",
+     "label": "Show buttons"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-callout",
+   "slug": "callout",
+   "name": "Callout",
+   "category": "Content",
+   "keywords": [
+    "alert",
+    "notice",
+    "message",
+    "warning",
+    "info"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "info",
+   "variants": [
+    {
+     "id": "info",
+     "label": "Information",
+     "html": "<div class=\"sk-c sk-callout\" role=\"note\"><span class=\"sk-callout__title\" data-edit=\"title\">Good to know</span><span class=\"sk-callout__text\" data-edit=\"text\" data-multiline>A sentence or two that gives the detail.</span></div>"
+    },
+    {
+     "id": "success",
+     "label": "Success",
+     "html": "<div class=\"sk-c sk-callout sk-callout--success\" role=\"note\"><span class=\"sk-callout__title\" data-edit=\"title\">All done</span><span class=\"sk-callout__text\" data-edit=\"text\" data-multiline>A sentence or two that gives the detail.</span></div>"
+    },
+    {
+     "id": "warning",
+     "label": "Warning",
+     "html": "<div class=\"sk-c sk-callout sk-callout--warning\" role=\"note\"><span class=\"sk-callout__title\" data-edit=\"title\">Check this first</span><span class=\"sk-callout__text\" data-edit=\"text\" data-multiline>A sentence or two that gives the detail.</span></div>"
+    },
+    {
+     "id": "error",
+     "label": "Error",
+     "html": "<div class=\"sk-c sk-callout sk-callout--error\" role=\"note\"><span class=\"sk-callout__title\" data-edit=\"title\">Something went wrong</span><span class=\"sk-callout__text\" data-edit=\"text\" data-multiline>A sentence or two that gives the detail.</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Good to know",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "A sentence or two that gives the detail.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-stats",
+   "slug": "stats",
+   "name": "Statistics",
+   "category": "Content",
+   "keywords": [
+    "numbers",
+    "metrics",
+    "kpi",
+    "figures"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "one",
+   "variants": [
+    {
+     "id": "one",
+     "label": "One number",
+     "html": "<div class=\"sk-c sk-stat\"><span class=\"sk-stat__value\" data-edit=\"value1\">1,284</span><span class=\"sk-stat__label\" data-edit=\"label1\">Active users</span></div>"
+    },
+    {
+     "id": "three",
+     "label": "Three numbers",
+     "html": "<div class=\"sk-c sk-stats\"><div class=\"sk-stat\"><span class=\"sk-stat__value\" data-edit=\"value1\">1,284</span><span class=\"sk-stat__label\" data-edit=\"label1\">Active users</span></div><div class=\"sk-stat\"><span class=\"sk-stat__value\" data-edit=\"value2\">96%</span><span class=\"sk-stat__label\" data-edit=\"label2\">Satisfaction</span></div><div class=\"sk-stat\"><span class=\"sk-stat__value\" data-edit=\"value3\">24</span><span class=\"sk-stat__label\" data-edit=\"label3\">Countries</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "value1",
+     "default": "1,284",
+     "multiline": false
+    },
+    {
+     "key": "label1",
+     "default": "Active users",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-features",
+   "slug": "features",
+   "name": "Features",
+   "category": "Content",
+   "keywords": [
+    "benefits",
+    "icons",
+    "highlights"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "one",
+   "variants": [
+    {
+     "id": "one",
+     "label": "One feature",
+     "html": "<div class=\"sk-c sk-feature\"><span class=\"sk-feature__icon\" aria-hidden=\"true\">★</span><h3 class=\"sk-feature__title\" data-edit=\"title1\">A helpful feature</h3><p class=\"sk-feature__text\" data-edit=\"text1\" data-multiline>Explain the benefit in a sentence.</p></div>"
+    },
+    {
+     "id": "three",
+     "label": "Three features",
+     "html": "<div class=\"sk-c sk-features\"><div class=\"sk-feature\"><span class=\"sk-feature__icon\" aria-hidden=\"true\">★</span><h3 class=\"sk-feature__title\" data-edit=\"title1\">Quick to start</h3><p class=\"sk-feature__text\" data-edit=\"text1\" data-multiline>Get going in minutes with nothing to set up.</p></div><div class=\"sk-feature\"><span class=\"sk-feature__icon\" aria-hidden=\"true\">✓</span><h3 class=\"sk-feature__title\" data-edit=\"title2\">Easy to use</h3><p class=\"sk-feature__text\" data-edit=\"text2\" data-multiline>Everything is where you expect to find it.</p></div><div class=\"sk-feature\"><span class=\"sk-feature__icon\" aria-hidden=\"true\">♥</span><h3 class=\"sk-feature__title\" data-edit=\"title3\">Made to last</h3><p class=\"sk-feature__text\" data-edit=\"text3\" data-multiline>Reliable and simple, year after year.</p></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "A helpful feature",
+     "multiline": false
+    },
+    {
+     "key": "text1",
+     "default": "Explain the benefit in a sentence.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-accordion",
+   "slug": "accordion",
+   "name": "Accordion",
+   "category": "Content",
+   "keywords": [
+    "faq",
+    "expand",
+    "collapse",
+    "questions"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "three",
+   "variants": [
+    {
+     "id": "three",
+     "label": "Three items",
+     "html": "<div class=\"sk-c sk-accordion\"><details open><summary data-edit=\"title1\">How do I get started?</summary><div class=\"sk-accordion__body\" data-edit=\"text1\" data-multiline>A short, direct answer goes here.</div></details><details><summary data-edit=\"title2\">Can I change my plan later?</summary><div class=\"sk-accordion__body\" data-edit=\"text2\" data-multiline>A short, direct answer goes here.</div></details><details><summary data-edit=\"title3\">Who can I contact for help?</summary><div class=\"sk-accordion__body\" data-edit=\"text3\" data-multiline>A short, direct answer goes here.</div></details></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "How do I get started?",
+     "multiline": false
+    },
+    {
+     "key": "text1",
+     "default": "A short, direct answer goes here.",
+     "multiline": true
+    },
+    {
+     "key": "title2",
+     "default": "Can I change my plan later?",
+     "multiline": false
+    },
+    {
+     "key": "text2",
+     "default": "A short, direct answer goes here.",
+     "multiline": true
+    },
+    {
+     "key": "title3",
+     "default": "Who can I contact for help?",
+     "multiline": false
+    },
+    {
+     "key": "text3",
+     "default": "A short, direct answer goes here.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-table",
+   "slug": "table",
+   "name": "Table",
+   "category": "Content",
+   "keywords": [
+    "grid",
+    "data",
+    "rows",
+    "columns"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "plain",
+   "variants": [
+    {
+     "id": "plain",
+     "label": "Plain",
+     "html": "<table class=\"sk-c sk-table\"><thead><tr><th data-edit=\"head1\">Name</th><th data-edit=\"head2\">Role</th><th data-edit=\"head3\">Status</th></tr></thead><tbody><tr><td data-edit=\"cell11\">Priya Nair</td><td data-edit=\"cell12\">Designer</td><td data-edit=\"cell13\">Active</td></tr><tr><td data-edit=\"cell21\">Sam Okafor</td><td data-edit=\"cell22\">Engineer</td><td data-edit=\"cell23\">Active</td></tr><tr><td data-edit=\"cell31\">Mei Lin</td><td data-edit=\"cell32\">Manager</td><td data-edit=\"cell33\">Away</td></tr></tbody></table>"
+    },
+    {
+     "id": "striped",
+     "label": "Striped",
+     "html": "<table class=\"sk-c sk-table sk-table--striped\"><thead><tr><th data-edit=\"head1\">Name</th><th data-edit=\"head2\">Role</th><th data-edit=\"head3\">Status</th></tr></thead><tbody><tr><td data-edit=\"cell11\">Priya Nair</td><td data-edit=\"cell12\">Designer</td><td data-edit=\"cell13\">Active</td></tr><tr><td data-edit=\"cell21\">Sam Okafor</td><td data-edit=\"cell22\">Engineer</td><td data-edit=\"cell23\">Active</td></tr><tr><td data-edit=\"cell31\">Mei Lin</td><td data-edit=\"cell32\">Manager</td><td data-edit=\"cell33\">Away</td></tr></tbody></table>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "head1",
+     "default": "Name",
+     "multiline": false
+    },
+    {
+     "key": "head2",
+     "default": "Role",
+     "multiline": false
+    },
+    {
+     "key": "head3",
+     "default": "Status",
+     "multiline": false
+    },
+    {
+     "key": "cell11",
+     "default": "Priya Nair",
+     "multiline": false
+    },
+    {
+     "key": "cell12",
+     "default": "Designer",
+     "multiline": false
+    },
+    {
+     "key": "cell13",
+     "default": "Active",
+     "multiline": false
+    },
+    {
+     "key": "cell21",
+     "default": "Sam Okafor",
+     "multiline": false
+    },
+    {
+     "key": "cell22",
+     "default": "Engineer",
+     "multiline": false
+    },
+    {
+     "key": "cell23",
+     "default": "Active",
+     "multiline": false
+    },
+    {
+     "key": "cell31",
+     "default": "Mei Lin",
+     "multiline": false
+    },
+    {
+     "key": "cell32",
+     "default": "Manager",
+     "multiline": false
+    },
+    {
+     "key": "cell33",
+     "default": "Away",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-rows",
+   "slug": "list-rows",
+   "name": "Item list",
+   "category": "Content",
+   "keywords": [
+    "list",
+    "files",
+    "people",
+    "items"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "simple",
+   "variants": [
+    {
+     "id": "simple",
+     "label": "Simple",
+     "html": "<div class=\"sk-c sk-rows\"><div class=\"sk-row\"><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title1\">Quarterly report</span><span class=\"sk-row__sub\" data-edit=\"sub1\">Updated yesterday</span></div><span class=\"sk-row__meta\" data-edit=\"meta1\">2 MB</span></div><div class=\"sk-row\"><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title2\">Team handbook</span><span class=\"sk-row__sub\" data-edit=\"sub2\">Updated last week</span></div><span class=\"sk-row__meta\" data-edit=\"meta2\">1 MB</span></div><div class=\"sk-row\"><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title3\">Budget plan</span><span class=\"sk-row__sub\" data-edit=\"sub3\">Updated 3 weeks ago</span></div><span class=\"sk-row__meta\" data-edit=\"meta3\">480 KB</span></div></div>"
+    },
+    {
+     "id": "people",
+     "label": "With avatars",
+     "html": "<div class=\"sk-c sk-rows\"><div class=\"sk-row\"><span class=\"sk-avatar\" aria-hidden=\"true\">PN</span><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title1\">Priya Nair</span><span class=\"sk-row__sub\" data-edit=\"sub1\">Designer</span></div></div><div class=\"sk-row\"><span class=\"sk-avatar\" aria-hidden=\"true\">SO</span><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title2\">Sam Okafor</span><span class=\"sk-row__sub\" data-edit=\"sub2\">Engineer</span></div></div><div class=\"sk-row\"><span class=\"sk-avatar\" aria-hidden=\"true\">ML</span><div class=\"sk-row__main\"><span class=\"sk-row__title\" data-edit=\"title3\">Mei Lin</span><span class=\"sk-row__sub\" data-edit=\"sub3\">Manager</span></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "Quarterly report",
+     "multiline": false
+    },
+    {
+     "key": "sub1",
+     "default": "Updated yesterday",
+     "multiline": false
+    },
+    {
+     "key": "meta1",
+     "default": "2 MB",
+     "multiline": false
+    },
+    {
+     "key": "title2",
+     "default": "Team handbook",
+     "multiline": false
+    },
+    {
+     "key": "sub2",
+     "default": "Updated last week",
+     "multiline": false
+    },
+    {
+     "key": "meta2",
+     "default": "1 MB",
+     "multiline": false
+    },
+    {
+     "key": "title3",
+     "default": "Budget plan",
+     "multiline": false
+    },
+    {
+     "key": "sub3",
+     "default": "Updated 3 weeks ago",
+     "multiline": false
+    },
+    {
+     "key": "meta3",
+     "default": "480 KB",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-profile",
+   "slug": "profile",
+   "name": "Profile",
+   "category": "Content",
+   "keywords": [
+    "person",
+    "avatar",
+    "author",
+    "user"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "profile",
+   "variants": [
+    {
+     "id": "profile",
+     "label": "Profile",
+     "html": "<div class=\"sk-c sk-profile\"><span class=\"sk-avatar\" aria-hidden=\"true\">AT</span><div class=\"sk-profile__text\"><span class=\"sk-profile__name\" data-edit=\"name\">Alex Taylor</span><span class=\"sk-profile__role\" data-edit=\"role\">Product designer</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "name",
+     "default": "Alex Taylor",
+     "multiline": false
+    },
+    {
+     "key": "role",
+     "default": "Product designer",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-steps",
+   "slug": "steps",
+   "name": "Steps",
+   "category": "Content",
+   "keywords": [
+    "process",
+    "how it works",
+    "stages"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "three",
+   "variants": [
+    {
+     "id": "three",
+     "label": "Three steps",
+     "html": "<div class=\"sk-c sk-steps\"><div class=\"sk-step\"><span class=\"sk-step__num\">1</span><span class=\"sk-step__title\" data-edit=\"title1\">Sign up</span><span class=\"sk-step__text\" data-edit=\"text1\">Create your account in a minute.</span></div><div class=\"sk-step\"><span class=\"sk-step__num\">2</span><span class=\"sk-step__title\" data-edit=\"title2\">Set up</span><span class=\"sk-step__text\" data-edit=\"text2\">Add your details and preferences.</span></div><div class=\"sk-step\"><span class=\"sk-step__num\">3</span><span class=\"sk-step__title\" data-edit=\"title3\">Go</span><span class=\"sk-step__text\" data-edit=\"text3\">Start using it straight away.</span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title1",
+     "default": "Sign up",
+     "multiline": false
+    },
+    {
+     "key": "text1",
+     "default": "Create your account in a minute.",
+     "multiline": false
+    },
+    {
+     "key": "title2",
+     "default": "Set up",
+     "multiline": false
+    },
+    {
+     "key": "text2",
+     "default": "Add your details and preferences.",
+     "multiline": false
+    },
+    {
+     "key": "title3",
+     "default": "Go",
+     "multiline": false
+    },
+    {
+     "key": "text3",
+     "default": "Start using it straight away.",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-testimonial",
+   "slug": "testimonial",
+   "name": "Testimonial",
+   "category": "Content",
+   "keywords": [
+    "review",
+    "quote",
+    "customer"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "testimonial",
+   "variants": [
+    {
+     "id": "testimonial",
+     "label": "Testimonial",
+     "html": "<div class=\"sk-c sk-testimonial\"><p class=\"sk-testimonial__quote\" data-edit=\"text\" data-multiline>“It took us minutes to get started, and everyone understood it straight away.”</p><div class=\"sk-profile\"><span class=\"sk-avatar\" aria-hidden=\"true\">SO</span><div class=\"sk-profile__text\"><span class=\"sk-profile__name\" data-edit=\"name\">Sam Okafor</span><span class=\"sk-profile__role\" data-edit=\"role\">Operations lead</span></div></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "text",
+     "default": "“It took us minutes to get started, and everyone understood it straight away.”",
+     "multiline": true
+    },
+    {
+     "key": "name",
+     "default": "Sam Okafor",
+     "multiline": false
+    },
+    {
+     "key": "role",
+     "default": "Operations lead",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-pricing",
+   "slug": "pricing",
+   "name": "Pricing",
+   "category": "Content",
+   "keywords": [
+    "plan",
+    "price",
+    "tier"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "plan",
+   "variants": [
+    {
+     "id": "plan",
+     "label": "Plan",
+     "html": "<div class=\"sk-c sk-pricing\"><span class=\"sk-pricing__name\" data-edit=\"name\">Starter</span><span class=\"sk-pricing__price\"><span data-edit=\"price\">$12</span> <small data-edit=\"period\">per month</small></span><ul class=\"sk-list sk-list--check\"><li data-edit=\"item1\">Up to 5 people</li><li data-edit=\"item2\">Basic reports</li><li data-edit=\"item3\">Email support</li></ul><button class=\"sk-button sk-button--outline sk-button--full\" data-edit=\"label\">Choose plan</button></div>"
+    },
+    {
+     "id": "featured",
+     "label": "Featured plan",
+     "html": "<div class=\"sk-c sk-pricing sk-pricing--featured\"><span class=\"sk-pricing__name\" data-edit=\"name\">Team</span><span class=\"sk-pricing__price\"><span data-edit=\"price\">$39</span> <small data-edit=\"period\">per month</small></span><ul class=\"sk-list sk-list--check\"><li data-edit=\"item1\">Unlimited people</li><li data-edit=\"item2\">Advanced reports</li><li data-edit=\"item3\">Priority support</li></ul><button class=\"sk-button sk-button--full\" data-edit=\"label\">Choose plan</button></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "name",
+     "default": "Starter",
+     "multiline": false
+    },
+    {
+     "key": "price",
+     "default": "$12",
+     "multiline": false
+    },
+    {
+     "key": "period",
+     "default": "per month",
+     "multiline": false
+    },
+    {
+     "key": "item1",
+     "default": "Up to 5 people",
+     "multiline": false
+    },
+    {
+     "key": "item2",
+     "default": "Basic reports",
+     "multiline": false
+    },
+    {
+     "key": "item3",
+     "default": "Email support",
+     "multiline": false
+    },
+    {
+     "key": "label",
+     "default": "Choose plan",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-empty",
+   "slug": "empty-state",
+   "name": "Empty state",
+   "category": "Content",
+   "keywords": [
+    "blank",
+    "no results",
+    "zero state"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "empty",
+   "variants": [
+    {
+     "id": "empty",
+     "label": "Empty state",
+     "html": "<div class=\"sk-c sk-empty\"><span class=\"sk-empty__icon\" aria-hidden=\"true\">＋</span><span class=\"sk-empty__title\" data-edit=\"title\">Nothing here yet</span><span class=\"sk-empty__text\" data-edit=\"text\" data-multiline>When you add something it will show up here.</span><button class=\"sk-button\" data-optional=\"action\" data-edit=\"label\">Add the first one</button></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Nothing here yet",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "When you add something it will show up here.",
+     "multiline": true
+    },
+    {
+     "key": "label",
+     "default": "Add the first one",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "action",
+     "label": "Show button"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-progress",
+   "slug": "progress",
+   "name": "Progress bar",
+   "category": "Content",
+   "keywords": [
+    "bar",
+    "percentage",
+    "loading"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "bar",
+   "variants": [
+    {
+     "id": "bar",
+     "label": "Bar",
+     "html": "<div class=\"sk-c sk-progress\"><div class=\"sk-progress__head\"><span data-edit=\"label\">Profile complete</span><span data-edit=\"value\">65%</span></div><div class=\"sk-progress__bar\"><span class=\"sk-progress__fill\"></span></div></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Profile complete",
+     "multiline": false
+    },
+    {
+     "key": "value",
+     "default": "65%",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-placeholder",
+   "slug": "placeholder",
+   "name": "Placeholder",
+   "category": "Content",
+   "keywords": [
+    "not converted"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "static",
+   "note": "Stands in for something this kit has no component for (for example one brought across from another kit).",
+   "defaultVariant": "placeholder",
+   "variants": [
+    {
+     "id": "placeholder",
+     "label": "Placeholder",
+     "html": "<div class=\"sk-c sk-placeholder\"><span class=\"sk-placeholder__tag\">Not converted</span><strong data-edit=\"name\">Component name</strong><span data-edit=\"text\" data-multiline>This had no equivalent in the Simple kit. Replace it, or rebuild it.</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "name",
+     "default": "Component name",
+     "multiline": false
+    },
+    {
+     "key": "text",
+     "default": "This had no equivalent in the Simple kit. Replace it, or rebuild it.",
+     "multiline": true
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-field",
+   "slug": "field",
+   "name": "Text field",
+   "category": "Forms",
+   "keywords": [
+    "input",
+    "text box",
+    "email",
+    "textarea",
+    "dropdown",
+    "select",
+    "search"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "text",
+   "variants": [
+    {
+     "id": "text",
+     "label": "Single line",
+     "html": "<label class=\"sk-c sk-field\"><span class=\"sk-field__label\" data-edit=\"label\">Full name</span><input class=\"sk-input\" type=\"text\" placeholder=\"Jane Citizen\"><span class=\"sk-field__hint\" data-optional=\"hint\" data-edit=\"hint\">As it appears on your documents.</span></label>"
+    },
+    {
+     "id": "email",
+     "label": "Email",
+     "html": "<label class=\"sk-c sk-field\"><span class=\"sk-field__label\" data-edit=\"label\">Email address</span><input class=\"sk-input\" type=\"email\" placeholder=\"name@example.com\"><span class=\"sk-field__hint\" data-optional=\"hint\" data-edit=\"hint\">We only use this to reply to you.</span></label>"
+    },
+    {
+     "id": "area",
+     "label": "Multi-line",
+     "html": "<label class=\"sk-c sk-field\"><span class=\"sk-field__label\" data-edit=\"label\">Message</span><textarea class=\"sk-input sk-input--area\" placeholder=\"Write here\"></textarea><span class=\"sk-field__hint\" data-optional=\"hint\" data-edit=\"hint\">A few sentences is plenty.</span></label>"
+    },
+    {
+     "id": "select",
+     "label": "Drop-down",
+     "html": "<label class=\"sk-c sk-field\"><span class=\"sk-field__label\" data-edit=\"label\">Topic</span><select class=\"sk-input\"><option>Choose one</option><option>General question</option><option>Support</option></select></label>"
+    },
+    {
+     "id": "search",
+     "label": "Search",
+     "html": "<label class=\"sk-c sk-field\"><span class=\"sk-field__label\" data-optional=\"label\" data-edit=\"label\">Search</span><input class=\"sk-input sk-input--search\" type=\"search\" placeholder=\"Search\"></label>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Full name",
+     "multiline": false
+    },
+    {
+     "key": "hint",
+     "default": "As it appears on your documents.",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "hint",
+     "label": "Show hint"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-check",
+   "slug": "choice",
+   "name": "Checkbox and switch",
+   "category": "Forms",
+   "keywords": [
+    "checkbox",
+    "radio",
+    "toggle",
+    "switch",
+    "option"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "checkbox",
+   "variants": [
+    {
+     "id": "checkbox",
+     "label": "Checkbox",
+     "html": "<label class=\"sk-c sk-check\"><input type=\"checkbox\"><span data-edit=\"label\">Remember me</span></label>"
+    },
+    {
+     "id": "radio",
+     "label": "Radio",
+     "html": "<label class=\"sk-c sk-check\"><input type=\"radio\" name=\"sk-choice\"><span data-edit=\"label\">Option one</span></label>"
+    },
+    {
+     "id": "switch",
+     "label": "Switch",
+     "html": "<label class=\"sk-c sk-switch\"><input type=\"checkbox\" checked><span class=\"sk-switch__track\"></span><span data-edit=\"label\">Email notifications</span></label>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Remember me",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-form",
+   "slug": "form",
+   "name": "Form",
+   "category": "Forms",
+   "keywords": [
+    "login",
+    "sign in",
+    "contact",
+    "inputs"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "login",
+   "variants": [
+    {
+     "id": "login",
+     "label": "Sign in",
+     "html": "<form class=\"sk-c sk-form\"><h3 class=\"sk-form__title\" data-edit=\"title\">Sign in</h3><label class=\"sk-field\"><span class=\"sk-field__label\" data-edit=\"label1\">Email address</span><input class=\"sk-input\" type=\"email\" placeholder=\"name@example.com\"></label><label class=\"sk-field\"><span class=\"sk-field__label\" data-edit=\"label2\">Password</span><input class=\"sk-input\" type=\"password\" placeholder=\"••••••••\"></label><button class=\"sk-button sk-button--full\" data-edit=\"submit\">Sign in</button></form>"
+    },
+    {
+     "id": "contact",
+     "label": "Contact",
+     "html": "<form class=\"sk-c sk-form\"><h3 class=\"sk-form__title\" data-edit=\"title\">Get in touch</h3><label class=\"sk-field\"><span class=\"sk-field__label\" data-edit=\"label1\">Your name</span><input class=\"sk-input\" type=\"text\" placeholder=\"Jane Citizen\"></label><label class=\"sk-field\"><span class=\"sk-field__label\" data-edit=\"label2\">Message</span><textarea class=\"sk-input sk-input--area\" placeholder=\"Write here\"></textarea></label><button class=\"sk-button sk-button--full\" data-edit=\"submit\">Send message</button></form>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "title",
+     "default": "Sign in",
+     "multiline": false
+    },
+    {
+     "key": "label1",
+     "default": "Email address",
+     "multiline": false
+    },
+    {
+     "key": "label2",
+     "default": "Password",
+     "multiline": false
+    },
+    {
+     "key": "submit",
+     "default": "Sign in",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-navbar",
+   "slug": "navbar",
+   "name": "Header bar",
+   "category": "Navigation",
+   "keywords": [
+    "menu",
+    "header",
+    "top bar",
+    "navigation"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "simple",
+   "variants": [
+    {
+     "id": "simple",
+     "label": "Name and links",
+     "html": "<header class=\"sk-navbar\"><a class=\"sk-navbar__brand\" href=\"#\" data-edit=\"brand\">Brand</a><nav class=\"sk-navbar__links\" aria-label=\"Main\"><a href=\"#\" data-edit=\"link1\">Home</a><a href=\"#\" data-edit=\"link2\">Features</a><a href=\"#\" data-edit=\"link3\">Pricing</a><a href=\"#\" data-edit=\"link4\">About</a></nav><button class=\"sk-button sk-button--small\" data-optional=\"action\" data-edit=\"action\">Sign in</button></header>"
+    },
+    {
+     "id": "centre",
+     "label": "Centred",
+     "html": "<header class=\"sk-navbar sk-navbar--centre\"><a class=\"sk-navbar__brand\" href=\"#\" data-edit=\"brand\">Brand</a><nav class=\"sk-navbar__links\" aria-label=\"Main\"><a href=\"#\" data-edit=\"link1\">Home</a><a href=\"#\" data-edit=\"link2\">Features</a><a href=\"#\" data-edit=\"link3\">Pricing</a><a href=\"#\" data-edit=\"link4\">About</a></nav></header>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "brand",
+     "default": "Brand",
+     "multiline": false
+    },
+    {
+     "key": "link1",
+     "default": "Home",
+     "multiline": false
+    },
+    {
+     "key": "link2",
+     "default": "Features",
+     "multiline": false
+    },
+    {
+     "key": "link3",
+     "default": "Pricing",
+     "multiline": false
+    },
+    {
+     "key": "link4",
+     "default": "About",
+     "multiline": false
+    },
+    {
+     "key": "action",
+     "default": "Sign in",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "action",
+     "label": "Show button"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-footer",
+   "slug": "footer",
+   "name": "Footer",
+   "category": "Navigation",
+   "keywords": [
+    "bottom",
+    "links",
+    "copyright"
+   ],
+   "needsJs": false,
+   "fullWidth": true,
+   "fidelity": "full",
+   "defaultVariant": "simple",
+   "variants": [
+    {
+     "id": "simple",
+     "label": "Simple",
+     "html": "<footer class=\"sk-footer\"><span data-edit=\"copy\">© 2026 Your organisation</span><nav class=\"sk-footer__links\" aria-label=\"Footer\"><a href=\"#\" data-edit=\"link1\">Privacy</a><a href=\"#\" data-edit=\"link2\">Terms</a><a href=\"#\" data-edit=\"link3\">Contact</a></nav></footer>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "copy",
+     "default": "© 2026 Your organisation",
+     "multiline": false
+    },
+    {
+     "key": "link1",
+     "default": "Privacy",
+     "multiline": false
+    },
+    {
+     "key": "link2",
+     "default": "Terms",
+     "multiline": false
+    },
+    {
+     "key": "link3",
+     "default": "Contact",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-breadcrumb",
+   "slug": "breadcrumb",
+   "name": "Breadcrumb",
+   "category": "Navigation",
+   "keywords": [
+    "trail",
+    "path"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "breadcrumb",
+   "variants": [
+    {
+     "id": "breadcrumb",
+     "label": "Breadcrumb",
+     "html": "<ol class=\"sk-c sk-breadcrumb\"><li><a href=\"#\" data-edit=\"link1\">Home</a></li><li><a href=\"#\" data-edit=\"link2\">Section</a></li><li data-edit=\"current\">Current page</li></ol>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "link1",
+     "default": "Home",
+     "multiline": false
+    },
+    {
+     "key": "link2",
+     "default": "Section",
+     "multiline": false
+    },
+    {
+     "key": "current",
+     "default": "Current page",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-tabs",
+   "slug": "tabs",
+   "name": "Tab bar",
+   "category": "Navigation",
+   "keywords": [
+    "tab",
+    "sections"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "tabs",
+   "variants": [
+    {
+     "id": "tabs",
+     "label": "Tab bar",
+     "html": "<nav class=\"sk-c sk-tabs\" aria-label=\"Sections\"><a class=\"sk-tab sk-tab--active\" href=\"#\" data-edit=\"tab1\">Overview</a><a class=\"sk-tab\" href=\"#\" data-edit=\"tab2\">Details</a><a class=\"sk-tab\" href=\"#\" data-edit=\"tab3\">Activity</a></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "tab1",
+     "default": "Overview",
+     "multiline": false
+    },
+    {
+     "key": "tab2",
+     "default": "Details",
+     "multiline": false
+    },
+    {
+     "key": "tab3",
+     "default": "Activity",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-sidenav",
+   "slug": "side-menu",
+   "name": "Side menu",
+   "category": "Navigation",
+   "keywords": [
+    "sidebar",
+    "menu",
+    "vertical"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "sidenav",
+   "variants": [
+    {
+     "id": "sidenav",
+     "label": "Side menu",
+     "html": "<nav class=\"sk-c sk-sidenav\" aria-label=\"Side\"><a class=\"sk-sidenav__active\" href=\"#\" data-edit=\"link1\">Dashboard</a><a href=\"#\" data-edit=\"link2\">Projects</a><a href=\"#\" data-edit=\"link3\">Reports</a><a href=\"#\" data-edit=\"link4\">Settings</a></nav>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "link1",
+     "default": "Dashboard",
+     "multiline": false
+    },
+    {
+     "key": "link2",
+     "default": "Projects",
+     "multiline": false
+    },
+    {
+     "key": "link3",
+     "default": "Reports",
+     "multiline": false
+    },
+    {
+     "key": "link4",
+     "default": "Settings",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-pagination",
+   "slug": "pagination",
+   "name": "Pagination",
+   "category": "Navigation",
+   "keywords": [
+    "pages",
+    "next",
+    "previous"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "pagination",
+   "variants": [
+    {
+     "id": "pagination",
+     "label": "Pagination",
+     "html": "<nav class=\"sk-c sk-pagination\" aria-label=\"Pages\"><a class=\"sk-page-link\" href=\"#\">‹</a><a class=\"sk-page-link sk-page-link--active\" href=\"#\">1</a><a class=\"sk-page-link\" href=\"#\">2</a><a class=\"sk-page-link\" href=\"#\">3</a><a class=\"sk-page-link\" href=\"#\">›</a></nav>"
+    }
+   ],
+   "editable": [],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-image",
+   "slug": "image",
+   "name": "Image",
+   "category": "Media",
+   "keywords": [
+    "picture",
+    "photo",
+    "figure"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "wide",
+   "variants": [
+    {
+     "id": "wide",
+     "label": "Wide",
+     "html": "<figure class=\"sk-c sk-image\"><img class=\"sk-image__img\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f6e3d3%22%2F%3E%3Ccircle%20cx%3D%22460.79999999999995%22%20cy%3D%22115.2%22%20r%3D%2250.400000000000006%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20360%20L204.8%20180%20L332.8%20273.6%20L448%20198.00000000000003%20L640%20324%20L640%20360%20Z%22%20fill%3D%22%23eab68f%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"><figcaption data-optional=\"caption\" data-edit=\"caption\">A short caption for the picture</figcaption></figure>"
+    },
+    {
+     "id": "square",
+     "label": "Square",
+     "html": "<figure class=\"sk-c sk-image sk-image--square\"><img class=\"sk-image__img\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22640%22%20viewBox%3D%220%200%20640%20640%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e6e9ee%22%2F%3E%3Ccircle%20cx%3D%22460.79999999999995%22%20cy%3D%22204.8%22%20r%3D%2289.60000000000001%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20640%20L204.8%20320%20L332.8%20486.4%20L448%20352%20L640%20576%20L640%20640%20Z%22%20fill%3D%22%23b9c1ce%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"><figcaption data-optional=\"caption\" data-edit=\"caption\">A short caption for the picture</figcaption></figure>"
+    },
+    {
+     "id": "banner",
+     "label": "Banner",
+     "html": "<figure class=\"sk-c sk-image sk-image--banner\"><img class=\"sk-image__img\" data-image=\"image\" src=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22320%22%20viewBox%3D%220%200%20960%20320%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23dbe4f5%22%2F%3E%3Ccircle%20cx%3D%22691.1999999999999%22%20cy%3D%22102.4%22%20r%3D%2244.800000000000004%22%20fill%3D%22%23fff%22%20opacity%3D%22.7%22%2F%3E%3Cpath%20d%3D%22M0%20320%20L307.2%20160%20L499.20000000000005%20243.2%20L672%20176%20L960%20288%20L960%20320%20Z%22%20fill%3D%22%239db5e3%22%2F%3E%3C%2Fsvg%3E\" alt=\"Placeholder picture\"><figcaption data-optional=\"caption\" data-edit=\"caption\">A short caption for the picture</figcaption></figure>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "caption",
+     "default": "A short caption for the picture",
+     "multiline": false
+    }
+   ],
+   "optional": [
+    {
+     "key": "caption",
+     "label": "Show caption"
+    }
+   ],
+   "options": []
+  },
+  {
+   "id": "sk-video",
+   "slug": "video",
+   "name": "Video",
+   "category": "Media",
+   "keywords": [
+    "play",
+    "movie",
+    "media"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "video",
+   "variants": [
+    {
+     "id": "video",
+     "label": "Video",
+     "html": "<div class=\"sk-c sk-video\" role=\"img\" aria-label=\"Video placeholder\"><span class=\"sk-video__play\" aria-hidden=\"true\">▶</span></div>"
+    }
+   ],
+   "editable": [],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-logos",
+   "slug": "logos",
+   "name": "Logo strip",
+   "category": "Media",
+   "keywords": [
+    "brands",
+    "partners",
+    "customers",
+    "clients"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "logos",
+   "variants": [
+    {
+     "id": "logos",
+     "label": "Logo strip",
+     "html": "<div class=\"sk-c sk-logos\"><span data-edit=\"name1\">Northwind</span><span data-edit=\"name2\">Contoso</span><span data-edit=\"name3\">Fabrikam</span><span data-edit=\"name4\">Litware</span><span data-edit=\"name5\">Adatum</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "name1",
+     "default": "Northwind",
+     "multiline": false
+    },
+    {
+     "key": "name2",
+     "default": "Contoso",
+     "multiline": false
+    },
+    {
+     "key": "name3",
+     "default": "Fabrikam",
+     "multiline": false
+    },
+    {
+     "key": "name4",
+     "default": "Litware",
+     "multiline": false
+    },
+    {
+     "key": "name5",
+     "default": "Adatum",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  },
+  {
+   "id": "sk-box",
+   "slug": "box",
+   "name": "Wireframe box",
+   "category": "Media",
+   "keywords": [
+    "wireframe",
+    "placeholder",
+    "blank",
+    "rectangle"
+   ],
+   "needsJs": false,
+   "fullWidth": false,
+   "fidelity": "full",
+   "defaultVariant": "box",
+   "variants": [
+    {
+     "id": "box",
+     "label": "Box",
+     "html": "<div class=\"sk-c sk-box\"><span data-edit=\"label\">Content goes here</span></div>"
+    },
+    {
+     "id": "picture",
+     "label": "Picture box",
+     "html": "<div class=\"sk-c sk-box sk-box--cross\" role=\"img\" aria-label=\"Picture placeholder\"><span data-edit=\"label\">Picture</span></div>"
+    }
+   ],
+   "editable": [
+    {
+     "key": "label",
+     "default": "Content goes here",
+     "multiline": false
+    }
+   ],
+   "optional": [],
+   "options": []
+  }
+ ]
+}

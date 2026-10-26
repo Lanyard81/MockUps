@@ -276,3 +276,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Export → PDF document: one page per frame, as tall as the frame (`export/pdf.ts`, no library).
 - [x] The empty state in the Properties panel welcomes you and offers the sample mockups.
 - [x] A Flow / Freeform toggle in the toolbar (before the ? button) sets the default layout for new frames and new mockups. Remembered per browser (`lib/layoutDefault.ts`); the Add frame menu toggle changes the same setting.
+
+## K3: Simple kit
+
+- [x] A third library beside NSW and SharePoint: **Simple (generic)**, a neutral, brand-free set of everyday parts for quick ideas and wireframes (`src/kits/simple/`).
+- [x] 38 components in seven groups: text (headings, paragraphs, quotes, lists, badges, dividers and spacers), actions (buttons, button pairs, links), content (cards, heroes, callouts, statistics, features, accordion, table, item lists, profiles, steps, testimonials, pricing, empty state, progress), forms (fields, checkboxes and switches, sign-in and contact forms), navigation (header bar, footer, breadcrumb, tab bar, side menu, pagination) and media (images, video, logo strip, wireframe boxes).
+- [x] Sections with one, two or three columns or a narrow/wide split; background (none, soft grey, dark, accent), spacing and edge-to-edge options; header bar and footer sit on the page itself, with one-click "Add header bar" and "Add footer".
+- [x] Accent colour for all Simple frames (Properties, any Simple frame) with a per-frame override; text colour on the accent follows its brightness.
+- [x] Seven page templates (landing, sign in, dashboard, article, pricing, phone home, contact), page-spec import and export, and the reference in `docs/PAGE-SPEC.md`.

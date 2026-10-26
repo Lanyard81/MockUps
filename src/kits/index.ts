@@ -1,9 +1,10 @@
 import type { Kit, KitId } from './types';
 import { nswKit } from './nsw';
 import { sharepointKit } from './sharepoint';
+import { simpleKit } from './simple';
 
 /** Every kit the editor offers. Adding one is a folder under `src/kits/` and a line here. */
-export const KITS: Kit[] = [nswKit, sharepointKit];
+export const KITS: Kit[] = [nswKit, sharepointKit, simpleKit];
 
 export const DEFAULT_KIT_ID: KitId = 'nsw';
 

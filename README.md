@@ -37,9 +37,11 @@ The Templates tab holds 22 official page templates (homepage, content, search, m
 
 Select a button or link and choose a frame under Go to frame. In Preview, clicking it opens that frame, with Back and Close. Exported HTML pages link to each other the same way.
 
-## Style kits: NSW and SharePoint
+## Style kits: NSW, SharePoint and Simple
 
 Each frame is built with one style kit. **NSW** uses the real NSW Design System. **SharePoint** is a lookalike of a modern SharePoint Online page (built on Fluent UI design tokens, with no Microsoft logos or fonts), so you can mock up intranet pages too. Choose the kit when you add a frame; the library, templates and Properties follow the selected frame, and the two kits never mix inside a frame.
+
+**Simple** is a neutral, brand-free kit of everyday parts (38 components, section layouts, an accent colour you choose and seven page templates) for quick ideas and wireframes.
 
 For SharePoint frames you get a theme (ready-made, Organisation or custom), site settings (site type, header, navigation, footer, page title area), sections (one to three columns, one-third left or right, full width, vertical, flexible, collapsible), 40 web parts, seven page templates, and **Copy as SharePoint build notes**: a plain-English spec a site owner can follow to build the page. **Convert to SharePoint** and **Convert to NSW** make a converted copy of a frame; anything with no equivalent becomes a labelled placeholder and is listed in a summary. See `docs/SHAREPOINT-OOB.md` for what is and isn't modelled.
 

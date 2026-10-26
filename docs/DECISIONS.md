@@ -368,3 +368,7 @@ A PDF can carry a JPEG untouched, so `export/pdf.ts` (about 60 lines) writes one
 ## 064. The app is called Pagewright
 
 Renamed from MockMaker for the name shown to people (toolbar, page title, README, docs). Technical identifiers are unchanged on purpose, so nothing saved or bookmarked breaks: the GitHub Pages address (`/MockUps/`), the single file name (`mockmaker.html`), saved-file formats and browser storage keys.
+
+## 065. The Simple kit is a third kit, not a mode of an existing one
+
+Kits are self-contained (rule 3a), so "generic" parts live in their own `src/kits/simple/` folder with their own CSS (`sk-` classes, checked by `npm run catalogue`) and nothing shared with NSW or SharePoint. It uses the same section > column layout as SharePoint so the tree rules, layers and drag and drop work unchanged. System fonts only; the accent is validated as a hex colour before it reaches CSS. No conversions to or from other kits yet: pages are rebuilt rather than mapped, which keeps the kit small.

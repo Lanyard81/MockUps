@@ -15,7 +15,7 @@ Paste this, then the reference for the kit you need (File → Copy page spec ins
 ```text
 Recreate the attached screenshot as a page spec for Pagewright.
 
-1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages.
+1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages, "simple" for generic, brand-free pages and wireframes.
 2. Use only the components, variants, text keys, options and settings listed in that kit's reference below. Use the closest variant when nothing matches exactly.
 3. Copy all visible text exactly. Do not invent content you cannot see.
 4. For anything with no match (a map, a chart you cannot express, a custom widget), add `{ "component": "<what it is>" }` with a name that is not in the list. The app turns it into a clearly labelled placeholder.
@@ -380,6 +380,164 @@ Each entry may have `variant`, `text`, `props` (the options), `hide` (optional p
           }
         ]
       ]
+    }
+  ]
+}
+```
+
+## Simple (generic) (`"kit": "simple"`)
+
+### Shapes
+
+- **Top level** (`page`): a list of sections. A header bar (`sk-navbar`) or footer (`sk-footer`) goes directly in `page`. Any other component put directly in `page` is wrapped in a one-column section for you.
+- **Section**: `{ "section": { "layout": "two-columns", "background": "soft" }, "columns": [ [component, …], [component, …] ] }`. One list per column.
+- **Layouts** (`section.layout`): `one-column`, `two-columns`, `three-columns`, `sidebar-left` (2 columns, narrow then wide), `sidebar-right` (2 columns, wide then narrow). Extra columns are merged into the last; missing ones are left empty.
+- **Component**: `{ "component": "sk-card", "variant": "image", "text": { … }, "props": { … }, "hide": [ … ] }`.
+- **Frame settings** (`settings`, top of the file): an optional accent colour for this frame (`accentOverride: true`, `accent: "#7c3aed"`).
+
+### Rules
+
+- A header bar and a footer sit directly on the page, not inside a section.
+- Sections have a fixed number of columns for their layout.
+
+### Frame settings (`settings`)
+
+| Key | Values | Default | What it is |
+| --- | --- | --- | --- |
+| `accentOverride` | true \| false | `false` | Colour: Use a different accent on this frame |
+| `accent` | #2563eb \| #7c3aed \| #0d9488 \| #16a34a \| #ea580c \| #dc2626 \| #111827 | `#2563eb` | Colour: Accent colour on this frame |
+
+**Section settings**
+
+| Key | Values | Default | What it is |
+| --- | --- | --- | --- |
+| `layout` | one-column \| two-columns \| three-columns \| sidebar-left \| sidebar-right | `one-column` | Layout: Section layout |
+| `background` | none \| soft \| dark \| accent | `none` | Look: Background |
+| `spacing` | compact \| normal \| spacious | `normal` | Look: Space above and below |
+| `wide` | true \| false | `false` | Look: Edge to edge |
+
+### Components
+
+Each entry may have `variant`, `text`, `props` (the options), `hide` (optional parts to hide), `name` and `hidden`.
+
+**Text**
+
+- `sk-heading` Heading: variants: `h1`, `h2`, `h3`, `h4` (default `h1`) · text: `text` “Heading 1” · options: `align` (left \| center \| right) Alignment; `level` (1 to 6) Heading level
+- `sk-paragraph` Paragraph: variants: `body`, `lead`, `small` (default `body`) · text: `text` “A short paragraph of text. Keep it to a ” · options: `align` (left \| center \| right) Alignment
+- `sk-eyebrow` Eyebrow: variants: `eyebrow` (default `eyebrow`) · text: `text` “Section label” · options: `align` (left \| center \| right) Alignment
+- `sk-quote` Quote: variants: `quote` (default `quote`) · text: `text` “Simple tools make it easier to get the i”, `source` “Alex Taylor, Designer” · hide: `source`
+- `sk-list` List: variants: `bullets`, `numbers`, `checks` (default `bullets`) · text: `item1` “List item 1”, `item2` “List item 2”, `item3` “List item 3”
+- `sk-badge` Badge: variants: `neutral`, `accent`, `success`, `warning`, `danger` (default `neutral`) · text: `text` “Draft” · options: `align` (left \| center \| right) Alignment
+- `sk-divider` Divider and space: variants: `line`, `space-small`, `space`, `space-large` (default `line`)
+
+**Actions**
+
+- `sk-button` Button: variants: `primary`, `secondary`, `outline`, `text` (default `primary`) · text: `label` “Button” · options: `href` (link address) Link address; `align` (left \| center \| right) Alignment; `size` (medium \| small \| large) Size; `full` (true) Full width
+- `sk-buttons` Button pair: variants: `pair`, `outline` (default `pair`) · text: `primary` “Get started”, `secondary` “Learn more” · options: `align` (left \| center \| right) Alignment
+- `sk-link` Link: variants: `link` (default `link`) · text: `label` “A link to somewhere →” · options: `href` (link address) Link address
+
+**Content**
+
+- `sk-card` Card: variants: `basic`, `image`, `horizontal`, `flat` (default `basic`) · text: `title` “Card title”, `text` “A short description that explains what t”, `link` “Read more →” · options: `href` (link address) Link address · hide: `link`
+- `sk-hero` Hero: variants: `centre`, `left`, `split` (default `centre`) · text: `title` “A clear headline for the page”, `text` “One or two sentences that explain what t”, `primary` “Get started”, `secondary` “Learn more” · hide: `actions`
+- `sk-callout` Callout: variants: `info`, `success`, `warning`, `error` (default `info`) · text: `title` “Good to know”, `text` “A sentence or two that gives the detail.”
+- `sk-stats` Statistics: variants: `one`, `three` (default `one`) · text: `value1` “1,284”, `label1` “Active users”, `value2` “96%”, `label2` “Satisfaction”, `value3` “24”, `label3` “Countries”
+- `sk-features` Features: variants: `one`, `three` (default `one`) · text: `title1` “A helpful feature”, `text1` “Explain the benefit in a sentence.”, `title2` “Easy to use”, `text2` “Everything is where you expect to find i”, `title3` “Made to last”, `text3` “Reliable and simple, year after year.”
+- `sk-accordion` Accordion: variants: `three` (default `three`) · text: `title1` “How do I get started?”, `text1` “A short, direct answer goes here.”, `title2` “Can I change my plan later?”, `text2` “A short, direct answer goes here.”, `title3` “Who can I contact for help?”, `text3` “A short, direct answer goes here.”
+- `sk-table` Table: variants: `plain`, `striped` (default `plain`) · text: `head1` “Name”, `head2` “Role”, `head3` “Status”, `cell11` “Priya Nair”, `cell12` “Designer”, `cell13` “Active”, `cell21` “Sam Okafor”, `cell22` “Engineer”, `cell23` “Active”, `cell31` “Mei Lin”, `cell32` “Manager”, `cell33` “Away”
+- `sk-rows` Item list: variants: `simple`, `people` (default `simple`) · text: `title1` “Quarterly report”, `sub1` “Updated yesterday”, `meta1` “2 MB”, `title2` “Team handbook”, `sub2` “Updated last week”, `meta2` “1 MB”, `title3` “Budget plan”, `sub3` “Updated 3 weeks ago”, `meta3` “480 KB”
+- `sk-profile` Profile: variants: `profile` (default `profile`) · text: `name` “Alex Taylor”, `role` “Product designer”
+- `sk-steps` Steps: variants: `three` (default `three`) · text: `title1` “Sign up”, `text1` “Create your account in a minute.”, `title2` “Set up”, `text2` “Add your details and preferences.”, `title3` “Go”, `text3` “Start using it straight away.”
+- `sk-testimonial` Testimonial: variants: `testimonial` (default `testimonial`) · text: `text` ““It took us minutes to get started, and ”, `name` “Sam Okafor”, `role` “Operations lead”
+- `sk-pricing` Pricing: variants: `plan`, `featured` (default `plan`) · text: `name` “Starter”, `price` “$12”, `period` “per month”, `item1` “Up to 5 people”, `item2` “Basic reports”, `item3` “Email support”, `label` “Choose plan”
+- `sk-empty` Empty state: variants: `empty` (default `empty`) · text: `title` “Nothing here yet”, `text` “When you add something it will show up h”, `label` “Add the first one” · hide: `action`
+- `sk-progress` Progress bar: variants: `bar` (default `bar`) · text: `label` “Profile complete”, `value` “65%”
+- `sk-placeholder` Placeholder: variants: `placeholder` (default `placeholder`) · text: `name` “Component name”, `text` “This had no equivalent in the Simple kit”
+
+**Forms**
+
+- `sk-field` Text field: variants: `text`, `email`, `area`, `select`, `search` (default `text`) · text: `label` “Full name”, `hint` “As it appears on your documents.” · hide: `hint`, `label`
+- `sk-check` Checkbox and switch: variants: `checkbox`, `radio`, `switch` (default `checkbox`) · text: `label` “Remember me”
+- `sk-form` Form: variants: `login`, `contact` (default `login`) · text: `title` “Sign in”, `label1` “Email address”, `label2` “Password”, `submit` “Sign in”
+
+**Navigation**
+
+- `sk-navbar` Header bar: variants: `simple`, `centre` (default `simple`) · text: `brand` “Brand”, `link1` “Home”, `link2` “Features”, `link3` “Pricing”, `link4` “About”, `action` “Sign in” · hide: `action` · **full width**
+- `sk-footer` Footer: variants: `simple` (default `simple`) · text: `copy` “© 2026 Your organisation”, `link1` “Privacy”, `link2` “Terms”, `link3` “Contact” · **full width**
+- `sk-breadcrumb` Breadcrumb: variants: `breadcrumb` (default `breadcrumb`) · text: `link1` “Home”, `link2` “Section”, `current` “Current page”
+- `sk-tabs` Tab bar: variants: `tabs` (default `tabs`) · text: `tab1` “Overview”, `tab2` “Details”, `tab3` “Activity”
+- `sk-sidenav` Side menu: variants: `sidenav` (default `sidenav`) · text: `link1` “Dashboard”, `link2` “Projects”, `link3` “Reports”, `link4` “Settings”
+- `sk-pagination` Pagination: variants: `pagination` (default `pagination`)
+
+**Media**
+
+- `sk-image` Image: variants: `wide`, `square`, `banner` (default `wide`) · text: `caption` “A short caption for the picture” · hide: `caption`
+- `sk-video` Video: variants: `video` (default `video`)
+- `sk-logos` Logo strip: variants: `logos` (default `logos`) · text: `name1` “Northwind”, `name2` “Contoso”, `name3` “Fabrikam”, `name4` “Litware”, `name5` “Adatum”
+- `sk-box` Wireframe box: variants: `box`, `picture` (default `box`) · text: `label` “Content goes here”
+
+### Worked example
+
+```json
+{
+  "format": "mockup-page-spec",
+  "version": 1,
+  "kit": "simple",
+  "name": "Landing page",
+  "device": "desktop",
+  "page": [
+    {
+      "component": "sk-navbar",
+      "variant": "simple",
+      "text": {
+        "brand": "Acme"
+      }
+    },
+    {
+      "section": {
+        "layout": "one-column",
+        "background": "soft"
+      },
+      "columns": [
+        [
+          {
+            "component": "sk-hero",
+            "variant": "centre",
+            "text": {
+              "title": "Make something people love"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "section": {
+        "layout": "three-columns"
+      },
+      "columns": [
+        [
+          {
+            "component": "sk-card",
+            "variant": "image"
+          }
+        ],
+        [
+          {
+            "component": "sk-card",
+            "variant": "image"
+          }
+        ],
+        [
+          {
+            "component": "sk-card",
+            "variant": "image"
+          }
+        ]
+      ]
+    },
+    {
+      "component": "sk-footer",
+      "variant": "simple"
     }
   ]
 }

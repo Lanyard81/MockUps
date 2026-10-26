@@ -7,7 +7,7 @@ import { SPEC_FORMAT, SPEC_VERSION } from './types';
 /** The instruction to paste into a chat with a screenshot. Kept short; the kit's reference follows it. */
 export const SPEC_INSTRUCTION = `Recreate the attached screenshot as a page spec for Pagewright.
 
-1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages.
+1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages, "simple" for generic, brand-free pages and wireframes.
 2. Use only the components, variants, text keys, options and settings listed in that kit's reference below. Use the closest variant when nothing matches exactly.
 3. Copy all visible text exactly. Do not invent content you cannot see.
 4. For anything with no match (a map, a chart you cannot express, a custom widget), add \`{ "component": "<what it is>" }\` with a name that is not in the list. The app turns it into a clearly labelled placeholder.

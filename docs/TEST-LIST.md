@@ -56,3 +56,5 @@ Open the Pages site or `dist-single/mockmaker.html` (try the single file with Wi
 **Accessibility (G9)** 53. Right-click a frame name → Check accessibility…. Add a Heading 1 and a Heading 4 and see the skipped level flagged; add a button/image with no description and pale text on a pale background (a Card with a light tint) and see them listed; click a named component to select it. A tidy page says "No problems found".
 
 **Quick wins (G10)** 54. Add frame → A4 page, Slide (16:9). Right-click a frame name → Duplicate as desktop. File → Export… → PDF document (one frame, then All frames) and open the PDF. With a blank mockup, look at the Properties panel for the welcome and the sample buttons.
+
+**Simple kit (K3)** 55. Add frame → choose Simple → Desktop. In the Library (Simple tab) add a few parts: hero, card with picture, form, header bar. Try Templates → Simple (landing page, dashboard). Change the accent colour (Properties on the frame, and in the kit colours), section background and spacing. Export a PNG and an HTML page; import a page spec with `"kit": "simple"`.
