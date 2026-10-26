@@ -65,13 +65,6 @@ export function buildPaletteItems(): PaletteItem[] {
     'prototype preview start',
   );
   act('edit', 'Edit mode', () => useStore.getState().setMode('edit'));
-  act(
-    'settings',
-    'Settings',
-    () => useStore.getState().setDialog('settings'),
-    undefined,
-    'default layout freeform flow preferences',
-  );
   act('new', 'New mockup', () => useStore.getState().newDoc());
   act(
     'mockups',

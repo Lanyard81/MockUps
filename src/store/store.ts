@@ -163,7 +163,6 @@ interface State {
     | 'history'
     | 'responsive'
     | 'accessibility'
-    | 'settings'
     | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;

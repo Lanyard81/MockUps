@@ -253,6 +253,28 @@ export function Toolbar() {
         <button className="btn" onClick={() => s.getState().zoomToFit()}>
           Zoom to fit
         </button>
+        <div
+          className="segmented"
+          role="group"
+          aria-label="Default layout"
+          title="Layout for new frames and mockups"
+        >
+          {(['flow', 'free'] as const).map((l) => (
+            <button
+              key={l}
+              className={l === newFrameLayout ? 'is-active' : ''}
+              aria-pressed={l === newFrameLayout}
+              title={
+                l === 'flow'
+                  ? 'New frames use sections, grids and columns'
+                  : 'New frames let you drag components anywhere'
+              }
+              onClick={() => s.getState().setNewFrameLayout(l)}
+            >
+              {l === 'flow' ? 'Flow' : 'Freeform'}
+            </button>
+          ))}
+        </div>
         <button
           className="btn btn--icon"
           aria-label="Keyboard shortcuts"
@@ -262,14 +284,6 @@ export function Toolbar() {
           ?
         </button>
         <ThemeToggle />
-        <button
-          className="btn btn--icon"
-          aria-label="Settings"
-          title="Settings"
-          onClick={() => s.getState().setDialog('settings')}
-        >
-          ⚙
-        </button>
       </div>
     </header>
   );

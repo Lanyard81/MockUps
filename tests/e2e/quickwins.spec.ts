@@ -44,19 +44,13 @@ test('exports every frame as one PDF', async ({ page }) => {
   expect(bytes.toString('latin1')).toContain('/Subtype /Image');
 });
 
-test('a default layout in Settings is used for new frames and mockups, and is remembered', async ({
+test('the toolbar toggle sets the default layout for new frames, and is remembered', async ({
   page,
 }) => {
-  await page.getByRole('button', { name: 'Settings' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Settings' });
-  await dialog.getByLabel('Freeform').check();
-  await page.keyboard.press('Escape');
-  await expect(dialog).toHaveCount(0);
+  const toggle = page.getByRole('group', { name: 'Default layout' });
+  await toggle.getByRole('button', { name: 'Freeform' }).click();
   await page.reload();
-  await page.getByRole('button', { name: 'Add frame' }).click();
   await expect(
-    page
-      .getByRole('group', { name: 'Layout for the new frame' })
-      .getByRole('button', { name: 'Freeform' }),
+    page.getByRole('group', { name: 'Default layout' }).getByRole('button', { name: 'Freeform' }),
   ).toHaveAttribute('aria-pressed', 'true');
 });

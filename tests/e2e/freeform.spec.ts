@@ -12,7 +12,10 @@ test.beforeEach(async ({ page }) => {
 /** A freeform desktop frame (named "Desktop 2"), selected. */
 async function addFreeFrame(page: Page) {
   await page.getByRole('button', { name: 'Add frame' }).click();
-  await page.getByRole('button', { name: 'Freeform', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Layout for the new frame' })
+    .getByRole('button', { name: 'Freeform', exact: true })
+    .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   await expect(page.getByTestId('frame-Desktop 2').getByTestId('frame-free')).toBeVisible();
   await page.getByRole('button', { name: 'Zoom to fit' }).click(); // so the whole new frame is on screen
@@ -145,7 +148,10 @@ test('Properties switches a frame between Flow and Freeform without losing the c
   const home = page.frameLocator('iframe[title="Home"]');
   await expect(home.locator('.nsw-section')).toHaveCount(1);
   await page.getByTestId('frame-Home').locator('.frame__label').click();
-  await page.getByRole('button', { name: 'Freeform', exact: true }).click();
+  await page
+    .getByTestId('properties-body')
+    .getByRole('button', { name: 'Freeform', exact: true })
+    .click();
   await page
     .getByRole('dialog', { name: 'Switch to Freeform?' })
     .getByRole('button', { name: 'Switch to Freeform' })
@@ -158,7 +164,10 @@ test('Properties switches a frame between Flow and Freeform without losing the c
     .evaluateAll((els) => els.map((e) => (e as HTMLElement).offsetTop));
   expect(h).toBeLessThan(p!);
 
-  await page.getByRole('button', { name: 'Flow', exact: true }).click();
+  await page
+    .getByTestId('properties-body')
+    .getByRole('button', { name: 'Flow', exact: true })
+    .click();
   await page
     .getByRole('dialog', { name: 'Switch to Flow?' })
     .getByRole('button', { name: 'Switch to Flow' })
