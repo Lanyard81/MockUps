@@ -5,7 +5,7 @@ import { describeVariant, optionsForVariant } from '../layout/component';
 import { SPEC_FORMAT, SPEC_VERSION } from './types';
 
 /** The instruction to paste into a chat with a screenshot. Kept short; the kit's reference follows it. */
-export const SPEC_INSTRUCTION = `Recreate the attached screenshot as a page spec for the MockMaker.
+export const SPEC_INSTRUCTION = `Recreate the attached screenshot as a page spec for Pagewright.
 
 1. Choose the kit and set "kit": "nsw" for NSW Government sites, "sharepoint" for SharePoint or Microsoft 365 pages.
 2. Use only the components, variants, text keys, options and settings listed in that kit's reference below. Use the closest variant when nothing matches exactly.

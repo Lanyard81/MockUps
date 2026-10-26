@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test('the empty state offers sample projects', async ({ page }) => {
   const welcome = page.getByTestId('welcome');
-  await expect(welcome).toContainText('Welcome to MockMaker');
+  await expect(welcome).toContainText('Welcome to Pagewright');
   await welcome.getByRole('button').first().click();
   await expect(page.getByTestId('welcome')).toHaveCount(0);
 });

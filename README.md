@@ -1,4 +1,4 @@
-# MockMaker
+# Pagewright
 
 A browser-based tool for making screen mockups from the official [NSW Government Design System](https://designsystem.nsw.gov.au). Drag real NSW components onto device frames, edit their text and options, then save and share the screens.
 

@@ -1,6 +1,6 @@
 # CLAUDE.md: conventions for this repository
 
-MockMaker: a Vite + React + TypeScript (strict) app where people drag real NSW Design System components onto device frames. The full brief is `docs/BUILD-PROMPT.md`; progress is in `docs/MILESTONES.md`.
+Pagewright: a Vite + React + TypeScript (strict) app where people drag real NSW Design System components onto device frames. The full brief is `docs/BUILD-PROMPT.md`; progress is in `docs/MILESTONES.md`.
 
 ## Folder structure
 

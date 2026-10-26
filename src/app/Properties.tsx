@@ -26,7 +26,7 @@ export function Properties() {
         {blank && (
           <div className="welcome" data-testid="welcome">
             <p>
-              <strong>Welcome to MockMaker</strong>
+              <strong>Welcome to Pagewright</strong>
             </p>
             <p>
               Drag components from the left onto a frame, or start from a sample and change it to
