@@ -301,7 +301,7 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 - **Fonts are bundled, not loaded from Google** (the single file must work offline, rule 6): `@fontsource/inter` (400, 500, 600, 700, Latin) as the web fallback after SF Pro, and `@fontsource/jetbrains-mono` (400, 500, Latin) for the uppercase mono labels. Both are SIL OFL fonts, a few tens of kilobytes each.
 - **Blur is spent where it shows.** Only the toolbar pill and transient popups use `backdrop-filter`. The side panels sit on the static aurora, where a blur is invisible, and blurring them made a drag over a 40-component page miss the "no long tasks" test (every repaint of a panel recomputed the blur), so they use the glass fill and border without it. The pills over the live canvas (hint, breadcrumb, drag ghost) use the near-solid popup fill for the same reason.
 - **Layout.** The toolbar becomes a floating pill and the panels and canvas rounded glass cards (24px) with 12px gaps; the toolbar sits above the panels (`z-index`) so its menus open over them. Radii follow the system (10, 16, 24, 32px, pill); buttons and inputs are pill-like at the editor's 32px control height.
-- **Brand.** The wordmark is "Pagewright" in the toolbar, with an inline SVG favicon (glass over an aurora) and a dark `theme-color`.
+- **Brand.** The wordmark is "PageWright" in the toolbar, with an inline SVG favicon (glass over an aurora) and a dark `theme-color`.
 
 ## 054: Freeform guides, grid and position (Milestone G1)
 
@@ -325,7 +325,7 @@ The first version of "fit on load and after opening a mockup" zoomed inside a st
 
 ## 057: Sharing as a viewer file, not a hosted link (Milestone G4)
 
-- **Why a file.** A shareable link needs somewhere to host the mockup and (for comments) somewhere to keep them, so a server, accounts and a privacy decision about where people's mockups live. Pagewright is built to run offline from one file, so it doesn't have any of that. The viewer file gives the same result for the common cases: it opens in any browser from an email attachment, a shared drive or any web server, including the GitHub Pages site.
+- **Why a file.** A shareable link needs somewhere to host the mockup and (for comments) somewhere to keep them, so a server, accounts and a privacy decision about where people's mockups live. PageWright is built to run offline from one file, so it doesn't have any of that. The viewer file gives the same result for the common cases: it opens in any browser from an email attachment, a shared drive or any web server, including the GitHub Pages site.
 - **What it is.** A static page with the viewer's own small script and the mockup embedded as JSON: each frame's cleaned export markup, plus each kit's CSS (fonts inlined), JavaScript and initialiser once. A frame is shown in an iframe built from that data, so components work (menus, accordions); links to other frames are rewritten to `#goto:<id>` and passed up by `postMessage`.
 - **Read-only, and comments are a snapshot.** People can't change the mockup or reply to notes; they see the notes as they were when the file was made. Two-way comments would need the server.
 - **Safe to embed.** The data is JSON with `<`, `>` and `&` escaped, so nothing in a frame name, text or note can close the script or start a tag.
@@ -365,7 +365,7 @@ The checks (`src/lib/a11y.ts`) are about 200 lines over a rendered copy of the f
 
 A PDF can carry a JPEG untouched, so `export/pdf.ts` (about 60 lines) writes one page per frame picture. The pages are images, so text isn't selectable; for selectable text use the HTML export. Duplicate-at-another-width keeps the page content and only changes the width, so it is a way to eyeball a layout, not to design a separate mobile version.
 
-## 064. The app is called Pagewright
+## 064. The app is called PageWright
 
 Renamed from MockMaker for the name shown to people (toolbar, page title, README, docs). Technical identifiers are unchanged on purpose, so nothing saved or bookmarked breaks: the GitHub Pages address (`/MockUps/`), the single file name (`mockmaker.html`), saved-file formats and browser storage keys.
 
@@ -380,3 +380,7 @@ With nobody using the app yet, decision 064's caution isn't needed: the single f
 ## 067. The repository is PageWright, so the site address is /PageWright/
 
 Vite's `base`, the Playwright config and the docs now use `/PageWright/` (case-sensitive), matching the renamed GitHub repository.
+
+## 068. Responsive on large screens
+
+The side panels grow with the window from 1700px up (clamped), the canvas refits when the window is resized until the person pans or zooms themselves (`autoFit`), and the click-through scales a wide page up to fill the window (a phone-sized page fills the height), to at most 2.5×. The visible name is PageWright (capital W); file and storage names stay lower case.

@@ -26,7 +26,7 @@ export class FileError extends Error {}
 
 export const FILE_VERSION = 1;
 export const FILE_APP = 'pagewright';
-/** The names files were saved under before the app was called Pagewright; still opened. */
+/** The names files were saved under before the app was called PageWright; still opened. */
 const OLD_FILE_APPS = ['mockmaker', 'nsw-mockup-builder'];
 const isOurFile = (app: unknown) =>
   app === FILE_APP || (typeof app === 'string' && OLD_FILE_APPS.includes(app));

@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test('the empty state offers sample projects', async ({ page }) => {
   const welcome = page.getByTestId('welcome');
-  await expect(welcome).toContainText('Welcome to Pagewright');
+  await expect(welcome).toContainText('Welcome to PageWright');
   await welcome.getByRole('button').first().click();
   await expect(page.getByTestId('welcome')).toHaveCount(0);
 });
@@ -77,4 +77,27 @@ test('the hand button (and H) toggles panning', async ({ page }) => {
   await page.keyboard.press('h');
   await expect(hand).toHaveAttribute('aria-pressed', 'false');
   await expect(page.getByTestId('viewport')).not.toHaveClass(/viewport--panning/);
+});
+
+test('the canvas refits when the window is resized, until you zoom yourself', async ({ page }) => {
+  const world = page.getByTestId('world');
+  const scale = () => world.evaluate((el) => (el as HTMLElement).style.transform);
+  const before = await scale();
+  await page.setViewportSize({ width: 1100, height: 450 });
+  await expect.poll(scale).not.toBe(before);
+  await page.keyboard.press('Control+=');
+  const manual = await scale();
+  await expect.poll(scale).toBe(manual);
+  await page.setViewportSize({ width: 1500, height: 900 });
+  await page.waitForTimeout(300);
+  expect(await scale()).toBe(manual);
+});
+
+test('the click-through scales a wide page to fill a large window', async ({ page }) => {
+  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('menuitem', { name: /Desktop/ }).click();
+  await page.getByLabel('Start frame').check();
+  await page.getByRole('button', { name: 'Play' }).click();
+  const box = await page.locator('.prototype__page').boundingBox();
+  expect(box!.width).toBeGreaterThan(1650); // the window is 1700 wide; a desktop page is 1440
 });

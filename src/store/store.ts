@@ -195,6 +195,8 @@ interface State {
   confirm: ConfirmRequest | null;
   /** Zoom to fit as soon as every frame has been measured (after opening a mockup). */
   fitRequested: boolean;
+  /** The view is the one "Zoom to fit" made, so resizing the window refits it. Any manual pan or zoom clears it. */
+  autoFit: boolean;
   /** The keyboard shortcuts sheet is open. */
   helpOpen: boolean;
   /** Preview's click-through: the frames visited, last is showing. Null when closed. UI-only. */
@@ -607,6 +609,7 @@ export const useStore = create<Store>((set, get) => ({
   templateDrop: null,
   confirm: null,
   fitRequested: true,
+  autoFit: true,
   helpOpen: false,
   prototype: null,
   fitWarnings: {},
@@ -909,7 +912,10 @@ export const useStore = create<Store>((set, get) => ({
     set((s) =>
       s.frameHeights[id] === height ? s : { frameHeights: { ...s.frameHeights, [id]: height } },
     ),
-  setViewport: (width, height) => set({ viewport: { width, height } }),
+  setViewport: (width, height) => {
+    set({ viewport: { width, height } });
+    if (get().autoFit && get().fitted) get().zoomToFit();
+  },
   setPanning: (panning) => set((s) => ({ panning: panning || s.handTool })),
   setHandTool: (handTool) => set({ handTool, panning: handTool }),
   markFitted: () => set({ fitted: true }),
@@ -917,7 +923,10 @@ export const useStore = create<Store>((set, get) => ({
 
   // View changes are not undoable: panning and zooming should never eat history.
   setView: (view) =>
-    set((s) => ({ doc: { ...s.doc, view: { ...view, zoom: clampZoom(view.zoom) } } })),
+    set((s) => ({
+      doc: { ...s.doc, view: { ...view, zoom: clampZoom(view.zoom) } },
+      autoFit: false,
+    })),
   zoomToFit: () => {
     const { doc, frameHeights, viewport } = get();
     const bounds = unionRects(
@@ -930,6 +939,7 @@ export const useStore = create<Store>((set, get) => ({
     );
     if (!bounds) return;
     get().setView(fitView(bounds, viewport.width, viewport.height));
+    set({ autoFit: true });
   },
 
   addFrame: (device, kitId, layout, size) =>

@@ -1,4 +1,4 @@
-# Build: Pagewright
+# Build: PageWright
 
 You are building a browser-based mockup tool, and it will live in a GitHub repository. I use it to make screen mockups from the **official NSW Government Design System**: I drag real NSW components onto device frames, edit their text and options, and save and share the screens. Ease of use is the top priority: everything should feel obvious without a manual.
 

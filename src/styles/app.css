@@ -2280,3 +2280,8 @@ body.is-free-gesture .frame__iframe {
   display: grid;
   gap: 6px;
 }
+
+.prototype__page {
+  overflow: hidden;
+  flex: none;
+}

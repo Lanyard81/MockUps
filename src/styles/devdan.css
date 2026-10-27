@@ -433,3 +433,10 @@ kbd {
   padding-left: var(--ed-space-2);
   padding-right: var(--ed-space-2);
 }
+
+/* Large screens: the side panels grow with the window so the canvas doesn't float in empty space. */
+@media (min-width: 1700px) {
+  .app {
+    grid-template-columns: clamp(320px, 17vw, 520px) minmax(0, 1fr) clamp(312px, 16vw, 480px);
+  }
+}

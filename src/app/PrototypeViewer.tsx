@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getKit } from '../kits';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
+import { DEVICES } from '../store/types';
 
 /**
  * Preview's click-through: a frame shown on its own, full height, where "go to frame" links open
@@ -96,9 +97,15 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
     doc.addEventListener('submit', (e) => e.preventDefault(), true);
   }, [html, kit]);
 
-  // Scale down to fit the width of the window; never scale up.
-  const scale = Math.min(1, size.w / frame.width);
+  // Fit the window. A wide page fills its width (and scrolls down); a phone-sized one fills the height
+  // as a phone would. Large screens scale up, to at most 2.5×.
   const stageH = Math.max(200, size.h - 52);
+  const wide = frame.width >= 700;
+  const screenH = DEVICES[frame.device].screenHeight;
+  const scale = Math.min(
+    2.5,
+    wide ? size.w / frame.width : Math.min(size.w / frame.width, stageH / screenH),
+  );
 
   return (
     <div
@@ -125,18 +132,20 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
         style={{ height: stageH }}
         data-motion={motion}
       >
-        <iframe
-          ref={iframeRef}
-          title={`Preview of ${frame.name}`}
-          srcDoc={kit.shell.document}
-          onLoad={onLoad}
-          style={{
-            width: frame.width,
-            height: stageH / scale,
-            transform: `scale(${scale})`,
-            transformOrigin: 'top left',
-          }}
-        />
+        <div className="prototype__page" style={{ width: frame.width * scale, height: stageH }}>
+          <iframe
+            ref={iframeRef}
+            title={`Preview of ${frame.name}`}
+            srcDoc={kit.shell.document}
+            onLoad={onLoad}
+            style={{
+              width: frame.width,
+              height: stageH / scale,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+            }}
+          />
+        </div>
       </div>
     </div>
   );
