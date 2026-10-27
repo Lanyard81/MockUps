@@ -133,14 +133,14 @@ describe('untrusted input is refused or repaired', () => {
         d.nodes.stray = { id: 'stray', type: 'component', componentId: 'heading' };
         d.frames[0].root.push('stray'); // a component can't sit in the frame root
       }),
-      /can’t go inside a frame/,
+      /can’t go inside a page/,
     );
     reject(
       mutate((d) => {
         d.nodes.box = { id: 'box', type: 'container', children: [] };
         d.frames[0].root.push('box'); // a container belongs in a section
       }),
-      /can’t go inside a frame/,
+      /can’t go inside a page/,
     );
   });
 

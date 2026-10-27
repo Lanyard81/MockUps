@@ -651,7 +651,7 @@ export const useStore = create<Store>((set, get) => ({
       if (isFreeFrame(s.doc.frames.find((f) => f.id === frameId)))
         return { notice: FREE_NO_CONVERT };
       const result = runConversion(s.doc, frameId, targetKitId, newId);
-      if (!result) return { notice: 'That frame can’t be converted to that style kit.' };
+      if (!result) return { notice: 'That page can’t be converted to that style kit.' };
       const { frame, nodes, report } = result;
       return {
         ...commit(s, {
@@ -1574,7 +1574,7 @@ export const useStore = create<Store>((set, get) => ({
       const frame = s.doc.frames.find((f) => f.id === frameId);
       if (!frame) return s;
       if (isFreeFrame(frame))
-        return { notice: 'Page parts need a Flow frame. Switch this frame to Flow first.' };
+        return { notice: 'Page parts need a stacked page. Switch this page to Stacked first.' };
       const def = getKit(frame.kitId).pageParts.find((p) => p.id === part);
       if (!def) return s;
       const specs = def.components;

@@ -39,7 +39,7 @@ test('clicking a template makes a new frame; dragging onto a frame asks before r
     x: box.x + box.width / 2,
     y: box.y + 100,
   });
-  const confirm = page.getByRole('dialog', { name: 'Replace this frame’s content?' });
+  const confirm = page.getByRole('dialog', { name: 'Replace this page’s content?' });
   await expect(confirm).toBeVisible();
   await confirm.getByRole('button', { name: 'Replace content' }).click();
   await expect(page.frameLocator('iframe.frame__iframe').nth(1).locator('h1')).not.toHaveCount(0);

@@ -32,10 +32,10 @@ test('save a component, then add it by click and by drag; it survives a reload',
   await expect(home(page).locator('.nsw-card')).toHaveCount(1);
 
   // Drag onto a freeform frame: it lands where it is dropped.
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Layout for the new frame' })
-    .getByRole('button', { name: 'Freeform' })
+    .getByRole('group', { name: 'Layout for the new page' })
+    .getByRole('button', { name: 'Free' })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   await page.getByRole('button', { name: 'Zoom to fit' }).click();

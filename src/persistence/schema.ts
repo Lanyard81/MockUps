@@ -164,7 +164,7 @@ export function cleanTree(
     seen.add(id);
     if (!canContain(parent, node, schema)) {
       throw new FileError(
-        `The file’s layout breaks the rules (a ${node.type} can’t go inside ${parent ? `a ${parent.type}` : 'a frame'}).`,
+        `The file’s layout breaks the rules (a ${node.type} can’t go inside ${parent ? `a ${parent.type}` : 'a page'}).`,
       );
     }
     for (const c of node.children ?? []) visit(c, node, schema);
@@ -184,7 +184,7 @@ export function cleanTree(
         throw new FileError('The file’s layout is damaged (a layer is used twice).');
       if (node.type !== 'component')
         throw new FileError(
-          'The file’s layout breaks the rules (a freeform frame holds components only).',
+          'The file’s layout breaks the rules (a free-layout page holds components only).',
         );
       seen.add(id);
     }
@@ -223,7 +223,7 @@ function cleanSettingValue(v: unknown, depth: number): unknown {
 }
 
 function cleanFrame(raw: unknown, index: number): Frame {
-  if (!isObject(raw)) throw new FileError('The file’s frames are damaged.');
+  if (!isObject(raw)) throw new FileError('The file’s pages are damaged.');
   const device = (
     typeof raw.device === 'string' && raw.device in DEVICES ? raw.device : 'custom'
   ) as DeviceId;
@@ -240,7 +240,7 @@ function cleanFrame(raw: unknown, index: number): Frame {
   const freeSnap = layout && raw.freeSnap === true ? true : undefined;
   return {
     id: str(raw.id, 100) || `f_${index}`,
-    name: str(raw.name) || `Frame ${index + 1}`,
+    name: str(raw.name) || `Page ${index + 1}`,
     kitId,
     ...(settings ? { settings } : {}),
     device,
@@ -321,7 +321,7 @@ function cleanComments(raw: unknown, frameIds: Set<string>): Comment[] {
 function validateCurrent(raw: Record<string, unknown>): MockupDoc {
   if (!Array.isArray(raw.frames)) throw new FileError('This mockup has no frames.');
   if (raw.frames.length > MAX_FRAMES)
-    throw new FileError('This mockup has too many frames to open.');
+    throw new FileError('This mockup has too many pages to open.');
 
   const images = cleanImages(raw.images);
   // A reference whose image is missing is dropped, not left pointing at nothing.
@@ -331,7 +331,7 @@ function validateCurrent(raw: Record<string, unknown>): MockupDoc {
     return rest;
   });
   if (new Set(frames.map((f) => f.id)).size !== frames.length)
-    throw new FileError('The file’s frames are damaged (two share an id).');
+    throw new FileError('The file’s pages are damaged (two share an id).');
   const nodes = cleanTree(
     raw.nodes,
     frames.map((f) => f.root),

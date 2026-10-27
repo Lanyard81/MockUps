@@ -16,14 +16,14 @@ test('the empty state offers sample projects', async ({ page }) => {
 });
 
 test('adds a frame at a paper or slide size', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /A4 page/ }).click();
   await expect(page.getByTestId('frame-A4 page 2').locator('.frame__size')).toHaveText('794px');
 });
 
 test('duplicates a frame at another width', async ({ page }) => {
   await page.getByTestId('frame-Home').locator('.frame__label').click({ button: 'right' });
-  await page.getByRole('menuitem', { name: /Duplicate as desktop/ }).click();
+  await page.getByRole('menuitem', { name: /Copy to a desktop-sized page/ }).click();
   await expect(page.getByTestId('frame-Home (Desktop)').locator('.frame__size')).toHaveText(
     '1440px',
   );
@@ -47,11 +47,11 @@ test('exports every frame as one PDF', async ({ page }) => {
 test('the toolbar toggle sets the default layout for new frames, and is remembered', async ({
   page,
 }) => {
-  const toggle = page.getByRole('group', { name: 'Default layout' });
-  await toggle.getByRole('button', { name: 'Freeform' }).click();
+  const toggle = page.getByRole('group', { name: 'Layout for new pages' });
+  await toggle.getByRole('button', { name: 'Free' }).click();
   await page.reload();
   await expect(
-    page.getByRole('group', { name: 'Default layout' }).getByRole('button', { name: 'Freeform' }),
+    page.getByRole('group', { name: 'Layout for new pages' }).getByRole('button', { name: 'Free' }),
   ).toHaveAttribute('aria-pressed', 'true');
 });
 
@@ -94,10 +94,10 @@ test('the canvas refits when the window is resized, until you zoom yourself', as
 });
 
 test('the click-through scales a wide page to fill a large window', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
-  await page.getByLabel('Start frame').check();
-  await page.getByRole('button', { name: 'Play' }).click();
+  await page.getByLabel('Start page').check();
+  await page.getByRole('button', { name: 'Present' }).click();
   const box = await page.locator('.prototype__page').boundingBox();
   expect(box!.width).toBeGreaterThan(1650); // the window is 1700 wide; a desktop page is 1440
 });

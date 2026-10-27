@@ -25,7 +25,7 @@ test('Convert to SharePoint: a copy beside the original, a summary, placeholders
   await label(page, 'Home').click({ button: 'right' });
   await page.getByRole('menuitem', { name: 'Convert to SharePoint' }).click();
 
-  const summary = page.getByRole('dialog', { name: 'Frame converted' });
+  const summary = page.getByRole('dialog', { name: 'Page converted' });
   await expect(summary).toBeVisible();
   await expect(summary).toContainText('The original is unchanged');
   await expect(summary.getByTestId('conversion-counts')).toContainText('brought across');
@@ -56,13 +56,13 @@ test('the frame panel has the same Convert buttons, and an empty frame can’t b
   await addFromLibrary(page, 'heading', 'Heading 1');
   await page.getByTestId('frame-Home').locator('.frame__name').click();
   await page.getByRole('button', { name: 'Convert to SharePoint' }).click();
-  await expect(page.getByRole('dialog', { name: 'Frame converted' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Page converted' })).toBeVisible();
 });
 
 test('Convert to NSW from a SharePoint frame', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Style kit for the new frame' })
+    .getByRole('group', { name: 'Style kit for the new page' })
     .getByRole('button', { name: 'SharePoint' })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
@@ -82,7 +82,7 @@ test('Convert to NSW from a SharePoint frame', async ({ page }) => {
 
   await label(page, 'Desktop 2').click({ button: 'right' });
   await page.getByRole('menuitem', { name: 'Convert to NSW' }).click();
-  const summary = page.getByRole('dialog', { name: 'Frame converted' });
+  const summary = page.getByRole('dialog', { name: 'Page converted' });
   await expect(summary.getByTestId('conversion-placeholders')).toContainText('Quick chart');
   await summary.getByRole('button', { name: 'Done' }).click();
 

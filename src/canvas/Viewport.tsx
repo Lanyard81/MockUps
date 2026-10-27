@@ -125,15 +125,13 @@ export function Viewport() {
       </div>
       {frames.length === 0 && (
         <div className="canvas-empty">
-          <h2>Start with a frame</h2>
-          <p>
-            A frame is a device screen. Add one from the toolbar, then build your page inside it.
-          </p>
+          <h2>Start with a page</h2>
+          <p>Add a page from the toolbar (a phone, tablet or desktop), then build inside it.</p>
         </div>
       )}
       <Breadcrumb />
       <div className="canvas-hint">
-        Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a frame name to move it
+        Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a page name to move it
       </div>
     </div>
   );

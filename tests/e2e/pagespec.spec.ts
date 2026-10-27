@@ -35,8 +35,8 @@ const frames = (page: Page) => page.locator('iframe.frame__iframe');
 
 async function openDialog(page: Page) {
   await page.getByRole('button', { name: 'File' }).click();
-  await page.getByRole('menuitem', { name: /Import page spec/ }).click();
-  return page.getByRole('dialog', { name: 'Import page spec' });
+  await page.getByRole('menuitem', { name: /Import a page description/ }).click();
+  return page.getByRole('dialog', { name: 'Import a page description' });
 }
 
 test('importing pasted JSON from the dialog adds a frame, reports, and undoes in one step', async ({
@@ -44,7 +44,7 @@ test('importing pasted JSON from the dialog adds a frame, reports, and undoes in
 }) => {
   const dialog = await openDialog(page);
   await expect(dialog.getByRole('button', { name: 'Import', exact: true })).toBeDisabled();
-  await dialog.getByLabel('Page spec JSON').fill(JSON.stringify(SPEC));
+  await dialog.getByLabel('Page description (JSON)').fill(JSON.stringify(SPEC));
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
 
   await expect(frames(page)).toHaveCount(2);
@@ -125,12 +125,12 @@ test('a spec file chosen in the dialog imports; bad text is explained and change
   page,
 }) => {
   const dialog = await openDialog(page);
-  await dialog.getByLabel('Page spec JSON').fill('{"nope": true}');
+  await dialog.getByLabel('Page description (JSON)').fill('{"nope": true}');
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
   await expect(page.getByText(/isn’t a page spec/)).toBeVisible();
   await expect(frames(page)).toHaveCount(1);
 
-  await dialog.getByLabel('Page spec file').setInputFiles({
+  await dialog.getByLabel('Page description file').setInputFiles({
     name: 'home.page.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(SPEC)),
@@ -141,7 +141,7 @@ test('a spec file chosen in the dialog imports; bad text is explained and change
 test('a frame goes out as a page spec and comes back as the same page', async ({ page }) => {
   // Build a page, download it as a page spec, and import the file: the copy matches the original.
   const dialog = await openDialog(page);
-  await dialog.getByLabel('Page spec JSON').fill(JSON.stringify(SPEC));
+  await dialog.getByLabel('Page description (JSON)').fill(JSON.stringify(SPEC));
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Page imported' })
@@ -151,7 +151,7 @@ test('a frame goes out as a page spec and comes back as the same page', async ({
   await page.getByTestId('frame-Imported home').locator('.frame__label').click({ button: 'right' });
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('menuitem', { name: 'Download page spec (.page.json)' }).click(),
+    page.getByRole('menuitem', { name: 'Download page description (.page.json)' }).click(),
   ]);
   expect(download.suggestedFilename()).toBe('imported-home.page.json');
   const text = readFileSync(await download.path(), 'utf8');
@@ -177,7 +177,7 @@ test('a frame goes out as a page spec and comes back as the same page', async ({
 test('File menu copies the instructions for each kit', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.getByRole('button', { name: 'File' }).click();
-  await page.getByRole('menuitem', { name: /Copy page spec instructions \(SharePoint\)/ }).click();
+  await page.getByRole('menuitem', { name: /Copy AI instructions \(SharePoint\)/ }).click();
   const text = await page.evaluate(() => navigator.clipboard.readText());
   expect(text).toContain('Recreate the attached screenshot as a page spec');
   expect(text).toContain('`sp-news`');

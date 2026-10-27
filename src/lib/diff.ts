@@ -13,7 +13,7 @@ export interface FrameDiff {
 
 export interface DocDiff {
   frames: FrameDiff[];
-  /** One line for the whole comparison: "2 frames changed, 1 added". */
+  /** One line for the whole comparison: "2 pages changed, 1 added". */
   summary: string;
   changed: boolean;
 }

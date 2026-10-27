@@ -72,7 +72,7 @@ export function Library() {
               Click to add to <strong>{target.name}</strong>
             </>
           ) : (
-            'Add a frame to start building'
+            'Add a page to start building'
           )}
         </p>
       </div>

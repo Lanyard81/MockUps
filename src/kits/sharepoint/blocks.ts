@@ -45,7 +45,9 @@ export const SP_LAYOUT_BLOCKS: LayoutBlock[] = [
     kind: 'section',
     columns: SECTION_LAYOUTS.indexOf(layout) + 1, // distinguishes the layouts; not a column count
     label: layout.label.replace(' (approximation)', ''),
-    title: layout.title ?? `Add a ${layout.label.toLowerCase()}`,
+    title:
+      layout.title ??
+      `Add ${/section$/i.test(layout.label) ? 'a ' : ''}${layout.label.replace(' (approximation)', '').toLowerCase()}`,
     layer: 'section',
     icon: icon as LayoutBlock['icon'],
     unavailable:

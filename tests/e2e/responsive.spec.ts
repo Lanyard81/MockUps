@@ -59,10 +59,10 @@ test('shows the page at three widths and flags what does not fit, selectable fro
 });
 
 test('a freeform frame says it does not reflow', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Layout for the new frame' })
-    .getByRole('button', { name: 'Freeform' })
+    .getByRole('group', { name: 'Layout for the new page' })
+    .getByRole('button', { name: 'Free' })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   await page.getByTestId('frame-Desktop 2').locator('.frame__label').click({ button: 'right' });

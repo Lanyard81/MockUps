@@ -7,9 +7,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 const addSharePointFrame = async (page: Page, device = 'Desktop') => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Style kit for the new frame' })
+    .getByRole('group', { name: 'Style kit for the new page' })
     .getByRole('button', { name: 'SharePoint' })
     .click();
   await page.getByRole('menuitem', { name: new RegExp(device) }).click();

@@ -16,7 +16,7 @@ export const navigation: ComponentSource[] = [
     fullWidth: true,
     needsJs: true,
     fidelity: 'partial',
-    note: 'Shown as the desktop bar (frames about 992px and wider). On narrow frames it is a slide-out menu, as on a real site. Sub-menus are not included.',
+    note: 'Shown as the desktop bar (pages about 992px and wider). On narrow pages it is a slide-out menu, as on a real site. Sub-menus are not included.',
     variants: [
       {
         id: 'default',
@@ -65,7 +65,7 @@ export const navigation: ComponentSource[] = [
     name: 'Side navigation',
     category: 'Navigation',
     fidelity: 'partial',
-    note: 'Expand and collapse on narrow frames is not wired up.',
+    note: 'Expand and collapse on narrow pages is not wired up.',
     variants: [
       {
         id: 'default',

@@ -325,7 +325,7 @@ describe('freeform store actions', () => {
     expect(s().doc.frames).toHaveLength(2);
     s().setNotice(null);
     s().addPageParts(f.id, 'top');
-    expect(s().notice).toMatch(/Flow frame/);
+    expect(s().notice).toMatch(/stacked page/);
   });
 });
 

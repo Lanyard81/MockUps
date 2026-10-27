@@ -17,6 +17,8 @@ interface Item {
   shortcut?: string;
   onSelect: () => void;
   disabled?: boolean;
+  /** Why it is disabled (shown on hover and read out). */
+  reason?: string;
   danger?: boolean;
   separatorBefore?: boolean;
 }
@@ -166,9 +168,9 @@ export function ContextMenu() {
     const frameKit = getKit(doc.frames.find((f) => f.id === frameId)?.kitId);
     const reference = doc.frames.find((f) => f.id === frameId)?.reference;
     items = [
-      { label: 'Rename frame', onSelect: () => st().requestRename(frameId) },
+      { label: 'Rename page', onSelect: () => st().requestRename(frameId) },
       {
-        label: 'Duplicate frame',
+        label: 'Duplicate page',
         shortcut: `${MOD}D`,
         onSelect: () => st().duplicateFrame(frameId),
       },
@@ -178,12 +180,13 @@ export function ContextMenu() {
             frameKit.devices.includes(d) && doc.frames.find((f) => f.id === frameId)?.device !== d,
         )
         .map((d) => ({
-          label: `Duplicate as ${DEVICES[d].label.toLowerCase()} (${DEVICES[d].width}px)`,
+          label: `Copy to a ${DEVICES[d].label === 'iPhone' ? 'phone' : DEVICES[d].label.toLowerCase()}-sized page (${DEVICES[d].width}px)`,
           onSelect: () => st().duplicateFrame(frameId, d),
         })),
       {
         label: 'Save as template…',
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
+        reason: 'Add something to this page first: there is nothing to save yet.',
         onSelect: () => st().setDialog('saveTemplate', frameId),
       },
       ...(reference
@@ -204,7 +207,7 @@ export function ContextMenu() {
         onSelect: () => st().setDialog('responsive', frameId),
       },
       {
-        label: doc.startFrameId === frameId ? 'Clear start frame' : 'Set as start frame',
+        label: doc.startFrameId === frameId ? 'Clear start page' : 'Set as start page',
         separatorBefore: true,
         onSelect: () => st().setStartFrame(doc.startFrameId === frameId ? null : frameId),
       },
@@ -224,14 +227,18 @@ export function ContextMenu() {
         label: `Convert to ${getKit(id).shortLabel}`,
         separatorBefore: i === 0,
         disabled: (doc.frames.find((f) => f.id === frameId)?.root.length ?? 0) === 0,
+        reason: 'Add something to this page first: there is nothing to convert yet.',
         onSelect: () => st().convertFrame(frameId, id),
       })),
       {
-        label: 'Copy as page spec',
+        label: 'Copy as page description',
         separatorBefore: true,
         onSelect: () => void copyFrameSpec(frameId),
       },
-      { label: 'Download page spec (.page.json)', onSelect: () => downloadFrameSpec(frameId) },
+      {
+        label: 'Download page description (.page.json)',
+        onSelect: () => downloadFrameSpec(frameId),
+      },
       ...(frameKit.buildNotes
         ? [
             {
@@ -243,7 +250,7 @@ export function ContextMenu() {
           ]
         : []),
       {
-        label: 'Delete frame',
+        label: 'Delete page',
         shortcut: 'Del',
         danger: true,
         separatorBefore: true,
@@ -285,6 +292,7 @@ export function ContextMenu() {
             role="menuitem"
             className={`context-menu__item${item.danger ? ' is-danger' : ''}`}
             disabled={item.disabled}
+            title={item.disabled ? item.reason : undefined}
             onClick={() => {
               st().openContextMenu(null);
               item.onSelect();

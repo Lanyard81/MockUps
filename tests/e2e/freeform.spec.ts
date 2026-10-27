@@ -11,10 +11,10 @@ test.beforeEach(async ({ page }) => {
 
 /** A freeform desktop frame (named "Desktop 2"), selected. */
 async function addFreeFrame(page: Page) {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Layout for the new frame' })
-    .getByRole('button', { name: 'Freeform', exact: true })
+    .getByRole('group', { name: 'Layout for the new page' })
+    .getByRole('button', { name: 'Free', exact: true })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   await expect(page.getByTestId('frame-Desktop 2').getByTestId('frame-free')).toBeVisible();
@@ -150,11 +150,11 @@ test('Properties switches a frame between Flow and Freeform without losing the c
   await page.getByTestId('frame-Home').locator('.frame__label').click();
   await page
     .getByTestId('properties-body')
-    .getByRole('button', { name: 'Freeform', exact: true })
+    .getByRole('button', { name: 'Free', exact: true })
     .click();
   await page
-    .getByRole('dialog', { name: 'Switch to Freeform?' })
-    .getByRole('button', { name: 'Switch to Freeform' })
+    .getByRole('dialog', { name: 'Switch to a free layout?' })
+    .getByRole('button', { name: 'Switch to Free' })
     .click();
   await expect(home.locator('[data-free]')).toHaveCount(2);
   await expect(home.locator('.nsw-section')).toHaveCount(0);
@@ -166,11 +166,11 @@ test('Properties switches a frame between Flow and Freeform without losing the c
 
   await page
     .getByTestId('properties-body')
-    .getByRole('button', { name: 'Flow', exact: true })
+    .getByRole('button', { name: 'Stacked', exact: true })
     .click();
   await page
-    .getByRole('dialog', { name: 'Switch to Flow?' })
-    .getByRole('button', { name: 'Switch to Flow' })
+    .getByRole('dialog', { name: 'Switch to a stacked layout?' })
+    .getByRole('button', { name: 'Switch to Stacked' })
     .click();
   await expect(home.locator('.nsw-section')).toHaveCount(2);
   await expect(home.locator('[data-free]')).toHaveCount(0);
@@ -182,7 +182,7 @@ test('sections and page parts are refused on a freeform frame, with a reason', a
   await addFreeFrame(page);
   await page.getByTestId('component-section').count(); // library is on the Layout tab for blocks
   await page.getByRole('button', { name: 'Add masthead + header' }).click();
-  await expect(page.getByText(/Page parts need a Flow frame/)).toBeVisible();
+  await expect(page.getByText(/Page parts need a stacked page/)).toBeVisible();
 });
 
 test('Preview shows a freeform frame as it is arranged, and positions survive a reload', async ({
@@ -247,12 +247,12 @@ test('the Position panel sets exact numbers and aligns in the frame', async ({ p
   await page.getByLabel('Width', { exact: true }).press('Enter');
   expect(await box(page)).toMatchObject({ x: 77, y: 55, width: 500 });
   await page
-    .getByRole('group', { name: 'Align in frame' })
+    .getByRole('group', { name: 'Align in page' })
     .getByRole('button', { name: 'Centre' })
     .click();
   expect((await box(page)).x).toBe(470);
   await page
-    .getByRole('group', { name: 'Align in frame' })
+    .getByRole('group', { name: 'Align in page' })
     .getByRole('button', { name: 'Right' })
     .click();
   expect((await box(page)).x).toBe(940);

@@ -96,7 +96,7 @@ export function ReferenceProps({ frameId }: { frameId: string }) {
               {
                 id: 'beside',
                 label: 'Beside',
-                title: 'Full opacity next to the frame, for comparing',
+                title: 'Full opacity next to the page, for comparing',
               },
             ]}
             onChange={(placement) => update({ placement })}
@@ -129,7 +129,7 @@ export function ReferenceProps({ frameId }: { frameId: string }) {
             label="Size"
             value={reference.fit}
             options={[
-              { id: 'width', label: 'Fit to width', title: 'Scaled to the frame’s width' },
+              { id: 'width', label: 'Fit to width', title: 'Scaled to the page’s width' },
               {
                 id: 'actual',
                 label: 'Actual size',

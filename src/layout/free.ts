@@ -12,10 +12,10 @@ import { buildChain, detachNode, insertNode, isFullWidth, schemaOfFrame, type Ma
 type Doc = Pick<MockupDoc, 'frames' | 'nodes'>;
 
 export const FREE_NO_LAYOUT =
-  'A freeform frame holds components, not sections or grids. Switch the frame to Flow to use them.';
+  'A free-layout page holds components, not sections or grids. Switch the page to Stacked to use them.';
 
 export const FREE_NO_CONVERT =
-  'Freeform frames can’t be converted, exported as a page spec or saved as a template yet. Switch the frame to Flow first.';
+  'Free-layout pages can’t be converted, exported as a page description or saved as a template yet. Switch the page to Stacked first.';
 
 export const FREE_DEFAULT_WIDTH = 360;
 export const FREE_MIN_WIDTH = 48;
@@ -70,7 +70,7 @@ export function nextPosition(frame: Pick<Frame, 'root' | 'width'>): { x: number;
   return { x: 32 + step * CASCADE, y: 32 + step * CASCADE };
 }
 
-/** Put a node (already in `doc.nodes`, not in any list) on a freeform frame, on top unless `index` says otherwise. */
+/** Put a node (already in `doc.nodes`, not in any list) on a freeform page, on top unless `index` says otherwise. */
 export function placeFree<T extends Doc>(
   doc: T,
   frameId: string,

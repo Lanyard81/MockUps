@@ -269,10 +269,10 @@ test.describe('export', () => {
 
   test('all frames at once come as a zip', async ({ page }) => {
     await addFromLibrary(page, 'heading', 'Heading 1');
-    await page.getByRole('button', { name: 'Add frame' }).click();
+    await page.getByRole('button', { name: 'Add page' }).click();
     await page.getByRole('menuitem', { name: /Tablet/ }).click();
     const dialog = await open(page);
-    await dialog.getByLabel(/All frames \(2\)/).check();
+    await dialog.getByLabel(/All pages \(2\)/).check();
     await dialog.getByLabel('1× (normal)').check();
     const zip = await download(page, () =>
       dialog.getByRole('button', { name: 'Export', exact: true }).click(),
@@ -335,10 +335,10 @@ test.describe('export', () => {
     page,
   }) => {
     await addFromLibrary(page, 'heading', 'Heading 1');
-    await page.getByRole('button', { name: 'Add frame' }).click();
+    await page.getByRole('button', { name: 'Add page' }).click();
     await page.getByRole('menuitem', { name: /Desktop/ }).click();
     const dialog = await open(page);
-    await dialog.getByLabel(/All frames/).check();
+    await dialog.getByLabel(/All pages/).check();
     await dialog.getByLabel('HTML page').check();
     const zip = await download(page, () =>
       dialog.getByRole('button', { name: 'Export', exact: true }).click(),

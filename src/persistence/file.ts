@@ -67,5 +67,7 @@ export function loadSample(id: string): void {
   const s = useStore.getState();
   const { doc } = parseMockupFile(serialiseMockupFile(def.build()));
   s.loadDoc({ ...doc, id: newId('doc') });
-  s.setNotice(`Opened the “${def.name}” sample. Switch to Preview to click through it.`);
+  s.setNotice(
+    `Opened the “${def.name}” sample. Switch to Preview to try it, or press Present to click through full screen.`,
+  );
 }

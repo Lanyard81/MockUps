@@ -56,7 +56,7 @@ export function checkSettings(
   ctx: Omit<SettingContext, 'values'>,
   note: (text: string) => void,
   what: string,
-  /** The values are the frame's own settings, so rules about "the frame" read them. */
+  /** The values are the frame's own settings, so rules about "the page" read them. */
   frameIsValues = false,
 ): { values: Record<string, unknown>; dropped: number } {
   const values: Record<string, unknown> = {};

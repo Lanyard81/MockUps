@@ -39,7 +39,7 @@ export const SIMPLE_LAYOUT_BLOCKS: LayoutBlock[] = SECTION_LAYOUTS.map((layout, 
   kind: 'section',
   columns: i + 1, // distinguishes the layouts; not a column count
   label: layout.label,
-  title: layout.title ?? `Add a ${layout.label.toLowerCase()} section`,
+  title: layout.title ?? `Add a section: ${layout.label.toLowerCase()}`,
   layer: 'section',
   icon: ICONS[layout.id]!,
   build: (makeId) => buildSection(makeId, layout.id),

@@ -30,8 +30,8 @@ function Inner({ frameId }: { frameId: string }) {
     <Modal title={`Responsive view: ${frame.name}`} width={1180} onClose={close}>
       {free ? (
         <p className="modal__text" data-testid="responsive-free">
-          A freeform frame has a fixed width, so it doesn’t reflow. Switch it to Flow to see how the
-          page adapts to a phone, a tablet and a desktop.
+          A free-layout page has a fixed width, so it doesn’t reflow. Switch it to Stacked to see
+          how the page adapts to a phone, a tablet and a desktop.
         </p>
       ) : (
         <>
@@ -144,7 +144,9 @@ function Pane({
         {issues === null ? (
           <p className="prop-hint">Checking…</p>
         ) : issues.length === 0 ? (
-          <p className="prop-hint responsive__ok">No problems found.</p>
+          <p className="prop-hint responsive__ok">
+            {frame.root.length === 0 ? 'There is nothing to check yet.' : 'No problems found.'}
+          </p>
         ) : (
           <ul>
             {issues.map((issue) => (

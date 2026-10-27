@@ -38,7 +38,7 @@ export interface KitShell {
   fonts: { family: string; style: string; weight: number; url: string }[];
   /** Plumbing only: never restyles a component. */
   frameCss: string;
-  /** The full `srcdoc` for a frame (an empty `#root`, the CSS and the script). */
+  /** The full `srcdoc` for a page (an empty `#root`, the CSS and the script). */
   document: string;
   /** Run after every render so scripted components behave (e.g. `NSW.initSite()`). */
   init: (frameWindow: Window) => void;

@@ -18,13 +18,13 @@ export function DragGhost() {
       <span className="drag-ghost__hint">
         {drag.kind === 'template'
           ? templateDrop?.frameId
-            ? 'Release to replace this frame’s content'
+            ? 'Release to replace this page’s content'
             : templateDrop
-              ? 'Release to make a new frame'
-              : 'Drag onto a frame or the canvas'
+              ? 'Release to make a new page'
+              : 'Drag onto a page or the canvas'
           : hasTarget
             ? 'Release to drop'
-            : 'Drag onto a frame'}
+            : 'Drag onto a page'}
       </span>
     </div>
   );

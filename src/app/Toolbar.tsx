@@ -34,17 +34,17 @@ export function Toolbar() {
   const items: OverflowItem[] = [
     {
       key: 'add',
-      label: 'Add frame',
+      label: 'Add page',
       node: (
         <Menu
           icon="+"
-          label="Add frame"
+          label="Add page"
           header={
             <>
               <div
                 className="segmented segmented--block"
                 role="group"
-                aria-label="Layout for the new frame"
+                aria-label="Layout for the new page"
               >
                 {(['flow', 'free'] as const).map((l) => (
                   <button
@@ -53,15 +53,15 @@ export function Toolbar() {
                     aria-pressed={l === newFrameLayout}
                     title={
                       l === 'flow'
-                        ? 'Sections, grids and columns, like a real page'
-                        : 'Drag components anywhere, with no grid'
+                        ? 'Stacked: sections, grids and columns, like a real web page'
+                        : 'Free: drag components anywhere, with no grid'
                     }
                     onClick={(e) => {
                       e.stopPropagation();
                       s.getState().setNewFrameLayout(l);
                     }}
                   >
-                    {l === 'flow' ? 'Flow' : 'Freeform'}
+                    {l === 'flow' ? 'Stacked' : 'Free'}
                   </button>
                 ))}
               </div>
@@ -69,7 +69,7 @@ export function Toolbar() {
                 <div
                   className="segmented segmented--block"
                   role="group"
-                  aria-label="Style kit for the new frame"
+                  aria-label="Style kit for the new page"
                 >
                   {KITS.map((k) => (
                     <button
@@ -126,7 +126,7 @@ export function Toolbar() {
         <button
           className={`btn${commentTool ? ' btn--primary' : ''}`}
           aria-pressed={commentTool}
-          title="Comment: click a spot on a frame to pin a note (Esc cancels)"
+          title="Comment: click a spot on a page to pin a note (Esc cancels)"
           onClick={() => {
             s.getState().setCommentTool(!commentTool);
             if (!commentTool) s.getState().setMode('edit');
@@ -191,15 +191,15 @@ export function Toolbar() {
     },
     {
       key: 'play',
-      label: 'Play',
+      label: 'Present',
       node: (
         <button
           className="btn"
-          title="Play the click-through full screen, from the start frame"
+          title="Present full screen, starting from the start page, and follow prototype links"
           disabled={!s.getState().doc.frames.length}
           onClick={() => s.getState().playPrototype()}
         >
-          ▶ Play
+          ▶ Present
         </button>
       ),
     },
@@ -271,27 +271,27 @@ export function Toolbar() {
       key: 'layout',
       label: 'Layout',
       node: (
-        <div
-          className="segmented"
-          role="group"
-          aria-label="Default layout"
-          title="Layout for new frames and mockups"
-        >
-          {(['flow', 'free'] as const).map((l) => (
-            <button
-              key={l}
-              className={l === newFrameLayout ? 'is-active' : ''}
-              aria-pressed={l === newFrameLayout}
-              title={
-                l === 'flow'
-                  ? 'New frames use sections, grids and columns'
-                  : 'New frames let you drag components anywhere'
-              }
-              onClick={() => s.getState().setNewFrameLayout(l)}
-            >
-              {l === 'flow' ? 'Flow' : 'Freeform'}
-            </button>
-          ))}
+        <div className="toolbar__layout" title="The layout new pages start with">
+          <span className="toolbar__layout-label" aria-hidden="true">
+            New pages
+          </span>
+          <div className="segmented" role="group" aria-label="Layout for new pages">
+            {(['flow', 'free'] as const).map((l) => (
+              <button
+                key={l}
+                className={l === newFrameLayout ? 'is-active' : ''}
+                aria-pressed={l === newFrameLayout}
+                title={
+                  l === 'flow'
+                    ? 'Stacked: sections, grids and columns, like a real web page'
+                    : 'Free: drag components anywhere, with no grid'
+                }
+                onClick={() => s.getState().setNewFrameLayout(l)}
+              >
+                {l === 'flow' ? 'Stacked' : 'Free'}
+              </button>
+            ))}
+          </div>
         </div>
       ),
     },
@@ -343,14 +343,14 @@ export function Toolbar() {
             { label: 'Open file…', separatorBefore: true, onSelect: pickMockupFile },
             { label: 'Save to file', hint: '.mockup.json', onSelect: saveToFile },
             {
-              label: 'Import page spec…',
+              label: 'Import a page description…',
               hint: '.page.json',
               separatorBefore: true,
               onSelect: () => s.getState().setDialog('importSpec'),
             },
             ...KITS.map((k) => ({
-              label: `Copy page spec instructions (${k.shortLabel})`,
-              hint: 'for a Claude chat',
+              label: `Copy AI instructions (${k.shortLabel})`,
+              hint: 'to describe a screenshot as a page',
               onSelect: () => void copyPageSpecInstructions(k.id),
             })),
             {

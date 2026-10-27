@@ -48,7 +48,7 @@ function Inner() {
           aria-controls="palette-list"
           aria-activedescendant={results[active] ? `pal-${results[active]!.id}` : undefined}
           aria-label="Search commands"
-          placeholder="Search actions, frames, components, templates…"
+          placeholder="Search actions, pages, components, templates…"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);

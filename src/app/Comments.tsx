@@ -37,7 +37,7 @@ export function Comments() {
         </label>
       </div>
       <p className="prop-hint">
-        Click “Add a comment”, then click a spot on a frame to pin a note there. Notes show while
+        Click “Add a comment”, then click a spot on a page to pin a note there. Notes show while
         editing only; they are not part of Preview or an HTML export.
       </p>
       {shown.length === 0 ? (

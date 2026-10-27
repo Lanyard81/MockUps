@@ -146,16 +146,16 @@ function Inner() {
           'selected',
           scope,
           setScope,
-          frame ? `Frame “${frame.name}”` : 'No frame',
-          'The frame you have selected, or the first one.',
+          frame ? `Page “${frame.name}”` : 'No page',
+          'The page you have selected, or the first one.',
         )}
         {radio(
           'scope',
           'all',
           scope,
           setScope,
-          `All frames (${doc.frames.length})`,
-          'Downloaded together (a zip file, or one PDF with a page per frame).',
+          `All pages (${doc.frames.length})`,
+          'Downloaded together: a zip file, or one PDF with a page for each of your pages.',
         )}
       </fieldset>
       <fieldset className="field-group">
@@ -174,7 +174,7 @@ function Inner() {
           format,
           setFormat,
           'PDF document',
-          'A page for each frame, each as tall as the frame. Good for sharing a whole flow.',
+          'One PDF page for each of your pages, each as tall as the page. Good for sharing a whole flow.',
         )}
         {radio(
           'format',
@@ -189,15 +189,15 @@ function Inner() {
           'viewer',
           format,
           setFormat,
-          'Viewer file (to share)',
-          'The whole mockup in one read-only file, with links between frames and your comments.',
+          'Shareable viewer (one read-only file)',
+          'The whole mockup in one read-only file, with links between pages and your comments.',
         )}
       </fieldset>
       {format === 'viewer' ? (
         <fieldset className="field-group">
           <legend>Viewer file</legend>
           <p className="modal__note">
-            One HTML file with every frame in this mockup, the links between frames working, and no
+            One HTML file with every page in this mockup, the links between pages working, and no
             editing. Send it by email or put it on any web page; it needs no internet connection to
             open.
           </p>
@@ -216,7 +216,13 @@ function Inner() {
         <fieldset className="field-group">
           <legend>Size</legend>
           {radio('scale', 1, scale, setScale, '1× (normal)')}
-          {radio('scale', 2, scale, setScale, '2× (sharper, for retina screens and slides)')}
+          {radio(
+            'scale',
+            2,
+            scale,
+            setScale,
+            '2× (sharper, best for slides and high-resolution screens)',
+          )}
           {commentsOf(doc).some((c) => !c.resolved) && (
             <label className="prop-toggle" style={{ marginTop: 8 }}>
               <input type="checkbox" checked={pins} onChange={(e) => setPins(e.target.checked)} />
@@ -247,7 +253,7 @@ function Inner() {
       )}
       {many && format === 'html' && (
         <p className="modal__note">
-          The zip has a page for each frame and an index page linking them all.
+          The zip has a web page for each of your pages and an index linking them all.
         </p>
       )}
     </Modal>

@@ -10,7 +10,11 @@ export function ImportSummary() {
   return (
     <Modal
       title={
-        summary.pages.length === 1 ? 'Page imported' : `${summary.pages.length} pages imported`
+        summary.pages.every((p) => p.components === 0)
+          ? 'Nothing usable was found'
+          : summary.pages.length === 1
+            ? 'Page imported'
+            : `${summary.pages.length} pages imported`
       }
       width={520}
       onClose={close}
@@ -21,8 +25,11 @@ export function ImportSummary() {
       }
     >
       <p className="modal__text">
-        New frames were added beside the others. Check anything marked as a placeholder. The report
-        stays in the frame’s Properties until you dismiss it, and Undo removes the import.
+        {summary.pages.every((p) => p.components === 0)
+          ? 'No components could be read from that description, so the page was added empty. '
+          : 'New pages were added beside the others. '}
+        Check anything marked as a placeholder. The report stays in the page’s Properties until you
+        dismiss it, and Undo removes the import.
       </p>
       {summary.pages.map((p) => (
         <section key={p.frameId} aria-label={p.frameName}>

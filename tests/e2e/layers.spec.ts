@@ -142,7 +142,7 @@ test.describe('layers panel', () => {
 
   test('drag a layer into another frame', async ({ page }) => {
     await addFromLibrary(page, 'masthead', 'Dark');
-    await page.getByRole('button', { name: 'Add frame' }).click();
+    await page.getByRole('button', { name: 'Add page' }).click();
     await page.getByRole('menuitem', { name: /Tablet/ }).click();
     await layersTab(page).click();
     const frameRow = layers(page).getByTestId('layer-frame').nth(1);

@@ -21,7 +21,7 @@ export async function addReferenceFromFile(frameId: string, file: File): Promise
     if (suggested.width === frame.width) return;
     const label = suggested.device === 'custom' ? '' : ` (${suggested.device})`;
     st.requestConfirm({
-      title: 'Match the frame to the screenshot?',
+      title: 'Match the page to the screenshot?',
       body: `The screenshot is ${image.originalWidth}px wide${
         suggested.pixelRatio === 2 ? ', which looks like a 2× capture' : ''
       }. Set this frame’s width to ${suggested.width}px${label}? It is now ${frame.width}px.`,

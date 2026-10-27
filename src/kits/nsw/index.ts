@@ -96,7 +96,7 @@ export const nswKit: Kit = {
     {
       id: 'top',
       label: 'Add masthead + header',
-      title: 'Adds the NSW masthead and header at the top of the frame',
+      title: 'Adds the NSW masthead and header at the top of the page',
       position: 'top',
       components: [
         ['masthead', 'dark'],
@@ -106,7 +106,7 @@ export const nswKit: Kit = {
     {
       id: 'footer',
       label: 'Add footer',
-      title: 'Adds the NSW footer at the bottom of the frame',
+      title: 'Adds the NSW footer at the bottom of the page',
       position: 'bottom',
       components: [['footer', 'dark']],
     },
@@ -169,7 +169,7 @@ export const nswKit: Kit = {
     'Theming',
     'Landing pages',
     'Application',
-    'Kitchen sink',
+    'Test pages',
   ],
   samples: SAMPLES.map((def) => ({
     id: def.id,

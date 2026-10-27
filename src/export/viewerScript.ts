@@ -42,7 +42,7 @@ body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;backgro
 @media (max-width:760px){.v-main{grid-template-columns:1fr}.v-notes{max-width:none;width:auto;border-left:0;border-top:1px solid rgba(255,255,255,.14)}}
 `;
 
-/** The viewer's behaviour. Reads the embedded JSON, shows one frame at a time, follows "go to frame" links. */
+/** The viewer's behaviour. Reads the embedded JSON, shows one frame at a time, follows "go to page" links. */
 export const VIEWER_JS = `
 (function () {
   var data = JSON.parse(document.getElementById('mm-data').textContent);
@@ -84,7 +84,7 @@ export const VIEWER_JS = `
     var list = f.comments || [];
     notesBtn.hidden = !data.comments.length;
     notes.hidden = !showNotes || !data.comments.length;
-    notes.innerHTML = '<h2>Comments on this frame</h2>';
+    notes.innerHTML = '<h2>Comments on this page</h2>';
     if (!list.length) {
       var p = document.createElement('p');
       p.className = 'v-none';

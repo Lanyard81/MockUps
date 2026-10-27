@@ -37,7 +37,7 @@ function Inner({ nodeId, initial }: { nodeId: string; initial: string }) {
       }
     >
       <p className="modal__text">
-        Keep this so you can add it to any frame later, with its text and options as they are now.
+        Keep this so you can add it to any page later, with its text and options as they are now.
         It’s saved in this browser, and goes with your mockups when you save to a file.
       </p>
       <div className="prop-field" style={{ marginTop: 16 }}>

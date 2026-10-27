@@ -46,7 +46,7 @@ function retag(el: Element, tag: string): Element {
   return next;
 }
 
-/** How a "go to frame" link can move to the next frame. */
+/** How a "go to page" link can move to the next frame. */
 export const TRANSITIONS = ['fade', 'slide', 'rise'];
 
 function applyOption(

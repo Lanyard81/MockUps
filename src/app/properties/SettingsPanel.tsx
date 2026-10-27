@@ -140,7 +140,7 @@ export function SettingsPanel({
 }: {
   defs: SettingDef[];
   values: Record<string, unknown>;
-  /** Everything but `values`: the frame's settings, the kit's settings and the frame's top-level nodes. */
+  /** Everything but `values`: the frame's settings, the kit's settings and the page's top-level nodes. */
   context: Omit<SettingContext, 'values'>;
   onChange: (key: string, value: unknown, def: SettingDef) => void;
 }) {

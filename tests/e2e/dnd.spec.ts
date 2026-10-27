@@ -162,7 +162,7 @@ test('drag an existing component into another frame, as one undo step', async ({
     .getByTestId('component-button')
     .getByRole('button', { name: 'Brand Dark', exact: true })
     .click();
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Tablet/ }).click();
   const button = await centre(doc(page).locator('.nsw-button--dark'));
   await dragBetween(page, button, await inFrame(page, 'Tablet 2', 0.5, 0.2));
@@ -234,7 +234,7 @@ test('delete, duplicate, copy and paste into another frame, and Alt+arrow reorde
 
   await doc(page).locator('h1').click();
   await page.keyboard.press('Control+c');
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Android/ }).click();
   await page.keyboard.press('Control+v');
   await expect(doc(page, 'Android 2').locator('h1')).toHaveText('Heading 1');

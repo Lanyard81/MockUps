@@ -59,7 +59,7 @@ export function buildPaletteItems(): PaletteItem[] {
   );
   act(
     'play',
-    'Play the click-through',
+    'Present full screen (prototype)',
     () => useStore.getState().playPrototype(),
     undefined,
     'prototype preview start',
@@ -91,18 +91,18 @@ export function buildPaletteItems(): PaletteItem[] {
   );
   act(
     'import',
-    'Import page spec…',
+    'Import a page description…',
     () => useStore.getState().setDialog('importSpec'),
     undefined,
-    'json paste',
+    'json paste page spec ai',
   );
   for (const k of KITS)
     act(
       `spec-${k.id}`,
-      `Copy page spec instructions (${k.shortLabel})`,
+      `Copy AI instructions (${k.shortLabel})`,
       () => void copyPageSpecInstructions(k.id),
       undefined,
-      'claude screenshot',
+      'claude ai screenshot page spec',
     );
   act(
     'comment',
@@ -122,22 +122,22 @@ export function buildPaletteItems(): PaletteItem[] {
   for (const d of kit.devices)
     act(
       `frame-${d}`,
-      `Add a ${DEVICES[d].label} frame`,
+      `Add ${/^(iP|[aeiou])/i.test(DEVICES[d].label) ? 'an' : 'a'} ${DEVICES[d].label} page`,
       () => useStore.getState().addFrame(d, kit.id, useStore.getState().newFrameLayout),
       d === 'custom' ? undefined : `${DEVICES[d].width}px`,
-      'new frame',
+      'new page frame screen',
     );
   if (frame) {
     act(
       'layout-free',
-      'Make this frame Freeform',
+      'Switch this page to Free layout',
       () => switchFrameLayout(frame.id, 'free'),
       undefined,
       'layout',
     );
     act(
       'layout-flow',
-      'Make this frame Flow',
+      'Switch this page to Stacked layout',
       () => switchFrameLayout(frame.id, 'flow'),
       undefined,
       'layout',
@@ -156,7 +156,7 @@ export function buildPaletteItems(): PaletteItem[] {
       undefined,
       'phone tablet desktop breakpoints',
     );
-    act('duplicate-frame', 'Duplicate this frame', () =>
+    act('duplicate-frame', 'Duplicate this page', () =>
       useStore.getState().duplicateFrame(frame.id),
     );
   }
@@ -168,7 +168,7 @@ export function buildPaletteItems(): PaletteItem[] {
       label: `Go to ${f.name}`,
       group: 'Frame',
       hint: getKit(f.kitId).shortLabel,
-      keywords: 'frame jump select',
+      keywords: 'page frame screen jump select',
       run: () => focusFrame(f.id),
     });
 
@@ -202,7 +202,7 @@ export function buildPaletteItems(): PaletteItem[] {
       id: `tpl:${t.id}`,
       label: t.name,
       group: 'Template',
-      hint: 'new frame',
+      hint: 'new page',
       run: () => templateAsNewFrame({ source: 'official', templateId: t.id }),
     });
   for (const t of useTemplates.getState().templates)
@@ -210,7 +210,7 @@ export function buildPaletteItems(): PaletteItem[] {
       id: `mytpl:${t.id}`,
       label: t.name,
       group: 'My template',
-      hint: 'new frame',
+      hint: 'new page',
       run: () => templateAsNewFrame({ source: 'mine', templateId: t.id }),
     });
 

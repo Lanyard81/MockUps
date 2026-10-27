@@ -234,11 +234,11 @@ describe('kits do not mix inside a frame', () => {
     const past = s().past.length;
     s().addComponent(sp().id, 'heading', 'h1');
     expect(s().notice).toMatch(
-      /This is a SharePoint frame — switch the library to SharePoint, or convert the frame/,
+      /This is a SharePoint page — switch the library to SharePoint, or convert the page/,
     );
     expect(s().past.length).toBe(past);
     s().addComponent(nsw().id, 'sp-text', 'paragraph');
-    expect(s().notice).toMatch(/This is an NSW frame/);
+    expect(s().notice).toMatch(/This is an NSW page/);
     expect(Object.keys(s().doc.nodes)).toHaveLength(0);
   });
 
@@ -272,7 +272,7 @@ describe('kits do not mix inside a frame', () => {
       },
     );
     expect(s().past.length).toBe(past);
-    expect(s().notice).toMatch(/SharePoint frame/);
+    expect(s().notice).toMatch(/SharePoint page/);
     s().dropNew(
       { kind: 'new-layout', kitId: 'nsw', block: 'section', label: 'Section' },
       {
@@ -292,13 +292,13 @@ describe('kits do not mix inside a frame', () => {
     const before = s().past.length;
     s().moveNode(heading.id, { frameId: sp().id, parentId: null, index: 0, chainFrom: 1 });
     expect(s().past.length).toBe(before);
-    expect(s().notice).toMatch(/SharePoint frame/);
+    expect(s().notice).toMatch(/SharePoint page/);
     s().setNotice(null);
     s().copyNode(heading.id);
     s().selectFrame(sp().id);
     s().pasteClipboard();
     expect(s().past.length).toBe(before);
-    expect(s().notice).toMatch(/SharePoint frame/);
+    expect(s().notice).toMatch(/SharePoint page/);
   });
 
   it('a layout node can’t cross kits even when it is empty', () => {

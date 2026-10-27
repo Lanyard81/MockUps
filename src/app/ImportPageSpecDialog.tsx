@@ -20,7 +20,7 @@ function Inner() {
   };
   return (
     <Modal
-      title="Import page spec"
+      title="Import a page description"
       width={560}
       onClose={close}
       footer={
@@ -38,12 +38,13 @@ function Inner() {
       }
     >
       <p className="modal__text">
-        Paste the JSON of a page spec (from a Claude chat, or Copy as page spec). Each page becomes
-        a new frame beside the others, and Undo removes them.
+        Paste a page description (from an AI assistant such as Claude, or from “Copy as page
+        description” on a page). Each page it describes is added as a new page beside the others,
+        and Undo removes them.
       </p>
       <textarea
         className="import-spec__text"
-        aria-label="Page spec JSON"
+        aria-label="Page description (JSON)"
         rows={10}
         spellCheck={false}
         value={text}
@@ -52,13 +53,13 @@ function Inner() {
         placeholder='{ "format": "mockup-page-spec", "version": 1, "kit": "nsw", "page": [ … ] }'
       />
       <p className="modal__text">
-        Don’t have one yet? Copy the instructions, paste them into a Claude chat with a screenshot,
-        and paste the answer here:
+        Don’t have one yet? Copy the instructions, paste them into an AI chat with a screenshot, and
+        paste the answer here:
       </p>
       <div className="prop-actions">
         {KITS.map((k) => (
           <button key={k.id} className="btn" onClick={() => void copyPageSpecInstructions(k.id)}>
-            Copy instructions for {k.shortLabel}
+            Copy AI instructions ({k.shortLabel})
           </button>
         ))}
       </div>
@@ -67,7 +68,7 @@ function Inner() {
         type="file"
         accept=".json,application/json"
         hidden
-        aria-label="Page spec file"
+        aria-label="Page description file"
         onChange={(e) => {
           const f = e.target.files?.[0];
           e.target.value = '';

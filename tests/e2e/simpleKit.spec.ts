@@ -6,9 +6,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('a Simple frame takes Simple components and a template', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Style kit for the new frame' })
+    .getByRole('group', { name: 'Style kit for the new page' })
     .getByRole('button', { name: 'Simple' })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();

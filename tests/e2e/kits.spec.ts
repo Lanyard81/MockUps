@@ -8,9 +8,9 @@ test.beforeEach(async ({ page }) => {
 
 const frames = (page: Page) => page.locator('iframe.frame__iframe');
 const addFrame = async (page: Page, kit: 'NSW' | 'SharePoint', device = 'Desktop') => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Style kit for the new frame' })
+    .getByRole('group', { name: 'Style kit for the new page' })
     .getByRole('button', { name: kit })
     .click();
   await page.getByRole('menuitem', { name: new RegExp(device) }).click();
@@ -26,10 +26,10 @@ test('Add frame asks for the kit, remembers it, and the frame shows a kit badge'
   await expect(page.getByTestId('frame-kit')).toHaveText(['NSW', 'SharePoint']);
 
   // The next time, the SharePoint choice is already selected.
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await expect(
     page
-      .getByRole('group', { name: 'Style kit for the new frame' })
+      .getByRole('group', { name: 'Style kit for the new page' })
       .getByRole('button', { name: 'SharePoint' }),
   ).toHaveAttribute('aria-pressed', 'true');
   await page.keyboard.press('Escape');
@@ -79,7 +79,7 @@ test('browsing the other kit’s library is allowed, adding from it to the wrong
   await expect(
     page
       .getByText(
-        'This is a SharePoint frame — switch the library to SharePoint, or convert the frame.',
+        'This is a SharePoint page — switch the library to SharePoint, or convert the page.',
       )
       .first(),
   ).toBeVisible();
@@ -94,7 +94,7 @@ test('browsing the other kit’s library is allowed, adding from it to the wrong
   const box = (await frames(page).nth(1).boundingBox())!;
   await dragBetween(page, await centre(tile), { x: box.x + box.width / 2, y: box.y + 120 });
   await expect(
-    page.getByRole('status').filter({ hasText: 'This is a SharePoint frame' }).first(),
+    page.getByRole('status').filter({ hasText: 'This is a SharePoint page' }).first(),
   ).toBeVisible();
   await expect(page.frameLocator('iframe.frame__iframe').nth(1).locator('p')).toHaveCount(0);
 });
@@ -104,8 +104,6 @@ test('the other way round: an NSW frame refuses a SharePoint web part', async ({
   await page.getByTestId('frame-Home').locator('.frame__name').click();
   await libraryKit(page).getByRole('button', { name: 'SharePoint' }).click();
   await expect(
-    page
-      .getByText('This is an NSW frame — switch the library to NSW, or convert the frame.')
-      .first(),
+    page.getByText('This is an NSW page — switch the library to NSW, or convert the page.').first(),
   ).toBeVisible();
 });

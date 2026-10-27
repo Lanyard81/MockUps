@@ -10,7 +10,7 @@ export function ConversionSummary() {
   const placeholders = report.placeholders.reduce((n, p) => n + p.count, 0);
   return (
     <Modal
-      title="Frame converted"
+      title="Page converted"
       width={520}
       onClose={close}
       footer={

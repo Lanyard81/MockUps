@@ -22,14 +22,14 @@ export function Properties() {
         <p>
           <strong>Nothing selected</strong>
         </p>
-        <p>Click a frame name, or click something inside a frame, to see its options here.</p>
+        <p>Click a page name, or click something inside a page, to see its options here.</p>
         {blank && (
           <div className="welcome" data-testid="welcome">
             <p>
               <strong>Welcome to PageWright</strong>
             </p>
             <p>
-              Drag components from the left onto a frame, or start from a sample and change it to
+              Drag components from the left onto a page, or start from a sample and change it to
               suit.
             </p>
             <div className="welcome__samples">

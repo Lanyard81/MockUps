@@ -56,8 +56,8 @@ function Inner() {
   return (
     <Modal title="Version history" width={600} onClose={close}>
       <p className="modal__text">
-        A version is a named copy of this mockup that you can come back to. Versions are kept in
-        this browser (the newest 30), not in the mockup file.
+        Save a named copy of this mockup that you can come back to later. Copies stay in this
+        browser only (up to 30) and are not in a downloaded file.
       </p>
       <div className="history__save">
         <input

@@ -108,7 +108,7 @@ describe('saved components', () => {
     s().addFrame('desktop', 'sharepoint');
     const sp = s().doc.frames[1]!;
     s().insertSaved(sp.id, saved().components[0]!.id);
-    expect(s().notice).toMatch(/SharePoint frame/);
+    expect(s().notice).toMatch(/SharePoint page/);
     expect(s().doc.frames[1]!.root).toHaveLength(0);
   });
 

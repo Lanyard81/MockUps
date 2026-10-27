@@ -28,7 +28,7 @@ export function buildNotesFor(
 export async function copyBuildNotes(frameId: string): Promise<void> {
   const s = useStore.getState();
   const notes = buildNotesFor(frameId);
-  if (!notes) return s.setNotice('This frame has no build notes.');
+  if (!notes) return s.setNotice('This page has no build notes.');
   s.setNotice(
     (await copyText(notes.text))
       ? `${notes.label} copied. Paste them into a document or ticket.`
@@ -40,7 +40,7 @@ export async function copyBuildNotes(frameId: string): Promise<void> {
 export function downloadBuildNotes(frameId: string): void {
   const s = useStore.getState();
   const notes = buildNotesFor(frameId);
-  if (!notes) return s.setNotice('This frame has no build notes.');
+  if (!notes) return s.setNotice('This page has no build notes.');
   downloadBlob(notes.text, notes.file, 'text/markdown');
   s.setNotice(`Saved ${notes.file} to your downloads.`);
 }

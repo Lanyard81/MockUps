@@ -36,7 +36,7 @@ test('single file works from disk with no network', async ({ page, context }) =>
     ]);
   });
   expect(fonts).toEqual([true, true]);
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Android/ }).click();
   await expect(page.locator('.frame')).toHaveCount(2);
   expect(requests).toEqual([]);

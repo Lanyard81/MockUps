@@ -198,7 +198,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
             className="frame__rename"
             autoFocus
             defaultValue={frame.name}
-            aria-label="Frame name"
+            aria-label="Page name"
             onFocus={(e) => e.currentTarget.select()}
             onBlur={(e) => finishRename(e.currentTarget.value)}
             onKeyDown={(e) => {
@@ -218,7 +218,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         {startFrame && (
           <span
             className="frame__kit"
-            title="The click-through starts here"
+            title="Presenting starts on this page"
             data-testid="frame-start"
           >
             ▶ Start
@@ -227,7 +227,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         {frame.layout === 'free' && (
           <span
             className="frame__kit"
-            title="Freeform: components placed anywhere"
+            title="Free layout: components placed anywhere"
             data-testid="frame-free"
           >
             Freeform
@@ -262,7 +262,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         )}
         {frame.root.length === 0 && ready && (
           <div className="frame__empty">
-            <strong>This frame is empty</strong>
+            <strong>This page is empty</strong>
             <span>Drag a component here from the library, or start from a template.</span>
             <span className="frame__empty-actions">
               <button className="btn" onClick={() => useStore.getState().setLeftTab('templates')}>

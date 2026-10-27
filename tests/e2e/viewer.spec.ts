@@ -15,12 +15,12 @@ test('export a viewer file, open it from disk: tabs, click-through, comments', a
   await addFromLibrary(page, 'heading', 'Heading 1');
   await addFromLibrary(page, 'button', 'Brand Dark');
   // A second frame, and a button that goes to it.
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /iPhone/ }).click();
   await page.getByRole('button', { name: 'Zoom to fit' }).click();
   await page.waitForTimeout(300);
   await page.frameLocator('iframe[title="Home"]').locator('button.nsw-button').click();
-  await page.getByLabel('Go to frame').selectOption({ label: 'iPhone 2' });
+  await page.getByLabel('Go to page').selectOption({ label: 'iPhone 2' });
   // A note on the first frame.
   await page.getByRole('button', { name: 'Comment', exact: true }).click();
   const fb = await frameBox(page, 'Home');
@@ -31,7 +31,7 @@ test('export a viewer file, open it from disk: tabs, click-through, comments', a
   await page.getByRole('button', { name: 'File' }).click();
   await page.getByRole('menuitem', { name: /Export/ }).click();
   const dialog = page.getByRole('dialog', { name: 'Export' });
-  await dialog.getByLabel('Viewer file (to share)').check();
+  await dialog.getByLabel('Shareable viewer (one read-only file)').check();
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     dialog.getByRole('button', { name: 'Export', exact: true }).click(),

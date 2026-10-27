@@ -79,7 +79,7 @@ test.describe('reference image', () => {
   test('a 2× screenshot offers to halve the width and match the frame', async ({ page }) => {
     await frameLabel(page).click();
     await pasteImage(page, redPng(2880, 200));
-    const dialog = page.getByRole('dialog', { name: 'Match the frame to the screenshot?' });
+    const dialog = page.getByRole('dialog', { name: 'Match the page to the screenshot?' });
     await expect(dialog).toContainText('2× capture');
     await dialog.getByRole('button', { name: 'Set width to 1440px' }).click();
     await expect(page.getByTestId('frame-Home').locator('.frame__size')).toHaveText('1440px');

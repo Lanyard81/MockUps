@@ -20,8 +20,8 @@ const markDone = () => {
 
 const STEPS = [
   {
-    title: 'Build a screen',
-    body: 'Find a component in the library on the left. Drag it onto the frame, or just click it to add it.',
+    title: 'Build a page',
+    body: 'Find a component in the library on the left. Drag it onto the page, or just click it to add it.',
   },
   {
     title: 'Click to select, double-click to edit',
@@ -29,11 +29,11 @@ const STEPS = [
   },
   {
     title: 'Move things around',
-    body: `Drag items to reorder them, or drop them in another frame. Right-click for more actions. ${MOD}Z undoes anything. The Layers tab shows the whole page as a list.`,
+    body: `Drag items to reorder them, or drop them on another page. Right-click for more actions. ${MOD}Z undoes anything. The Layers tab shows the whole page as a list.`,
   },
   {
     title: 'Look around and try it out',
-    body: 'Hold Space and drag to pan, and use the zoom control to fit your screens. Switch to Preview to click through components. Press ? at any time for all the shortcuts.',
+    body: 'Hold Space and drag to pan, and use Zoom to fit to see all your pages. Switch to Preview to try components out, or Present to click through full screen. Press ? at any time for all the shortcuts.',
   },
 ];
 
@@ -78,9 +78,11 @@ export function Tour() {
             <span key={i} className={i === step ? 'is-active' : ''} />
           ))}
         </div>
-        <button className="btn" onClick={close}>
-          {last ? 'Close' : 'Skip tour'}
-        </button>
+        {!last && (
+          <button className="btn" onClick={close}>
+            Skip tour
+          </button>
+        )}
         {step > 0 && (
           <button className="btn" onClick={() => setStep(step - 1)}>
             Back

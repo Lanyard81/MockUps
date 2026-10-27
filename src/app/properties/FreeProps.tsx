@@ -41,7 +41,7 @@ export function FreePosition({ nodeId }: { nodeId: string }) {
   const box = readBox(node, frame.width);
   const st = useStore.getState;
   return (
-    <Section title="Position" hint="On a freeform frame. Pixels from the frame’s top-left corner.">
+    <Section title="Position" hint="On a free-layout page. Pixels from the page’s top-left corner.">
       <div className="prop-row">
         <NumberBox label="X" value={box.x} onCommit={(x) => st().setFreeBox(nodeId, { x })} />
         <NumberBox label="Y" value={box.y} onCommit={(y) => st().setFreeBox(nodeId, { y })} />
@@ -51,7 +51,7 @@ export function FreePosition({ nodeId }: { nodeId: string }) {
         value={box.width}
         onCommit={(width) => st().setFreeBox(nodeId, { width })}
       />
-      <div className="segmented segmented--block" role="group" aria-label="Align in frame">
+      <div className="segmented segmented--block" role="group" aria-label="Align in page">
         {(['left', 'centre', 'right'] as const).map((to) => (
           <button
             key={to}
@@ -81,7 +81,7 @@ export function FreeFrameSettings({ frameId }: { frameId: string }) {
   return (
     <Section
       title="Alignment"
-      hint="Pink guides show when an item lines up with the frame or another item. Hold Alt while dragging to ignore snapping."
+      hint="Pink guides show when an item lines up with the page or another item. Hold Alt while dragging to ignore snapping."
     >
       <Segmented
         label="Grid"

@@ -1002,8 +1002,8 @@ export const NSW_TEMPLATE_DEFS: NswTemplateDef[] = [
   // ---- Kitchen sink
   {
     id: 'kitchen-sink-sticky',
-    name: 'Kitchen sink: sticky elements',
-    group: 'Kitchen sink',
+    name: 'Test page: sticky elements',
+    group: 'Test pages',
     description:
       'A busy page with alerts and the elements that stick to the screen (shown static here).',
     device: 'desktop',

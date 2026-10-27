@@ -94,7 +94,7 @@ export async function buildIndexPage(
         `<li><a href="${esc(file)}">${esc(frame.name)}</a> <span class="nsw-small">(${frame.width}px)</span></li>`,
     )
     .join('\n');
-  const body = `<main class="nsw-section nsw-section--off-white"><div class="nsw-container"><h1>${esc(doc.name)}</h1><p class="nsw-intro">Open a screen to click through it.</p><ul>\n${items}\n</ul></div></main>`;
+  const body = `<main class="nsw-section nsw-section--off-white"><div class="nsw-container"><h1>${esc(doc.name)}</h1><p class="nsw-intro">Open a page to click through it.</p><ul>\n${items}\n</ul></div></main>`;
   return shell(doc.name, head, body, foot);
 }
 

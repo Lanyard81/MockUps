@@ -49,7 +49,7 @@ export function depthOf(n: DocNode, schema: KitSchema = nswSchema()): number {
   return i < 0 ? -1 : i + 1;
 }
 
-/** Can `parent` (null means the frame root) hold `child`? */
+/** Can `parent` (null means the page root) hold `child`? */
 export function canContain(
   parent: DocNode | null,
   child: DocNode,

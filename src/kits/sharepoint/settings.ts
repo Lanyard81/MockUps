@@ -40,11 +40,11 @@ const when =
 const headerIs = (ctx: SettingContext) => readSite(ctx.frame).header.layout;
 const headerBg = (ctx: SettingContext) => readSite(ctx.frame).header.background;
 
-/** Theme controls, for the document (`override` false) or for one frame that has its own (`override` true). */
+/** Theme controls, for the document (`override` false) or for one page that has its own (`override` true). */
 function themeDefs(
   group: string,
   gate?: (ctx: SettingContext) => string | null,
-  /** Added to each label, so the document's controls and a frame's own can be told apart. */
+  /** Added to each label, so the document's controls and a page's own can be told apart. */
   suffix = '',
 ): SettingDef[] {
   const custom = (ctx: SettingContext) => {
@@ -118,12 +118,10 @@ function themeDefs(
 }
 
 const override = (ctx: SettingContext): string | null =>
-  ctx.frame.themeOverride === true
-    ? null
-    : 'Switch on “Use a different theme on this frame” first.';
+  ctx.frame.themeOverride === true ? null : 'Switch on “Use a different theme on this page” first.';
 
 /** Document-wide theme (all SharePoint frames). */
-export const KIT_SETTINGS: SettingDef[] = themeDefs('SharePoint theme (all SharePoint frames)');
+export const KIT_SETTINGS: SettingDef[] = themeDefs('SharePoint theme (all SharePoint pages)');
 
 /** Settings that belong to one SharePoint frame: the site it shows and the page title area. */
 export const FRAME_SETTINGS: SettingDef[] = [
@@ -375,11 +373,11 @@ export const FRAME_SETTINGS: SettingDef[] = [
   {
     type: 'toggle',
     key: 'themeOverride',
-    label: 'Use a different theme on this frame',
-    group: 'Theme for this frame',
+    label: 'Use a different theme on this page',
+    group: 'Theme for this page',
     default: false,
   },
-  ...themeDefs('Theme for this frame', override, ' on this frame'),
+  ...themeDefs('Theme for this page', override, ' on this page'),
 ];
 
 /** The layout choice for a section, built from the section layouts so the rules live in one place. */

@@ -19,7 +19,7 @@ export async function renderFramePng(frameId: string, scale: 1 | 2): Promise<Blo
   const iframe = getFrameElement(frameId);
   const idoc = iframe?.contentDocument;
   const root = idoc?.getElementById('root');
-  if (!frame || !idoc || !root) throw new ExportError('That frame isn’t ready yet.');
+  if (!frame || !idoc || !root) throw new ExportError('That page isn’t ready yet.');
 
   const height = Math.ceil(
     Math.max(frameHeights[frameId] ?? 0, root.offsetHeight, DEVICES[frame.device].screenHeight),

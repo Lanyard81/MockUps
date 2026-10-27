@@ -165,7 +165,7 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
       void addReferenceFromFile(frameId, file);
     } else
       store.setNotice(
-        'Drop an image onto a picture to replace it, or onto the frame to trace over it.',
+        'Drop an image onto a picture to replace it, or onto the page to trace over it.',
       );
   });
 

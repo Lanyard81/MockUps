@@ -384,3 +384,7 @@ Vite's `base`, the Playwright config and the docs now use `/PageWright/` (case-s
 ## 068. Responsive on large screens
 
 The side panels grow with the window from 1700px up (clamped), the canvas refits when the window is resized until the person pans or zooms themselves (`autoFit`), and the click-through scales a wide page up to fill the window (a phone-sized page fills the height), to at most 2.5×. The visible name is PageWright (capital W); file and storage names stay lower case.
+
+## 069. The glossary (review Q1)
+
+The editor says **page** for what was a frame or screen (the saved document is still a **mockup**), **Stacked** and **Free** for the two layouts, **Preview** (in the canvas) and **Present** (full screen), **prototype links**, and **page description** for the page-spec JSON. Internal names (`frame`, `flow`/`free`, `.page.json`, `mockup-page-spec`) do not change, so saved files, page descriptions and code are unaffected. `docs/review/REVIEW.md` has the full proposed glossary.

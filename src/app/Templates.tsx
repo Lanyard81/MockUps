@@ -76,7 +76,7 @@ function TemplateTile({ gref, name, description, thumbnail, render, actions }: T
     <div className="template" ref={ref} data-testid="template-tile">
       <button
         className="template__main"
-        title={`Click to add “${name}” as a new frame, or drag it onto a frame or the canvas`}
+        title={`Click to add “${name}” as a new page, or drag it onto a page or the canvas`}
         onPointerDown={(e) =>
           beginPendingDrag(e, {
             kind: 'template',
@@ -170,7 +170,7 @@ function MineTile({ template }: { template: SavedTemplate }) {
             onClick={() =>
               useStore.getState().requestConfirm({
                 title: 'Delete this template?',
-                body: `“${template.name}” will be deleted from your templates. This can’t be undone. Frames already made from it are not affected.`,
+                body: `“${template.name}” will be deleted from your templates. This can’t be undone. Pages already made from it are not affected.`,
                 confirmLabel: 'Delete template',
                 danger: true,
                 onConfirm: () => useTemplates.getState().remove(template.id),
@@ -232,7 +232,7 @@ export function Templates() {
         />
         <KitSwitcher />
         <p className="library__target">
-          Click to add as a new frame, or drag onto a frame to replace its content.
+          Click to add as a new page, or drag onto a page to replace its content.
         </p>
       </div>
       <div className="library__scroll">
@@ -246,7 +246,7 @@ export function Templates() {
         )}
         {mine.length === 0 && query === '' && (
           <p className="library__none">
-            Your own templates will appear here. Right-click a frame and choose “Save as template…”.
+            Your own templates will appear here. Right-click a page and choose “Save as template…”.
           </p>
         )}
         {groups.map(({ group, items }) => (

@@ -31,15 +31,15 @@ export function switchFrameLayout(frameId: string, layout: 'flow' | 'free'): voi
   s.requestConfirm(
     layout === 'free'
       ? {
-          title: 'Switch to Freeform?',
-          body: 'Each component stays where it is now and can then be dragged anywhere. Sections, grids and columns (and a SharePoint frame’s site header and menu) are dropped. Undo brings them back.',
-          confirmLabel: 'Switch to Freeform',
+          title: 'Switch to a free layout?',
+          body: 'Each component stays where it is now and can then be dragged anywhere. Sections, grids and columns (and a SharePoint page’s site header and menu) are dropped. Undo brings them back.',
+          confirmLabel: 'Switch to Free',
           onConfirm: apply,
         }
       : {
-          title: 'Switch to Flow?',
+          title: 'Switch to a stacked layout?',
           body: 'Components are put in reading order (top to bottom, then left to right), each in its own section. Their free positions are dropped. Undo brings them back.',
-          confirmLabel: 'Switch to Flow',
+          confirmLabel: 'Switch to Stacked',
           onConfirm: apply,
         },
   );

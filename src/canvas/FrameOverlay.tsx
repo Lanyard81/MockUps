@@ -153,7 +153,7 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
           data-testid="replace-indicator"
           style={{ inset: 0 }}
         >
-          <span>Replace this frame’s content</span>
+          <span>Replace this page’s content</span>
         </div>
       )}
       {drop && parent && (

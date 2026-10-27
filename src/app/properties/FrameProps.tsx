@@ -86,12 +86,13 @@ export function FrameProps({ frameId }: { frameId: string }) {
           options={[
             {
               id: 'flow',
-              label: 'Flow',
-              title: 'Sections, grids and columns, like a real page',
+              label: 'Stacked',
+              title:
+                'Sections, grids and columns, like a real web page. Content reflows to the page width.',
             },
             {
               id: 'free',
-              label: 'Freeform',
+              label: 'Free',
               title: 'Drag components anywhere, with no grid. Good for sketching ideas.',
             },
           ]}
@@ -118,11 +119,11 @@ export function FrameProps({ frameId }: { frameId: string }) {
         </div>
       </Section>
       <Section
-        title="Click-through"
-        hint="Play starts here. Links set to “Go to frame” move between frames, with the transition you choose."
+        title="Prototype links"
+        hint="Presenting starts here. Links set to “Go to page” move between pages, with the transition you choose."
       >
         <Toggle
-          label="Start frame"
+          label="Start page"
           checked={(doc.startFrameId ?? doc.frames[0]?.id) === frame.id}
           disabled={(doc.startFrameId ?? doc.frames[0]?.id) === frame.id && !doc.startFrameId}
           onChange={(on) => st().setStartFrame(on ? frame.id : null)}
@@ -131,7 +132,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
       {importReport && (
         <Section
           title="Import report"
-          hint="From the page spec this frame was made from. Check the placeholders."
+          hint="From the page spec this page was made from. Check the placeholders."
         >
           <ImportReportView report={importReport} />
           <div className="prop-actions">
@@ -222,7 +223,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
           className="btn"
           disabled={free || frame.root.length === 0}
           onClick={() => st().setDialog('saveTemplate', frame.id)}
-          title="Keep this frame to start new frames from later"
+          title="Keep this page to start new pages from later"
         >
           Save as template…
         </button>
@@ -231,14 +232,14 @@ export function FrameProps({ frameId }: { frameId: string }) {
           onClick={() => st().duplicateFrame(frame.id)}
           title="Duplicate (Ctrl/⌘ D)"
         >
-          Duplicate frame
+          Duplicate page
         </button>
         <button
           className="btn btn--danger"
           onClick={() => st().deleteFrame(frame.id)}
           title="Delete (Delete key). Undo brings it back."
         >
-          Delete frame
+          Delete page
         </button>
       </div>
     </>

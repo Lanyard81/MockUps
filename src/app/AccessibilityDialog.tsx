@@ -83,7 +83,11 @@ function Inner({ frameId }: { frameId: string }) {
         {issues === null ? (
           <p className="prop-hint">Checking…</p>
         ) : issues.length === 0 ? (
-          <p className="prop-hint responsive__ok">No problems found.</p>
+          <p className="prop-hint responsive__ok">
+            {frame.root.length === 0
+              ? 'There is nothing to check yet. Add some components first.'
+              : 'No problems found by the checks this tool runs. Test with real people too.'}
+          </p>
         ) : (
           <>
             <p className="prop-hint">

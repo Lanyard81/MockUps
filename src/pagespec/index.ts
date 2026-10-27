@@ -222,7 +222,7 @@ function checkFrameSettings(kit: Kit, raw: unknown, col: Collector): Record<stri
     defRaw,
     { frame: {}, kit: {}, topLevel: [] },
     col.note,
-    'Frame settings',
+    'Page settings',
     true,
   );
   col.dropped += dropped;
@@ -262,7 +262,7 @@ export function pageFromSpec(
   const settings = checkFrameSettings(kit, raw.settings, col);
   const ctx = makeContext(kit, settings, col);
   const blocks = Array.isArray(raw.page) ? raw.page.slice(0, LIMITS.blocks) : [];
-  if (!Array.isArray(raw.page)) col.note('The page has no "page" list, so the frame is empty.');
+  if (!Array.isArray(raw.page)) col.note('The page has no "page" list, so the page is empty.');
   const { root, nodes } = kit.pageSpec.build(blocks, ctx);
 
   const frameName = cleanString(raw.name, LIMITS.nameChars)?.trim() || `Imported page ${index + 1}`;
@@ -296,7 +296,11 @@ export function importPageSpec(text: string, defaultKitId: KitId): ImportedPage[
 
 /** One sentence for the top of the report: "Imported 24 components. 2 placeholders: 'Map'…". */
 export function summariseReport(r: PageImportReport): string {
-  const parts = [`Imported ${r.components} component${r.components === 1 ? '' : 's'}.`];
+  const parts = [
+    r.components === 0
+      ? 'No components were imported.'
+      : `Imported ${r.components} component${r.components === 1 ? '' : 's'}.`,
+  ];
   const ph = r.placeholders.reduce((n, p) => n + p.count, 0);
   if (ph)
     parts.push(

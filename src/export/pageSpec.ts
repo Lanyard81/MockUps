@@ -11,7 +11,7 @@ export async function copyFrameSpec(frameId: string): Promise<void> {
   const s = useStore.getState();
   if (isFreeFrame(s.doc.frames.find((f) => f.id === frameId))) return s.setNotice(FREE_NO_CONVERT);
   const out = framesToSpecText(s.doc, [frameId]);
-  if (!out) return s.setNotice('That frame could not be exported.');
+  if (!out) return s.setNotice('That page could not be exported.');
   const ok = await copyText(out.text);
   s.setNotice(
     ok
@@ -26,7 +26,7 @@ export function downloadFrameSpec(frameId: string): void {
   const frame = s.doc.frames.find((f) => f.id === frameId);
   if (isFreeFrame(frame)) return s.setNotice(FREE_NO_CONVERT);
   const out = framesToSpecText(s.doc, [frameId]);
-  if (!frame || !out) return s.setNotice('That frame could not be exported.');
+  if (!frame || !out) return s.setNotice('That page could not be exported.');
   const file = `${slug(frame.name, 'page')}.page.json`;
   downloadBlob(out.text, file, 'application/json');
   s.setNotice(

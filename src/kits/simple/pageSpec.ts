@@ -111,7 +111,7 @@ export const simplePageSpec: KitPageSpec = {
       '- **Section**: `{ "section": { "layout": "two-columns", "background": "soft" }, "columns": [ [component, …], [component, …] ] }`. One list per column.',
       '- **Layouts** (`section.layout`): `one-column`, `two-columns`, `three-columns`, `sidebar-left` (2 columns, narrow then wide), `sidebar-right` (2 columns, wide then narrow). Extra columns are merged into the last; missing ones are left empty.',
       '- **Component**: `{ "component": "sk-card", "variant": "image", "text": { … }, "props": { … }, "hide": [ … ] }`.',
-      '- **Frame settings** (`settings`, top of the file): an optional accent colour for this frame (`accentOverride: true`, `accent: "#7c3aed"`).',
+      '- **Page settings** (`settings`, top of the file): an optional accent colour for this page (`accentOverride: true`, `accent: "#7c3aed"`).',
     ].join('\n'),
     rules: [
       'A header bar and a footer sit directly on the page, not inside a section.',

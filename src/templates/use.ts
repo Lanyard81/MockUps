@@ -38,8 +38,8 @@ export function templateOnFrame(ref: TemplateRef, frameId: string): void {
   const changesKit = getKit(frame.kitId).id !== getKit(t.kitId).id;
   if (frame.root.length === 0 && !changesKit) return apply();
   s.requestConfirm({
-    title: 'Replace this frame’s content?',
-    body: `Everything in “${frame.name}” will be replaced with “${t.name}”${changesKit ? `, and the frame will become ${getKit(t.kitId).shortLabel === 'NSW' ? 'an' : 'a'} ${getKit(t.kitId).shortLabel} frame` : ''}. You can undo this straight afterwards.`,
+    title: 'Replace this page’s content?',
+    body: `Everything in “${frame.name}” will be replaced with “${t.name}”${changesKit ? `, and the page will become ${getKit(t.kitId).shortLabel === 'NSW' ? 'an' : 'a'} ${getKit(t.kitId).shortLabel} page` : ''}. You can undo this straight afterwards.`,
     confirmLabel: 'Replace content',
     danger: true,
     onConfirm: apply,

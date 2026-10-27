@@ -44,7 +44,7 @@ function Inner({ frameId, initial }: { frameId: string; initial: string }) {
       }
     >
       <p className="modal__text">
-        Keep this frame so you can start new frames from it later. It’s saved in this browser, and
+        Keep this page so you can start new pages from it later. It’s saved in this browser, and
         goes with your mockups when you save to a file.
       </p>
       <div className="prop-field" style={{ marginTop: 16 }}>

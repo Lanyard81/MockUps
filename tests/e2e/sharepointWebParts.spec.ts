@@ -3,9 +3,9 @@ import { expect, test, type Page } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('./');
   await expect(page.getByTestId('viewport')).toHaveAttribute('data-fitted', 'true');
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page
-    .getByRole('group', { name: 'Style kit for the new frame' })
+    .getByRole('group', { name: 'Style kit for the new page' })
     .getByRole('button', { name: 'SharePoint' })
     .click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();

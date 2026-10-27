@@ -284,3 +284,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Sections with one, two or three columns or a narrow/wide split; background (none, soft grey, dark, accent), spacing and edge-to-edge options; header bar and footer sit on the page itself, with one-click "Add header bar" and "Add footer".
 - [x] Accent colour for all Simple frames (Properties, any Simple frame) with a per-frame override; text colour on the accent follows its brightness.
 - [x] Seven page templates (landing, sign in, dashboard, article, pricing, phone home, contact), page-spec import and export, and the reference in `docs/PAGE-SPEC.md`.
+
+## Review milestones (from `docs/review/FIX-PLAN.md`)
+
+### Q1: Plain-language pass
+
+- [x] One glossary: **page** (was frame/screen), **Stacked / Free** layout (was Flow/Freeform), **Present** (was Play), **prototype links** (was click-through), **page description** (was page spec) in the UI, tour, menus, palette, dialogs, shortcuts and messages.
+- [x] Honest messages: an import with nothing usable says so; the accessibility and responsive checks say "nothing to check yet" on an empty page; disabled Convert and Save as template say why; grammar fixes ("Add an iPhone page", SharePoint "Add one column").
+- [x] The layout toggle in the top bar is labelled "New pages", with explanations in its tooltips.

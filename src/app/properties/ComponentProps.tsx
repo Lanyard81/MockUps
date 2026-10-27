@@ -36,9 +36,9 @@ function LinkControl({
   const exists = frames.some((f) => f.id === target);
   return (
     <>
-      <Field label="Go to frame">
+      <Field label="Go to page">
         <select
-          aria-label="Go to frame"
+          aria-label="Go to page"
           value={exists ? target : ''}
           onChange={(e) =>
             useStore.getState().setNodeProps(nodeId, { goto: e.target.value || undefined })
@@ -255,7 +255,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
       <div className="prop-actions">
         <button
           className="btn"
-          title="Keep this to add to any frame later"
+          title="Keep this to add to any page later"
           onClick={() => st().setDialog('saveComponent', frameId, nodeId)}
         >
           Save as component…

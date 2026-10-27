@@ -272,7 +272,7 @@ export function Layers() {
           {frame.root.length > 0 ? (
             <button
               className="layer-row__twisty"
-              aria-label={isCollapsed ? 'Expand frame' : 'Collapse frame'}
+              aria-label={isCollapsed ? 'Expand page' : 'Collapse page'}
               onClick={(e) => {
                 e.stopPropagation();
                 toggle(key);
@@ -288,7 +288,7 @@ export function Layers() {
               className="layer-row__rename"
               autoFocus
               defaultValue={frame.name}
-              aria-label="Frame name"
+              aria-label="Page name"
               onFocus={(e) => e.currentTarget.select()}
               onClick={(e) => e.stopPropagation()}
               onBlur={(e) => {
@@ -315,7 +315,7 @@ export function Layers() {
         {!isCollapsed && frame.root.length > 0 && (
           <div role="group">{frame.root.map((id) => renderNode(id, 1))}</div>
         )}
-        {frame.root.length === 0 && <p className="layer-empty">Empty frame</p>}
+        {frame.root.length === 0 && <p className="layer-empty">Empty page</p>}
       </div>
     );
   };
@@ -327,7 +327,7 @@ export function Layers() {
   return (
     <div className="layers" ref={treeRef} role="tree" aria-label="Layers" data-testid="layers">
       {doc.frames.length === 0 ? (
-        <p className="layer-empty">No frames yet. Add one from the toolbar.</p>
+        <p className="layer-empty">No pages yet. Add one from the toolbar.</p>
       ) : (
         doc.frames.map(renderFrame)
       )}

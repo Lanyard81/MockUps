@@ -16,7 +16,7 @@ export async function saveFrameAsTemplate(frameId: string, name: string): Promis
     return false;
   }
   if (frame.root.length === 0) {
-    s.setNotice('That frame is empty, so there is nothing to save as a template.');
+    s.setNotice('That page is empty, so there is nothing to save as a template.');
     return false;
   }
   const nodes = Object.fromEntries(

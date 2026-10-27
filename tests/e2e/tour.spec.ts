@@ -5,7 +5,7 @@ test.use({ storageState: { cookies: [], origins: [] } });
 
 test('the first-run tour shows four tips, closes, and never comes back', async ({ page }) => {
   await page.goto('./');
-  const tour = page.getByRole('dialog', { name: /Build a screen/ });
+  const tour = page.getByRole('dialog', { name: /Build a page/ });
   await expect(tour).toBeVisible();
   await expect(tour).toContainText('Tip 1 of 4');
   await tour.getByRole('button', { name: 'Next' }).click();

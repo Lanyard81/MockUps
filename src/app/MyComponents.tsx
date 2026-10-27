@@ -18,7 +18,7 @@ export function MyComponents({ kitId, frameId }: { kitId: KitId; frameId?: strin
             <button
               className="mine__main"
               disabled={!frameId}
-              title={`Add “${c.name}”. Drag it onto a frame to place it.`}
+              title={`Add “${c.name}”. Drag it onto a page to place it.`}
               onPointerDown={(e) =>
                 beginPendingDrag(e, { kind: 'saved', savedId: c.id, label: c.name })
               }

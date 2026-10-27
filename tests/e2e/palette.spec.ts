@@ -24,7 +24,7 @@ test('Ctrl+K finds a component and adds it to the selected frame', async ({ page
 
 test('arrows move, Esc closes, and the toolbar button opens it too', async ({ page }) => {
   await page.getByRole('button', { name: 'Search', exact: true }).click();
-  await page.getByLabel('Search commands').fill('frame');
+  await page.getByLabel('Search commands').fill('page');
   const options = palette(page).getByRole('option');
   await expect(options.first()).toHaveAttribute('aria-selected', 'true');
   await page.keyboard.press('ArrowDown');

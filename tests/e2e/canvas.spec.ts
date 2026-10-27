@@ -20,7 +20,7 @@ test('frames render real NSW markup, styles and fonts', async ({ page }) => {
 });
 
 test('frame width drives the NSW responsive layout', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   const width = await page.locator('iframe[title="Desktop 2"]').evaluate((f) => f.clientWidth);
   expect(width).toBe(1440);
@@ -40,7 +40,7 @@ test('edit mode blocks interaction, preview mode runs NSW scripts', async ({ pag
 });
 
 test('add, duplicate, delete and undo frames', async ({ page }) => {
-  await page.getByRole('button', { name: 'Add frame' }).click();
+  await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Tablet/ }).click();
   await expect(page.locator('.frame')).toHaveCount(2);
   await page.getByRole('button', { name: 'Duplicate' }).click();
@@ -56,7 +56,7 @@ test('add, duplicate, delete and undo frames', async ({ page }) => {
 
 test('rename a frame by double-clicking its label', async ({ page }) => {
   await page.locator('.frame__name').first().dblclick();
-  await page.getByLabel('Frame name').fill('Landing');
+  await page.getByLabel('Page name').fill('Landing');
   await page.keyboard.press('Enter');
   await expect(page.locator('.frame__name').first()).toHaveText('Landing');
 });
