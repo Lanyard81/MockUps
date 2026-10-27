@@ -388,3 +388,7 @@ The side panels grow with the window from 1700px up (clamped), the canvas refits
 ## 069. The glossary (review Q1)
 
 The editor says **page** for what was a frame or screen (the saved document is still a **mockup**), **Stacked** and **Free** for the two layouts, **Preview** (in the canvas) and **Present** (full screen), **prototype links**, and **page description** for the page-spec JSON. Internal names (`frame`, `flow`/`free`, `.page.json`, `mockup-page-spec`) do not change, so saved files, page descriptions and code are unaffected. `docs/review/REVIEW.md` has the full proposed glossary.
+
+## 070. axe-core as a dev dependency
+
+`axe-core` (MPL-2.0, test-only, not bundled) runs inside Playwright to check the editor for accessibility problems (colour contrast now, more rules in the keyboard milestone). It is the standard engine for this, and writing our own checks for ARIA and contrast would be larger and less trustworthy. The app's own accessibility checker (for mockup content) stays separate and dependency-free (decision 062).

@@ -37,16 +37,48 @@ const colour = (v: unknown, fallback: string) =>
 
 export const DEFAULT_ACCENT = '#2563eb';
 
-/** Readable text on an accent colour: white on dark accents, near-black on light ones. */
-export function inkFor(hex: string): string {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [
-    number,
+const channels = (hex: string): [number, number, number] =>
+  [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [number, number, number];
+const luminance = (rgb: [number, number, number]) => {
+  const [r, g, b] = rgb.map((v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+/** WCAG contrast ratio between two hex colours. */
+export function contrast(a: string, b: string): number {
+  const [hi, lo] = [luminance(channels(a)), luminance(channels(b))].sort((x, y) => y - x) as [
     number,
     number,
   ];
-  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-  const lum = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-  return lum > 0.4 ? '#111827' : '#ffffff';
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+const INK_LIGHT = '#ffffff';
+const INK_DARK = '#0b0f19';
+
+/** Text on an accent colour: whichever of white and near-black reads better (at least 4.5:1 for every offered accent). */
+export function inkFor(hex: string): string {
+  return contrast(INK_LIGHT, hex) >= contrast(INK_DARK, hex) ? INK_LIGHT : INK_DARK;
+}
+
+/** The accent, darkened as far as needed to read as text on white or a light tint of itself (5:1 on white). */
+export function accentText(hex: string): string {
+  const [r, g, b] = channels(hex);
+  for (let k = 1; k >= 0; k -= 0.05) {
+    const c =
+      '#' +
+      [r, g, b]
+        .map((v) =>
+          Math.round(v * k)
+            .toString(16)
+            .padStart(2, '0'),
+        )
+        .join('');
+    if (contrast(c, '#ffffff') >= 5) return c;
+  }
+  return '#000000';
 }
 
 /** The page: the accent colour for the whole frame, around the content. */
@@ -58,5 +90,5 @@ export function renderFrame(
     ctx.settings.accentOverride === true ? ctx.settings.accent : ctx.kitSettings.accent,
     DEFAULT_ACCENT,
   );
-  return `<div class="sk-page" style="--sk-accent:${accent};--sk-accent-ink:${inkFor(accent)}">${children.map((c) => c.html).join('')}</div>`;
+  return `<div class="sk-page" style="--sk-accent:${accent};--sk-accent-ink:${inkFor(accent)};--sk-accent-text:${accentText(accent)}">${children.map((c) => c.html).join('')}</div>`;
 }

@@ -7,9 +7,9 @@ export const SIMPLE_CSS = `
 .sk-c{min-width:0}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-.sk-page{--sk-accent:#2563eb;--sk-accent-ink:#fff;--sk-accent-soft:color-mix(in srgb,var(--sk-accent) 10%,#fff);--sk-text:#1f2430;--sk-muted:#667085;--sk-line:#e4e7ec;--sk-soft:#f6f7f9;--sk-radius:10px;--sk-gap:24px;color:var(--sk-text);min-height:100vh}
+.sk-page{--sk-accent:#2563eb;--sk-accent-ink:#fff;--sk-accent-text:var(--sk-accent);--sk-accent-soft:color-mix(in srgb,var(--sk-accent) 10%,#fff);--sk-text:#1f2430;--sk-muted:#667085;--sk-line:#e4e7ec;--sk-soft:#f6f7f9;--sk-radius:10px;--sk-gap:24px;color:var(--sk-text);min-height:100vh}
 .sk-page img{max-width:100%;display:block}
-.sk-page a{color:var(--sk-accent)}
+.sk-page a{color:var(--sk-accent-text)}
 .sk-page h1,.sk-page h2,.sk-page h3,.sk-page h4,.sk-page p{margin:0}
 
 /* Sections and columns */
@@ -27,7 +27,7 @@ body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-syst
 .sk-section--bg-dark{background:#161a23;color:#f4f5f7;--sk-text:#f4f5f7;--sk-muted:#aab0bd;--sk-line:#2d3341;--sk-soft:#1f2430}
 .sk-section--bg-accent{background:var(--sk-accent);color:var(--sk-accent-ink);--sk-text:var(--sk-accent-ink);--sk-muted:color-mix(in srgb,var(--sk-accent-ink) 80%,transparent);--sk-line:color-mix(in srgb,var(--sk-accent-ink) 30%,transparent)}
 .sk-section--bg-accent a{color:inherit}
-.sk-section--bg-accent .sk-button{background:#fff;color:var(--sk-accent);border-color:#fff}
+.sk-section--bg-accent .sk-button{background:#fff;color:var(--sk-accent-text);border-color:#fff}
 .sk-section--bg-accent .sk-button--outline,.sk-section--bg-accent .sk-button--text{background:transparent;color:var(--sk-accent-ink);border-color:var(--sk-accent-ink)}
 .sk-section--bg-accent .sk-button--text{border-color:transparent}
 .sk-column{display:flex;flex-direction:column;gap:16px;min-width:0;align-items:stretch}
@@ -51,23 +51,23 @@ body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-syst
 .sk-list{margin:0;padding-left:22px;display:grid;gap:6px}
 .sk-list--check{list-style:none;padding-left:0}
 .sk-list--check li{position:relative;padding-left:28px}
-.sk-list--check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:var(--sk-accent-soft);color:var(--sk-accent);font-size:12px;line-height:20px;text-align:center;font-weight:700;margin-top:2px}
+.sk-list--check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:var(--sk-accent-soft);color:var(--sk-accent-text);font-size:12px;line-height:20px;text-align:center;font-weight:700;margin-top:2px}
 .sk-divider{border:0;border-top:1px solid var(--sk-line);margin:8px 0;width:100%}
 .sk-spacer{display:block;height:24px;width:100%}
 .sk-spacer--small{height:12px}
 .sk-spacer--large{height:56px}
 .sk-badge{display:inline-flex;align-self:flex-start;align-items:center;padding:2px 10px;border-radius:999px;background:var(--sk-soft);color:var(--sk-text);border:1px solid var(--sk-line);font-size:13px;font-weight:600}
-.sk-badge--accent{background:var(--sk-accent-soft);color:var(--sk-accent);border-color:transparent}
+.sk-badge--accent{background:var(--sk-accent-soft);color:var(--sk-accent-text);border-color:transparent}
 .sk-badge--success{background:#e7f6ec;color:#17693a;border-color:transparent}
 .sk-badge--warning{background:#fff4de;color:#8a5a00;border-color:transparent}
 .sk-badge--danger{background:#fdeaea;color:#a12626;border-color:transparent}
-.sk-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sk-accent)}
+.sk-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sk-accent-text)}
 
 /* Actions */
 .sk-button{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;gap:8px;min-height:44px;padding:0 20px;border-radius:var(--sk-radius);border:1px solid transparent;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;background:var(--sk-accent);color:var(--sk-accent-ink)}
 .sk-button--secondary{background:var(--sk-soft);color:var(--sk-text);border-color:var(--sk-line)}
-.sk-button--outline{background:transparent;color:var(--sk-accent);border-color:var(--sk-accent)}
-.sk-button--text{background:transparent;color:var(--sk-accent);padding:0 8px}
+.sk-button--outline{background:transparent;color:var(--sk-accent-text);border-color:var(--sk-accent-text)}
+.sk-button--text{background:transparent;color:var(--sk-accent-text);padding:0 8px}
 .sk-button--small{min-height:34px;padding:0 14px;font-size:14px}
 .sk-button--large{min-height:54px;padding:0 28px;font-size:18px}
 .sk-button--full{align-self:stretch;width:100%}
@@ -106,7 +106,7 @@ body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-syst
 .sk-stat__label{color:#667085;font-size:14px}
 .sk-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
 .sk-feature{display:flex;flex-direction:column;gap:8px}
-.sk-feature__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--sk-accent-soft);color:var(--sk-accent);font-size:20px}
+.sk-feature__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--sk-accent-soft);color:var(--sk-accent-text);font-size:20px}
 .sk-feature__title{font-size:18px;font-weight:700}
 .sk-feature__text{color:var(--sk-muted)}
 .sk-accordion{border:1px solid var(--sk-line);border-radius:var(--sk-radius);overflow:hidden;background:#fff;color:#1f2430}
@@ -128,7 +128,7 @@ body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-syst
 .sk-row__title{font-weight:600}
 .sk-row__sub{color:#667085;font-size:14px}
 .sk-row__meta{color:#667085;font-size:14px;white-space:nowrap}
-.sk-avatar{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;border-radius:50%;background:var(--sk-accent-soft);color:var(--sk-accent);font-weight:700}
+.sk-avatar{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;border-radius:50%;background:var(--sk-accent-soft);color:var(--sk-accent-text);font-weight:700}
 .sk-profile{display:flex;align-items:center;gap:14px}
 .sk-profile__name{font-weight:700}
 .sk-profile__role{color:var(--sk-muted);font-size:14px}
@@ -189,13 +189,13 @@ body{margin:0;background:#fff;color:#1f2430;font:16px/1.55 system-ui,-apple-syst
 .sk-breadcrumb a{text-decoration:none;color:inherit}
 .sk-tabs{display:flex;gap:4px;border-bottom:1px solid var(--sk-line);overflow:hidden}
 .sk-tab{padding:10px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--sk-muted);font-weight:600;text-decoration:none}
-.sk-tab--active{color:var(--sk-accent);border-bottom-color:var(--sk-accent)}
+.sk-tab--active{color:var(--sk-accent-text);border-bottom-color:var(--sk-accent-text)}
 .sk-pagination{display:flex;gap:6px;align-items:center}
 .sk-page-link{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 10px;border:1px solid var(--sk-line);border-radius:8px;text-decoration:none;color:var(--sk-text);font-weight:600}
-.sk-page-link--active{background:var(--sk-accent);border-color:var(--sk-accent);color:var(--sk-accent-ink)}
+.sk-page-link--active{background:var(--sk-accent);border-color:var(--sk-accent-text);color:var(--sk-accent-ink)}
 .sk-sidenav{display:flex;flex-direction:column;gap:2px}
 .sk-sidenav a{padding:9px 12px;border-radius:8px;color:var(--sk-text);text-decoration:none;font-weight:500}
-.sk-sidenav a.sk-sidenav__active{background:var(--sk-accent-soft);color:var(--sk-accent);font-weight:700}
+.sk-sidenav a.sk-sidenav__active{background:var(--sk-accent-soft);color:var(--sk-accent-text);font-weight:700}
 .sk-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:28px 32px;background:#161a23;color:#aab0bd;font-size:14px}
 .sk-footer__links{display:flex;gap:20px;flex-wrap:wrap}
 .sk-footer a{color:#e4e7ec;text-decoration:none}

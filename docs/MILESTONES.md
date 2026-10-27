@@ -292,3 +292,9 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] One glossary: **page** (was frame/screen), **Stacked / Free** layout (was Flow/Freeform), **Present** (was Play), **prototype links** (was click-through), **page description** (was page spec) in the UI, tour, menus, palette, dialogs, shortcuts and messages.
 - [x] Honest messages: an import with nothing usable says so; the accessibility and responsive checks say "nothing to check yet" on an empty page; disabled Convert and Save as template say why; grammar fixes ("Add an iPhone page", SharePoint "Add one column").
 - [x] The layout toggle in the top bar is labelled "New pages", with explanations in its tooltips.
+
+### Q2: Colour contrast
+
+- [x] Primary buttons, selected page-name chips and the icon picker use a new `--dd-accent-fill` (4.7:1 and 5.9:1 with white) instead of the brighter accent; muted and placeholder text tokens raised to at least 4.5:1 in both themes.
+- [x] Simple kit: button text is white or near-black, whichever reads better (every accent on offer reaches 4.5:1); accent-coloured text (links, outline buttons, tabs, badges) uses a darkened accent that reaches 5:1 on white.
+- [x] axe-core (dev dependency) checks colour contrast on the editor in both themes; unit tests check the tokens and every Simple accent.

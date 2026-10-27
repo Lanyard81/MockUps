@@ -3,7 +3,7 @@ import { getKit } from '../src/kits';
 import { renderComponent } from '../src/layout/component';
 import { renderFrameHtml } from '../src/layout/render';
 import { createDoc, useStore } from '../src/store/store';
-import { inkFor } from '../src/kits/simple/render';
+import { accentText, contrast, inkFor } from '../src/kits/simple/render';
 
 const simple = getKit('simple');
 
@@ -64,7 +64,7 @@ describe('Simple kit', () => {
 
   it('picks readable text for light and dark accents', () => {
     expect(inkFor('#2563eb')).toBe('#ffffff');
-    expect(inkFor('#facc15')).toBe('#111827');
+    expect(inkFor('#facc15')).toBe('#0b0f19');
   });
 
   it('adds components to a Simple frame through the store, with sections and columns', () => {
@@ -77,5 +77,16 @@ describe('Simple kit', () => {
     expect(types).toContain('column');
     expect(types).toContain('component');
     expect(doc.frames[0]!.kitId).toBe('simple');
+  });
+
+  it('keeps button text and accent text readable (4.5:1) for every accent on offer', () => {
+    const accents = ['#2563eb', '#7c3aed', '#0d9488', '#16a34a', '#ea580c', '#dc2626', '#111827'];
+    for (const a of accents) {
+      expect(contrast(inkFor(a), a), `button text on ${a}`).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contrast(accentText(a), '#ffffff'),
+        `accent text on white for ${a}`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });

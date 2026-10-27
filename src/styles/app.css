@@ -1006,7 +1006,7 @@ textarea {
   background: var(--ed-accent-soft);
 }
 .icon-grid__item.is-active {
-  background: var(--ed-accent);
+  background: var(--dd-accent-fill);
   color: #fff;
 }
 .sr-only {

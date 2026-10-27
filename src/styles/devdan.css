@@ -112,13 +112,13 @@ body {
   background: color-mix(in srgb, var(--dd-glass-strong) 70%, var(--ed-text) 18%);
 }
 .btn--primary {
-  background: var(--dd-accent);
+  background: var(--dd-accent-fill);
   border-color: transparent;
   color: #fff;
 }
 .btn--primary:hover:not(:disabled) {
-  background: var(--dd-accent);
-  filter: brightness(1.12);
+  background: var(--dd-accent-fill);
+  filter: brightness(0.92);
 }
 .btn--danger {
   color: var(--ed-danger);
@@ -290,7 +290,7 @@ kbd {
   color: var(--ed-text);
 }
 .frame--selected .frame__name {
-  background: var(--dd-accent);
+  background: var(--dd-accent-fill);
   color: #fff;
   border-radius: 999px;
 }
