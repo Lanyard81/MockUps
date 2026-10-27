@@ -1,0 +1,190 @@
+{
+ "violations": [
+  {
+   "id": "aria-required-parent",
+   "impact": "critical",
+   "help": "Certain ARIA roles must be contained by particular parents",
+   "count": 4,
+   "nodes": [
+    {
+     "t": "#tab-library",
+     "h": "<button role=\"tab\" id=\"tab-library\" aria-selected=\"true\" aria-controls=\"panel-library\" class=\"tabs__tab is-active\">Library</button>",
+     "s": "Required ARIA parent role not present: tablist"
+    },
+    {
+     "t": "#tab-templates",
+     "h": "<button role=\"tab\" id=\"tab-templates\" aria-selected=\"false\" aria-controls=\"panel-templates\" class=\"tabs__tab\">Templates</button>",
+     "s": "Required ARIA parent role not present: tablist"
+    },
+    {
+     "t": "#tab-layers",
+     "h": "<button role=\"tab\" id=\"tab-layers\" aria-selected=\"false\" aria-controls=\"panel-layers\" class=\"tabs__tab\">Layers</button>",
+     "s": "Required ARIA parent role not present: tablist"
+    },
+    {
+     "t": "#tab-comments",
+     "h": "<button role=\"tab\" id=\"tab-comments\" aria-selected=\"false\" aria-controls=\"panel-comments\" class=\"tabs__tab\">Comments</button>",
+     "s": "Required ARIA parent role not present: tablist"
+    }
+   ]
+  },
+  {
+   "id": "color-contrast",
+   "impact": "serious",
+   "help": "Elements must meet minimum color contrast ratio thresholds",
+   "count": 2,
+   "nodes": [
+    {
+     "t": ".btn--primary.btn[aria-haspopup=\"menu\"]",
+     "h": "<button class=\"btn btn--primary\" aria-haspopup=\"menu\" aria-expanded=\"false\"><span aria-hidden=\"true\">+</span>Add frame</button>",
+     "s": "Element has insufficient color contrast of 4.01 (foreground color: #ffffff, background color: #007aff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+    },
+    {
+     "t": ".frame__name",
+     "h": "<span class=\"frame__name\" title=\"Drag to move. Double-click to rename.\">Home</span>",
+     "s": "Element has insufficient color contrast of 4.01 (foreground color: #ffffff, background color: #007aff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+    }
+   ]
+  },
+  {
+   "id": "landmark-one-main",
+   "impact": "moderate",
+   "help": "Document should have one main landmark",
+   "count": 1,
+   "nodes": [
+    {
+     "t": "html",
+     "h": "<html lang=\"en-AU\" data-theme=\"light\">",
+     "s": "Document does not have a main landmark"
+    }
+   ]
+  },
+  {
+   "id": "page-has-heading-one",
+   "impact": "moderate",
+   "help": "Page should contain a level-one heading",
+   "count": 1,
+   "nodes": [
+    {
+     "t": "html",
+     "h": "<html lang=\"en-AU\" data-theme=\"light\">",
+     "s": "Page must have a level-one heading"
+    }
+   ]
+  },
+  {
+   "id": "region",
+   "impact": "moderate",
+   "help": "All page content should be contained by landmarks",
+   "count": 4,
+   "nodes": [
+    {
+     "t": ".tabs",
+     "h": "<div class=\"overflow tabs\">",
+     "s": "Some page content is not contained by landmarks"
+    },
+    {
+     "t": "#panel-library",
+     "h": "<div id=\"panel-library\" role=\"tabpanel\" aria-labelledby=\"tab-library\" class=\"left__body\">",
+     "s": "Some page content is not contained by landmarks"
+    },
+    {
+     "t": ".frame__label",
+     "h": "<div class=\"frame__label\"><span class=\"frame__name\" title=\"Drag to move. Double-click to rename.\">Home</span><span class=\"frame__kit\" title=\"NSW Design System\" ",
+     "s": "Some page content is not contained by landmarks"
+    },
+    {
+     "t": ".canvas-hint",
+     "h": "<div class=\"canvas-hint\">Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a frame name to move it</div>",
+     "s": "Some page content is not contained by landmarks"
+    }
+   ]
+  }
+ ],
+ "incomplete": [
+  {
+   "id": "color-contrast",
+   "impact": "serious",
+   "help": "Elements must meet minimum color contrast ratio thresholds",
+   "count": 70,
+   "nodes": [
+    {
+     "t": ".toolbar__title",
+     "h": "<strong class=\"toolbar__title\">PageWright</strong>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    },
+    {
+     "t": ".docname__button",
+     "h": "<button class=\"docname__button\" title=\"Click to rename\">Untitled mockup</button>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    },
+    {
+     "t": ".docname__status",
+     "h": "<span class=\"docname__status is-ok\" role=\"status\" data-testid=\"save-status\">Saved</span>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    },
+    {
+     "t": "button[title=\"Search everything (Ctrl/⌘ K)\"]",
+     "h": "<button class=\"btn\" title=\"Search everything (Ctrl/⌘ K)\">Search</button>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    },
+    {
+     "t": ".toolbar__group > .menu > .btn[aria-haspopup=\"menu\"]",
+     "h": "<button class=\"btn\" aria-haspopup=\"menu\" aria-expanded=\"false\">File</button>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    },
+    {
+     "t": "button[title=\"Undo (Ctrl/⌘ Z)\"]",
+     "h": "<button class=\"btn\" title=\"Undo (Ctrl/⌘ Z)\">Undo</button>",
+     "s": "Element's background color could not be determined due to a background gradient"
+    }
+   ]
+  },
+  {
+   "id": "frame-tested",
+   "impact": "critical",
+   "help": "Frames should be tested with axe-core",
+   "count": 1,
+   "nodes": [
+    {
+     "t": ".frame__iframe",
+     "h": "<iframe class=\"frame__iframe\" title=\"Home\" srcdoc=\"<!doctype html><html...\" data-mode=\"edit\" style=\"pointer-events: auto...\">",
+     "s": "The iframe still has to be tested with axe-core"
+    }
+   ]
+  },
+  {
+   "id": "label-content-name-mismatch",
+   "impact": "serious",
+   "help": "Elements must have their visible text as part of their accessible name",
+   "count": 5,
+   "nodes": [
+    {
+     "t": "button[aria-label=\"Hand tool\"]",
+     "h": "<button class=\"btn btn--icon\" aria-label=\"Hand tool\" aria-pressed=\"false\" title=\"Hand tool (H): drag to pan the canvas\">✋</button>",
+     "s": "Unable to determine if the visible text is part of the accessible name"
+    },
+    {
+     "t": "button[aria-label=\"Zoom out\"]",
+     "h": "<button class=\"btn btn--icon\" aria-label=\"Zoom out\">−</button>",
+     "s": "Unable to determine if the visible text is part of the accessible name"
+    },
+    {
+     "t": "button[aria-label=\"Zoom in\"]",
+     "h": "<button class=\"btn btn--icon\" aria-label=\"Zoom in\">+</button>",
+     "s": "Unable to determine if the visible text is part of the accessible name"
+    },
+    {
+     "t": "button[aria-label=\"Keyboard shortcuts\"]",
+     "h": "<button class=\"btn btn--icon\" aria-label=\"Keyboard shortcuts\" title=\"Keyboard shortcuts (?)\">?</button>",
+     "s": "Unable to determine if the visible text is part of the accessible name"
+    },
+    {
+     "t": "button[aria-label=\"Switch to dark theme\"]",
+     "h": "<button class=\"btn btn--icon\" aria-label=\"Switch to dark theme\" title=\"Switch to dark theme\">☾</button>",
+     "s": "Unable to determine if the visible text is part of the accessible name"
+    }
+   ]
+  }
+ ]
+}
