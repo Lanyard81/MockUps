@@ -2332,5 +2332,60 @@ body.is-free-gesture .frame__iframe {
 /* The save status keeps its width, so the toolbar doesn't shift on every autosave. */
 .docname__status {
   display: inline-block;
-  min-width: 9.5em;
+  min-width: 6.2em;
+}
+
+/* The Settings menu: labelled choices above the items */
+.menu__setting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ed-space-1);
+  padding: var(--ed-space-1) var(--ed-space-2) var(--ed-space-2);
+  color: var(--ed-text-muted);
+  font-size: 12px;
+}
+.menu__setting + .menu__setting {
+  border-top: 1px solid var(--ed-border);
+  padding-top: var(--ed-space-2);
+}
+/* Zoom: a small cluster in the corner of the canvas */
+.zoom-controls {
+  position: absolute;
+  right: var(--ed-space-3);
+  bottom: var(--ed-space-3);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--ed-space-1);
+  padding: var(--ed-space-1);
+  border: 1px solid var(--ed-border-strong);
+  border-radius: 999px;
+  background: var(--dd-pop);
+}
+/* Names stay on one line and long ones are cut, so the left of the bar can't squeeze the rest. */
+.docname__button {
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.toolbar__overflow .menu__list,
+.overflow__pop .menu__list {
+  left: auto;
+  right: 0;
+}
+
+/* Under 1100px the Search button is just its icon (its name is still read out), to leave room for Share. */
+@media (max-width: 1100px) {
+  .toolbar__search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .toolbar {
+    gap: var(--ed-space-2);
+  }
 }

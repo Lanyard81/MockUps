@@ -319,3 +319,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Deleting a page or an item says so, with "Bring it back"; deleting a saved version asks first.
 - [x] The save status keeps its width (the top bar no longer shifts on autosave) and its tooltip says "Saved in this browser at 10:42". The storage banner now tells apart "this browser won't keep data" from "the last save failed", and clears when saving works again.
 - [x] The shareable viewer file leaves comments out unless "Include comments" is ticked (default off).
+
+### M3: A stable top bar
+
+- [x] Zoom (out, level, in, Zoom to fit) lives in a cluster in the corner of the canvas, so it is never tucked away.
+- [x] The bar has a Share button (opens the export dialog) and a labelled Settings menu: layout new pages start as (Stacked or Free), editor theme (Dark or Light), keyboard shortcuts.
+- [x] Overflow follows a priority, strictly: Add page, Edit/Preview, Present and Share stay longest; Undo, Redo, Comment and Pan go into More first. Undo and Redo sit together; the Hand is a text "Pan" button.
+- [x] Under 1100px Search is an icon (still named for screen readers) and the bar tightens. The save status keeps its width: nothing moves on autosave.

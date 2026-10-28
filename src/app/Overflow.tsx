@@ -5,6 +5,8 @@ export interface OverflowItem {
   /** What the "More" button says when this item is the active one and has been tucked away. */
   label: string;
   node: ReactNode;
+  /** Higher stays on the bar longer when there is not enough room. Defaults to earlier items staying longer. */
+  priority?: number;
 }
 
 /**
@@ -33,7 +35,7 @@ export function Overflow({
   const widths = useRef(new Map<string, number>());
   const moreWidth = useRef(76);
   const [tick, setTick] = useState(0);
-  const [hidden, setHidden] = useState(0);
+  const [hiddenKeys, setHiddenKeys] = useState('');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -58,15 +60,40 @@ export function Overflow({
       if (child.dataset.ovkey) widths.current.set(child.dataset.ovkey, w);
       else if (child.dataset.ovmore) moreWidth.current = w;
     }
-    let fit = items.length;
-    for (; fit > 0; fit--) {
-      let need = 0;
-      for (let i = 0; i < fit; i++)
-        need += (widths.current.get(items[i]!.key) ?? 0) + (i ? gap : 0);
-      if (fit < items.length) need += gap + moreWidth.current;
-      if (need <= avail) break;
+    const widthOf = (key: string) => widths.current.get(key) ?? 0;
+    const total = items.reduce((n, i, k) => n + widthOf(i.key) + (k ? gap : 0), 0);
+    const hide = new Set<string>();
+    if (total > avail) {
+      // Keep the most important items that fit beside the More button; the rest go in the menu.
+      const room = avail - moreWidth.current - gap;
+      const byPriority = items
+        .map((item, index) => ({ item, index }))
+        .sort(
+          (x, y) =>
+            (y.item.priority ?? items.length - y.index) -
+            (x.item.priority ?? items.length - x.index),
+        );
+      let used = 0;
+      let kept = 0;
+      let full = false;
+      for (const { item } of byPriority) {
+        const w = widthOf(item.key) + (kept ? gap : 0);
+        // Strict order: once one doesn't fit, everything less important goes in the menu too.
+        if (!full && used + w <= room) {
+          used += w;
+          kept++;
+        } else {
+          full = true;
+          hide.add(item.key);
+        }
+      }
     }
-    setHidden(items.length - fit);
+    setHiddenKeys(
+      items
+        .filter((i) => hide.has(i.key))
+        .map((i) => i.key)
+        .join('|'),
+    );
   });
 
   useEffect(() => {
@@ -84,8 +111,9 @@ export function Overflow({
   }, [open]);
 
   void tick;
-  const shown = items.slice(0, items.length - hidden);
-  const tucked = items.slice(items.length - hidden);
+  const hiddenSet = new Set(hiddenKeys ? hiddenKeys.split('|') : []);
+  const shown = items.filter((i) => !hiddenSet.has(i.key));
+  const tucked = items.filter((i) => hiddenSet.has(i.key));
   const activeTucked = tucked.find((i) => i.key === activeKey);
   return (
     <div

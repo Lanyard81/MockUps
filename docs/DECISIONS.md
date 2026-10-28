@@ -396,3 +396,7 @@ The editor says **page** for what was a frame or screen (the saved document is s
 ## 071. Recovery copy and multi-tab rules (review M2)
 
 A reload can happen before an asynchronous IndexedDB write finishes, so when the page is hidden or unloaded with a save waiting, a copy of the mockup (if under about 1.5 MB) is also written to local storage and restored on the next start if it is newer. For two tabs we chose "the tab that didn't save pauses and asks" over locking or merging: it never discards work without a choice and needs no server. The viewer file's "Include comments" now defaults to off (owner flag from the review: it matches what the Comments panel says).
+
+## 072. Toolbar priorities and zoom on the canvas (review M3)
+
+Overflow is decided by an explicit priority per item (not by position) and is strict: once one item doesn't fit, everything less important goes in More, so the bar never shows Redo without Undo. Zoom moved to a corner of the canvas as in Figma, Framer and Canva, which frees the bar and keeps zoom reachable at every window size. Layout default, theme and shortcuts are one labelled "Settings" menu rather than three bare icons.

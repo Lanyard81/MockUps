@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { addFromLibrary } from './helpers';
 
 test.use({ viewport: { width: 1700, height: 1000 } });
 
@@ -44,26 +45,30 @@ test('exports every frame as one PDF', async ({ page }) => {
   expect(bytes.toString('latin1')).toContain('/Subtype /Image');
 });
 
-test('the toolbar toggle sets the default layout for new frames, and is remembered', async ({
-  page,
-}) => {
-  const toggle = page.getByRole('group', { name: 'Layout for new pages' });
-  await toggle.getByRole('button', { name: 'Free' }).click();
+test('Settings sets the layout new pages start with, and it is remembered', async ({ page }) => {
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page
+    .getByRole('group', { name: 'New pages start as' })
+    .getByRole('button', { name: 'Free' })
+    .click();
   await page.reload();
+  await page.getByRole('button', { name: 'Settings' }).click();
   await expect(
-    page.getByRole('group', { name: 'Layout for new pages' }).getByRole('button', { name: 'Free' }),
+    page.getByRole('group', { name: 'New pages start as' }).getByRole('button', { name: 'Free' }),
   ).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('on a narrow window the toolbar and tabs tuck extras into a More menu', async ({ page }) => {
+test('on a narrow window the least-used buttons tuck into More; zoom, Add page and the mode switch stay', async ({
+  page,
+}) => {
+  const bar = page.locator('.toolbar');
+  await expect(bar.getByRole('button', { name: 'Hand tool' })).toBeVisible();
+  await page.setViewportSize({ width: 900, height: 700 });
+  await expect(bar.getByRole('button', { name: 'Hand tool' })).toHaveCount(0);
+  await expect(bar.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
-  await page.setViewportSize({ width: 800, height: 700 });
-  await expect(page.getByRole('button', { name: 'Zoom in' })).toHaveCount(0);
-  const more = page.locator('.toolbar').getByRole('button', { name: /More/ });
-  await more.click();
-  await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
-  await page.setViewportSize({ width: 1700, height: 1000 });
-  await expect(page.getByRole('button', { name: 'Zoom in' })).toBeVisible();
+  await bar.getByRole('button', { name: /More/ }).click();
+  await expect(page.getByRole('button', { name: 'Hand tool' })).toBeVisible();
 });
 
 test('the hand button (and H) toggles panning', async ({ page }) => {
@@ -102,3 +107,33 @@ test('the click-through scales a wide page to fill a large window', async ({ pag
   const box = await page.locator('.prototype__page').boundingBox();
   expect(box!.width).toBeGreaterThan(1650); // the window is 1700 wide; a desktop page is 1440
 });
+
+test('the top bar does not move while autosave runs', async ({ page }) => {
+  const x = async () =>
+    Math.round((await page.getByRole('button', { name: 'Undo' }).boundingBox())!.x);
+  const before = await x();
+  await addFromLibrary(page, 'heading', 'Heading 1');
+  const seen = new Set<number>();
+  for (let i = 0; i < 20; i++) {
+    seen.add(await x());
+    await page.waitForTimeout(60);
+  }
+  expect(Math.max(...seen) - Math.min(...seen, before)).toBeLessThanOrEqual(1);
+});
+
+for (const width of [1024, 1280, 1440, 1700]) {
+  test(`at ${width}px the mode switch, Present, Share and zoom are always on screen`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 800 });
+    const bar = page.locator('.toolbar');
+    await expect(bar.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
+    await expect(bar.getByRole('button', { name: 'Present' })).toBeVisible();
+    await expect(bar.getByRole('button', { name: 'Share and export' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Zoom to fit' })).toBeVisible();
+    // No control is hidden without a More button to find it in.
+    const hidden = await bar.getByRole('button', { name: /^More/ }).count();
+    const settings = await bar.getByRole('button', { name: 'Settings' }).count();
+    expect(settings + hidden).toBeGreaterThan(0);
+  });
+}

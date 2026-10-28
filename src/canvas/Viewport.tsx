@@ -3,6 +3,7 @@ import { clampZoom, zoomAt } from '../lib/geometry';
 import { useStore } from '../store/store';
 import { Breadcrumb } from './Breadcrumb';
 import { Frame } from './Frame';
+import { ZoomControls } from './ZoomControls';
 import { setCanvasHandlers, type ForwardedWheel } from './input';
 
 const LINE_HEIGHT = 16;
@@ -62,6 +63,8 @@ export function Viewport() {
   }, []);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Pressing the zoom controls (or any control drawn over the canvas) is not a click on the background.
+    if ((e.target as HTMLElement).closest('.zoom-controls')) return;
     const s = useStore.getState();
     const wantsPan = e.button === 1 || (e.button === 0 && s.panning);
     if (!wantsPan) {
@@ -133,6 +136,7 @@ export function Viewport() {
         </div>
       )}
       <Breadcrumb />
+      <ZoomControls />
       <div className="canvas-hint">
         Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a page name to move it
       </div>

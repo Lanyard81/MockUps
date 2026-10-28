@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { zoomStep } from '../canvas/shortcuts';
 import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
@@ -12,28 +11,22 @@ import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
 import { Overflow, type OverflowItem } from './Overflow';
 
-const ZOOM_PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
-
 export function Toolbar() {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
   const canUndo = useStore((s) => s.past.length > 0);
   const canRedo = useStore((s) => s.future.length > 0);
-  const zoom = useStore((s) => s.doc.view.zoom);
   const hasSelection = useStore((s) => s.selectedNodeId !== null);
   const newFrameKit = useStore((s) => s.newFrameKitId);
   const newFrameLayout = useStore((s) => s.newFrameLayout);
   const handTool = useStore((s) => s.handTool);
   const commentTool = useStore((s) => s.commentTool);
   const s = useStore;
-  const pct = Math.round(zoom * 100);
-  const options = ZOOM_PRESETS.includes(pct)
-    ? ZOOM_PRESETS
-    : [...ZOOM_PRESETS, pct].sort((a, b) => a - b);
 
   const items: OverflowItem[] = [
     {
       key: 'add',
+      priority: 11,
       label: 'Add page',
       node: (
         <Menu
@@ -107,6 +100,7 @@ export function Toolbar() {
     },
     {
       key: 'undo',
+      priority: 6,
       label: 'Undo',
       node: (
         <button
@@ -120,7 +114,23 @@ export function Toolbar() {
       ),
     },
     {
+      key: 'redo',
+      priority: 5,
+      label: 'Redo',
+      node: (
+        <button
+          className="btn"
+          disabled={!canRedo}
+          onClick={() => s.getState().redo()}
+          title="Redo (Ctrl/⌘ Shift Z)"
+        >
+          Redo
+        </button>
+      ),
+    },
+    {
       key: 'comment',
+      priority: 4,
       label: 'Comment',
       node: (
         <button
@@ -137,21 +147,8 @@ export function Toolbar() {
       ),
     },
     {
-      key: 'redo',
-      label: 'Redo',
-      node: (
-        <button
-          className="btn"
-          disabled={!canRedo}
-          onClick={() => s.getState().redo()}
-          title="Redo (Ctrl/⌘ Shift Z)"
-        >
-          Redo
-        </button>
-      ),
-    },
-    {
       key: 'mode',
+      priority: 10,
       label: 'Edit / Preview',
       node: (
         <div className="segmented" role="group" aria-label="Mode">
@@ -176,21 +173,23 @@ export function Toolbar() {
     },
     {
       key: 'hand',
+      priority: 3,
       label: 'Hand',
       node: (
         <button
-          className={`btn btn--icon${handTool ? ' btn--primary' : ''}`}
-          aria-label="Hand tool"
+          className={`btn${handTool ? ' btn--primary' : ''}`}
+          aria-label="Pan (hand tool)"
           aria-pressed={handTool}
           title="Hand tool (H): drag to pan the canvas"
           onClick={() => s.getState().setHandTool(!handTool)}
         >
-          ✋
+          Pan
         </button>
       ),
     },
     {
       key: 'play',
+      priority: 9,
       label: 'Present',
       node: (
         <button
@@ -204,109 +203,63 @@ export function Toolbar() {
       ),
     },
     {
-      key: 'zout',
-      label: 'Zoom out',
+      key: 'share',
+      priority: 9,
+      label: 'Share and export',
       node: (
         <button
-          className="btn btn--icon"
-          aria-label="Zoom out"
-          onClick={() =>
-            s.getState().setView(zoomStep(s.getState().doc.view, 0.8, s.getState().viewport))
+          className="btn"
+          aria-label="Share and export"
+          title="Export an image, PDF or web page, or make a shareable viewer file"
+          onClick={() => s.getState().setDialog('export')}
+        >
+          Share
+        </button>
+      ),
+    },
+    {
+      key: 'settings',
+      priority: 7,
+      label: 'Settings',
+      node: (
+        <Menu
+          plain
+          label="Settings"
+          header={
+            <>
+              <div className="menu__setting">
+                <span id="set-layout">New pages start as</span>
+                <div className="segmented" role="group" aria-labelledby="set-layout">
+                  {(['flow', 'free'] as const).map((l) => (
+                    <button
+                      key={l}
+                      className={l === newFrameLayout ? 'is-active' : ''}
+                      aria-pressed={l === newFrameLayout}
+                      title={
+                        l === 'flow'
+                          ? 'Stacked: sections, grids and columns, like a real web page'
+                          : 'Free: drag components anywhere, with no grid'
+                      }
+                      onClick={() => s.getState().setNewFrameLayout(l)}
+                    >
+                      {l === 'flow' ? 'Stacked' : 'Free'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <ThemeChoice />
+            </>
           }
-        >
-          −
-        </button>
+          items={[
+            {
+              label: 'Keyboard shortcuts',
+              hint: '?',
+              onSelect: () => s.getState().setHelpOpen(true),
+            },
+          ]}
+        />
       ),
     },
-    {
-      key: 'zsel',
-      label: 'Zoom',
-      node: (
-        <select
-          aria-label="Zoom level"
-          value={pct}
-          onChange={(e) => {
-            const st = s.getState();
-            const centre = { x: st.viewport.width / 2, y: st.viewport.height / 2 };
-            const v = st.doc.view;
-            const next = Number(e.target.value) / 100;
-            const wx = (centre.x - v.x) / v.zoom;
-            const wy = (centre.y - v.y) / v.zoom;
-            st.setView({ zoom: next, x: centre.x - wx * next, y: centre.y - wy * next });
-          }}
-        >
-          {options.map((p) => (
-            <option key={p} value={p}>
-              {p}%
-            </option>
-          ))}
-        </select>
-      ),
-    },
-    {
-      key: 'zin',
-      label: 'Zoom in',
-      node: (
-        <button
-          className="btn btn--icon"
-          aria-label="Zoom in"
-          onClick={() =>
-            s.getState().setView(zoomStep(s.getState().doc.view, 1.25, s.getState().viewport))
-          }
-        >
-          +
-        </button>
-      ),
-    },
-    {
-      key: 'fit',
-      label: 'Zoom to fit',
-      node: (
-        <button className="btn" onClick={() => s.getState().zoomToFit()}>
-          Zoom to fit
-        </button>
-      ),
-    },
-    {
-      key: 'layout',
-      label: 'Layout',
-      node: (
-        <div className="toolbar__layout" title="The layout new pages start with">
-          <div className="segmented" role="group" aria-label="Layout for new pages">
-            {(['flow', 'free'] as const).map((l) => (
-              <button
-                key={l}
-                className={l === newFrameLayout ? 'is-active' : ''}
-                aria-pressed={l === newFrameLayout}
-                title={
-                  l === 'flow'
-                    ? 'Stacked: sections, grids and columns, like a real web page'
-                    : 'Free: drag components anywhere, with no grid'
-                }
-                onClick={() => s.getState().setNewFrameLayout(l)}
-              >
-                {l === 'flow' ? 'Stacked' : 'Free'}
-              </button>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: 'help',
-      label: 'Help',
-      node: (
-        <button
-          className="btn btn--icon"
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-          onClick={() => s.getState().setHelpOpen(true)}
-        >
-          ?
-        </button>
-      ),
-    },
-    { key: 'theme', label: 'Theme', node: <ThemeToggle /> },
   ];
 
   return (
@@ -319,7 +272,20 @@ export function Toolbar() {
           title="Search everything (Ctrl/⌘ K)"
           onClick={() => s.getState().setPaletteOpen(true)}
         >
-          Search
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <span className="toolbar__search-label">Search</span>
         </button>
         <Menu
           plain
@@ -371,20 +337,26 @@ export function Toolbar() {
 }
 
 /** Dark (the default) or light editor theme. Only the editor changes; mockups are drawn by their kit. */
-function ThemeToggle() {
+function ThemeChoice() {
   const [theme, setTheme] = useState<Theme>(readTheme);
-  const next: Theme = theme === 'dark' ? 'light' : 'dark';
   return (
-    <button
-      className="btn btn--icon"
-      aria-label={`Switch to ${next} theme`}
-      title={`Switch to ${next} theme`}
-      onClick={() => {
-        applyTheme(next);
-        setTheme(next);
-      }}
-    >
-      {theme === 'dark' ? '☀' : '☾'}
-    </button>
+    <div className="menu__setting">
+      <span id="set-theme">Editor theme</span>
+      <div className="segmented" role="group" aria-labelledby="set-theme">
+        {(['dark', 'light'] as const).map((t) => (
+          <button
+            key={t}
+            className={t === theme ? 'is-active' : ''}
+            aria-pressed={t === theme}
+            onClick={() => {
+              applyTheme(t);
+              setTheme(t);
+            }}
+          >
+            {t === 'dark' ? 'Dark' : 'Light'}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
