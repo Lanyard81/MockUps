@@ -22,7 +22,7 @@ test('Play starts on the start frame, follows a link with its transition, and Ba
 
   // The first frame is the start by default, and the badge only shows once there are two frames.
   await expect(page.getByTestId('frame-Home').getByTestId('frame-start')).toBeVisible();
-  await page.getByRole('button', { name: '▶ Present' }).click();
+  await page.getByRole('button', { name: 'Present' }).click();
   const viewer = page.getByRole('dialog', { name: 'Preview: Home' });
   await expect(viewer).toBeVisible();
   await viewer.frameLocator('iframe').locator('a.nsw-button').click();
@@ -40,7 +40,7 @@ test('Play starts on the start frame, follows a link with its transition, and Ba
   await page.getByRole('menuitem', { name: 'Set as start page' }).click();
   await expect(page.getByTestId('frame-iPhone 2').getByTestId('frame-start')).toBeVisible();
   await expect(page.getByTestId('frame-Home').getByTestId('frame-start')).toHaveCount(0);
-  await page.getByRole('button', { name: '▶ Present' }).click();
+  await page.getByRole('button', { name: 'Present' }).click();
   await expect(page.getByRole('dialog', { name: 'Preview: iPhone 2' })).toBeVisible();
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Undo' }).click();

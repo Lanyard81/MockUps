@@ -9,6 +9,13 @@ import { isMultiTouch, touchDown, touchMove, touchUp } from './touch';
 
 const LINE_HEIGHT = 16;
 
+/** Dot spacing on screen: doubles while it would be tighter than 14px, so the grid never gets dense. */
+function gridStep(zoom: number): number {
+  let step = 24 * zoom;
+  while (step < 14) step *= 2;
+  return step;
+}
+
 /** The infinite canvas: pan, zoom and the frames laid out in world coordinates. */
 export function Viewport() {
   const ref = useRef<HTMLDivElement>(null);
@@ -138,7 +145,9 @@ export function Viewport() {
       style={
         {
           backgroundPosition: `${view.x}px ${view.y}px`,
-          backgroundSize: `${24 * view.zoom}px ${24 * view.zoom}px`,
+          backgroundSize: `${gridStep(view.zoom)}px ${gridStep(view.zoom)}px`,
+          // Zoomed far out the dots would be a grey haze: thin them, then drop them.
+          ['--grid-dots' as string]: view.zoom < 0.12 ? 0 : view.zoom < 0.25 ? 0.5 : 1,
         } as React.CSSProperties
       }
     >

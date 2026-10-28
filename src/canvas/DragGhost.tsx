@@ -1,5 +1,6 @@
 import { useStore } from '../store/store';
 import { registerGhost } from './drag';
+import { Icon } from '../app/Icon';
 
 /** The label that follows the pointer while dragging. Moved directly by the drag loop. */
 export function DragGhost() {
@@ -13,7 +14,9 @@ export function DragGhost() {
       className={`drag-ghost${hasTarget ? ' is-valid' : ''}`}
       aria-hidden="true"
     >
-      <span className="drag-ghost__icon">{drag.kind === 'move' ? '↕' : '+'}</span>
+      <span className="drag-ghost__icon">
+        <Icon name={drag.kind === 'move' ? 'arrows-vertical' : 'plus'} />
+      </span>
       {drag.label}
       <span className="drag-ghost__hint">
         {drag.kind === 'template'

@@ -10,6 +10,7 @@ import { FrameOverlay } from './FrameOverlay';
 import { attachFrameInput } from './input';
 import { ReferenceLayer } from './ReferenceLayer';
 import { registerFrameElement } from './registry';
+import { Icon } from '../app/Icon';
 
 interface Props {
   frame: FrameModel;
@@ -245,7 +246,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
             title="Presenting starts on this page"
             data-testid="frame-start"
           >
-            ▶ Start
+            <Icon name="play" size={10} /> Start
           </span>
         )}
         {frame.layout === 'free' && (

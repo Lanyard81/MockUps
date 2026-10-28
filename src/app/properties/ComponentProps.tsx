@@ -13,6 +13,7 @@ import { NodeSettings } from './NodeSettings';
 import { IconPicker, type IconValue } from './IconPicker';
 import { SlotIconPicker } from './SlotIconPicker';
 import { CommitInput, Field, Section, Toggle, titleCase } from './controls';
+import { Icon } from '../Icon';
 
 /** A stable empty list: a selector must not return a fresh array each time, or React loops forever. */
 const NO_KEYS: string[] = [];
@@ -194,7 +195,7 @@ function TextField({
           role="status"
           title="Even at the smallest size this text doesn’t fit, so it is cut off with an ellipsis."
         >
-          ⚠ Text is cut off
+          <Icon name="warning" size={12} /> Text is cut off
         </span>
       )}
     </div>

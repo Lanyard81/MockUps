@@ -6,10 +6,11 @@ import { KITS, getKit } from '../kits';
 import { FRAME_SIZES } from '../lib/frameSizes';
 import { loadSample, pickMockupFile, saveToFile, startNewMockup } from '../persistence/file';
 import { DocName } from './DocName';
-import { applyTheme, readTheme, type Theme } from './theme';
+import { applyLook, applyTheme, readLook, readTheme, type Look, type Theme } from './theme';
 import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
 import { Overflow, type OverflowItem } from './Overflow';
+import { Icon } from './Icon';
 
 const NARROW = '(max-width: 899px)';
 const subscribeNarrow = (cb: () => void) => {
@@ -40,7 +41,7 @@ export function Toolbar() {
       label: 'Add page',
       node: (
         <Menu
-          icon="+"
+          icon={<Icon name="plus" />}
           label="Add page"
           header={
             <>
@@ -208,7 +209,7 @@ export function Toolbar() {
           disabled={!s.getState().doc.frames.length}
           onClick={() => s.getState().playPrototype()}
         >
-          ▶ Present
+          <Icon name="play" size={12} /> Present
         </button>
       ),
     },
@@ -299,6 +300,7 @@ export function Toolbar() {
                 </div>
               </div>
               <ThemeChoice />
+              <LookChoice />
               <StructureChoice />
             </>
           }
@@ -420,6 +422,36 @@ function ThemeChoice() {
             }}
           >
             {t === 'dark' ? 'Dark' : 'Light'}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Glass (the default) or flat. Both work in dark and light. */
+function LookChoice() {
+  const [look, setLook] = useState<Look>(readLook);
+  return (
+    <div className="menu__setting">
+      <span id="set-look">Editor look</span>
+      <div className="segmented" role="group" aria-labelledby="set-look">
+        {(['glass', 'flat'] as const).map((l) => (
+          <button
+            key={l}
+            className={l === look ? 'is-active' : ''}
+            aria-pressed={l === look}
+            title={
+              l === 'glass'
+                ? 'Frosted panels over a soft coloured backdrop'
+                : 'Plain, calm surfaces with thin lines and no blur'
+            }
+            onClick={() => {
+              applyLook(l);
+              setLook(l);
+            }}
+          >
+            {l === 'glass' ? 'Glass' : 'Flat'}
           </button>
         ))}
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { Icon } from './Icon';
 
 /** A centred dialog over a dimmed page. Esc or clicking outside closes it; focus returns afterwards. */
 export function Modal({
@@ -81,7 +82,7 @@ export function Modal({
         <header className="sheet__head">
           <h2>{title}</h2>
           <button className="btn btn--icon" data-modal-close aria-label="Close" onClick={onClose}>
-            ×
+            <Icon name="close" />
           </button>
         </header>
         <div className="modal__body">{children}</div>

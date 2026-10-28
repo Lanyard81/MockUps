@@ -3,6 +3,7 @@ import { getKit } from '../kits';
 import { renderFrameHtml } from '../layout/render';
 import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
+import { Icon } from './Icon';
 
 /**
  * Preview's click-through: a frame shown on its own, full height, where "go to frame" links open
@@ -123,7 +124,7 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
           disabled={depth < 2}
           onClick={() => useStore.getState().prototypeBack()}
         >
-          ← Back
+          <Icon name="arrow-left" /> Back
         </button>
         <span className="prototype__title">
           {frame.name}

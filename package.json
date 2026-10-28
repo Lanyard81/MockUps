@@ -20,7 +20,8 @@
     "page-spec-docs": "node scripts/vite-run.mjs scripts/generate-page-spec-docs.ts",
     "page-spec-docs:check": "npm run page-spec-docs && git diff --exit-code docs/PAGE-SPEC.md",
     "catalogue:check": "npm run catalogue && git diff --exit-code src/kits/nsw/catalogue/generated src/kits/sharepoint/catalogue/generated src/kits/sharepoint/icons.generated.ts",
-    "icons:sp": "tsx scripts/generate-sp-icons.ts"
+    "icons:sp": "tsx scripts/generate-sp-icons.ts",
+    "lint:tokens": "node scripts/check-editor-tokens.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

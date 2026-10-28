@@ -10,6 +10,7 @@ import '@fontsource/jetbrains-mono/latin-500.css';
 import './styles/theme.css';
 import './styles/app.css';
 import './styles/devdan.css';
+import './styles/flat.css';
 import { applyStoredTheme } from './app/theme';
 
 applyStoredTheme();

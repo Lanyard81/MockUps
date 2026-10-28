@@ -3,6 +3,7 @@ import { getKit } from '../kits';
 import type { KitId } from '../kits/types';
 import { useSavedComponents } from '../store/savedComponents';
 import { useStore } from '../store/store';
+import { Icon } from './Icon';
 
 /** The user's saved components for the library's kit: click to add, or drag onto a frame. */
 export function MyComponents({ kitId, frameId }: { kitId: KitId; frameId?: string }) {
@@ -46,7 +47,7 @@ export function MyComponents({ kitId, frameId }: { kitId: KitId; frameId?: strin
                 })
               }
             >
-              ✕
+              <Icon name="close" />
             </button>
           </li>
         ))}

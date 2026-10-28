@@ -6,6 +6,7 @@ import { placementForFrame, placementForRow, zoneForPointer, type RowZone } from
 import { isDraggable, pathTo } from '../layout/ops';
 import { useStore } from '../store/store';
 import type { DocNode, Frame } from '../store/types';
+import { Icon, type IconName } from './Icon';
 
 /** One-line preview of a component's text, so layers are recognisable. */
 function snippet(node: DocNode): string {
@@ -17,12 +18,12 @@ function snippet(node: DocNode): string {
   return variant ? (describeVariant(variant.html).editable[0]?.default ?? '') : '';
 }
 
-const TYPE_ICON: Record<DocNode['type'], string> = {
-  section: '▭',
-  container: '▯',
-  grid: '▦',
-  column: '▥',
-  component: '◆',
+const TYPE_ICON: Record<DocNode['type'], IconName> = {
+  section: 'section',
+  container: 'container',
+  grid: 'grid',
+  column: 'column',
+  component: 'component',
 };
 
 interface DropState {
@@ -287,13 +288,13 @@ export function Layers() {
                 toggle(id);
               }}
             >
-              {open ? '▾' : '▸'}
+              <Icon name={open ? 'chevron-down' : 'chevron-right'} size={12} />
             </button>
           ) : (
             <span className="layer-row__twisty" aria-hidden="true" />
           )}
           <span className="layer-row__icon" aria-hidden="true">
-            {TYPE_ICON[node.type]}
+            <Icon name={TYPE_ICON[node.type]} size={12} />
           </span>
           {renaming === id ? (
             <input
@@ -338,7 +339,7 @@ export function Layers() {
               useStore.getState().setHidden(id, !node.hidden);
             }}
           >
-            {node.hidden ? '◌' : '●'}
+            <Icon name={node.hidden ? 'eye-off' : 'eye'} />
           </button>
         </div>
         {open && <div role="group">{kids.map((k) => renderNode(k, depth + 1))}</div>}
@@ -381,7 +382,7 @@ export function Layers() {
                 toggle(key);
               }}
             >
-              {isCollapsed ? '▸' : '▾'}
+              <Icon name={isCollapsed ? 'chevron-right' : 'chevron-down'} size={12} />
             </button>
           ) : (
             <span className="layer-row__twisty" aria-hidden="true" />

@@ -26,6 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run format:check
+      - run: npm run lint:tokens
       - run: npm run catalogue:check
       - run: npm run page-spec-docs:check
       - run: npm run samples && git diff --exit-code public/samples

@@ -5,6 +5,7 @@ import { useStore } from '../store/store';
 import { setFrameImageFromFile } from './imageUpload';
 import { ImageField } from './properties/ImageField';
 import { CommitInput, Field, Section } from './properties/controls';
+import { Icon } from './Icon';
 
 /**
  * Properties panels for the SharePoint kit that its settings data can't express: menu and footer
@@ -134,7 +135,7 @@ function NavRows({
                   )
                 }
               >
-                ↑
+                <Icon name="arrow-up" />
               </button>
               <button
                 className="btn btn--icon"
@@ -150,7 +151,7 @@ function NavRows({
                   )
                 }
               >
-                ↓
+                <Icon name="arrow-down" />
               </button>
               <button
                 className="btn btn--icon"
@@ -173,7 +174,7 @@ function NavRows({
                   )
                 }
               >
-                +
+                <Icon name="plus" />
               </button>
               <button
                 className="btn btn--icon"
@@ -182,7 +183,7 @@ function NavRows({
                   save(editList(all, here, (list, idx) => list.filter((_, j) => j !== idx)))
                 }
               >
-                ×
+                <Icon name="close" />
               </button>
             </div>
             {item.children?.length ? (
@@ -241,7 +242,7 @@ function FooterLinks({ frameId }: { frameId: string }) {
                 aria-label={`Remove ${l}`}
                 onClick={() => save(links.filter((_, j) => j !== i))}
               >
-                ×
+                <Icon name="close" />
               </button>
             </div>
           </li>
@@ -351,7 +352,7 @@ export function ChartDataPanel({ nodeId }: { nodeId: string }) {
                   )
                 }
               >
-                ×
+                <Icon name="close" />
               </button>
             </div>
           </li>

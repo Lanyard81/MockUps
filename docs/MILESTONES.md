@@ -371,3 +371,14 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - Under 900px the panels become drawers over the canvas and start closed, so a phone or a 200% zoom keeps a full-width canvas.
 - Touch: one finger on empty canvas pans, two fingers pan and pinch-zoom (also from inside a page), press and hold on an item opens its menu; a tap on empty canvas deselects. The canvas hint names the touch gestures on touch screens.
 - Press targets: `--ed-target` is 32px (44px on touch screens) and every button, chip, tab, toggle and layer row meets it; the tree's small expand arrows keep the 24px WCAG minimum. A Playwright scan (`targets.spec.ts`) fails on anything smaller.
+
+### M10: Editor visual system (done)
+
+- Decision: keep the glass look (the default) and add a flat option. Settings → Editor look (Glass / Flat), independent of Dark / Light, also in the palette. CLAUDE.md's design rule now describes both.
+- Flat look (`src/styles/flat.css`): warm neutral solid surfaces, hairline dividers, small radii, no blur, no aurora, panels edge to edge.
+- Menus and popups are opaque in both looks.
+- Tokens: no literal colour or font size under 12px outside the token files; `npm run lint:tokens` enforces it (CI and the pre-push list). Smallest text is now 12px.
+- One icon set (`src/app/Icon.tsx`) replaces ▶ × ▾ ↑ ↓ and the layer-type glyphs.
+- Canvas grid thins out as you zoom out and disappears below 12%; one focus ring; the toast sits above the hint bar; accent text has its own 4.5:1 token.
+- Contrast is checked by axe in all four combinations (glass or flat, dark or light), with a page selected and the Layers tab open; this found and fixed three real contrast failures (selected page name, tour step, empty-page buttons).
+- Not done: pixel snapshot tests (they need committed baselines per platform); the contrast scan and style assertions stand in for them.

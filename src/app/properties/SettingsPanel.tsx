@@ -1,6 +1,7 @@
 import type { SettingContext, SettingDef, SettingOption } from '../../kits/types';
 import { CommitInput, Field, Section, Segmented, Toggle } from './controls';
 
+const COLOUR_INPUT_DEFAULT = '#000000'; // token-ok: the colour input's own starting value, not a style
 const asString = (v: unknown, fallback: string) => (typeof v === 'string' ? v : fallback);
 
 /** One kit setting, drawn from its definition. A setting that can't apply says why and is disabled. */
@@ -105,7 +106,7 @@ function Control({
             type="color"
             aria-label={def.label}
             disabled={disabled}
-            value={asString(value, String(def.default ?? '#000000'))}
+            value={asString(value, String(def.default ?? COLOUR_INPUT_DEFAULT))}
             onChange={(e) => commit(e.target.value)}
           />
         </Field>

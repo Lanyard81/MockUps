@@ -18,7 +18,7 @@ export function Menu({
 }: {
   label: ReactNode;
   items: Item[];
-  icon?: string;
+  icon?: ReactNode;
   /** A quiet button rather than the blue call to action. */
   plain?: boolean;
   /** Controls shown above the items (e.g. a choice that changes what the items do). They are not menu items. */

@@ -1,5 +1,6 @@
 import { useStore } from '../store/store';
 import { zoomStep } from './shortcuts';
+import { Icon } from '../app/Icon';
 
 const PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
 
@@ -17,7 +18,7 @@ export function ZoomControls() {
         title="Zoom out (Ctrl/⌘ −)"
         onClick={() => st().setView(zoomStep(st().doc.view, 0.8, st().viewport))}
       >
-        −
+        <Icon name="minus" />
       </button>
       <select
         aria-label="Zoom level"
@@ -44,7 +45,7 @@ export function ZoomControls() {
         title="Zoom in (Ctrl/⌘ +)"
         onClick={() => st().setView(zoomStep(st().doc.view, 1.25, st().viewport))}
       >
-        +
+        <Icon name="plus" />
       </button>
       <button
         className="btn"

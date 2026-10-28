@@ -121,7 +121,11 @@ body {
   filter: brightness(0.92);
 }
 .btn--danger {
-  color: var(--ed-danger);
+  background: var(--dd-pop);
+  color: var(--ed-danger-text);
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--ed-danger-soft);
 }
 input,
 select,
@@ -191,17 +195,17 @@ select option {
 }
 .prop-section__title,
 .library__category {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ed-text-muted);
 }
 .prop-field__label {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
 }
 .frame__size {
   font-family: var(--ed-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ed-text-muted);
 }
 kbd {
@@ -233,7 +237,7 @@ kbd {
   background: var(--dd-accent-soft);
 }
 
-/* Popups and dialogs: near-solid glass with a strong blur, so text stays legible over a white mockup */
+/* Popups and dialogs: opaque, so text stays legible over a white mockup */
 .menu__list,
 .context-menu,
 .icon-picker__pop,
@@ -243,8 +247,6 @@ kbd {
 .modal,
 .prototype__bar {
   background: var(--dd-pop);
-  -webkit-backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
-  backdrop-filter: blur(var(--dd-blur-strong)) saturate(180%);
   border: 1px solid var(--dd-glass-border);
   box-shadow: var(--dd-shadow-glass);
   color: var(--ed-text);
@@ -270,7 +272,7 @@ kbd {
   background: var(--dd-accent-soft);
 }
 .sheet-backdrop {
-  background: rgba(7, 7, 11, 0.5);
+  background: var(--ed-scrim);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
@@ -316,6 +318,11 @@ kbd {
   background: #fff;
   color: #1d1d1f;
   border-color: #c9ccd2;
+}
+.frame__empty .btn--primary {
+  background: var(--dd-accent-fill);
+  border-color: transparent;
+  color: #fff;
 }
 
 /* Hover and press: raise one step; motion is translate and opacity only. */

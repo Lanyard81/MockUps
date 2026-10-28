@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store/store';
+import { Icon } from './Icon';
 
 /**
  * A short message at the bottom of the screen. The live region is always on the page, so screen
@@ -41,7 +42,7 @@ export function Toast() {
             aria-label="Dismiss"
             onClick={() => useStore.getState().setNotice(null)}
           >
-            ×
+            <Icon name="close" />
           </button>
         </div>
       )}

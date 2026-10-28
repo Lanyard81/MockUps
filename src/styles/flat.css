@@ -1,0 +1,219 @@
+/*
+ * The flat look: a calm alternative to the glass look. Warm neutral surfaces, hairline borders, small
+ * radii, no blur, no aurora and no heavy shadows. It only restyles the editor chrome, and switches on
+ * with `data-look="flat"` on <html>. Loaded after devdan.css; the dark and light themes both have values.
+ * Nothing here reaches into a frame: mockups are drawn by their own kit.
+ */
+:root[data-look='flat'] {
+  --ed-radius-sm: 6px;
+  --ed-radius: 8px;
+  --ed-radius-lg: 10px;
+  --ed-radius-xl: 12px;
+  --dd-blur: 0px;
+  --dd-blur-strong: 0px;
+  --dd-aurora-strength: 0;
+  --dd-shadow-glass: none;
+  --ed-shadow-pop: 0 4px 16px rgb(0 0 0 / 0.2);
+  --ed-shadow-modal: 0 12px 32px rgb(0 0 0 / 0.28);
+
+  /* Warm dark */
+  --dd-bg: #1c1a17;
+  --dd-glass: #2d2a26;
+  --dd-glass-strong: #262320;
+  --dd-glass-border: #403b35;
+  --dd-pop: #2b2825;
+  --dd-ink: #f1ede6;
+  --dd-ink-2: #c9c2b6;
+  --dd-ink-3: #bdb6aa;
+  --dd-accent: #6aa3ff;
+  --dd-accent-fill: #1f5fd1;
+  --dd-accent-soft: rgb(106 163 255 / 0.18);
+  --dd-link: #8ab4ff;
+  --ed-bg: #201e1b;
+  --ed-surface: #262320;
+  --ed-surface-2: #322e2a;
+  --ed-canvas: #171512;
+  --ed-canvas-dot: rgb(255 245 230 / 0.14);
+  --ed-border: #3a3631;
+  --ed-border-strong: #524c44;
+  --ed-text: #f1ede6;
+  --ed-text-muted: #bdb6aa;
+  --ed-accent: #6aa3ff;
+  --ed-accent-text: #8ab4ff;
+  --ed-accent-soft: rgb(106 163 255 / 0.18);
+  --ed-danger: #ff7b6e;
+  --ed-danger-text: #ff8a7e;
+  --ed-danger-soft: rgb(255 123 110 / 0.16);
+  --ed-focus: #6aa3ff;
+  --ed-scrim: rgb(12 11 9 / 0.6);
+}
+:root[data-look='flat'][data-theme='light'] {
+  --dd-bg: #f4f1ec;
+  --dd-glass: #f0ece5;
+  --dd-glass-strong: #fbfaf7;
+  --dd-glass-border: #d9d2c6;
+  --dd-pop: #fbfaf7;
+  --dd-ink: #2b2823;
+  --dd-ink-2: #5f584d;
+  --dd-ink-3: #5f584d;
+  --dd-accent: #1f5fd1;
+  --dd-accent-fill: #1f5fd1;
+  --dd-accent-soft: rgb(31 95 209 / 0.1);
+  --dd-link: #1a4fb0;
+  --ed-bg: #f4f1ec;
+  --ed-surface: #fbfaf7;
+  --ed-surface-2: #ece7df;
+  --ed-canvas: #e7e2d9;
+  --ed-canvas-dot: rgb(60 50 35 / 0.2);
+  --ed-border: #ddd6cb;
+  --ed-border-strong: #bdb4a5;
+  --ed-text: #2b2823;
+  --ed-text-muted: #5f584d;
+  --ed-accent: #1f5fd1;
+  --ed-accent-text: #1a4fb0;
+  --ed-accent-soft: rgb(31 95 209 / 0.1);
+  --ed-danger: #b3261e;
+  --ed-danger-text: #a8211a;
+  --ed-danger-soft: rgb(179 38 30 / 0.1);
+  --ed-focus: #1f5fd1;
+  --ed-scrim: rgb(43 40 35 / 0.45);
+}
+
+/* No aurora: a plain, solid backdrop. */
+:root[data-look='flat'] body {
+  background: var(--dd-bg);
+}
+
+/* Layout: panels meet the canvas edge to edge, divided by hairlines, instead of floating. */
+:root[data-look='flat'] .app {
+  padding: 0;
+  gap: 0;
+}
+:root[data-look='flat'] .toolbar {
+  border-width: 0 0 1px;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 var(--ed-space-3);
+  background: var(--ed-surface);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+:root[data-look='flat'] .left,
+:root[data-look='flat'] .properties {
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--ed-surface);
+}
+:root[data-look='flat'] .left {
+  border-right: 1px solid var(--ed-border);
+}
+:root[data-look='flat'] .properties {
+  border-left: 1px solid var(--ed-border);
+}
+:root[data-look='flat'] .viewport {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: var(--ed-canvas);
+}
+:root[data-look='flat'] .library__category {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--ed-surface);
+}
+
+/* Controls: modest radii and plain fills, in sentence case rather than mono capitals. */
+:root[data-look='flat'] .btn {
+  font-weight: 500;
+  background: var(--ed-surface);
+  border-color: var(--ed-border-strong);
+}
+:root[data-look='flat'] .btn:hover:not(:disabled) {
+  background: var(--ed-surface-2);
+  filter: none;
+}
+:root[data-look='flat'] .btn--primary {
+  background: var(--dd-accent-fill);
+  border-color: transparent;
+}
+:root[data-look='flat'] input,
+:root[data-look='flat'] select,
+:root[data-look='flat'] textarea {
+  background: var(--ed-surface);
+  border-color: var(--ed-border-strong);
+}
+:root[data-look='flat'] .segmented,
+:root[data-look='flat'] .segmented button,
+:root[data-look='flat'] .chip,
+:root[data-look='flat'] .toast {
+  border-radius: var(--ed-radius-sm);
+}
+:root[data-look='flat'] .segmented .is-active {
+  background: var(--ed-surface);
+  box-shadow: 0 0 0 1px var(--ed-border-strong);
+}
+:root[data-look='flat'] .tile,
+:root[data-look='flat'] .mockup-card,
+:root[data-look='flat'] .template__main {
+  background: var(--ed-surface);
+  border-color: var(--ed-border);
+}
+:root[data-look='flat'] .tile:hover:not(:disabled) {
+  background: var(--ed-surface-2);
+}
+:root[data-look='flat'] .prop-section__title,
+:root[data-look='flat'] .properties__title,
+:root[data-look='flat'] .library__category,
+:root[data-look='flat'] .prop-field__label {
+  font-family: var(--ed-font);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+:root[data-look='flat'] .toolbar__title {
+  letter-spacing: 0;
+}
+
+/* Popups, dialogs and the sheet backdrop: solid, no blur. */
+:root[data-look='flat']
+  :is(
+    .menu__list,
+    .context-menu,
+    .icon-picker__pop,
+    .toast,
+    .sheet,
+    .tour,
+    .modal,
+    .prototype__bar,
+    .overflow__pop
+  ) {
+  background: var(--dd-pop);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: var(--ed-shadow-pop);
+}
+:root[data-look='flat'] :is(.modal, .sheet, .tour) {
+  box-shadow: var(--ed-shadow-modal);
+}
+:root[data-look='flat'] .sheet-backdrop {
+  background: var(--ed-scrim);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+:root[data-look='flat'] :is(.canvas-hint, .breadcrumb, .zoom-controls) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* The empty-page prompt is paper inside a frame, whatever the editor theme. */
+:root[data-look='flat'] .frame__empty .btn {
+  background: var(--ed-paper);
+  color: var(--ed-paper-ink);
+  border-color: var(--ed-paper-ink-3);
+}
+:root[data-look='flat'] .frame__empty .btn--primary {
+  background: var(--dd-accent-fill);
+  border-color: transparent;
+  color: var(--ed-on-accent);
+}

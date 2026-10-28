@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Icon } from './Icon';
 
 export interface OverflowItem {
   key: string;
@@ -143,7 +144,7 @@ export function Overflow({
               : {})}
             onClick={() => setOpen(!open)}
           >
-            {activeTucked ? activeTucked.label : moreLabel} <span aria-hidden>▾</span>
+            {activeTucked ? activeTucked.label : moreLabel} <Icon name="chevron-down" size={12} />
           </button>
           {open && (
             <div

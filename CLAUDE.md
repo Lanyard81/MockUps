@@ -37,7 +37,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 - Australian English in UI and docs (colour, organise, centre).
 - Files: components `PascalCase.tsx`; modules `camelCase.ts`; tests `*.test.ts` in `tests/`; e2e `*.spec.ts` in `tests/e2e/`.
 - Ids: `newId('prefix')` from `src/lib/ids.ts` (prefixes: `doc`, `f` frame, `n` node, `img`).
-- Editor design: warm, flat, neutral. Colours, radii and spacing are CSS custom properties on `:root` in `src/styles/theme.css`. No glassmorphism or heavy shadows.
+- Editor design: two looks, each in dark and light. **Glass** (the default, `devdan.css`): frosted panels over a soft backdrop. **Flat** (`flat.css`, `data-look="flat"`): warm neutral, solid surfaces, hairlines, small radii, no blur or aurora. Colours, radii, spacing and sizes are CSS custom properties in `src/styles/theme.css` (and the look files); nothing else uses a literal colour or a font size under 12px (`npm run lint:tokens` fails the build). Menus and popups are opaque in both looks. One icon set: `src/app/Icon.tsx` (no text glyphs as icons). Anything you press is at least `--ed-target` tall (32px, 44px on touch).
 - Each dependency is recorded with its reason in `docs/DECISIONS.md`.
 - Drag and drop uses plain pointer events (no DnD library). Hover, selection and drop state are UI-only store fields: they must never enter history or cause frames to re-render. A press that begins in an iframe keeps its events there, so drag code listens on the source frame's document too. Use `requestAnimationFrame` for drag updates and avoid re-rendering whole frames per change.
 
@@ -56,7 +56,7 @@ tests/            Vitest unit tests; tests/e2e/ for Playwright
 
 - Unit tests (Vitest) for pure logic: geometry, tree operations, store actions and undo, text fitting.
 - Playwright e2e for each milestone's user-visible behaviour (listed per milestone in the brief). The single-file e2e opens `dist-single/pagewright.html` from disk, offline.
-- Before pushing: `npm run lint && npm run format:check && npm run catalogue:check && npm run page-spec-docs:check && npm run samples && git diff --exit-code public/samples && npm run typecheck && npm test && npm run build:single && npm run test:e2e` (the same steps CI runs, in its order). `catalogue:check`, `page-spec-docs:check` and the samples check compare generated files with what is committed, so run the generators and commit their output (a generator run on uncommitted files passes by mistake: check `git status` is clean afterwards).
+- Before pushing: `npm run lint && npm run lint:tokens && npm run format:check && npm run catalogue:check && npm run page-spec-docs:check && npm run samples && git diff --exit-code public/samples && npm run typecheck && npm test && npm run build:single && npm run test:e2e` (the same steps CI runs, in its order). `catalogue:check`, `page-spec-docs:check` and the samples check compare generated files with what is committed, so run the generators and commit their output (a generator run on uncommitted files passes by mistake: check `git status` is clean afterwards).
 - Playwright needs a Chromium: set `PW_CHROMIUM=/opt/pw-browsers/chromium` in the cloud sandbox.
 
 ## Milestone workflow

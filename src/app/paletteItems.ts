@@ -11,7 +11,7 @@ import { OFFICIAL_TEMPLATES } from '../templates';
 import { templateAsNewFrame } from '../templates/use';
 import { useTemplates } from '../store/templates';
 import { switchFrameLayout } from './frameLayout';
-import { applyTheme, readTheme } from './theme';
+import { applyLook, applyTheme, readLook, readTheme } from './theme';
 
 export interface PaletteItem extends RankItem {
   hint?: string;
@@ -160,6 +160,13 @@ export function buildPaletteItems(): PaletteItem[] {
     () => applyTheme(readTheme() === 'dark' ? 'light' : 'dark'),
     undefined,
     'dark light appearance',
+  );
+  act(
+    'look',
+    readLook() === 'glass' ? 'Switch to the flat look' : 'Switch to the glass look',
+    () => applyLook(readLook() === 'glass' ? 'flat' : 'glass'),
+    undefined,
+    'appearance style calm plain frosted',
   );
   for (const d of kit.devices)
     act(

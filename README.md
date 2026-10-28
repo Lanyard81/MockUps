@@ -47,7 +47,7 @@ For SharePoint frames you get a theme (ready-made, Organisation or custom), site
 
 ## Look and theme
 
-The editor uses the DevDan Startup design system: frosted glass panels over an aurora backdrop, pill controls, Inter and JetBrains Mono (bundled, so the single file still works offline). It opens dark; the sun/moon button in the toolbar switches to light and remembers the choice. Only the editor changes: mockups look exactly as the NSW or SharePoint kit draws them.
+The editor uses the DevDan Startup design system: frosted glass panels over an aurora backdrop, pill controls, Inter and JetBrains Mono (bundled, so the single file still works offline). It opens dark and glass. Settings has two choices, remembered in the browser: Dark or Light, and Glass or Flat (a calmer look with solid surfaces and thin lines). Only the editor changes: mockups look exactly as the NSW or SharePoint kit draws them.
 
 ## Freeform frames for sketching
 
