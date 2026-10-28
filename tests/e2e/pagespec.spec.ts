@@ -47,7 +47,7 @@ test('importing pasted JSON from the dialog adds a frame, reports, and undoes in
   await dialog.getByLabel('Page description (JSON)').fill(JSON.stringify(SPEC));
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
 
-  await expect(frames(page)).toHaveCount(2);
+  await expect(frames(page)).toHaveCount(1);
   const frame = page.frameLocator('iframe[title="Imported home"]');
   await expect(frame.locator('h1')).toHaveText('Find a service');
   await expect(frame.locator('.nsw-in-page-alert')).toContainText('search-filters');
@@ -78,7 +78,7 @@ test('pasting page spec JSON into the editor imports it', async ({ page }) => {
       new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true }),
     );
   }, JSON.stringify(SPEC));
-  await expect(frames(page)).toHaveCount(2);
+  await expect(frames(page)).toHaveCount(1);
   await expect(page.getByRole('dialog', { name: 'Page imported' })).toBeVisible();
 });
 
@@ -115,7 +115,7 @@ test('dropping a .page.json file imports it; several pages make several frames',
       new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }),
     );
   }, JSON.stringify(multi));
-  await expect(frames(page)).toHaveCount(3);
+  await expect(frames(page)).toHaveCount(2);
   await expect(page.getByTestId('frame-First').getByTestId('frame-kit')).toHaveText('NSW');
   await expect(page.getByTestId('frame-Second').getByTestId('frame-kit')).toHaveText('SharePoint');
   await expect(page.getByRole('dialog', { name: '2 pages imported' })).toBeVisible();
@@ -135,7 +135,7 @@ test('a spec file chosen in the dialog imports; bad text is explained and change
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(SPEC)),
   });
-  await expect(frames(page)).toHaveCount(2);
+  await expect(frames(page)).toHaveCount(1);
 });
 
 test('a frame goes out as a page spec and comes back as the same page', async ({ page }) => {
@@ -165,7 +165,7 @@ test('a frame goes out as a page spec and comes back as the same page', async ({
       new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true }),
     );
   }, text);
-  await expect(frames(page)).toHaveCount(3);
+  await expect(frames(page)).toHaveCount(2);
   const html = (title: string) =>
     page.frameLocator(`iframe[title="${title}"]`).locator('#root').innerHTML();
   const strip = (h: string) =>

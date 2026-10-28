@@ -408,3 +408,7 @@ People think "put these three cards in a row", not "set the grid to three column
 ## 074. One hand-off dialog (review M5)
 
 Exports used to live in three places (File → Export, the page's right-click menu and the Properties panel). The Share button opens one dialog with every output and a sentence on what it is for; the right-click menu and Properties keep their shortcuts. A4 PDF slices the picture of the page into sheets (the PDF is still made of pictures, so text can't be selected: the web page export is the way to get selectable text).
+
+## 075: Starter page is replaced, not kept (M6)
+
+A mockup's only page, if still empty with no comments, is the "starter". Adding a template or importing a page description takes its place (same position, one undo step) so people don't end up with a stray empty page. Dropping a template at a chosen spot never replaces it.

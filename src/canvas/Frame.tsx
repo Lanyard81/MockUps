@@ -286,11 +286,23 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
         )}
         {frame.root.length === 0 && ready && (
           <div className="frame__empty">
-            <strong>This page is empty</strong>
-            <span>Drag a component here from the library, or start from a template.</span>
+            <strong>Start your page</strong>
+            <span>
+              Click a component in the library, or drag one here. Or begin from something
+              ready-made:
+            </span>
             <span className="frame__empty-actions">
-              <button className="btn" onClick={() => useStore.getState().setLeftTab('templates')}>
-                Browse templates
+              <button
+                className="btn btn--primary"
+                onClick={() => useStore.getState().setLeftTab('templates')}
+              >
+                Choose a template
+              </button>
+              <button className="btn" onClick={() => useStore.getState().setDialog('samples')}>
+                Try a sample
+              </button>
+              <button className="btn" onClick={() => useStore.getState().setDialog('importSpec')}>
+                Import a page description
               </button>
             </span>
           </div>

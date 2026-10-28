@@ -7,6 +7,7 @@ import { openMockupFile } from '../persistence/file';
 import { useStore } from '../store/store';
 import { ResponsiveDialog } from './ResponsiveDialog';
 import { AccessibilityDialog } from './AccessibilityDialog';
+import { SamplesDialog } from './SamplesDialog';
 import { HistoryDialog } from './HistoryDialog';
 import { CommandPalette } from './CommandPalette';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -129,6 +130,7 @@ export function App() {
       <HistoryDialog />
       <ResponsiveDialog />
       <AccessibilityDialog />
+      <SamplesDialog />
       <ImportSummary />
       <ConfirmDialog />
       <Tour />

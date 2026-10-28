@@ -66,3 +66,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Adding things (M4)** 58. Add masthead + header, then a heading, three cards and a footer by clicking: header on top, footer last. Watch the line under the Library search say where the next click adds. Select the first card and choose "3 across" (Properties or right-click), then Undo. Press Esc from a card: Section, then the page. Settings → "Show layout details" brings containers, grids and columns back.
 
 **Hand-off (M5)** 59. Click Share: read what each choice is for, export a PDF on A4 sheets, a page description, and (on a SharePoint page) build notes. Right-click a page → Convert: the summary lists what each part became, and the copy sits clear of the original.
+
+**First run (M6)** 60. Open the app fresh: the empty page offers Choose a template, Try a sample and Import a page description. Pick a template: it replaces the empty page. Help → Replay the tour: tips sit beside what they describe and move on as you act. Press Present on an empty mockup: it says why not.

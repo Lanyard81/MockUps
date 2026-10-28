@@ -272,7 +272,7 @@ test.describe('shortcuts sheet', () => {
     await page.getByLabel('Search components').fill('a?');
     await expect(sheet).toHaveCount(0);
 
-    await page.getByRole('button', { name: 'Settings' }).click();
+    await page.getByRole('button', { name: 'Help' }).click();
     await page.getByRole('menuitem', { name: 'Keyboard shortcuts' }).click();
     await expect(sheet).toBeVisible();
     await sheet.getByRole('button', { name: 'Close' }).click();

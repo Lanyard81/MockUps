@@ -251,12 +251,26 @@ export function Toolbar() {
               <StructureChoice />
             </>
           }
+          items={[]}
+        />
+      ),
+    },
+    {
+      key: 'help',
+      priority: 4,
+      label: 'Help',
+      node: (
+        <Menu
+          plain
+          label="Help"
           items={[
+            { label: 'Replay the tour', onSelect: () => s.getState().requestTour() },
             {
               label: 'Keyboard shortcuts',
               hint: '?',
               onSelect: () => s.getState().setHelpOpen(true),
             },
+            { label: 'Try a sample', onSelect: () => s.getState().setDialog('samples') },
           ]}
         />
       ),

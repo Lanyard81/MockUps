@@ -64,6 +64,20 @@ export function buildPaletteItems(): PaletteItem[] {
     undefined,
     'prototype preview start',
   );
+  act(
+    'tour',
+    'Replay the tour',
+    () => useStore.getState().requestTour(),
+    undefined,
+    'help guide tips intro',
+  );
+  act(
+    'samples',
+    'Try a sample',
+    () => useStore.getState().setDialog('samples'),
+    undefined,
+    'example demo',
+  );
   act('edit', 'Edit mode', () => useStore.getState().setMode('edit'));
   act(
     'select-next',

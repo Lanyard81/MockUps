@@ -20,9 +20,16 @@ beforeEach(() => {
 });
 
 describe('start frame and play', () => {
+  it('says there is nothing to present when every page is empty', () => {
+    s().playPrototype();
+    expect(s().prototype).toBeNull();
+    expect(s().notice).toMatch(/nothing to present/);
+  });
+
   it('plays from the first frame unless one is set, and sets, clears and undoes', () => {
     s().addFrame('tablet');
     const [a, b] = s().doc.frames;
+    s().addComponent(a!.id, 'heading', 'h1');
     s().playPrototype();
     expect(s().prototype).toEqual([a!.id]);
     s().closePrototype();

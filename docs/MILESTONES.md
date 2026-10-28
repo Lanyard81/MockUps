@@ -340,3 +340,12 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] PDF: "the size of each page" or A4 sheets (long pages continue on the next sheet).
 - [x] The web page choice describes the kit (NSW, SharePoint, Simple) and offers the "link to NSW" option only for NSW.
 - [x] Converting shows "What each part became" (Accordion → …, header → page settings), places the copy to the right of everything, and no longer stacks "(SharePoint) (NSW)" in its name; the Convert section says why it is disabled on an empty page.
+
+### M6: First run and help (done)
+
+- Empty page now reads "Start your page" with three actions: Choose a template, Try a sample, Import a page description. The old Properties welcome card is gone.
+- New "Try a sample" dialog (also in Help and the command palette).
+- The tour is anchored beside what it describes, moves on when you do the thing, and can be replayed from Help.
+- Help menu: Replay the tour, Keyboard shortcuts, Try a sample.
+- A template or import replaces an empty starter page instead of sitting beside it (one history entry).
+- Present on an all-empty mockup says why it can't; the viewer hints when pages have no links.

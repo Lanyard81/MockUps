@@ -24,13 +24,11 @@ test('the Templates tab lists official templates by group and searches them', as
 test('clicking a template makes a new frame; dragging onto a frame asks before replacing', async ({
   page,
 }) => {
+  // An empty starter page is replaced by a template, so give the first page some content.
+  await addFromLibrary(page, 'heading', 'Heading 1');
   await openTab(page);
   await tile(page, 'Article').click();
   await expect(frames(page)).toHaveCount(2);
-
-  // Put something in the first (empty) frame, then drag a template onto it.
-  await page.getByRole('tab', { name: 'Library' }).click();
-  await addFromLibrary(page, 'heading', 'Heading 1');
   await openTab(page);
   await page.waitForTimeout(500); // the view re-fits after a frame is added
   const box = (await frames(page).nth(1).boundingBox())!;
@@ -80,7 +78,7 @@ test('Save as template: appears under My templates, renames, deletes, travels in
 });
 
 test('an empty frame offers templates and the File menu opens samples', async ({ page }) => {
-  await page.getByRole('button', { name: 'Browse templates' }).click();
+  await page.getByRole('button', { name: 'Choose a template' }).click();
   await expect(page.getByRole('tab', { name: 'Templates' })).toHaveAttribute(
     'aria-selected',
     'true',

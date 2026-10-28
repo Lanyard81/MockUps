@@ -167,6 +167,7 @@ interface State {
     | 'history'
     | 'responsive'
     | 'accessibility'
+    | 'samples'
     | null;
   /** The frame a dialog is about (Save as template). */
   dialogFrameId: string | null;
@@ -223,6 +224,8 @@ interface State {
   panning: boolean;
   /** Show containers and grids in the selection path and when stepping out with Esc. Off by default. UI-only. */
   showStructure: boolean;
+  /** Counts up each time the tour is asked for again (Help → Replay the tour). UI-only. */
+  tourRequest: number;
   /** The hand tool is switched on (the toolbar button or H): dragging pans until it is switched off. */
   handTool: boolean;
   /** True once the initial "zoom to fit" has run. */
@@ -296,6 +299,7 @@ interface Actions {
   setViewport: (width: number, height: number) => void;
   setPanning: (panning: boolean) => void;
   setHandTool: (on: boolean) => void;
+  requestTour: () => void;
   setShowStructure: (on: boolean) => void;
   markFitted: () => void;
   requestRename: (id: string | null) => void;
@@ -492,6 +496,20 @@ function applyPatch(
   return Object.keys(next).length > 0 ? next : undefined;
 }
 
+/**
+ * The starter page: a mockup's only page, still empty. When something ready-made (a template, an
+ * imported page) arrives it takes the starter's place instead of sitting beside an empty page.
+ */
+function starterPage(doc: MockupDoc): Frame | undefined {
+  const only = doc.frames.length === 1 ? doc.frames[0] : undefined;
+  return only &&
+    only.root.length === 0 &&
+    !only.reference &&
+    !doc.comments?.some((c) => c.frameId === only.id)
+    ? only
+    : undefined;
+}
+
 const withKitVersion = (doc: MockupDoc, kitId: KitId): MockupDoc =>
   doc.kitVersions[kitId]
     ? doc
@@ -639,6 +657,7 @@ export const useStore = create<Store>((set, get) => ({
   viewport: { width: 1000, height: 700 },
   panning: false,
   handTool: false,
+  tourRequest: 0,
   showStructure: readShowStructure(),
   fitted: false,
   renameRequest: null,
@@ -720,14 +739,18 @@ export const useStore = create<Store>((set, get) => ({
       return false;
     }
     set((s) => {
-      let x = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width)) + FRAME_GAP;
+      const starter = starterPage(s.doc);
+      const kept = starter ? [] : s.doc.frames;
+      let x = starter
+        ? starter.x
+        : Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width)) + FRAME_GAP;
       const y = s.doc.frames[0]?.y ?? 0;
       const frames: Frame[] = [];
       const reports: Record<string, PageImportReport> = {};
       const summary: ImportSummary = { pages: [] };
       let doc = s.doc;
       let nodes = s.doc.nodes;
-      const taken = new Set(s.doc.frames.map((f) => f.name));
+      const taken = new Set(kept.map((f) => f.name));
       for (const p of pages) {
         // Frame names identify frames to people, so an imported page never reuses one.
         let name = p.name;
@@ -752,7 +775,12 @@ export const useStore = create<Store>((set, get) => ({
         doc = withKitVersion(doc, p.kitId);
       }
       return {
-        ...commit(s, { ...doc, frames: [...s.doc.frames, ...frames], nodes }),
+        ...commit(s, {
+          ...doc,
+          frames: [...kept, ...frames],
+          nodes,
+          ...(starter && doc.startFrameId === starter.id ? { startFrameId: undefined } : {}),
+        }),
         selectedFrameId: frames[frames.length - 1]?.id ?? s.selectedFrameId,
         selectedNodeId: null,
         importReports: { ...s.importReports, ...reports },
@@ -832,6 +860,8 @@ export const useStore = create<Store>((set, get) => ({
   addFrameFromTemplate: (template, at) => {
     const id = newId('f');
     set((s) => {
+      const starter = at ? undefined : starterPage(s.doc);
+      const kept = starter ? [] : s.doc.frames;
       const right = Math.max(-FRAME_GAP, ...s.doc.frames.map((f) => f.x + f.width));
       const frame: Frame = {
         id,
@@ -840,20 +870,21 @@ export const useStore = create<Store>((set, get) => ({
         ...(template.settings ? { settings: template.settings } : {}),
         device: template.device,
         width: template.width,
-        x: Math.round(at?.x ?? right + FRAME_GAP),
+        x: Math.round(at?.x ?? (starter ? starter.x : right + FRAME_GAP)),
         y: Math.round(at?.y ?? s.doc.frames[0]?.y ?? 0),
         root: template.root,
       };
       return {
         ...commit(s, {
           ...withKitVersion(s.doc, template.kitId),
-          frames: [...s.doc.frames, frame],
+          ...(starter && s.doc.startFrameId === starter.id ? { startFrameId: undefined } : {}),
+          frames: [...kept, frame],
           nodes: { ...s.doc.nodes, ...template.nodes },
           images: { ...s.doc.images, ...template.images },
         }),
         selectedFrameId: id,
         selectedNodeId: null,
-        fitRequested: s.doc.frames.length === 0,
+        fitRequested: kept.length === 0,
       };
     });
     return id;
@@ -922,7 +953,9 @@ export const useStore = create<Store>((set, get) => ({
   playPrototype: () =>
     set((s) => {
       const start = s.doc.frames.find((f) => f.id === s.doc.startFrameId) ?? s.doc.frames[0];
-      return start ? { prototype: [start.id], prototypeMotion: 'none', mode: 'edit' } : s;
+      if (!start || s.doc.frames.every((f) => f.root.length === 0))
+        return { notice: 'There is nothing to present yet. Add something to a page first.' };
+      return { prototype: [start.id], prototypeMotion: 'none', mode: 'edit' };
     }),
   setStartFrame: (frameId) =>
     set((s) => {
@@ -965,6 +998,7 @@ export const useStore = create<Store>((set, get) => ({
   },
   setPanning: (panning) => set((s) => ({ panning: panning || s.handTool })),
   setHandTool: (handTool) => set({ handTool, panning: handTool }),
+  requestTour: () => set((s) => ({ tourRequest: s.tourRequest + 1 })),
   setShowStructure: (showStructure) => {
     saveShowStructure(showStructure);
     set({ showStructure });

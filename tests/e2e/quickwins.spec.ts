@@ -10,10 +10,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('the empty state offers sample projects', async ({ page }) => {
-  const welcome = page.getByTestId('welcome');
-  await expect(welcome).toContainText('Welcome to PageWright');
-  await welcome.getByRole('button').first().click();
-  await expect(page.getByTestId('welcome')).toHaveCount(0);
+  const frame = page.locator('.frame__empty');
+  await expect(frame).toContainText('Start your page');
+  await frame.getByRole('button', { name: 'Try a sample' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Try a sample' });
+  await dialog.getByRole('button', { name: /Open/ }).first().click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.locator('.frame__empty')).toHaveCount(0);
 });
 
 test('adds a frame at a paper or slide size', async ({ page }) => {
@@ -103,6 +106,7 @@ test('the click-through scales a wide page to fill a large window', async ({ pag
   await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
   await page.getByLabel('Start page').check();
+  await addFromLibrary(page, 'heading', 'Heading 1');
   await page.getByRole('button', { name: 'Present' }).click();
   const box = await page.locator('.prototype__page').boundingBox();
   expect(box!.width).toBeGreaterThan(1650); // the window is 1700 wide; a desktop page is 1440
@@ -137,3 +141,18 @@ for (const width of [1024, 1280, 1440, 1700]) {
     expect(settings + hidden).toBeGreaterThan(0);
   });
 }
+
+test('first run: the empty page offers three ways in, Present explains an empty mockup, Help replays the tour', async ({
+  page,
+}) => {
+  const empty = page.locator('.frame__empty');
+  await expect(empty.getByRole('button', { name: 'Choose a template' })).toBeVisible();
+  await expect(empty.getByRole('button', { name: 'Import a page description' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Present' }).click();
+  await expect(page.getByText(/nothing to present yet/)).toBeVisible();
+
+  await page.getByRole('button', { name: 'Help' }).click();
+  await page.getByRole('menuitem', { name: 'Replay the tour' }).click();
+  await expect(page.locator('.tour')).toBeVisible();
+});

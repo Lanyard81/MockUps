@@ -100,25 +100,27 @@ export function Menu({
       {open && (
         <div className="menu__list" id={id}>
           {header && <div className="menu__header">{header}</div>}
-          <div role="menu" aria-label={typeof label === 'string' ? label : undefined}>
-            {items.map((item) => (
-              <div key={item.label} role="none">
-                {item.separatorBefore && <div className="context-menu__sep" role="separator" />}
-                <button
-                  role="menuitem"
-                  className="menu__item"
-                  disabled={item.disabled}
-                  onClick={() => {
-                    close(true);
-                    item.onSelect();
-                  }}
-                >
-                  <span>{item.label}</span>
-                  {item.hint && <span className="menu__hint">{item.hint}</span>}
-                </button>
-              </div>
-            ))}
-          </div>
+          {items.length > 0 && (
+            <div role="menu" aria-label={typeof label === 'string' ? label : undefined}>
+              {items.map((item) => (
+                <div key={item.label} role="none">
+                  {item.separatorBefore && <div className="context-menu__sep" role="separator" />}
+                  <button
+                    role="menuitem"
+                    className="menu__item"
+                    disabled={item.disabled}
+                    onClick={() => {
+                      close(true);
+                      item.onSelect();
+                    }}
+                  >
+                    <span>{item.label}</span>
+                    {item.hint && <span className="menu__hint">{item.hint}</span>}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

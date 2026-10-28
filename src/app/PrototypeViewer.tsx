@@ -23,6 +23,9 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
   const kitSettings = useStore((s) => s.doc.kitSettings[frame.kitId]);
   const frameHeight = useStore((s) => s.frameHeights[frame.id]);
   const motion = useStore((s) => s.prototypeMotion);
+  const noLinks = useStore(
+    (s) => s.doc.frames.length > 1 && !Object.values(s.doc.nodes).some((n) => n.props?.goto),
+  );
   const html = useMemo(
     () =>
       renderFrameHtml(nodes, frame.root, images, {
@@ -122,7 +125,14 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
         >
           ← Back
         </button>
-        <span className="prototype__title">{frame.name}</span>
+        <span className="prototype__title">
+          {frame.name}
+          {noLinks && (
+            <span className="prototype__hint">
+              No links between pages yet: select a button and choose “Go to page” in Properties.
+            </span>
+          )}
+        </span>
         <button className="btn" onClick={() => useStore.getState().closePrototype()}>
           Close
         </button>

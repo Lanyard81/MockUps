@@ -359,6 +359,8 @@ describe('page spec import and export in the store', () => {
       selectedFrameId: null,
       importReports: {},
     });
+    // A page with something on it, so an import adds beside it (an empty starter page is replaced).
+    useStore.getState().addComponent(useStore.getState().doc.frames[0]!.id, 'heading', 'h1');
   });
 
   it('adds a frame per page to the right of the others, selects the last, and is one undo step', () => {
@@ -385,6 +387,16 @@ describe('page spec import and export in the store', () => {
     s().undo();
     expect(s().doc.frames).toHaveLength(before);
     expect(s().importReports).toEqual({});
+  });
+
+  it('replaces an empty starter page instead of sitting beside it', () => {
+    useStore.setState({ doc: createDoc(), past: [], future: [] });
+    const starter = s().doc.frames[0]!;
+    s().importPageSpecText('{"format":"mockup-page-spec","version":1,"name":"Real","page":[]}');
+    expect(s().doc.frames.map((f) => f.name)).toEqual(['Real']);
+    expect(s().doc.frames[0]!.x).toBe(starter.x);
+    s().undo();
+    expect(s().doc.frames.map((f) => f.id)).toEqual([starter.id]);
   });
 
   it('never reuses a frame name', () => {
