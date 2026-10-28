@@ -29,6 +29,12 @@ export function handleKeyDown(e: KeyboardEvent) {
   const mod = e.metaKey || e.ctrlKey;
   const key = e.key.toLowerCase();
 
+  if (e.altKey && !mod && !e.shiftKey && (e.code === 'Digit1' || e.code === 'Digit2')) {
+    e.preventDefault();
+    s.togglePanel(e.code === 'Digit1' ? 'left' : 'right');
+    return;
+  }
+
   if (e.code === 'Space') {
     // On a button, tab, menu item or tree row Space does its normal job (activate it).
     if (isActivatable(e.target)) return;

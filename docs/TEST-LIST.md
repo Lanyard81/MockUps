@@ -72,3 +72,7 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Library (M7)** 61. Select a SharePoint page, switch the Library to NSW: the notice offers "Add an NSW page" and "Convert this page". Search "expandable rows": Accordion appears. Ctrl+K "mega menu" jumps to the SharePoint navigation setting; Ctrl+K "layers" opens Layers.
 
 **Properties (M8)** 62. Select a Card: its panel starts with Text, then appearance, then show/hide. There is one "Shrink text to fit" switch; turn it on and Undo once. On a page, "Checks" and "Prototype links" are folded away until opened. Select a footer: labels read "Group 1 link 1". Select one item, then another: the panel starts at the top.
+
+**Small windows and touch (M9)** 63. Press Alt 1 and Alt 2 (or the two panel buttons): the side panels hide and show, and the canvas grows. Make the window narrow (under 900px, or zoom the browser to 200
+
+**Small windows and touch (M9)** 63. Press Alt 1 and Alt 2 (or the two panel buttons): the side panels hide and show, and the canvas grows. Make the window narrow (under 900px, or zoom the browser to 200%): panels become drawers and the canvas fills the window. On a tablet: drag empty canvas to pan, pinch to zoom, press and hold an item for its menu.

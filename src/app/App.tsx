@@ -30,6 +30,7 @@ import { ImportSummary } from './ImportSummary';
 import { addReferenceFromFile, isReferenceFile } from './referenceUpload';
 
 export function App() {
+  const panels = useStore((s) => s.panels);
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
@@ -92,7 +93,9 @@ export function App() {
   }, []);
 
   return (
-    <div className="app">
+    <div
+      className={`app${panels.left ? '' : ' app--no-left'}${panels.right ? '' : ' app--no-right'}`}
+    >
       <nav className="skip-links" aria-label="Skip links">
         {[
           ['canvas', 'Skip to the canvas'],

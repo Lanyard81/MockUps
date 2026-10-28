@@ -4,6 +4,8 @@
  * Dark is the default; `data-theme="light"` on <html> switches to the light values.
  */
 :root {
+  /* Smallest height of anything you press: 32px with a mouse, 44px on touch screens. */
+  --ed-target: 32px;
   /* DevDan Startup tokens (dark) */
   --dd-bg: #07070b;
   --dd-glass: rgba(255, 255, 255, 0.08);
@@ -105,4 +107,10 @@
   --ed-danger-soft: rgba(215, 0, 21, 0.1);
   --ed-focus: #007aff;
   color-scheme: light;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --ed-target: 44px;
+  }
 }

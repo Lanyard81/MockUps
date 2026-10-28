@@ -78,6 +78,20 @@ export function buildPaletteItems(): PaletteItem[] {
     undefined,
     'example demo',
   );
+  act(
+    'panel-left',
+    'Show or hide the left panel',
+    () => useStore.getState().togglePanel('left'),
+    'Alt 1',
+    'library layers templates sidebar',
+  );
+  act(
+    'panel-right',
+    'Show or hide the right panel',
+    () => useStore.getState().togglePanel('right'),
+    'Alt 2',
+    'properties sidebar',
+  );
   act('edit', 'Edit mode', () => useStore.getState().setMode('edit'));
   act(
     'select-next',

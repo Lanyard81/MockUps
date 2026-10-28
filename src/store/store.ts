@@ -204,6 +204,8 @@ interface State {
   autoFit: boolean;
   /** The keyboard shortcuts sheet is open. */
   helpOpen: boolean;
+  /** Which side panels are showing. UI only; narrow windows start with both closed. */
+  panels: { left: boolean; right: boolean };
   /** Preview's click-through: the frames visited, last is showing. Null when closed. UI-only. */
   prototype: string[] | null;
   /** A short message for the user (errors from uploads and the like). */
@@ -285,6 +287,7 @@ interface Actions {
   newDoc: () => void;
   renameDoc: (name: string) => void;
   setHelpOpen: (open: boolean) => void;
+  togglePanel: (side: 'left' | 'right') => void;
   /** Open the click-through viewer on a frame, step to another, go back, or close. */
   openPrototype: (frameId: string) => void;
   /** Play the click-through from the start frame (the first frame unless one is set). */
@@ -431,6 +434,13 @@ export type ReferencePatch = Partial<Omit<FrameReference, 'imageId'>>;
 export type Store = State & Actions;
 
 /** Apply a document change as a single undoable history entry. */
+/** Below this window width the side panels become drawers over the canvas, closed to start with. */
+export const DRAWER_WIDTH = 900;
+const initialPanels = () => {
+  const narrow = typeof window !== 'undefined' && window.innerWidth < DRAWER_WIDTH;
+  return { left: !narrow, right: !narrow };
+};
+
 function commit(s: Store, next: MockupDoc): Partial<Store> {
   return { doc: next, past: [...s.past, s.doc].slice(-HISTORY_LIMIT), future: [] };
 }
@@ -658,6 +668,7 @@ export const useStore = create<Store>((set, get) => ({
   fitRequested: true,
   autoFit: true,
   helpOpen: false,
+  panels: initialPanels(),
   prototype: null,
   fitWarnings: {},
   clipboard: null,
@@ -956,6 +967,7 @@ export const useStore = create<Store>((set, get) => ({
       return next && next !== s.doc.name ? commit(s, { ...s.doc, name: next }) : s;
     }),
   setHelpOpen: (helpOpen) => set({ helpOpen }),
+  togglePanel: (side) => set((s) => ({ panels: { ...s.panels, [side]: !s.panels[side] } })),
   openPrototype: (frameId) =>
     set((s) => (s.doc.frames.some((f) => f.id === frameId) ? { prototype: [frameId] } : s)),
   playPrototype: () =>

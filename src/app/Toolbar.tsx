@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
@@ -11,7 +11,16 @@ import { copyPageSpecInstructions } from '../export/pageSpec';
 import { Menu } from './Menu';
 import { Overflow, type OverflowItem } from './Overflow';
 
+const NARROW = '(max-width: 899px)';
+const subscribeNarrow = (cb: () => void) => {
+  const mq = window.matchMedia(NARROW);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+};
+
 export function Toolbar() {
+  // On a narrow window the panels are drawers, so their buttons matter most; otherwise they're a nicety.
+  const narrow = useSyncExternalStore(subscribeNarrow, () => window.matchMedia(NARROW).matches);
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
   const canUndo = useStore((s) => s.past.length > 0);
@@ -21,6 +30,7 @@ export function Toolbar() {
   const newFrameLayout = useStore((s) => s.newFrameLayout);
   const handTool = useStore((s) => s.handTool);
   const commentTool = useStore((s) => s.commentTool);
+  const panels = useStore((s) => s.panels);
   const s = useStore;
 
   const items: OverflowItem[] = [
@@ -215,6 +225,47 @@ export function Toolbar() {
         >
           Share
         </button>
+      ),
+    },
+    {
+      key: 'panels',
+      priority: narrow ? 12 : 2,
+      label: 'Panels',
+      node: (
+        <div className="segmented" role="group" aria-label="Side panels">
+          {(['left', 'right'] as const).map((side) => (
+            <button
+              key={side}
+              className={`panel-toggle${panels[side] ? ' is-active' : ''}`}
+              aria-pressed={panels[side]}
+              aria-label={side === 'left' ? 'Library panel' : 'Properties panel'}
+              title={`${panels[side] ? 'Hide' : 'Show'} the ${side === 'left' ? 'library' : 'properties'} panel (Alt ${side === 'left' ? '1' : '2'})`}
+              onClick={() => s.getState().togglePanel(side)}
+            >
+              <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
+                <rect
+                  x="1"
+                  y="1"
+                  width="14"
+                  height="12"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                />
+                <rect
+                  x={side === 'left' ? 1 : 10}
+                  y="1"
+                  width="5"
+                  height="12"
+                  rx="1"
+                  fill="currentColor"
+                  opacity={panels[side] ? 1 : 0.35}
+                />
+              </svg>
+            </button>
+          ))}
+        </div>
       ),
     },
     {

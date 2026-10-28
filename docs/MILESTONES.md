@@ -364,3 +364,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - Specialist groups (Checks, Prototype links, Reference image, Side by side) are collapsible and start closed; the choice is remembered for the session; Reference image opens by itself when one is set.
 - Readable labels ("Group 1 link 1", "Column 1" in the width table), muted rather than red "Turn on…" hints, and each new selection starts at the top of its panel.
 - Fix found while testing M8: a reload while an autosave write was still running could lose the last edit (the safety copy was only made while the save timer was waiting). The safety copy is now made whenever the stored document is behind the open one.
+
+### M9: Small windows, zoom and touch (done)
+
+- Side panels collapse: toolbar buttons, Alt 1 (library) and Alt 2 (properties), and palette commands. Panel widths follow the window (`clamp`), margins tighten under 1100px, and at 1024px wide the canvas keeps 60% of the window.
+- Under 900px the panels become drawers over the canvas and start closed, so a phone or a 200% zoom keeps a full-width canvas.
+- Touch: one finger on empty canvas pans, two fingers pan and pinch-zoom (also from inside a page), press and hold on an item opens its menu; a tap on empty canvas deselects. The canvas hint names the touch gestures on touch screens.
+- Press targets: `--ed-target` is 32px (44px on touch screens) and every button, chip, tab, toggle and layer row meets it; the tree's small expand arrows keep the 24px WCAG minimum. A Playwright scan (`targets.spec.ts`) fails on anything smaller.

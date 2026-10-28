@@ -2489,3 +2489,128 @@ body.is-free-gesture .frame__iframe {
 .prop-section--collapsible > summary::-webkit-details-marker {
   display: none;
 }
+
+/* Side panels: sized by window width, collapsible (Alt 1 / Alt 2), and drawers on narrow windows */
+.app {
+  --left-w: clamp(184px, 17vw, 320px);
+  --right-w: clamp(194px, 17vw, 312px);
+  grid-template-columns: var(--left-w) minmax(0, 1fr) var(--right-w);
+}
+.left {
+  grid-column: 1;
+}
+.viewport {
+  grid-column: 2;
+}
+.properties {
+  grid-column: 3;
+}
+.app.app--no-left {
+  --left-w: 0px;
+}
+.app.app--no-right {
+  --right-w: 0px;
+}
+.app--no-left .left,
+.app--no-right .properties {
+  display: none;
+}
+.canvas-hint__touch {
+  display: none;
+}
+@media (pointer: coarse) {
+  .canvas-hint__mouse {
+    display: none;
+  }
+  .canvas-hint__touch {
+    display: inline;
+  }
+}
+@media (max-width: 899px) {
+  .app,
+  .app--no-left,
+  .app--no-right {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .viewport {
+    grid-column: 1;
+  }
+  .left,
+  .properties {
+    position: fixed;
+    top: var(--ed-toolbar-h);
+    bottom: 0;
+    z-index: 30;
+    width: min(88vw, 340px);
+    box-shadow: 0 0 0 1px var(--ed-border);
+  }
+  .left {
+    left: 0;
+  }
+  .properties {
+    right: 0;
+  }
+}
+
+/* Press targets: at least --ed-target tall (32px, or 44px on touch) */
+.segmented button,
+.chip,
+.docname__button,
+.btn,
+.tabs__tab,
+.menu__item,
+summary.prop-section__title,
+.panel-toggle {
+  min-height: var(--ed-target);
+}
+.segmented button {
+  height: auto;
+}
+.chip {
+  height: auto;
+}
+.frame__label {
+  min-height: calc(var(--ed-target) + 6px);
+  align-items: center;
+}
+@media (pointer: coarse) {
+  .segmented button,
+  .chip,
+  .btn {
+    min-width: var(--ed-target);
+  }
+  select,
+  input[type='text'],
+  input[type='search'],
+  input[type='number'] {
+    min-height: var(--ed-target);
+  }
+}
+.breadcrumb__crumb,
+.prop-toggle,
+.menu__check,
+.choice {
+  min-height: var(--ed-target);
+}
+.breadcrumb__crumb {
+  display: inline-flex;
+  align-items: center;
+}
+.menu__check {
+  display: flex;
+  align-items: center;
+}
+.layer-row {
+  height: var(--ed-target);
+}
+.layer-row--frame {
+  height: calc(var(--ed-target) + 2px);
+}
+.layer-row__twisty {
+  width: 24px;
+  height: 24px;
+}
+.layer-row__eye {
+  width: var(--ed-target);
+  height: var(--ed-target);
+}

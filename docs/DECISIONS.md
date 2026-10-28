@@ -420,3 +420,11 @@ Plain-word synonyms ("expandable" → Accordion) are a small map in `src/catalog
 ## 077: Collapsible groups use `<details>` (M8)
 
 `Section` takes `collapsible` and `defaultOpen`. Open state is a module-level map by title, so a group stays as the person left it when the selection changes, and nothing enters the document or history.
+
+## 078: Panels stay mounted when collapsed (M9)
+
+A collapsed side panel is hidden with CSS, not unmounted, so the Library keeps its scroll, search and thumbnails. `panels` in the store is UI state: no history, not saved with the document.
+
+## 079: Two-finger touch is handled in one place (M9)
+
+`src/canvas/touch.ts` tracks touch points from the canvas and from inside page iframes (converted to screen coordinates) so pinch and two-finger pan work anywhere; single-finger actions check `isMultiTouch()` and stand aside.

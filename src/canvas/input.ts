@@ -7,6 +7,14 @@ import { setImageFromFile } from '../app/imageUpload';
 import { addReferenceFromFile, isReferenceFile } from '../app/referenceUpload';
 import { startSettingEdit, startTextEdit } from './textEdit';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
+import {
+  LONG_PRESS_MS,
+  LONG_PRESS_SLOP,
+  isMultiTouch,
+  touchDown,
+  touchMove,
+  touchUp,
+} from './touch';
 
 export interface ForwardedWheel {
   deltaX: number;
@@ -58,6 +66,22 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     },
     { passive: false },
   );
+
+  // Touch: report fingers to the canvas so two of them pan and pinch-zoom from inside a page too.
+  doc.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'touch') return;
+    const p = toScreen(e.clientX, e.clientY);
+    touchDown(e.pointerId, p.x, p.y);
+  });
+  doc.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'touch') return;
+    const p = toScreen(e.clientX, e.clientY);
+    touchMove(e.pointerId, p.x, p.y);
+  });
+  for (const type of ['pointerup', 'pointercancel'])
+    doc.addEventListener(type, (e) => {
+      if ((e as PointerEvent).pointerType === 'touch') touchUp((e as PointerEvent).pointerId);
+    });
 
   doc.addEventListener('pointerdown', (e) => {
     if (e.button === 1) {
@@ -116,14 +140,31 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     const canDrag = !!node && isDraggable(node);
 
     let started = false;
+    // Touch: press and hold opens the item menu, like a right-click.
+    let held = false;
+    let holdTimer: ReturnType<typeof setTimeout> | undefined;
+    if (e.pointerType === 'touch')
+      holdTimer = setTimeout(() => {
+        if (isMultiTouch() || started) return;
+        held = true;
+        openItemMenu(e.clientX, e.clientY, e.target);
+      }, LONG_PRESS_MS);
     const cleanup = () => {
+      clearTimeout(holdTimer);
       doc.removeEventListener('pointermove', move);
       doc.removeEventListener('pointerup', up);
       doc.removeEventListener('pointercancel', cleanup);
     };
     const move = (ev: PointerEvent) => {
       const p = toScreen(ev.clientX, ev.clientY);
-      if (started || !canDrag || Math.hypot(p.x - origin.x, p.y - origin.y) < DRAG_THRESHOLD)
+      if (Math.hypot(p.x - origin.x, p.y - origin.y) > LONG_PRESS_SLOP) clearTimeout(holdTimer);
+      if (isMultiTouch()) return;
+      if (
+        started ||
+        held ||
+        !canDrag ||
+        Math.hypot(p.x - origin.x, p.y - origin.y) < DRAG_THRESHOLD
+      )
         return;
       started = true;
       cleanup();
@@ -137,7 +178,7 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     };
     const up = () => {
       cleanup();
-      if (!started) useStore.getState().selectNode(frameId, id);
+      if (!started && !held && !isMultiTouch()) useStore.getState().selectNode(frameId, id);
     };
     doc.addEventListener('pointermove', move);
     doc.addEventListener('pointerup', up);
@@ -169,14 +210,13 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
       );
   });
 
-  // Edit mode: right-click opens the actions menu for what is under the pointer.
-  doc.addEventListener('contextmenu', (e) => {
+  // The actions menu for what is at a point (right-click, or press and hold on touch).
+  function openItemMenu(clientX: number, clientY: number, eventTarget: EventTarget | null) {
     const store = useStore.getState();
     if (store.mode !== 'edit') return;
-    e.preventDefault();
-    const target = e.target as Element | null;
+    const target = eventTarget as Element | null;
     const id = nodeIdAt(target);
-    const point = toScreen(e.clientX, e.clientY);
+    const point = toScreen(clientX, clientY);
     if (id) store.selectNode(frameId, id);
     else store.selectFrame(frameId);
     store.openContextMenu({
@@ -186,6 +226,12 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
       nodeId: id,
       textKey: target?.closest?.('[data-edit]')?.getAttribute('data-edit') ?? undefined,
     });
+  }
+  // Edit mode: right-click opens the actions menu for what is under the pointer.
+  doc.addEventListener('contextmenu', (e) => {
+    if (useStore.getState().mode !== 'edit') return;
+    e.preventDefault();
+    openItemMenu(e.clientX, e.clientY, e.target);
   });
 
   // Edit mode: double-click a piece of text to edit it in place.

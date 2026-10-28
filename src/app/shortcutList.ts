@@ -76,6 +76,8 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
     items: [
       { keys: 'Space + drag', action: 'Pan (or middle mouse button, or scroll)' },
       { keys: 'H', action: 'Hand tool: switch panning on or off' },
+      { keys: 'Alt 1', action: 'Show or hide the left panel' },
+      { keys: 'Alt 2', action: 'Show or hide the right panel' },
       { keys: `${MOD}scroll`, action: 'Zoom (or pinch)' },
       { keys: `${MOD}+  ${MOD}−`, action: 'Zoom in and out' },
       { keys: `${MOD}0`, action: 'Zoom to fit' },

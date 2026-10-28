@@ -5,6 +5,7 @@ import { Breadcrumb } from './Breadcrumb';
 import { Frame } from './Frame';
 import { ZoomControls } from './ZoomControls';
 import { setCanvasHandlers, type ForwardedWheel } from './input';
+import { isMultiTouch, touchDown, touchMove, touchUp } from './touch';
 
 const LINE_HEIGHT = 16;
 
@@ -62,11 +63,30 @@ export function Viewport() {
     };
   }, []);
 
+  // Touch fingers that move or lift anywhere (they are captured by the canvas once down).
+  useEffect(() => {
+    const move = (e: PointerEvent) =>
+      e.pointerType === 'touch' && touchMove(e.pointerId, e.clientX, e.clientY);
+    const up = (e: PointerEvent) => e.pointerType === 'touch' && touchUp(e.pointerId);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+    return () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+  }, []);
+
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     // Pressing the zoom controls (or any control drawn over the canvas) is not a click on the background.
     if ((e.target as HTMLElement).closest('.zoom-controls')) return;
     const s = useStore.getState();
-    const wantsPan = e.button === 1 || (e.button === 0 && s.panning);
+    const touch = e.pointerType === 'touch';
+    if (touch) touchDown(e.pointerId, e.clientX, e.clientY);
+    // One finger on the empty canvas pans it, like the hand tool.
+    const onBackground = (e.target as HTMLElement).closest('.frame') === null;
+    const wantsPan = e.button === 1 || (e.button === 0 && (s.panning || (touch && onBackground)));
     if (!wantsPan) {
       if (e.button === 0 && (e.target as HTMLElement).closest('.frame') === null)
         s.selectFrame(null);
@@ -77,7 +97,10 @@ export function Viewport() {
     const el = e.currentTarget;
     el.setPointerCapture(e.pointerId);
     let raf = 0;
+    let moved = false;
     const move = (ev: PointerEvent) => {
+      if (Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > 6) moved = true;
+      if (isMultiTouch()) return; // two fingers pan and zoom together instead
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() =>
         useStore.getState().setView({
@@ -93,6 +116,8 @@ export function Viewport() {
       el.removeEventListener('pointercancel', up);
       // A middle-mouse pan ends with the button; a space pan ends when space is released.
       if (e.button === 1) useStore.getState().setPanning(false);
+      // A tap (not a drag) on the empty canvas with a finger clears the selection, as a click does.
+      if (touch && !moved && onBackground) useStore.getState().selectFrame(null);
     };
     el.addEventListener('pointermove', move);
     el.addEventListener('pointerup', up);
@@ -138,7 +163,12 @@ export function Viewport() {
       <Breadcrumb />
       <ZoomControls />
       <div className="canvas-hint">
-        Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a page name to move it
+        <span className="canvas-hint__mouse">
+          Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a page name to move it
+        </span>
+        <span className="canvas-hint__touch">
+          Drag to pan · Pinch to zoom · Press and hold an item for its menu
+        </span>
       </div>
     </main>
   );
