@@ -8,6 +8,12 @@ const isTyping = (t: EventTarget | null): boolean => {
   return /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable;
 };
 
+/** Things that Space (or Enter) should activate rather than start a pan. */
+const isActivatable = (t: EventTarget | null): boolean =>
+  !!(t as HTMLElement | null)?.closest?.(
+    'button, a[href], summary, [role="button"], [role="tab"], [role="menuitem"], [role="treeitem"], [role="option"], input, select, textarea',
+  );
+
 let spaceHeld = false;
 
 export function handleKeyDown(e: KeyboardEvent) {
@@ -24,11 +30,19 @@ export function handleKeyDown(e: KeyboardEvent) {
   const key = e.key.toLowerCase();
 
   if (e.code === 'Space') {
+    // On a button, tab, menu item or tree row Space does its normal job (activate it).
+    if (isActivatable(e.target)) return;
     e.preventDefault();
     if (!spaceHeld) {
       spaceHeld = true;
       s.setPanning(true);
     }
+    return;
+  }
+  if ((e.key === ']' || e.key === '[') && !mod && !e.altKey) {
+    // Step through every page and item in reading order: the keyboard route to anything on a page.
+    e.preventDefault();
+    s.selectStep(e.key === ']' ? 1 : -1);
     return;
   }
   if (key === 'h' && !mod && !e.altKey && !e.shiftKey) {
@@ -88,6 +102,10 @@ export function handleKeyDown(e: KeyboardEvent) {
   } else if (mod && key === 'c' && s.selectedNodeId) {
     e.preventDefault();
     s.copyNode(s.selectedNodeId);
+  } else if (mod && key === 'x' && s.selectedNodeId) {
+    e.preventDefault();
+    s.copyNode(s.selectedNodeId);
+    s.deleteNode(s.selectedNodeId);
   } else if (mod && key === 'v' && s.clipboard) {
     e.preventDefault();
     s.pasteClipboard();

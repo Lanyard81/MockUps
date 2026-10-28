@@ -41,6 +41,12 @@ export function Layers() {
   const [dragId, setDragId] = useState<string | null>(null);
   const [drop, setDrop] = useState<DropState | null>(null);
   const treeRef = useRef<HTMLDivElement>(null);
+  const [focusKey, setFocusKey] = useState<string | null>(null);
+  // One row is in the Tab order (the one last focused, else the selection, else the first page).
+  const tabKey =
+    focusKey ??
+    (selectedNodeId ? selectedNodeId : selectedFrameId ? `frame:${selectedFrameId}` : null) ??
+    (doc.frames[0] ? `frame:${doc.frames[0].id}` : null);
 
   // The path to the selection is always open, so the selected layer can always be seen.
   const forcedOpen = useMemo(
@@ -136,6 +142,103 @@ export function Layers() {
     window.addEventListener('keydown', key, true);
   };
 
+  const ownerOf = (id: string) => doc.frames.find((f) => f.root.includes(pathTo(doc, id)[0] ?? ''));
+  const selectRow = (id: string) => {
+    const frameId = useStore.getState().selectedFrameId;
+    useStore.getState().selectNode(ownerOf(id)?.id ?? frameId ?? doc.frames[0]!.id, id);
+  };
+
+  /** Keyboard for a Layers row: arrows move and open or close, Enter selects, F2 renames, Delete deletes, Alt+arrows reorder. */
+  const rowKeyDown = (e: React.KeyboardEvent<HTMLElement>, key: string) => {
+    if (e.target !== e.currentTarget) return;
+    const row = e.currentTarget;
+    const isFrame = key.startsWith('frame:');
+    const rows = Array.from(
+      treeRef.current?.querySelectorAll<HTMLElement>('[role="treeitem"]') ?? [],
+    );
+    const i = rows.indexOf(row);
+    const focusRow = (el: HTMLElement | undefined) => {
+      if (!el) return;
+      setFocusKey(el.dataset.layerKey ?? null);
+      el.focus();
+    };
+    const expanded = row.getAttribute('aria-expanded');
+    const st = useStore.getState();
+    const handled = () => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && !isFrame) {
+      handled();
+      selectRow(key);
+      st.moveSelected(e.key === 'ArrowUp' ? -1 : 1);
+      return;
+    }
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    switch (e.key) {
+      case 'ArrowDown':
+        handled();
+        focusRow(rows[i + 1]);
+        break;
+      case 'ArrowUp':
+        handled();
+        focusRow(rows[i - 1]);
+        break;
+      case 'Home':
+        handled();
+        focusRow(rows[0]);
+        break;
+      case 'End':
+        handled();
+        focusRow(rows[rows.length - 1]);
+        break;
+      case 'ArrowRight':
+        handled();
+        if (expanded === 'false') toggle(key);
+        else if (expanded === 'true') focusRow(rows[i + 1]);
+        break;
+      case 'ArrowLeft':
+        handled();
+        if (expanded === 'true' && !forcedOpen.has(key.replace('frame:', ''))) toggle(key);
+        else
+          focusRow(
+            row.parentElement?.parentElement?.previousElementSibling as HTMLElement | undefined,
+          );
+        break;
+      case 'Enter':
+      case ' ':
+        handled();
+        if (isFrame) st.selectFrame(key.slice(6));
+        else selectRow(key);
+        break;
+      case 'F2':
+        handled();
+        setRenaming(key);
+        break;
+      case 'Delete':
+      case 'Backspace':
+        handled();
+        if (isFrame) st.deleteFrame(key.slice(6));
+        else st.deleteNode(key);
+        focusRow(rows[Math.max(0, i - 1)]);
+        break;
+      case 'ContextMenu': {
+        handled();
+        const r = row.getBoundingClientRect();
+        if (isFrame) {
+          st.selectFrame(key.slice(6));
+          st.openContextMenu({ x: r.left + 24, y: r.bottom, frameId: key.slice(6), nodeId: null });
+        } else {
+          const owner = ownerOf(key);
+          if (!owner) break;
+          st.selectNode(owner.id, key);
+          st.openContextMenu({ x: r.left + 24, y: r.bottom, frameId: owner.id, nodeId: key });
+        }
+        break;
+      }
+    }
+  };
+
   const dropClass = (rowKey: string) => {
     if (!drop || drop.rowKey !== rowKey) return '';
     return drop.valid ? ` is-drop-${drop.zone}` : ' is-drop-invalid';
@@ -157,17 +260,14 @@ export function Layers() {
           aria-selected={selected}
           aria-expanded={kids.length ? open : undefined}
           data-layer-key={id}
+          tabIndex={tabKey === id ? 0 : -1}
+          onKeyDown={(e) => rowKeyDown(e, id)}
+          onFocus={(e) => e.target === e.currentTarget && setFocusKey(id)}
           data-testid={`layer-${node.type}`}
           className={`layer-row${selected ? ' is-selected' : ''}${node.hidden ? ' is-hidden' : ''}${dragId === id ? ' is-dragging' : ''}${dropClass(id)}`}
           style={{ paddingLeft: 6 + depth * 14 }}
           onPointerDown={(e) => startDrag(e, id)}
-          onClick={() => {
-            const frameId = useStore.getState().selectedFrameId;
-            const owner = doc.frames.find(
-              (f) => pathTo(doc, id)[0] && f.root.includes(pathTo(doc, id)[0]!),
-            );
-            useStore.getState().selectNode(owner?.id ?? frameId ?? doc.frames[0]!.id, id);
-          }}
+          onClick={() => selectRow(id)}
           onContextMenu={(e) => {
             e.preventDefault();
             const owner = doc.frames.find((f) => f.root.includes(pathTo(doc, id)[0]!));
@@ -258,6 +358,9 @@ export function Layers() {
           aria-selected={selected}
           aria-expanded={frame.root.length ? !isCollapsed : undefined}
           data-layer-key={key}
+          tabIndex={tabKey === key ? 0 : -1}
+          onKeyDown={(e) => rowKeyDown(e, key)}
+          onFocus={(e) => e.target === e.currentTarget && setFocusKey(key)}
           data-testid="layer-frame"
           className={`layer-row layer-row--frame${selected ? ' is-selected' : ''}${dropClass(key)}`}
           onClick={() => useStore.getState().selectFrame(frame.id)}

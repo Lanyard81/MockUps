@@ -298,3 +298,15 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Primary buttons, selected page-name chips and the icon picker use a new `--dd-accent-fill` (4.7:1 and 5.9:1 with white) instead of the brighter accent; muted and placeholder text tokens raised to at least 4.5:1 in both themes.
 - [x] Simple kit: button text is white or near-black, whichever reads better (every accent on offer reaches 4.5:1); accent-coloured text (links, outline buttons, tabs, badges) uses a darkened accent that reaches 5:1 on white.
 - [x] axe-core (dev dependency) checks colour contrast on the editor in both themes; unit tests check the tokens and every Simple accent.
+
+### M1: Keyboard and screen reader basics
+
+- [x] Layers is a real tree: one Tab stop, arrows move, ← → close/open, Enter selects, F2 renames, Delete deletes, Alt+↑/↓ reorders, the menu key opens the context menu.
+- [x] `]` and `[` select the next or previous page or item in reading order (also in the command palette); Ctrl/⌘ X cuts.
+- [x] Page names are focusable buttons (Enter selects, F2 renames, menu key opens actions).
+- [x] The left tabs are a tab list with arrow keys, Home and End; the More button is part of it.
+- [x] File and Add page menus: arrow keys, Home/End, Esc returns focus; the Add page layout and style toggles sit above the menu, not inside it.
+- [x] Space presses a focused button, tab, menu item or tree row (it only pans when nothing else wants it).
+- [x] Skip links (canvas, Properties, library), landmarks (`aside`, `main`, an h1), and the page behind a dialog is inert while it is open.
+- [x] The toast is a permanent polite live region, stays 8 seconds and while hovered or focused.
+- [x] axe-core runs on 15 screens and dialogs: no critical or serious violations.

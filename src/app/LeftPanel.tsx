@@ -17,9 +17,34 @@ export function LeftPanel() {
   const tab = useStore((s) => s.leftTab);
   const setTab = useStore((s) => s.setLeftTab);
   return (
-    <div className="left">
+    <aside
+      className="left"
+      id="left-panel"
+      tabIndex={-1}
+      aria-label="Library, templates, layers and comments"
+    >
       <Overflow
         className="tabs"
+        role="tablist"
+        onKeyDown={(e) => {
+          if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+          const tabs = Array.from(
+            e.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]'),
+          ).filter((el) => el.offsetParent !== null && !el.closest('.overflow__pop'));
+          const i = tabs.indexOf(document.activeElement as HTMLElement);
+          if (i < 0) return;
+          e.preventDefault();
+          const next =
+            e.key === 'Home'
+              ? 0
+              : e.key === 'End'
+                ? tabs.length - 1
+                : (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+          const target = tabs[next]!;
+          target.focus();
+          const id = target.id.replace('tab-', '') as (typeof TABS)[number][0];
+          if (target.id.startsWith('tab-')) setTab(id);
+        }}
         activeKey={tab}
         items={TABS.map(([t, label]) => ({
           key: t,
@@ -30,6 +55,7 @@ export function LeftPanel() {
               id={`tab-${t}`}
               aria-selected={tab === t}
               aria-controls={`panel-${t}`}
+              tabIndex={tab === t ? 0 : -1}
               className={`tabs__tab${tab === t ? ' is-active' : ''}`}
               onClick={() => setTab(t)}
             >
@@ -75,6 +101,6 @@ export function LeftPanel() {
       >
         <Comments />
       </div>
-    </div>
+    </aside>
   );
 }

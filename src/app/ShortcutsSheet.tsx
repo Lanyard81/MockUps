@@ -48,7 +48,7 @@ export function ShortcutsSheet() {
             Close
           </button>
         </header>
-        <div className="sheet__body">
+        <div className="sheet__body" role="region" aria-labelledby="sheet-title" tabIndex={0}>
           {SHORTCUT_GROUPS.map((g) => (
             <section key={g.title} className="sheet__group">
               <h3>{g.title}</h3>

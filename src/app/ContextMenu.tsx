@@ -104,6 +104,15 @@ export function ContextMenu() {
         onSelect: () => st().copyNode(nodeId),
       },
       {
+        label: 'Cut',
+        shortcut: `${MOD}X`,
+        disabled: !movable,
+        onSelect: () => {
+          st().copyNode(nodeId);
+          st().deleteNode(nodeId);
+        },
+      },
+      {
         label: 'Paste',
         shortcut: `${MOD}V`,
         disabled: !clipboard,

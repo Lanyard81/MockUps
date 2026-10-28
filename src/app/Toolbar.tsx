@@ -315,7 +315,7 @@ export function Toolbar() {
   return (
     <header className="toolbar">
       <div className="toolbar__group">
-        <strong className="toolbar__title">PageWright</strong>
+        <h1 className="toolbar__title">PageWright</h1>
         <DocName />
         <button
           className="btn"

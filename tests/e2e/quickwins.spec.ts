@@ -71,6 +71,7 @@ test('the hand button (and H) toggles panning', async ({ page }) => {
   await hand.click();
   await expect(hand).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByTestId('viewport')).toHaveClass(/viewport--panning/);
+  await page.locator('#canvas').focus(); // Space on the focused button would press it
   await page.keyboard.press('Space');
   await page.keyboard.up('Space');
   await expect(page.getByTestId('viewport')).toHaveClass(/viewport--panning/); // Space doesn't switch it off

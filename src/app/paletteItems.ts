@@ -65,6 +65,20 @@ export function buildPaletteItems(): PaletteItem[] {
     'prototype preview start',
   );
   act('edit', 'Edit mode', () => useStore.getState().setMode('edit'));
+  act(
+    'select-next',
+    'Select the next page or item',
+    () => useStore.getState().selectStep(1),
+    ']',
+    'move cursor focus step',
+  );
+  act(
+    'select-previous',
+    'Select the previous page or item',
+    () => useStore.getState().selectStep(-1),
+    '[',
+    'move cursor focus step',
+  );
   act('new', 'New mockup', () => useStore.getState().newDoc());
   act(
     'mockups',

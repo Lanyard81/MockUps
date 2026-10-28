@@ -183,6 +183,30 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
     >
       <div
         className="frame__label"
+        {...(renaming
+          ? {}
+          : {
+              role: 'button',
+              tabIndex: 0,
+              title: 'Enter selects the page, F2 renames it, the menu key opens its actions',
+              onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (e.target !== e.currentTarget) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  store.getState().selectFrame(frame.id);
+                } else if (e.key === 'F2') {
+                  e.preventDefault();
+                  setRenaming(true);
+                } else if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) {
+                  e.preventDefault();
+                  const r = e.currentTarget.getBoundingClientRect();
+                  store.getState().selectFrame(frame.id);
+                  store
+                    .getState()
+                    .openContextMenu({ x: r.left, y: r.bottom, frameId: frame.id, nodeId: null });
+                }
+              },
+            })}
         onPointerDown={renaming ? undefined : startDrag}
         onDoubleClick={() => setRenaming(true)}
         onContextMenu={(e) => {
@@ -230,7 +254,7 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
             title="Free layout: components placed anywhere"
             data-testid="frame-free"
           >
-            Freeform
+            Free
           </span>
         )}
         <span className="frame__size">{frame.width}px</span>

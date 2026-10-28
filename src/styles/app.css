@@ -574,7 +574,7 @@ select {
   padding: 0 8px;
   /* Inside the selection, so it never covers a neighbour that the user may want to click. */
   border-radius: 0 0 4px 0;
-  background: var(--ed-accent);
+  background: var(--dd-accent-fill);
   color: #fff;
   font: 600 12px/22px var(--ed-font);
   white-space: nowrap;
@@ -1018,11 +1018,19 @@ textarea {
   white-space: nowrap;
 }
 
-.toast {
+.toast-region {
   position: fixed;
   bottom: var(--ed-space-4);
-  left: 50%;
+  left: 0;
+  right: 0;
   z-index: 200;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--ed-space-3);
@@ -1030,7 +1038,6 @@ textarea {
   border: 1px solid var(--ed-border-strong);
   border-radius: var(--ed-radius);
   background: var(--ed-surface);
-  transform: translateX(-50%);
 }
 .toast__close {
   border: 0;
@@ -1563,7 +1570,7 @@ kbd {
   border: 1px solid var(--ed-border);
   border-radius: var(--ed-radius-sm);
   background: #fff;
-  color: var(--ed-text-muted);
+  color: #5b5b66;
   font-size: 11px;
   text-align: center;
 }
@@ -2284,4 +2291,36 @@ body.is-free-gesture .frame__iframe {
 .prototype__page {
   overflow: hidden;
   flex: none;
+}
+
+/* Skip links: out of sight until focused */
+.skip-links a {
+  position: absolute;
+  left: 8px;
+  top: -80px;
+  z-index: 500;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--dd-accent-fill);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-links a:focus {
+  top: 8px;
+}
+.toolbar__title {
+  margin: 0;
+}
+.left:focus,
+.properties:focus,
+.viewport:focus {
+  outline: none;
+}
+
+/* "No preview yet" is drawn, not typed, so the button's name is just "Open <name>". */
+.mockup-card__thumb--empty::after {
+  content: 'No preview yet';
+  align-self: center;
+  padding: 4px;
 }

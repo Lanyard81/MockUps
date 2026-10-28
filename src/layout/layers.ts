@@ -67,3 +67,18 @@ export function placementForFrame(doc: Doc, draggedId: string, frameId: string):
     chainFrom: null,
   };
 }
+
+/** Every selectable thing in reading order: each page, then its items from top to bottom (parents before their children). */
+export function selectionOrder(doc: Doc): { frameId: string; nodeId: string | null }[] {
+  const out: { frameId: string; nodeId: string | null }[] = [];
+  for (const f of doc.frames) {
+    out.push({ frameId: f.id, nodeId: null });
+    const walk = (id: string) => {
+      if (!doc.nodes[id]) return;
+      out.push({ frameId: f.id, nodeId: id });
+      for (const k of doc.nodes[id]!.children ?? []) walk(k);
+    };
+    f.root.forEach(walk);
+  }
+  return out;
+}

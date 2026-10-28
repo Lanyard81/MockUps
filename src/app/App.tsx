@@ -92,6 +92,24 @@ export function App() {
 
   return (
     <div className="app">
+      <nav className="skip-links" aria-label="Skip links">
+        {[
+          ['canvas', 'Skip to the canvas'],
+          ['properties-panel', 'Skip to Properties'],
+          ['left-panel', 'Skip to the library'],
+        ].map(([id, label]) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById(id!)?.focus();
+            }}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
       <Toolbar />
       <StorageBanner />
       <LeftPanel />

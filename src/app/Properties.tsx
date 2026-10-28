@@ -44,7 +44,7 @@ export function Properties() {
       </div>
     );
   } else if (!node) {
-    title = 'Frame';
+    title = 'Page';
     body = <FrameProps frameId={frameId} />;
   } else {
     title = nodeLabel(node, frameKit);
@@ -56,7 +56,7 @@ export function Properties() {
   }
 
   return (
-    <aside className="properties" aria-label="Properties">
+    <aside className="properties" id="properties-panel" tabIndex={-1} aria-label="Properties">
       <header className="properties__head">
         <h2 className="properties__title">{title}</h2>
       </header>

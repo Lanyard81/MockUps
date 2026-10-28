@@ -18,6 +18,16 @@ export function Modal({
 
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
+    // The page behind a dialog can't be reached by keyboard or screen reader until it closes.
+    const backdrop = ref.current?.parentElement ?? null;
+    const behind = Array.from(document.querySelectorAll('.app > *')).filter(
+      (el) =>
+        el !== backdrop &&
+        !el.contains(backdrop) &&
+        !el.classList.contains('toast-region') &&
+        !el.hasAttribute('inert'),
+    );
+    behind.forEach((el) => el.setAttribute('inert', ''));
     const first = ref.current?.querySelector<HTMLElement>(
       '[autofocus], input, select, textarea, button:not([data-modal-close])',
     );
@@ -49,6 +59,7 @@ export function Modal({
     window.addEventListener('keydown', key, true);
     return () => {
       window.removeEventListener('keydown', key, true);
+      behind.forEach((el) => el.removeAttribute('inert'));
       previous?.focus?.();
     };
     // `onClose` is stable enough for the lifetime of the dialog.

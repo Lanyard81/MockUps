@@ -52,6 +52,7 @@ import {
   setGridColumnCount,
   type Insertion,
 } from '../layout/ops';
+import { selectionOrder } from '../layout/layers';
 import { cloneSubtrees, removeSubtrees } from '../layout/tree';
 import {
   DEVICES,
@@ -225,6 +226,8 @@ interface Actions {
   selectNode: (frameId: string, nodeId: string | null) => void;
   /** Esc: select the parent, then the frame, then nothing. */
   selectParent: () => void;
+  /** Select the next (1) or previous (-1) page or item in reading order, wrapping round. For keyboard users. */
+  selectStep: (dir: 1 | -1) => void;
   setHover: (hover: { frameId: string; nodeId: string } | null) => void;
   setDrag: (drag: DragPayload | null) => void;
   setDropTarget: (target: DropTarget | null) => void;
@@ -631,6 +634,19 @@ export const useStore = create<Store>((set, get) => ({
         return { selectedNodeId: p?.parentId ?? null };
       }
       return { selectedFrameId: null };
+    }),
+  selectStep: (dir) =>
+    set((s) => {
+      const order = selectionOrder(s.doc);
+      if (order.length === 0) return s;
+      const at = order.findIndex(
+        (o) => o.frameId === s.selectedFrameId && o.nodeId === s.selectedNodeId,
+      );
+      const next =
+        order[
+          at < 0 ? (dir === 1 ? 0 : order.length - 1) : (at + dir + order.length) % order.length
+        ]!;
+      return { selectedFrameId: next.frameId, selectedNodeId: next.nodeId };
     }),
   setHover: (hover) =>
     set((s) =>

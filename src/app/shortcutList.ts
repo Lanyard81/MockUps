@@ -37,6 +37,13 @@ export const SHORTCUT_GROUPS: ShortcutGroup[] = [
     items: [
       { keys: 'Click', action: 'Select what is under the pointer' },
       { keys: 'Esc', action: 'Select the parent, then the page, then nothing' },
+      { keys: '] and [', action: 'Select the next or previous page or item, in reading order' },
+      {
+        keys: 'Layers tab: ↑ ↓ ← → Enter',
+        action: 'Move through the Layers list, open or close, and select',
+      },
+      { keys: 'F2 or Delete (in Layers)', action: 'Rename or delete the focused layer' },
+      { keys: `${MOD}X`, action: 'Cut the selected item (paste it elsewhere with ' + MOD + 'V)' },
       { keys: 'Double-click', action: 'Edit text in place' },
       { keys: 'Enter or F2', action: 'Edit the selected component’s text' },
       { keys: 'Enter', action: 'Finish editing text' },

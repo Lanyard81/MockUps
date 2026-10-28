@@ -17,12 +17,17 @@ export function Overflow({
   className,
   activeKey,
   moreLabel = 'More',
+  role,
+  onKeyDown,
 }: {
   items: OverflowItem[];
   className?: string;
   /** If this item is tucked away, the "More" button is highlighted and named after it. */
   activeKey?: string;
   moreLabel?: string;
+  /** `tablist` makes the row a tab strip: items are tabs, and the More button is a tab that opens the rest. */
+  role?: 'tablist';
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const widths = useRef(new Map<string, number>());
@@ -83,9 +88,19 @@ export function Overflow({
   const tucked = items.slice(items.length - hidden);
   const activeTucked = tucked.find((i) => i.key === activeKey);
   return (
-    <div className={`overflow${className ? ` ${className}` : ''}`} ref={ref}>
+    <div
+      className={`overflow${className ? ` ${className}` : ''}`}
+      ref={ref}
+      role={role}
+      onKeyDown={onKeyDown}
+    >
       {shown.map((i) => (
-        <div key={i.key} className="overflow__item" data-ovkey={i.key}>
+        <div
+          key={i.key}
+          className="overflow__item"
+          data-ovkey={i.key}
+          role={role ? 'presentation' : undefined}
+        >
           {i.node}
         </div>
       ))}
@@ -93,8 +108,11 @@ export function Overflow({
         <div className="overflow__more" data-ovmore="1">
           <button
             className={`btn${activeTucked ? ' is-active' : ''}`}
-            aria-haspopup="true"
+            aria-haspopup={role ? 'menu' : 'true'}
             aria-expanded={open}
+            {...(role
+              ? { role: 'tab', 'aria-selected': !!activeTucked, tabIndex: activeTucked ? 0 : -1 }
+              : {})}
             onClick={() => setOpen(!open)}
           >
             {activeTucked ? activeTucked.label : moreLabel} <span aria-hidden>▾</span>
@@ -102,13 +120,18 @@ export function Overflow({
           {open && (
             <div
               className="overflow__pop"
+              role={role}
               onClick={(e) => {
                 const b = (e.target as HTMLElement).closest('button');
                 if (b && !b.hasAttribute('aria-haspopup')) setOpen(false);
               }}
             >
               {tucked.map((i) => (
-                <div key={i.key} className="overflow__item">
+                <div
+                  key={i.key}
+                  className="overflow__item"
+                  role={role ? 'presentation' : undefined}
+                >
                   {i.node}
                 </div>
               ))}

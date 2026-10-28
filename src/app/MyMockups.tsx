@@ -145,8 +145,10 @@ function Inner() {
                 onClick={() => void openMockup(m.id)}
                 aria-label={`Open ${m.name}`}
               >
-                <span className="mockup-card__thumb">
-                  {m.thumbnail ? <img src={m.thumbnail} alt="" /> : <span>No preview yet</span>}
+                <span
+                  className={`mockup-card__thumb${m.thumbnail ? '' : ' mockup-card__thumb--empty'}`}
+                >
+                  {m.thumbnail ? <img src={m.thumbnail} alt="" /> : null}
                 </span>
               </button>
               <div className="mockup-card__info">

@@ -307,7 +307,7 @@ test('grid columns and per-breakpoint widths', async ({ page }) => {
 
 test('frame properties live in the panel', async ({ page }) => {
   await page.locator('.frame__name').first().click();
-  await expect(panel(page).getByRole('heading', { name: 'Frame', level: 2 })).toBeVisible();
+  await expect(panel(page).getByRole('heading', { name: 'Page', level: 2 })).toBeVisible();
   await panel(page).getByLabel('Name').fill('Landing');
   await panel(page).getByLabel('Name').press('Enter');
   await expect(page.locator('.frame__name').first()).toHaveText('Landing');
@@ -322,5 +322,5 @@ test('the panel says what to do when nothing is selected', async ({ page }) => {
   await expect(panel(page).getByText('Nothing selected')).toBeVisible();
   const c = await centre(page.locator('.frame__name').first());
   await page.mouse.click(c.x, c.y);
-  await expect(panel(page).getByRole('heading', { name: 'Frame', level: 2 })).toBeVisible();
+  await expect(panel(page).getByRole('heading', { name: 'Page', level: 2 })).toBeVisible();
 });

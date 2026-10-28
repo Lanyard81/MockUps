@@ -58,3 +58,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Quick wins (G10)** 54. Add frame → A4 page, Slide (16:9). Right-click a frame name → Duplicate as desktop. File → Export… → PDF document (one frame, then All frames) and open the PDF. With a blank mockup, look at the Properties panel for the welcome and the sample buttons.
 
 **Simple kit (K3)** 55. Add frame → choose Simple → Desktop. In the Library (Simple tab) add a few parts: hero, card with picture, form, header bar. Try Templates → Simple (landing page, dashboard). Change the accent colour (Properties on the frame, and in the kit colours), section background and spacing. Export a PNG and an HTML page; import a page spec with `"kit": "simple"`.
+
+**Keyboard (M1)** 56. Put the mouse away. Tab to "Skip to the library", press Enter. Use ← → on the tabs, open Layers, arrow down to an item, Enter to select it, F2 to rename, Alt+↓ to move it, Delete then Ctrl+Z. Press `]` to step through the page, Enter to edit text. Focus File and press ↓, then Esc. Focus a page name and press Enter, then F2.

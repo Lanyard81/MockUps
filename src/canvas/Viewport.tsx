@@ -97,8 +97,11 @@ export function Viewport() {
   };
 
   return (
-    <div
+    <main
       ref={ref}
+      id="canvas"
+      tabIndex={-1}
+      aria-label="Canvas"
       className={`viewport${panning ? ' viewport--panning' : ''}${dragging ? (droppable ? ' viewport--drop' : ' viewport--nodrop') : ''}`}
       onPointerDown={onPointerDown}
       onAuxClick={(e) => e.preventDefault()}
@@ -133,6 +136,6 @@ export function Viewport() {
       <div className="canvas-hint">
         Space + drag to pan · Ctrl/⌘ + scroll to zoom · Drag a page name to move it
       </div>
-    </div>
+    </main>
   );
 }
