@@ -2,15 +2,36 @@ import { useState, type ReactNode } from 'react';
 
 /** Shared building blocks for the properties panel. */
 
+/** Which collapsible sections the person has opened, kept for the session so they stay as left. */
+const openSections = new Map<string, boolean>();
+
 export function Section({
   title,
   children,
   hint,
+  collapsible = false,
+  defaultOpen = false,
 }: {
   title: string;
   children: ReactNode;
   hint?: string;
+  /** Specialist groups start closed; the person's choice is remembered. */
+  collapsible?: boolean;
+  /** Start open (until the person closes it), e.g. when the group already holds something. */
+  defaultOpen?: boolean;
 }) {
+  if (collapsible)
+    return (
+      <details
+        className="prop-section prop-section--collapsible"
+        open={openSections.get(title) ?? defaultOpen}
+        onToggle={(e) => openSections.set(title, e.currentTarget.open)}
+      >
+        <summary className="prop-section__title">{title}</summary>
+        {hint && <p className="prop-hint">{hint}</p>}
+        {children}
+      </details>
+    );
   return (
     <section className="prop-section">
       <h3 className="prop-section__title">{title}</h3>
@@ -136,7 +157,11 @@ export function Segmented<T extends string>({
 
 export function titleCase(key: string): string {
   return key
-    .replace(/([a-z])(\d)/g, '$1 $2')
+    .replace(/^g(\d+)/i, 'group $1 ')
+    .replace(/([a-z])(\d)/gi, '$1 $2')
+    .replace(/(\d)([a-z])/gi, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim()
     .replace(/[-_]/g, ' ')
     .replace(/^./, (c) => c.toUpperCase());
 }

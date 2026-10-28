@@ -170,24 +170,11 @@ function TextField({
   def: { default: string; multiline: boolean };
 }) {
   const text = useStore((s) => s.doc.nodes[nodeId]?.text?.[textKey]);
-  const fit = useStore((s) => s.doc.nodes[nodeId]?.textFit?.[textKey]);
   const truncated = useStore((s) =>
     (s.fitWarnings[frameId] ?? []).some((w) => w.nodeId === nodeId && w.key === textKey),
   );
   const st = useStore.getState;
   const current = text ?? def.default;
-
-  const toggleFit = (on: boolean) => {
-    if (!on) return st().setTextFit(nodeId, textKey, 'natural');
-    // Record the element's present size: that is the box the text will be fitted into.
-    const el = getFrameElement(frameId)?.contentDocument?.querySelector<HTMLElement>(
-      `[data-node="${nodeId}"] [data-edit="${textKey}"]`,
-    );
-    const rect = el ? measureFitBox(el) : null;
-    if (!rect || rect.width < 1 || rect.height < 1)
-      return st().setNotice('That text isn’t visible, so its size can’t be measured.');
-    st().setTextFit(nodeId, textKey, 'shrink', { width: rect.width, height: rect.height });
-  };
 
   return (
     <div className="text-field">
@@ -201,18 +188,52 @@ function TextField({
           }
         />
       </Field>
-      <div className="text-field__fit">
-        <Toggle label="Shrink text to fit" checked={fit === 'shrink'} onChange={toggleFit} />
-        {truncated && (
-          <span
-            className="warn-badge"
-            role="status"
-            title="Even at the smallest size this text doesn’t fit, so it is cut off with an ellipsis."
-          >
-            ⚠ Text is cut off
-          </span>
-        )}
-      </div>
+      {truncated && (
+        <span
+          className="warn-badge"
+          role="status"
+          title="Even at the smallest size this text doesn’t fit, so it is cut off with an ellipsis."
+        >
+          ⚠ Text is cut off
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** One switch for the whole component: every text part shrinks to stay inside the space it has now. */
+function ShrinkToFit({
+  nodeId,
+  frameId,
+  keys,
+}: {
+  nodeId: string;
+  frameId: string;
+  keys: string[];
+}) {
+  const on = useStore((s) => keys.every((k) => s.doc.nodes[nodeId]?.textFit?.[k] === 'shrink'));
+  const toggle = (next: boolean) => {
+    const st = useStore.getState();
+    const parts: Record<string, { width: number; height: number } | null> = {};
+    for (const key of keys) {
+      if (!next) {
+        parts[key] = null;
+        continue;
+      }
+      // Record each element's present size: that is the box its text will be fitted into.
+      const el = getFrameElement(frameId)?.contentDocument?.querySelector<HTMLElement>(
+        `[data-node="${nodeId}"] [data-edit="${key}"]`,
+      );
+      const rect = el ? measureFitBox(el) : null;
+      if (rect && rect.width >= 1 && rect.height >= 1) parts[key] = rect;
+    }
+    if (Object.keys(parts).length === 0)
+      return st.setNotice('That text isn’t visible, so its size can’t be measured.');
+    st.setTextFitMany(nodeId, parts);
+  };
+  return (
+    <div className="text-field__fit">
+      <Toggle label="Shrink text to fit" checked={on} onChange={toggle} />
     </div>
   );
 }
@@ -225,6 +246,7 @@ function SideBySide({ nodeId }: { nodeId: string }) {
   return (
     <Section
       title="Side by side"
+      collapsible
       hint="Put this item and the ones after it in this column next to each other, across the page."
     >
       <div className="segmented segmented--block" role="group" aria-label="Items across">
@@ -273,17 +295,29 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
         )}
       </Section>
 
-      <FreePosition nodeId={nodeId} />
-      <SideBySide nodeId={nodeId} />
-      <div className="prop-actions">
-        <button
-          className="btn"
-          title="Keep this to add to any page later"
-          onClick={() => st().setDialog('saveComponent', frameId, nodeId)}
+      {parts.editable.length > 0 && (
+        <Section
+          title="Text"
+          hint="Double-click text on the canvas to edit it in place, or edit it here."
         >
-          Save as component…
-        </button>
-      </div>
+          {parts.editable.map((f) => (
+            <TextField key={f.key} nodeId={nodeId} frameId={frameId} textKey={f.key} def={f} />
+          ))}
+          <ShrinkToFit nodeId={nodeId} frameId={frameId} keys={parts.editable.map((f) => f.key)} />
+        </Section>
+      )}
+
+      {parts.images.length > 0 && (
+        <Section
+          title="Images"
+          hint="Drop an image file onto the picture on the canvas, or onto a box below."
+        >
+          {parts.images.map((key) => (
+            <ImageField key={key} nodeId={nodeId} imageKey={key} label={titleCase(key)} />
+          ))}
+        </Section>
+      )}
+
       <NodeSettings nodeId={nodeId} frameId={frameId} />
       {KitPanel && <KitPanel nodeId={nodeId} />}
 
@@ -312,28 +346,17 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
         </Section>
       )}
 
-      {parts.editable.length > 0 && (
-        <Section
-          title="Text"
-          hint="Double-click text on the canvas to edit it in place, or edit it here."
+      <FreePosition nodeId={nodeId} />
+      <SideBySide nodeId={nodeId} />
+      <div className="prop-actions">
+        <button
+          className="btn"
+          title="Keep this to add to any page later"
+          onClick={() => st().setDialog('saveComponent', frameId, nodeId)}
         >
-          {parts.editable.map((f) => (
-            <TextField key={f.key} nodeId={nodeId} frameId={frameId} textKey={f.key} def={f} />
-          ))}
-        </Section>
-      )}
-
-      {parts.images.length > 0 && (
-        <Section
-          title="Images"
-          hint="Drop an image file onto the picture on the canvas, or onto a box below."
-        >
-          {parts.images.map((key) => (
-            <ImageField key={key} nodeId={nodeId} imageKey={key} label={titleCase(key)} />
-          ))}
-        </Section>
-      )}
-
+          Save as component…
+        </button>
+      </div>
       <div className="prop-actions">
         <button
           className="btn"

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { nodeLabel } from '../layout/labels';
 import { useStore } from '../store/store';
 import { ComponentProps } from './properties/ComponentProps';
@@ -11,6 +12,13 @@ export function Properties() {
   const frameId = useStore((s) => s.selectedFrameId);
   const node = useStore((s) => (s.selectedNodeId ? s.doc.nodes[s.selectedNodeId] : undefined));
   const frameKit = useStore((s) => s.doc.frames.find((f) => f.id === s.selectedFrameId)?.kitId);
+
+  // A new selection starts at the top of its panel, not wherever the last one was scrolled to.
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const nodeId = node?.id;
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [frameId, nodeId]);
 
   let body: React.ReactNode;
   let title = 'Properties';
@@ -40,7 +48,7 @@ export function Properties() {
       <header className="properties__head">
         <h2 className="properties__title">{title}</h2>
       </header>
-      <div className="properties__body" data-testid="properties-body">
+      <div className="properties__body" data-testid="properties-body" ref={bodyRef}>
         {body}
       </div>
     </aside>

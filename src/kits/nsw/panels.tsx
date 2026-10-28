@@ -27,7 +27,7 @@ function WidthTable({ columnIds }: { columnIds: string[] }) {
         const spans = readSpans(nodes[id]?.props);
         return (
           <div key={id} className="width-table__row" role="row">
-            <span role="rowheader">Col {i + 1}</span>
+            <span role="rowheader">Column {i + 1}</span>
             {BREAKPOINTS.map((b) => {
               const own = spans[b.id];
               return (

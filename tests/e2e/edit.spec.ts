@@ -324,3 +324,11 @@ test('the panel says what to do when nothing is selected', async ({ page }) => {
   await page.mouse.click(c.x, c.y);
   await expect(panel(page).getByRole('heading', { name: 'Page', level: 2 })).toBeVisible();
 });
+
+test('a Card’s panel starts with its text, and keeps one shrink switch', async ({ page }) => {
+  await addFromLibrary(page, 'card', 'Default');
+  const headings = panel(page).locator('.prop-section__title');
+  await expect(headings.nth(0)).toHaveText('Cards');
+  await expect(headings.nth(1)).toHaveText('Text');
+  await expect(panel(page).getByLabel('Shrink text to fit')).toHaveCount(1);
+});

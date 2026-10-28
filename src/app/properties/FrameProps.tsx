@@ -106,7 +106,8 @@ export function FrameProps({ frameId }: { frameId: string }) {
         )}
       </Section>
       <Section
-        title="Responsive"
+        title="Checks"
+        collapsible
         hint="See this page at phone, tablet and desktop widths, and check headings, labels, picture descriptions and colour contrast."
       >
         <div className="prop-actions">
@@ -120,6 +121,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
       </Section>
       <Section
         title="Prototype links"
+        collapsible
         hint="Presenting starts here. Links set to “Go to page” move between pages, with the transition you choose."
       >
         <Toggle

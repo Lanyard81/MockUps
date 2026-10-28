@@ -416,3 +416,7 @@ A mockup's only page, if still empty with no comments, is the "starter". Adding 
 ## 076: Search synonyms live in code, not the catalogue (M7)
 
 Plain-word synonyms ("expandable" → Accordion) are a small map in `src/catalogue/index.ts`, applied to every kit, so adding one needs no catalogue regeneration. Kit-specific keywords stay in each kit's overrides.
+
+## 077: Collapsible groups use `<details>` (M8)
+
+`Section` takes `collapsible` and `defaultOpen`. Open state is a module-level map by title, so a group stays as the person left it when the selection changes, and nothing enters the document or history.

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { addFromLibrary } from './helpers';
+import { addFromLibrary, openSection } from './helpers';
 
 test.use({ viewport: { width: 1700, height: 1000 } });
 
@@ -105,6 +105,7 @@ test('the canvas refits when the window is resized, until you zoom yourself', as
 test('the click-through scales a wide page to fill a large window', async ({ page }) => {
   await page.getByRole('button', { name: 'Add page' }).click();
   await page.getByRole('menuitem', { name: /Desktop/ }).click();
+  await openSection(page, 'Prototype links');
   await page.getByLabel('Start page').check();
   await addFromLibrary(page, 'heading', 'Heading 1');
   await page.getByRole('button', { name: 'Present' }).click();

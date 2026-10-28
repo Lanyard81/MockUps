@@ -338,6 +338,25 @@ describe('editing text and properties', () => {
     expect(s().doc.nodes[id]!.props).not.toHaveProperty('fitBoxes');
   });
 
+  it('shrinks several text parts in one undo step', () => {
+    const id = addButton();
+    const before = s().past.length;
+    s().setTextFitMany(id, {
+      label: { width: 100, height: 30 },
+      hint: { width: 80.6, height: 20 },
+    });
+    expect(s().past.length).toBe(before + 1);
+    expect(s().doc.nodes[id]!.textFit).toEqual({ label: 'shrink', hint: 'shrink' });
+    expect(s().doc.nodes[id]!.props?.fitBoxes).toEqual({
+      label: { width: 100, height: 30 },
+      hint: { width: 81, height: 20 },
+    });
+    s().setTextFitMany(id, { label: null, hint: null });
+    expect(s().doc.nodes[id]!.props).not.toHaveProperty('fitBoxes');
+    s().undo();
+    expect(s().doc.nodes[id]!.textFit).toEqual({ label: 'shrink', hint: 'shrink' });
+  });
+
   it('sets column widths per breakpoint', () => {
     s().addLayoutBlock(frameId(), 'grid', 2);
     const col = Object.values(s().doc.nodes).find((n) => n.type === 'column')!;

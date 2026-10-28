@@ -49,6 +49,8 @@ export function ReferenceProps({ frameId }: { frameId: string }) {
   return (
     <Section
       title="Reference image"
+      collapsible
+      defaultOpen={!!reference}
       hint="A screenshot to trace over. Only shown while editing; never in Preview, exports, build notes or templates."
     >
       <div className="prop-actions">

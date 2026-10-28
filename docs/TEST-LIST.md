@@ -70,3 +70,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **First run (M6)** 60. Open the app fresh: the empty page offers Choose a template, Try a sample and Import a page description. Pick a template: it replaces the empty page. Help → Replay the tour: tips sit beside what they describe and move on as you act. Press Present on an empty mockup: it says why not.
 
 **Library (M7)** 61. Select a SharePoint page, switch the Library to NSW: the notice offers "Add an NSW page" and "Convert this page". Search "expandable rows": Accordion appears. Ctrl+K "mega menu" jumps to the SharePoint navigation setting; Ctrl+K "layers" opens Layers.
+
+**Properties (M8)** 62. Select a Card: its panel starts with Text, then appearance, then show/hide. There is one "Shrink text to fit" switch; turn it on and Undo once. On a page, "Checks" and "Prototype links" are folded away until opened. Select a footer: labels read "Group 1 link 1". Select one item, then another: the panel starts at the top.

@@ -364,6 +364,14 @@ interface Actions {
     mode: 'natural' | 'shrink',
     box?: { width: number; height: number },
   ) => void;
+  /**
+   * Shrink-to-fit for several text parts of one component at once: a box turns shrinking on for that
+   * part, `null` turns it off. One undo step.
+   */
+  setTextFitMany: (
+    nodeId: string,
+    parts: Record<string, { width: number; height: number } | null>,
+  ) => void;
   /** Set a column's width at a breakpoint (null removes the override). */
   setColumnSpan: (columnId: string, bp: BreakpointId, span: number | null) => void;
   setGridColumns: (gridId: string, count: number) => void;
@@ -1483,6 +1491,27 @@ export const useStore = create<Store>((set, get) => ({
         s,
         replaceNode(s.doc, { ...node, props, textFit: { ...node.textFit, [key]: mode } }),
       );
+    }),
+
+  setTextFitMany: (nodeId, parts) =>
+    set((s) => {
+      const node = s.doc.nodes[nodeId];
+      if (!node || node.type !== 'component' || Object.keys(parts).length === 0) return s;
+      const props = { ...node.props };
+      const boxes = { ...((props.fitBoxes as Record<string, unknown> | undefined) ?? {}) };
+      const textFit = { ...node.textFit };
+      for (const [key, box] of Object.entries(parts)) {
+        if (box) {
+          boxes[key] = { width: Math.round(box.width), height: Math.round(box.height) };
+          textFit[key] = 'shrink';
+        } else {
+          delete boxes[key];
+          textFit[key] = 'natural';
+        }
+      }
+      if (Object.keys(boxes).length) props.fitBoxes = boxes;
+      else delete props.fitBoxes;
+      return commit(s, replaceNode(s.doc, { ...node, props, textFit }));
     }),
 
   setColumnSpan: (columnId, bp, span) =>

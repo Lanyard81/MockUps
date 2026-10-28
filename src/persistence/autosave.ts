@@ -16,6 +16,8 @@ export function startAutosave(): () => void {
   let saveTimer: ReturnType<typeof setTimeout> | undefined;
   let thumbTimer: ReturnType<typeof setTimeout> | undefined;
   let last = useStore.getState().doc;
+  // The newest document known to be stored. A save that has started but not finished doesn't count.
+  let stored = last;
 
   const save = async () => {
     saveTimer = undefined;
@@ -27,7 +29,8 @@ export function startAutosave(): () => void {
     // A change made while this save was running has its own save queued: don't say "Saved" yet.
     if (s.doc === doc || ok === false) s.setSaveState(ok ? 'saved' : 'error');
     if (ok) {
-      clearRecovery();
+      stored = doc;
+      if (s.doc === doc) clearRecovery();
       announceSave(doc.id);
     }
   };
@@ -69,7 +72,8 @@ export function startAutosave(): () => void {
   // Leaving the page (a reload, closing the tab, switching away): save now rather than waiting for the
   // timer, and keep a synchronous copy in case the storage write doesn't finish in time.
   const flush = () => {
-    if (!saveTimer || useStore.getState().conflict) return;
+    // Also when the timer has fired but its write hasn't finished: a reload can cut that write short.
+    if (useStore.getState().conflict || useStore.getState().doc === stored) return;
     clearTimeout(saveTimer);
     writeRecovery(useStore.getState().doc);
     void save();

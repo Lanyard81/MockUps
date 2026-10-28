@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
-import { addFromLibrary } from './helpers';
+import { addFromLibrary, openSection } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('./');
@@ -88,6 +88,7 @@ test.describe('reference image', () => {
 
   test('the panel adds, changes, hides and removes it; each change undoes', async ({ page }) => {
     await frameLabel(page).click();
+    await openSection(page, 'Reference image');
     await page.getByLabel('Reference image file').setInputFiles({
       name: 'shot.png',
       mimeType: 'image/png',

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { addFromLibrary } from './helpers';
+import { addFromLibrary, openSection } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('./');
@@ -50,6 +50,7 @@ test('three stacked cards go side by side with one click', async ({ page }) => {
   expect(new Set(await ys()).size).toBe(3);
   // Select the first card, then ask for three across.
   await cards.first().click();
+  await openSection(page, 'Side by side');
   await page.getByRole('button', { name: '3 across' }).click();
   await expect.poll(async () => new Set(await ys()).size).toBe(1);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();

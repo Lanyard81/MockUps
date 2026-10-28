@@ -775,7 +775,8 @@ body.is-dragging .viewport--nodrop * {
   font-size: 12px;
 }
 .prop-hint--warn {
-  color: var(--ed-danger);
+  color: var(--ed-text-muted);
+  font-style: italic;
 }
 .prop-field {
   display: flex;
@@ -870,13 +871,13 @@ textarea {
 }
 .width-table__row {
   display: grid;
-  grid-template-columns: 40px repeat(5, minmax(0, 1fr));
+  grid-template-columns: 62px repeat(5, minmax(0, 1fr));
   align-items: center;
   gap: 3px;
 }
 .width-table__head {
   color: var(--ed-text-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .width-table select {
   height: 28px;
@@ -2471,4 +2472,20 @@ body.is-free-gesture .frame__iframe {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 6px;
+}
+
+.prop-section--collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.prop-section--collapsible > summary::before {
+  content: '▸';
+  display: inline-block;
+  width: 1em;
+}
+.prop-section--collapsible[open] > summary::before {
+  content: '▾';
+}
+.prop-section--collapsible > summary::-webkit-details-marker {
+  display: none;
 }

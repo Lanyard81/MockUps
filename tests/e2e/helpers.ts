@@ -50,3 +50,11 @@ export async function dragTile(
 
 export const frameBox = async (page: Page, name: string) =>
   (await page.locator(`iframe[title="${name}"]`).boundingBox())!;
+
+/** Open a collapsible group in the Properties panel (specialist groups start closed). */
+export async function openSection(page: Page, title: string) {
+  const summary = page.locator('summary.prop-section__title', { hasText: title });
+  await summary.waitFor();
+  const open = await summary.evaluate((el) => (el.parentElement as HTMLDetailsElement).open);
+  if (!open) await summary.click();
+}

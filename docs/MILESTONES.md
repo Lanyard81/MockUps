@@ -356,3 +356,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - Search understands plain words and simple stems ("expandable rows" finds Accordion; "toggle", "dropdown", "popup", "faq", "photo"…).
 - The command palette can open Library, Layers, Templates and Comments, and finds a page's own settings (theme, header, navigation and their options, e.g. "mega menu") and jumps to the control.
 - Not done in this pass: the category chips still filter rather than scroll (kept; tests and habits depend on them).
+
+### M8: Properties panels (done)
+
+- A component's panel is now ordered: variant, Text, Images, appearance (kit settings and Options), Show or hide, placement (free position, side by side), then actions.
+- One "Shrink text to fit" switch per component (one undo step, `setTextFitMany`); a cut-off warning stays beside the text it affects.
+- Specialist groups (Checks, Prototype links, Reference image, Side by side) are collapsible and start closed; the choice is remembered for the session; Reference image opens by itself when one is set.
+- Readable labels ("Group 1 link 1", "Column 1" in the width table), muted rather than red "Turn on…" hints, and each new selection starts at the top of its panel.
+- Fix found while testing M8: a reload while an autosave write was still running could lose the last edit (the safety copy was only made while the save timer was waiting). The safety copy is now made whenever the stored document is behind the open one.
