@@ -184,6 +184,11 @@ test('click selects, the breadcrumb shows the path, crumbs and Esc move up a lev
   const crumbs = page.getByRole('navigation', { name: 'Selection' });
   await expect(crumbs).toContainText('Home');
   await expect(crumbs).toContainText('Section');
+  // Containers, grids and columns are left out of the path unless layout details are on.
+  await expect(crumbs).not.toContainText('Container');
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByLabel(/Show layout details/).check();
+  await page.keyboard.press('Escape');
   await expect(crumbs).toContainText('Container');
   await expect(crumbs).toContainText('Grid');
   await expect(crumbs).toContainText('Column');
@@ -192,6 +197,10 @@ test('click selects, the breadcrumb shows the path, crumbs and Esc move up a lev
 
   await crumbs.getByRole('button', { name: 'Section' }).click();
   await expect(crumbs.locator('.is-current')).toHaveText('Section');
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByLabel(/Show layout details/).uncheck();
+  await page.keyboard.press('Escape');
+  await crumbs.getByRole('button', { name: 'Section' }).click();
   await page.keyboard.press('Escape');
   await expect(crumbs.locator('.is-current')).toHaveText('Home'); // frame level
   await page.keyboard.press('Escape');

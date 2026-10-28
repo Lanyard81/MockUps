@@ -15,6 +15,8 @@ import { KitSwitcher } from './KitSwitcher';
 import { PageParts } from './PageParts';
 import { useLibraryKit } from './useLibraryKit';
 import { kitMismatchMessage } from '../layout/kitGuard';
+import { nodeLabel } from '../layout/labels';
+import { describeInsertion } from '../layout/ops';
 
 type Filter = Category | 'All';
 
@@ -22,6 +24,18 @@ export function Library() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All');
   const { kit, target, mismatch } = useLibraryKit();
+  // Where a click would add the next item, in words. A string, so the library only redraws when it changes.
+  const where = useStore((s) => {
+    const frame = s.doc.frames.find((f) => f.id === s.selectedFrameId) ?? s.doc.frames[0];
+    if (!frame) return '';
+    if (frame.layout === 'free') return 'in the next free spot';
+    return describeInsertion(
+      s.doc,
+      frame.id,
+      s.selectedFrameId === frame.id ? s.selectedNodeId : null,
+      (n) => nodeLabel(n, frame.kitId),
+    );
+  });
   // The filter belongs to a kit's categories: reset it when the kit changes.
   const activeFilter: Filter = filter === 'All' || kit.categories.includes(filter) ? filter : 'All';
   const results = useMemo(
@@ -69,7 +83,7 @@ export function Library() {
             </span>
           ) : target ? (
             <>
-              Click to add to <strong>{target.name}</strong>
+              Adds to <strong>{target.name}</strong>, {where}
             </>
           ) : (
             'Add a page to start building'

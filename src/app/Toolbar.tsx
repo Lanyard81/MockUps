@@ -248,6 +248,7 @@ export function Toolbar() {
                 </div>
               </div>
               <ThemeChoice />
+              <StructureChoice />
             </>
           }
           items={[
@@ -357,6 +358,23 @@ function ThemeChoice() {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** Advanced: show containers and grids when stepping through a page's structure. */
+function StructureChoice() {
+  const on = useStore((s) => s.showStructure);
+  return (
+    <div className="menu__setting">
+      <label className="menu__check">
+        <input
+          type="checkbox"
+          checked={on}
+          onChange={(e) => useStore.getState().setShowStructure(e.target.checked)}
+        />
+        <span>Show layout details (containers, grids and columns)</span>
+      </label>
     </div>
   );
 }

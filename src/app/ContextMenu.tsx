@@ -8,7 +8,7 @@ import { getKit } from '../kits';
 import { conversionTargets } from '../layout/convert';
 import { getComponent } from '../catalogue';
 import { isFreeFrame } from '../layout/free';
-import { parentOf } from '../layout/ops';
+import { parentOf, sideBySideChoices } from '../layout/ops';
 import { useStore } from '../store/store';
 import { ALT, MOD, SHIFT } from './platform';
 
@@ -103,6 +103,15 @@ export function ContextMenu() {
         disabled: !movable,
         onSelect: () => st().copyNode(nodeId),
       },
+      ...sideBySideChoices(doc, nodeId)
+        .filter((n) => n <= 3)
+        .map((n) => ({
+          label:
+            n === 2
+              ? 'Put this and the next item side by side'
+              : `Put this and the next ${n - 1} items side by side`,
+          onSelect: () => st().arrangeInRow(nodeId, n),
+        })),
       {
         label: 'Cut',
         shortcut: `${MOD}X`,

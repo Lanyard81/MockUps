@@ -1,4 +1,5 @@
 import { readDefaultLayout, saveDefaultLayout } from '../lib/layoutDefault';
+import { readShowStructure, saveShowStructure } from '../lib/layoutDefault';
 import { create } from 'zustand';
 import { DEFAULT_KIT_ID, getKit } from '../kits';
 import { patchAtPath } from '../lib/settingsPath';
@@ -38,6 +39,7 @@ import { DEFAULT_REFERENCE } from '../lib/reference';
 import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
 import {
   applyInsertion,
+  arrangeInRow,
   clearChildren,
   detachNode,
   extractSubtree,
@@ -219,6 +221,8 @@ interface State {
   viewport: { width: number; height: number };
   /** True while the canvas is being panned (space held or middle mouse), so frames ignore the pointer. */
   panning: boolean;
+  /** Show containers and grids in the selection path and when stepping out with Esc. Off by default. UI-only. */
+  showStructure: boolean;
   /** The hand tool is switched on (the toolbar button or H): dragging pans until it is switched off. */
   handTool: boolean;
   /** True once the initial "zoom to fit" has run. */
@@ -292,6 +296,7 @@ interface Actions {
   setViewport: (width: number, height: number) => void;
   setPanning: (panning: boolean) => void;
   setHandTool: (on: boolean) => void;
+  setShowStructure: (on: boolean) => void;
   markFitted: () => void;
   requestRename: (id: string | null) => void;
 
@@ -334,6 +339,8 @@ interface Actions {
   moveNode: (nodeId: string, target: Placement) => void;
   deleteNode: (nodeId: string) => void;
   duplicateNode: (nodeId: string) => void;
+  /** Put this item and the ones after it in its column side by side, up to `n` across. One undo step. */
+  arrangeInRow: (nodeId: string, n: number) => void;
   copyNode: (nodeId: string) => void;
   pasteClipboard: () => void;
   /** Save a component, or a section of a flow frame, for reuse. Returns false (with a notice) if it can't be. */
@@ -632,6 +639,7 @@ export const useStore = create<Store>((set, get) => ({
   viewport: { width: 1000, height: 700 },
   panning: false,
   handTool: false,
+  showStructure: readShowStructure(),
   fitted: false,
   renameRequest: null,
 
@@ -641,7 +649,15 @@ export const useStore = create<Store>((set, get) => ({
   selectParent: () =>
     set((s) => {
       if (s.selectedNodeId) {
-        const p = parentOf(s.doc, s.selectedNodeId);
+        // Step out to the nearest parent a person would recognise: containers and grids are skipped
+        // unless "Show layout details" is on.
+        let p = parentOf(s.doc, s.selectedNodeId);
+        while (
+          !s.showStructure &&
+          p?.parentId &&
+          ['container', 'grid', 'column'].includes(s.doc.nodes[p.parentId]?.type ?? '')
+        )
+          p = parentOf(s.doc, p.parentId);
         return { selectedNodeId: p?.parentId ?? null };
       }
       return { selectedFrameId: null };
@@ -949,6 +965,10 @@ export const useStore = create<Store>((set, get) => ({
   },
   setPanning: (panning) => set((s) => ({ panning: panning || s.handTool })),
   setHandTool: (handTool) => set({ handTool, panning: handTool }),
+  setShowStructure: (showStructure) => {
+    saveShowStructure(showStructure);
+    set({ showStructure });
+  },
   markFitted: () => set({ fitted: true }),
   requestRename: (id) => set({ renameRequest: id }),
 
@@ -1273,6 +1293,16 @@ export const useStore = create<Store>((set, get) => ({
         notice: text,
         noticeAction: { text, label: 'Bring it back', run: () => get().undo() },
       };
+    }),
+
+  arrangeInRow: (nodeId, n) =>
+    set((s) => {
+      const doc = arrangeInRow(s.doc, nodeId, n, newId);
+      if (doc === s.doc)
+        return {
+          notice: 'There is nothing after this item to put beside it, or no room in this row.',
+        };
+      return commit(s, doc);
     }),
 
   duplicateNode: (nodeId) =>
@@ -1632,7 +1662,12 @@ export const useStore = create<Store>((set, get) => ({
           newId,
         );
       });
-      return { ...commit(s, doc), selectedFrameId: frameId, selectedNodeId: added[0]! };
+      return {
+        ...commit(s, doc),
+        selectedFrameId: frameId,
+        // Next content goes after the last top part, or above the footer.
+        selectedNodeId: atTop ? added[added.length - 1]! : added[0]!,
+      };
     }),
 
   moveSelected: (dir) =>

@@ -400,3 +400,7 @@ A reload can happen before an asynchronous IndexedDB write finishes, so when the
 ## 072. Toolbar priorities and zoom on the canvas (review M3)
 
 Overflow is decided by an explicit priority per item (not by position) and is strict: once one item doesn't fit, everything less important goes in More, so the bar never shows Redo without Undo. Zoom moved to a corner of the canvas as in Figma, Framer and Canva, which frees the bar and keeps zoom reachable at every window size. Layout default, theme and shortcuts are one labelled "Settings" menu rather than three bare icons.
+
+## 073. Rows are made from the items, not from the Grid (review M4)
+
+People think "put these three cards in a row", not "set the grid to three columns and move each card". `arrangeInRow` (in `layout/ops.ts`, tested in `tests/ops.test.ts`) takes an item and the ones after it in its column and spreads them across columns, adding columns to the grid or section as needed. Containers, grids and columns stay in the document and in Layers; they are only left out of the selection path and Esc by default, behind a "Show layout details" setting, because they are NSW's structure, not something the person made.

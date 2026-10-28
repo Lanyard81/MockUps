@@ -5,6 +5,7 @@ import { getFrameElement } from '../../canvas/registry';
 import { copySelectionHtml } from '../../export/copy';
 import { describeVariant, optionsForVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
+import { sideBySideChoices } from '../../layout/ops';
 import { useStore } from '../../store/store';
 import { FreePosition } from './FreeProps';
 import { ImageField } from './ImageField';
@@ -216,6 +217,27 @@ function TextField({
   );
 }
 
+/** "Side by side": put this item and the next ones in its column across the page. */
+function SideBySide({ nodeId }: { nodeId: string }) {
+  const doc = useStore((s) => s.doc);
+  const choices = sideBySideChoices(doc, nodeId);
+  if (choices.length === 0) return null;
+  return (
+    <Section
+      title="Side by side"
+      hint="Put this item and the ones after it in this column next to each other, across the page."
+    >
+      <div className="segmented segmented--block" role="group" aria-label="Items across">
+        {choices.map((n) => (
+          <button key={n} onClick={() => useStore.getState().arrangeInRow(nodeId, n)}>
+            {n} across
+          </button>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: string }) {
   const node = useStore((s) => s.doc.nodes[nodeId]);
   const hidden =
@@ -252,6 +274,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
       </Section>
 
       <FreePosition nodeId={nodeId} />
+      <SideBySide nodeId={nodeId} />
       <div className="prop-actions">
         <button
           className="btn"

@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
   applyInsertion,
+  arrangeInRow,
   buildChain,
   canContain,
   canMoveInto,
   clearChildren,
+  describeInsertion,
   depthOf,
   detachNode,
   frameOfNode,
@@ -17,6 +19,7 @@ import {
   removeNode,
   resolveInsertion,
   setGridColumnCount,
+  sideBySideChoices,
   type Doc,
 } from '../src/layout/ops';
 import { buildSection } from '../src/kits/nsw/blocks';
@@ -339,5 +342,82 @@ describe("changing a grid's column count", () => {
     );
     expect(setGridColumnCount(fx.doc, fx.grid, 0, makeId).nodes[fx.grid]!.children).toHaveLength(1);
     expect(setGridColumnCount(fx.doc, 'a', 3, makeId)).toBe(fx.doc);
+  });
+});
+
+describe('content stays between the header and the footer', () => {
+  /** f1: masthead, header, the section (with a, b), footer. */
+  function withParts() {
+    const { doc, section, column } = fixture();
+    doc.nodes.m = { ...comp('m', 'masthead') };
+    doc.nodes.h = { ...comp('h', 'header') };
+    doc.nodes.ft = { ...comp('ft', 'footer') };
+    doc.frames[0] = { ...doc.frames[0]!, root: ['m', 'h', section, 'ft'] };
+    return { doc, section, column };
+  }
+
+  it('adds before the footer when nothing is selected, or the footer is', () => {
+    const { doc, column } = withParts();
+    expect(resolveInsertion(doc, 'f1', null, comp('x'))).toEqual({
+      parentId: column,
+      index: 2,
+      chainFrom: null,
+    });
+    expect(resolveInsertion(doc, 'f1', 'ft', comp('x'))).toEqual({
+      parentId: column,
+      index: 2,
+      chainFrom: null,
+    });
+  });
+
+  it('adds after the last header part when the masthead is selected, in a section of its own', () => {
+    const { doc } = withParts();
+    // With the masthead selected, content goes after the header (index 2), starting a new section.
+    const ins = resolveInsertion(doc, 'f1', 'm', comp('x'));
+    expect(ins.parentId).toBeNull();
+    expect(ins.index).toBe(2);
+    expect(ins.chainFrom).toBe(1);
+  });
+
+  it('puts a footer at the end and describes the spot in words', () => {
+    const { doc } = withParts();
+    const label = (n: DocNode) => n.componentId ?? n.type;
+    expect(describeInsertion(doc, 'f1', null, label)).toBe('after “button”');
+    expect(describeInsertion(doc, 'f2', null, label)).toBe('at the top of the page');
+  });
+});
+
+describe('side by side', () => {
+  /** A grid of one column holding a, b, c (three cards, say). */
+  function stacked() {
+    const { doc, grid, column } = fixture();
+    doc.nodes.c = comp('c');
+    doc.nodes[column] = { ...doc.nodes[column]!, children: ['a', 'b', 'c'] };
+    return { doc, grid, column };
+  }
+
+  it('offers 2 and 3 across for an item with two after it', () => {
+    const { doc } = stacked();
+    expect(sideBySideChoices(doc, 'a')).toEqual([2, 3]);
+    expect(sideBySideChoices(doc, 'b')).toEqual([2]);
+    expect(sideBySideChoices(doc, 'c')).toEqual([]);
+  });
+
+  it('spreads three stacked items into three columns of one grid', () => {
+    const { doc, grid } = stacked();
+    const next = arrangeInRow(doc, 'a', 3, makeId);
+    const cols = next.nodes[grid]!.children!;
+    expect(cols).toHaveLength(3);
+    expect(cols.map((id) => next.nodes[id]!.children)).toEqual([['a'], ['b'], ['c']]);
+  });
+
+  it('leaves the items before it in place, and does nothing when there is no one to put beside it', () => {
+    const { doc, grid, column } = stacked();
+    const next = arrangeInRow(doc, 'b', 2, makeId);
+    const cols = next.nodes[grid]!.children!;
+    expect(next.nodes[cols[0]!]!.children).toEqual(['a', 'b']);
+    expect(next.nodes[cols[1]!]!.children).toEqual(['c']);
+    expect(arrangeInRow(doc, 'c', 2, makeId)).toBe(doc);
+    expect(next.nodes[column]!.children).toEqual(['a', 'b']);
   });
 });

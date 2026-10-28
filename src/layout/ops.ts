@@ -229,6 +229,16 @@ export function buildChain(
   return { nodes, topId: childId };
 }
 
+/** The component ids a kit puts at the top of a page (masthead, header) and at the bottom (footer). */
+export function pagePartIds(kitId: string): { top: Set<string>; bottom: Set<string> } {
+  const parts = getKit(kitId).pageParts;
+  const ids = (position: 'top' | 'bottom') =>
+    new Set(
+      parts.filter((p) => p.position === position).flatMap((p) => p.components.map((c) => c[0])),
+    );
+  return { top: ids('top'), bottom: ids('bottom') };
+}
+
 /** Where something should go: a parent (null = frame root), a position, and layers to create. */
 export interface Insertion {
   parentId: string | null;
@@ -253,6 +263,32 @@ export function resolveInsertion(
   const schema = schemaOfFrame(doc, frameId);
   const leafDepth = depthOf(leaf, schema);
   let anchor = anchorId && frameOfNode(doc, anchorId) === frameId ? anchorId : null;
+
+  // Content belongs between the page's top parts (masthead, header) and its bottom parts (footer),
+  // whatever happens to be selected or last: a footer stays last and a header stays first.
+  const part = pagePartIds(frame.kitId);
+  const componentOf = (id: string) => doc.nodes[id]?.componentId ?? '';
+  const isTop = (id: string) => part.top.has(componentOf(id));
+  const isBottom = (id: string) => part.bottom.has(componentOf(id));
+  const leafIsPart =
+    part.top.has(leaf.componentId ?? '') || part.bottom.has(leaf.componentId ?? '');
+  if (!leafIsPart) {
+    const root = frame.root;
+    const inRoot = anchor ? pathTo(doc, anchor)[0] : null;
+    if (!anchor || (inRoot && isBottom(inRoot) && anchor === inRoot)) {
+      // Nothing selected, or the footer: the end of the content, above the footer.
+      let last = root.length - 1;
+      while (last >= 0 && isBottom(root[last]!)) last--;
+      if (last < 0) return { parentId: null, index: 0, chainFrom: leafDepth > 1 ? 1 : null };
+      anchor = root[last]!;
+    }
+    if (anchor && isTop(anchor)) {
+      // On a masthead or header: after the last of the run of top parts at the start.
+      let last = 0;
+      while (last + 1 < root.length && isTop(root[last + 1]!)) last++;
+      anchor = root[last]!;
+    }
+  }
   anchor ??= frame.root[frame.root.length - 1] ?? null;
   if (!anchor) return { parentId: null, index: 0, chainFrom: leafDepth > 1 ? 1 : null };
 
@@ -418,4 +454,95 @@ export function setColumnCount<T extends Doc>(
   }
   nodes[parentId] = { ...parent, children: columns };
   return { ...doc, nodes };
+}
+
+/**
+ * Put a component and the items after it in its column side by side in a row of up to `n`: each goes
+ * in its own column, starting at the column it is in. Adds columns when the row has too few (a grid
+ * up to 6, a section up to its kit's layouts), keeps everything else where it was, and returns the
+ * document unchanged when it can't be done.
+ */
+export function arrangeInRow<T extends Doc>(doc: T, nodeId: string, n: number, makeId: MakeId): T {
+  const where = parentOf(doc, nodeId);
+  const col = where?.parentId ? doc.nodes[where.parentId] : undefined;
+  if (!where || !col || col.type !== 'column') return doc;
+  const rowLoc = parentOf(doc, col.id);
+  const row = rowLoc?.parentId ? doc.nodes[rowLoc.parentId] : undefined;
+  if (!rowLoc || !row || (row.type !== 'grid' && row.type !== 'section')) return doc;
+  const frameId = frameOfNode(doc, nodeId);
+  if (!frameId) return doc;
+  const schema = schemaOfFrame(doc, frameId);
+  const layouts = schema.sectionLayouts;
+  const rowMax = row.type === 'grid' ? 6 : layouts ? 3 : (schema.maxChildren?.section ?? 6);
+  const group = (col.children ?? []).slice(where.index, where.index + Math.max(1, Math.round(n)));
+  const start = rowLoc.index;
+  const size = Math.min(group.length, rowMax - start);
+  if (size < 2) return doc;
+  const needed = start + size;
+  let next: T = doc;
+  const have = row.children?.length ?? 0;
+  if (needed > have) {
+    if (row.type === 'grid') next = setGridColumnCount(next, row.id, needed, makeId);
+    else {
+      const id = { 1: 'one-column', 2: 'two-columns', 3: 'three-columns' }[needed];
+      if (layouts && !(id && layouts.some((l) => l.id === id && l.columns === needed))) return doc;
+      next = setColumnCount(next, row.id, needed, makeId, rowMax);
+      if (id)
+        next = {
+          ...next,
+          nodes: {
+            ...next.nodes,
+            [row.id]: {
+              ...next.nodes[row.id]!,
+              props: { ...next.nodes[row.id]!.props, layout: id },
+            },
+          },
+        };
+    }
+  }
+  const columns = next.nodes[row.id]!.children ?? [];
+  // The first stays; the rest move one column to the right each.
+  group.slice(1, size).forEach((id, i) => {
+    next = insertNode(detachNode(next, id), frameId, columns[start + 1 + i]!, 0, id);
+  });
+  return next;
+}
+
+/** The row sizes `arrangeInRow` could make for this item now: 2 up to as many items as follow it (and fit). */
+export function sideBySideChoices(doc: Doc, nodeId: string): number[] {
+  const out: number[] = [];
+  for (let n = 2; n <= 4; n++) {
+    // Only sizes it can fill exactly: enough items after this one, and room in the row.
+    const loc = parentOf(doc, nodeId);
+    const col = loc?.parentId ? doc.nodes[loc.parentId] : undefined;
+    const enough = (col?.children?.length ?? 0) - (loc?.index ?? 0) >= n;
+    if (enough && arrangeInRow(doc, nodeId, n, (p) => `${p}_probe`) !== doc) out.push(n);
+  }
+  return out;
+}
+
+/** In words, where click-to-add would put a new item now (for the Library): "after “Heading”", "at the end of the page". */
+export function describeInsertion(
+  doc: Doc,
+  frameId: string,
+  anchorId: string | null,
+  label: (n: DocNode) => string,
+): string {
+  const frame = doc.frames.find((f) => f.id === frameId);
+  if (!frame) return '';
+  const probe: DocNode = { id: '_probe', type: 'component', componentId: '_probe' };
+  const ins = resolveInsertion(
+    { ...doc, nodes: { ...doc.nodes, _probe: probe } },
+    frameId,
+    anchorId,
+    probe,
+  );
+  if (ins.chainFrom !== null && ins.parentId === null && frame.root.length === 0)
+    return 'at the top of the page';
+  const siblings = ins.parentId ? (doc.nodes[ins.parentId]?.children ?? []) : frame.root;
+  const prev = ins.index > 0 ? doc.nodes[siblings[ins.index - 1]!] : undefined;
+  if (ins.chainFrom !== null)
+    return prev ? `in a new section after “${label(prev)}”` : 'at the top of the page';
+  if (prev) return `after “${label(prev)}”`;
+  return ins.parentId ? 'at the start of that column' : 'at the top of the page';
 }

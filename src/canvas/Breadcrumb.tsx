@@ -9,8 +9,15 @@ export function Breadcrumb() {
   const nodeId = useStore((s) => s.selectedNodeId);
   const select = useStore((s) => s.selectNode);
   const selectFrame = useStore((s) => s.selectFrame);
+  const showStructure = useStore((s) => s.showStructure);
   if (!frame) return null;
-  const path = nodeId && doc.nodes[nodeId] ? pathTo(doc, nodeId) : [];
+  // Containers, grids and columns are layout plumbing: hidden here unless "Show layout details" is on (or selected).
+  const path = (nodeId && doc.nodes[nodeId] ? pathTo(doc, nodeId) : []).filter(
+    (id) =>
+      showStructure ||
+      id === nodeId ||
+      !['container', 'grid', 'column'].includes(doc.nodes[id]?.type ?? ''),
+  );
 
   return (
     <nav className="breadcrumb" aria-label="Selection" onPointerDown={(e) => e.stopPropagation()}>

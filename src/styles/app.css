@@ -2389,3 +2389,10 @@ body.is-free-gesture .frame__iframe {
     gap: var(--ed-space-2);
   }
 }
+
+.menu__check {
+  display: flex;
+  gap: var(--ed-space-2);
+  align-items: center;
+  cursor: pointer;
+}

@@ -62,3 +62,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Keyboard (M1)** 56. Put the mouse away. Tab to "Skip to the library", press Enter. Use ← → on the tabs, open Layers, arrow down to an item, Enter to select it, F2 to rename, Alt+↓ to move it, Delete then Ctrl+Z. Press `]` to step through the page, Enter to edit text. Focus File and press ↓, then Esc. Focus a page name and press Enter, then F2.
 
 **Safety (M2)** 57. Edit something and reload straight away: it is still there. Open the same mockup in two tabs, edit in one, and see the other pause with a choice. File → New mockup asks first. Delete a page: "Bring it back" restores it. Delete a saved version: it asks.
+
+**Adding things (M4)** 58. Add masthead + header, then a heading, three cards and a footer by clicking: header on top, footer last. Watch the line under the Library search say where the next click adds. Select the first card and choose "3 across" (Properties or right-click), then Undo. Press Esc from a card: Section, then the page. Settings → "Show layout details" brings containers, grids and columns back.

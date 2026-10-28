@@ -326,3 +326,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] The bar has a Share button (opens the export dialog) and a labelled Settings menu: layout new pages start as (Stacked or Free), editor theme (Dark or Light), keyboard shortcuts.
 - [x] Overflow follows a priority, strictly: Add page, Edit/Preview, Present and Share stay longest; Undo, Redo, Comment and Pan go into More first. Undo and Redo sit together; the Hand is a text "Pan" button.
 - [x] Under 1100px Search is an icon (still named for screen readers) and the bar tightens. The save status keeps its width: nothing moves on autosave.
+
+### M4: Insertion you can see
+
+- [x] Click-to-add keeps content between the header and the footer: with nothing selected, or the footer selected, it goes above the footer; with the masthead selected it goes after the header; Add masthead + header leaves the header selected so the next item follows it.
+- [x] The Library says where the next click will add ("Adds to Home, after “Heading 1”").
+- [x] "Side by side": select an item and choose 2 or 3 across (Properties, or the right-click menu) to spread it and the items after it in its column across the row, adding columns as needed.
+- [x] Esc and the selection path skip containers, grids and columns (they are layout plumbing); Settings → "Show layout details" brings them back.

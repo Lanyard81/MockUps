@@ -138,7 +138,23 @@ describe('selection, moving and clipboard', () => {
     expect(order).toEqual(['heading', 'paragraph', 'heading', 'heading']);
   });
 
-  it('Esc selects the parent, then the frame, then nothing', () => {
+  it('Esc skips containers, grids and columns: section, then the page, then nothing', () => {
+    const types: (string | null)[] = [];
+    for (let i = 0; i < 4; i++) {
+      s().selectParent();
+      types.push(
+        s().selectedNodeId
+          ? s().doc.nodes[s().selectedNodeId!]!.type
+          : s().selectedFrameId
+            ? 'frame'
+            : null,
+      );
+    }
+    expect(types).toEqual(['section', 'frame', null, null]);
+  });
+
+  it('with layout details shown, Esc selects the parent, then the frame, then nothing', () => {
+    useStore.setState({ showStructure: true });
     const leaf = s().selectedNodeId!;
     const types: (string | null)[] = [];
     for (let i = 0; i < 8; i++) {
@@ -153,6 +169,7 @@ describe('selection, moving and clipboard', () => {
     }
     expect(s().doc.nodes[leaf]).toBeDefined();
     expect(types.slice(0, 6)).toEqual(['column', 'grid', 'container', 'section', 'frame', null]);
+    useStore.setState({ showStructure: false });
   });
 
   it('dropping a new component at an index is one undo step', () => {
@@ -387,7 +404,7 @@ describe('layers, page parts and names', () => {
     s().addPageParts(frameId(), 'top');
     expect(rootComponents()).toEqual(['masthead', 'header', 'section']);
     expect(s().past.length).toBe(before + 1);
-    expect(s().doc.nodes[s().selectedNodeId!]!.componentId).toBe('masthead');
+    expect(s().doc.nodes[s().selectedNodeId!]!.componentId).toBe('header'); // so the next item follows it
     s().undo();
     expect(rootComponents()).toEqual(['section']);
   });
