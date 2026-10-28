@@ -1,3 +1,4 @@
+import { NSW_SPACING } from './spacing';
 import type { Catalogue } from '../../catalogue/types';
 import nswPkg from 'nsw-design-system/package.json';
 import data from './catalogue/generated/catalogue.json';
@@ -89,6 +90,7 @@ export const nswKit: Kit = {
     },
   },
   renderLayout: renderNswLayout,
+  spacing: NSW_SPACING,
   previewOnDark: (html) =>
     `<div class="nsw-section nsw-section--brand-dark nsw-section--invert" style="padding:16px 12px">${html}</div>`,
   layoutBlocks,

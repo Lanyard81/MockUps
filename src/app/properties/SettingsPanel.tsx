@@ -26,23 +26,43 @@ function Control({
   switch (def.type) {
     case 'swatches': {
       const current = asString(value, String(def.default ?? def.options[0]?.id));
+      // A few choices get their names written under them; a long row shows just the chosen name.
+      const named = def.options.length <= 5;
       return (
         <>
-          <div className="swatches" role="group" aria-label={def.label}>
-            {def.options.map((o) => (
-              <button
-                key={o.id}
-                className={`swatch${current === o.id ? ' is-active' : ''}`}
-                style={{ background: typeof o.swatch === 'function' ? o.swatch(ctx) : o.swatch }}
-                aria-pressed={current === o.id}
-                aria-label={o.label}
-                title={why(o) ?? o.title ?? o.label}
-                disabled={disabled || (why(o) !== null && current !== o.id)}
-                onClick={() => commit(o.id)}
-              />
-            ))}
+          <div
+            className={`swatches${named ? ' swatches--named' : ''}`}
+            role="group"
+            aria-label={def.label}
+          >
+            {def.options.map((o) => {
+              const button = (
+                <button
+                  key={o.id}
+                  className={`swatch${current === o.id ? ' is-active' : ''}`}
+                  style={{ background: typeof o.swatch === 'function' ? o.swatch(ctx) : o.swatch }}
+                  aria-pressed={current === o.id}
+                  aria-label={o.label}
+                  title={why(o) ?? o.title ?? o.label}
+                  disabled={disabled || (why(o) !== null && current !== o.id)}
+                  onClick={() => commit(o.id)}
+                />
+              );
+              return named ? (
+                <div key={o.id} className="swatch-cell">
+                  {button}
+                  <span className="swatch-cell__name" aria-hidden="true">
+                    {o.label}
+                  </span>
+                </div>
+              ) : (
+                button
+              );
+            })}
           </div>
-          <p className="prop-hint">{def.options.find((o) => o.id === current)?.label}</p>
+          {!named && (
+            <p className="prop-hint">{def.options.find((o) => o.id === current)?.label}</p>
+          )}
         </>
       );
     }
@@ -146,34 +166,68 @@ export function SettingsPanel({
   onChange: (key: string, value: unknown, def: SettingDef) => void;
 }) {
   const ctx: SettingContext = { ...context, values };
-  const groups: { title: string; hint?: string; defs: SettingDef[] }[] = [];
+  const groups: { title: string; defs: SettingDef[] }[] = [];
   for (const def of defs) {
     let g = groups.find((x) => x.title === def.group);
     if (!g) groups.push((g = { title: def.group, defs: [] }));
-    g.hint ??= def.hint;
     g.defs.push(def);
   }
   return (
     <>
-      {groups.map((g) => (
-        <Section key={g.title} title={g.title} hint={g.hint}>
-          {g.defs.map((def) => {
-            const reason = def.unavailable?.(ctx) ?? null;
-            return (
-              <div key={def.key}>
-                <Control
-                  def={def}
-                  value={def.current ? def.current(ctx) : values[def.key]}
-                  disabled={reason !== null}
-                  ctx={ctx}
-                  onChange={(v) => onChange(def.key, v, def)}
-                />
-                {reason && <p className="prop-hint prop-hint--warn">{reason}</p>}
-              </div>
-            );
-          })}
-        </Section>
-      ))}
+      {groups.map((g) => {
+        const rows = g.defs.map((def) => ({ def, reason: def.unavailable?.(ctx) ?? null }));
+        // A group where nothing can be changed says why once, in a line, instead of a wall of disabled controls.
+        if (rows.every((r) => r.reason)) {
+          const reasons = [...new Set(rows.map((r) => r.reason))];
+          return (
+            <Section key={g.title} title={g.title}>
+              {reasons.map((r) => (
+                <p key={r} className="prop-hint prop-hint--warn">
+                  {r}
+                </p>
+              ))}
+            </Section>
+          );
+        }
+        // Several controls in a row with the same reason share one line of it.
+        const shown: ((typeof rows)[number] | { collapsed: string })[] = [];
+        for (let i = 0; i < rows.length; i++) {
+          const r = rows[i]!;
+          let j = i;
+          while (j + 1 < rows.length && r.reason && rows[j + 1]!.reason === r.reason) j++;
+          if (r.reason && j > i) {
+            shown.push({ collapsed: r.reason });
+            i = j;
+          } else shown.push(r);
+        }
+        return (
+          <Section key={g.title} title={g.title}>
+            {shown.map((item) => {
+              if ('collapsed' in item)
+                return (
+                  <p key={item.collapsed} className="prop-hint prop-hint--warn">
+                    {item.collapsed}
+                  </p>
+                );
+              const { def, reason } = item;
+              if (reason && def.hideWhenUnavailable) return null;
+              return (
+                <div key={def.key}>
+                  <Control
+                    def={def}
+                    value={def.current ? def.current(ctx) : values[def.key]}
+                    disabled={reason !== null}
+                    ctx={ctx}
+                    onChange={(v) => onChange(def.key, v, def)}
+                  />
+                  {def.hint && <p className="prop-hint">{def.hint}</p>}
+                  {reason && <p className="prop-hint prop-hint--warn">{reason}</p>}
+                </div>
+              );
+            })}
+          </Section>
+        );
+      })}
     </>
   );
 }

@@ -78,6 +78,8 @@ export type SettingDef = (
    * something the kit can't do in that context.
    */
   unavailable?: (ctx: SettingContext) => string | null;
+  /** When it is unavailable, show nothing at all instead of a disabled control and the reason. */
+  hideWhenUnavailable?: boolean;
 };
 
 /** One choice in a setting. `unavailable` gives the reason it can't be chosen here, or null. */
@@ -295,6 +297,13 @@ export interface KitPageSpec {
   docs: { shapes: string; rules: string[]; example: unknown };
 }
 
+/** Space above a component in a stack, as classes the kit's own system provides. */
+export interface KitSpacing {
+  options: { id: string; label: string; cls: string }[];
+  /** The option a component gets when the person hasn't chosen one and it follows something in its column (or null for none). */
+  auto: (node: DocNode) => string | null;
+}
+
 export interface Kit {
   id: KitId;
   name: string;
@@ -328,6 +337,8 @@ export interface Kit {
     init: string;
   };
   settings: KitSettings;
+  /** Space-above choices for stacked components; kits without them leave this out. */
+  spacing?: KitSpacing;
   /** Final touches to a component's markup that data can't describe (a chart drawn from its numbers). */
   enhanceComponent?: (root: ParentNode, node: DocNode) => void;
   /** Markup for one of the kit's icons by name (see the `iconSlot` option), and the names it offers. */

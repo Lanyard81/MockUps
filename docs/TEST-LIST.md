@@ -80,3 +80,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Look (M10)** 64. Settings → Editor look → Flat: panels sit edge to edge with thin lines, no blur or colour wash. Switch Dark/Light in each look; menus never show the page through them. Zoom far out: the dots thin out and vanish. Every icon (close, expand arrows, eye, play) looks like the same family.
 
 **Canvas (M11)** 65. Zoom to 100%, add three desktop pages: each slides into view. Drag a library tile to the bottom edge of the canvas and hold: the canvas scrolls. Hover a spot and press Ctrl/⌘ + : it zooms around that spot. Zoom far out: page names shorten, never overlap. Present, click inside the page, press Esc: it closes.
+
+**Kits (M12)** 66. Templates → NSW → Application: work dashboard: each group heading has clear space above it. Select a paragraph below a heading in an NSW page: Properties has "Space above" (try Large, then Auto). Simple → Landing page: the last button is centred under its heading. Simple page: the "Accent colour on this page" swatches appear only after ticking "Use a different accent".

@@ -183,6 +183,55 @@ describe('rendering frames', () => {
   });
 });
 
+describe('space above stacked components', () => {
+  const column = (kids: DocNode[], extra: Record<string, DocNode> = {}) => ({
+    nodes: {
+      col: { id: 'col', type: 'column', children: kids.map((k) => k.id) } as DocNode,
+      ...Object.fromEntries(kids.map((k) => [k.id, k])),
+      ...extra,
+    },
+  });
+  const wrapper = (html: string, id: string) =>
+    new RegExp(`<div data-node="${id}"( class="([^"]*)")?>`).exec(html);
+
+  it('gives a section heading room above it, but not when it comes first', () => {
+    const { nodes } = column([
+      node('paragraph', 'default', { id: 'a' }),
+      node('heading', 'h2', { id: 'b' }),
+      node('heading', 'h1', { id: 'c' }),
+    ]);
+    const html = renderFrameHtml(nodes, ['col']);
+    expect(wrapper(html, 'a')?.[2]).toBeUndefined();
+    expect(wrapper(html, 'b')?.[2]).toBe('nsw-m-top-lg');
+    expect(wrapper(html, 'c')?.[2]).toBeUndefined(); // a page title does not open a group
+    const first = column([
+      node('heading', 'h2', { id: 'x' }),
+      node('paragraph', 'default', { id: 'y' }),
+    ]);
+    expect(wrapper(renderFrameHtml(first.nodes, ['col']), 'x')?.[2]).toBeUndefined();
+  });
+
+  it('follows the person’s choice, including none, with official NSW classes', () => {
+    const { nodes } = column([
+      node('paragraph', 'default', { id: 'a' }),
+      node('heading', 'h2', { id: 'b', props: { spaceAbove: 'none' } }),
+      node('paragraph', 'default', { id: 'c', props: { spaceAbove: 'xl' } }),
+    ]);
+    const html = renderFrameHtml(nodes, ['col']);
+    expect(wrapper(html, 'b')?.[2]).toBe('nsw-m-top-0');
+    expect(wrapper(html, 'c')?.[2]).toBe('nsw-m-top-xl');
+  });
+
+  it('leaves kits without spacing alone', () => {
+    const { nodes } = column([
+      node('sk-paragraph', 'default', { id: 'a' }),
+      node('sk-heading', 'h2', { id: 'b', props: { spaceAbove: 'lg' } }),
+    ]);
+    const html = renderFrameHtml(nodes, ['col'], {}, { kitId: 'simple' });
+    expect(wrapper(html, 'b')?.[2]).toBeUndefined();
+  });
+});
+
 describe('column spans', () => {
   it('writes NSW column classes per breakpoint', () => {
     expect(columnClasses({ spans: { base: 12, md: 6, lg: 4 } })).toBe(

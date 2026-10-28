@@ -15,13 +15,33 @@ function renderNode(
   id: string,
   kit: Kit,
   ctx: RenderContext,
+  /** It follows another item in its column or container, so spacing above it makes sense. */
+  stacked = false,
 ): string {
   const node = nodes[id];
   if (!node || node.hidden) return '';
-  if (node.type === 'component')
-    return `<div data-node="${node.id}">${renderComponent(node, images)}</div>`;
-  const kids = (node.children ?? []).map((c) => renderNode(nodes, images, c, kit, ctx)).join('');
+  if (node.type === 'component') {
+    const cls = spaceClass(node, kit, stacked);
+    return `<div data-node="${node.id}"${cls ? ` class="${cls}"` : ''}>${renderComponent(node, images)}</div>`;
+  }
+  let shown = 0;
+  const kids = (node.children ?? [])
+    .map((c) => {
+      const html = renderNode(nodes, images, c, kit, ctx, shown > 0);
+      if (html) shown++;
+      return html;
+    })
+    .join('');
   return kit.renderLayout(node, kids, ctx);
+}
+
+/** The kit's class for the space above a component: the person's choice, else (when it follows something) the kit's own default. */
+function spaceClass(node: DocNode, kit: Kit, stacked: boolean): string {
+  const spacing = kit.spacing;
+  if (!spacing) return '';
+  const chosen = typeof node.props?.spaceAbove === 'string' ? node.props.spaceAbove : null;
+  const id = chosen ?? (stacked ? spacing.auto(node) : null);
+  return spacing.options.find((o) => o.id === id)?.cls ?? '';
 }
 
 /** What survives sanitising: our own editor markers and the data attributes the NSW script reads. */

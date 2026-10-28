@@ -58,7 +58,8 @@ test('a team site has a left menu and no footer, and the options that no longer 
   await choose(page, 'Site type', 'Team site');
   await expect(inner(page).locator('.sp-site--team .sp-nav--vertical')).toHaveCount(1);
   await expect(inner(page).locator('footer.sp-footer')).toHaveCount(0);
-  await expect(page.getByLabel('Show the footer')).toBeDisabled();
+  // The footer group has nothing to change here, so it says why once instead of listing disabled controls.
+  await expect(page.getByLabel('Show the footer')).toHaveCount(0);
   await expect(page.getByText('Footers are only available on communication sites.')).toBeVisible();
   await expect(
     group(page, 'Navigation style').getByRole('button', { name: 'Mega menu' }),

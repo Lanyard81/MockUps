@@ -6,13 +6,14 @@ import { copySelectionHtml } from '../../export/copy';
 import { describeVariant, optionsForVariant } from '../../layout/component';
 import { measureFitBox } from '../../lib/textFit';
 import { sideBySideChoices } from '../../layout/ops';
+import { getKit } from '../../kits';
 import { useStore } from '../../store/store';
 import { FreePosition } from './FreeProps';
 import { ImageField } from './ImageField';
 import { NodeSettings } from './NodeSettings';
 import { IconPicker, type IconValue } from './IconPicker';
 import { SlotIconPicker } from './SlotIconPicker';
-import { CommitInput, Field, Section, Toggle, titleCase } from './controls';
+import { CommitInput, Field, Section, Segmented, Toggle, titleCase } from './controls';
 import { Icon } from '../Icon';
 
 /** A stable empty list: a selector must not return a fresh array each time, or React loops forever. */
@@ -239,6 +240,35 @@ function ShrinkToFit({
   );
 }
 
+/** "Space above": how far this item sits below the one before it, using the kit's own spacing classes. */
+function SpaceAbove({ nodeId, frameId }: { nodeId: string; frameId: string }) {
+  const kitId = useStore((s) => s.doc.frames.find((f) => f.id === frameId)?.kitId);
+  const free = useStore((s) => s.doc.frames.find((f) => f.id === frameId)?.layout === 'free');
+  const value = useStore((s) => s.doc.nodes[nodeId]?.props?.spaceAbove);
+  const spacing = getKit(kitId).spacing;
+  if (!spacing || free) return null;
+  const current =
+    typeof value === 'string' && spacing.options.some((o) => o.id === value) ? value : 'auto';
+  return (
+    <Section
+      title="Space above"
+      hint="Automatic gives section headings room above them. Choose a size to set it yourself."
+    >
+      <Segmented
+        label="Space above"
+        value={current}
+        options={[
+          { id: 'auto', label: 'Auto' },
+          ...spacing.options.map((o) => ({ id: o.id, label: o.label })),
+        ]}
+        onChange={(v) =>
+          useStore.getState().setNodeProps(nodeId, { spaceAbove: v === 'auto' ? undefined : v })
+        }
+      />
+    </Section>
+  );
+}
+
 /** "Side by side": put this item and the next ones in its column across the page. */
 function SideBySide({ nodeId }: { nodeId: string }) {
   const doc = useStore((s) => s.doc);
@@ -347,6 +377,7 @@ export function ComponentProps({ nodeId, frameId }: { nodeId: string; frameId: s
         </Section>
       )}
 
+      <SpaceAbove nodeId={nodeId} frameId={frameId} />
       <FreePosition nodeId={nodeId} />
       <SideBySide nodeId={nodeId} />
       <div className="prop-actions">

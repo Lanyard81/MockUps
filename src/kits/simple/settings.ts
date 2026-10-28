@@ -43,6 +43,7 @@ export const FRAME_SETTINGS: SettingDef[] = [
     options: accentSwatches,
     unavailable: (ctx) =>
       ctx.values.accentOverride === true ? null : 'Turn on “Use a different accent” first.',
+    hideWhenUnavailable: true,
   },
 ];
 

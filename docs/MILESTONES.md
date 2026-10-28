@@ -392,3 +392,11 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - The selected item's name tag sits above it (inside it only at the top edge of a page).
 - The zoom menu no longer shows 75% beside 76%; the library tile shows the component's name while its picture is made, so no tile looks empty; Esc closes Present from inside the page too.
 - Not reproduced: blank thumbnails after edits (checked all 84 loaded tiles for blank pictures; none). The name-while-loading change removes the empty look.
+
+### M12: Kit polish (done)
+
+- NSW: a "Space above" choice for any component (Auto, None, Small, Medium, Large, XL), using the official `nsw-m-top-*` classes. Auto gives h2 to h4 headings room above them when they follow something in their column; every NSW template now keeps headings at least 16px clear (a test measures all 23).
+- NSW: the header's logo space is a quiet outline reading "Your logo", not a dashed "LOGO PLACEHOLDER".
+- Simple: stacked components get an even 16px, buttons set to centre or right now really do, steps have more room, and the landing page's closing button sits under its heading.
+- Properties (all kits): a setting's help text sits under its own control (not above a different one); groups where nothing can be changed show one muted line instead of disabled controls; Simple's per-page accent swatches appear only after opting in; groups of up to five swatches (backgrounds) show their names under them.
+- Not done: pinning sticky parts (quick exit, back to top, cookie banner) to the screen in the kitchen-sink template; the NSW main navigation sub-menus; waratah logo (licence). Template thumbnails still show a shimmer while they are made.

@@ -15,8 +15,12 @@ export function placeholderImage(width: number, height: number, label = 'Image')
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-/** Stand-in for the NSW Government waratah logo, which is not part of the npm package. */
+/**
+ * Stand-in for the NSW Government waratah logo, which is not part of the npm package. Quiet on
+ * purpose: a plain outline and a soft grey label, so a screenshot reads as a page with a logo space
+ * rather than a page marked unfinished.
+ */
 export const LOGO_PLACEHOLDER =
-  `<svg class="nsw-header__rectangular-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60" role="img" aria-label="Logo placeholder">` +
-  `<rect width="220" height="60" fill="none" stroke="#002664" stroke-width="2" stroke-dasharray="6 4"/>` +
-  `<text x="110" y="35" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#002664">LOGO PLACEHOLDER</text></svg>`;
+  `<svg class="nsw-header__rectangular-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60" role="img" aria-label="Logo">` +
+  `<rect x="1" y="1" width="218" height="58" rx="4" fill="#f5f6f7" stroke="#cdd3d6" stroke-width="2"/>` +
+  `<text x="110" y="36" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="600" fill="#6b7280">Your logo</text></svg>`;

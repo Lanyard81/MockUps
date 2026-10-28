@@ -2653,3 +2653,18 @@ summary.prop-section__title,
 .frame__size {
   flex: none;
 }
+
+.swatches--named {
+  grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+}
+.swatch-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+.swatch-cell__name {
+  color: var(--ed-text-muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
