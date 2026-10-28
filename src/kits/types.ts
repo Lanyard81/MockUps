@@ -203,8 +203,8 @@ export interface ConversionSource {
 /** Keeps score while converting: what was brought across and what became a placeholder. */
 export interface ConversionContext {
   makeId: (prefix: string) => string;
-  /** Count something brought across. */
-  mapped: () => void;
+  /** Count something brought across: the original's name, and the ids of the components it became (none if it became page settings). */
+  mapped: (from?: string, to?: string[]) => void;
   /** Count something with no equivalent, by its original name. */
   unmapped: (name: string) => void;
   /** Something the person should know about the result ("columns were stacked"). */

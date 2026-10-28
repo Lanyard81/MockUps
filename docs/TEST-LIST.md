@@ -64,3 +64,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Safety (M2)** 57. Edit something and reload straight away: it is still there. Open the same mockup in two tabs, edit in one, and see the other pause with a choice. File → New mockup asks first. Delete a page: "Bring it back" restores it. Delete a saved version: it asks.
 
 **Adding things (M4)** 58. Add masthead + header, then a heading, three cards and a footer by clicking: header on top, footer last. Watch the line under the Library search say where the next click adds. Select the first card and choose "3 across" (Properties or right-click), then Undo. Press Esc from a card: Section, then the page. Settings → "Show layout details" brings containers, grids and columns back.
+
+**Hand-off (M5)** 59. Click Share: read what each choice is for, export a PDF on A4 sheets, a page description, and (on a SharePoint page) build notes. Right-click a page → Convert: the summary lists what each part became, and the copy sits clear of the original.

@@ -2396,3 +2396,13 @@ body.is-free-gesture .frame__iframe {
   align-items: center;
   cursor: pointer;
 }
+
+.choice-group {
+  margin: var(--ed-space-2) 0 var(--ed-space-1);
+  color: var(--ed-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.choice-group:first-of-type {
+  margin-top: 0;
+}

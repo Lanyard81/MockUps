@@ -13,6 +13,8 @@ export interface ConversionReport {
   converted: number;
   /** What had no equivalent and became a placeholder, by original name. */
   placeholders: { name: string; count: number }[];
+  /** What became what: the original's name and the ids of the components it became (none: page settings). */
+  mappings: { from: string; to: string[]; count: number }[];
   notes: string[];
 }
 
@@ -74,23 +76,33 @@ export function convertFrame(
   if (!conversion || target.id === getKit(frame.kitId).id) return null;
 
   let converted = 0;
+  const mappings = new Map<string, { from: string; to: string[]; count: number }>();
   const unmapped = new Map<string, number>();
   const notes = new Set<string>();
   const page = conversion.convert(sourceFor(doc, frame), {
     makeId,
-    mapped: () => void converted++,
+    mapped: (from, to) => {
+      converted++;
+      if (!from) return;
+      const key = `${from}→${(to ?? []).join('+')}`;
+      const m = mappings.get(key) ?? { from, to: to ?? [], count: 0 };
+      m.count++;
+      mappings.set(key, m);
+    },
     unmapped: (name) => unmapped.set(name, (unmapped.get(name) ?? 0) + 1),
     note: (text) => void notes.add(text),
   });
 
   const out: Frame = {
     id: makeId('f'),
-    name: `${frame.name} (${target.shortLabel})`,
+    // Converting a copy again doesn't stack suffixes: "Home (NSW)" becomes "Home (SharePoint)", not "Home (NSW) (SharePoint)".
+    name: `${frame.name.replace(/ \((NSW|SharePoint|Simple)\)$/, '')} (${target.shortLabel})`,
     kitId: target.id,
     ...(page.settings && Object.keys(page.settings).length ? { settings: page.settings } : {}),
     device: frame.device,
     width: frame.width,
-    x: frame.x + frame.width + FRAME_GAP,
+    // To the right of everything, so the copy never lands on another page or its label.
+    x: Math.max(...doc.frames.map((f) => f.x + f.width)) + FRAME_GAP,
     y: frame.y,
     root: page.root,
   };
@@ -103,6 +115,7 @@ export function convertFrame(
       sourceName: frame.name,
       converted,
       placeholders: [...unmapped].map(([name, count]) => ({ name, count })),
+      mappings: [...mappings.values()],
       notes: [...notes],
     },
   };

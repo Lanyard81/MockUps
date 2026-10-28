@@ -333,3 +333,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] The Library says where the next click will add ("Adds to Home, after “Heading 1”").
 - [x] "Side by side": select an item and choose 2 or 3 across (Properties, or the right-click menu) to spread it and the items after it in its column across the row, adding columns as needed.
 - [x] Esc and the selection path skip containers, grids and columns (they are layout plumbing); Settings → "Show layout details" brings them back.
+
+### M5: Hand-off in one place
+
+- [x] "Share and export" lists every way out with what it is for: image (PNG), PDF, web page (HTML), shareable viewer, build notes (SharePoint pages), page description (.page.json). Page descriptions and build notes can be copied instead of downloaded; unavailable choices say why.
+- [x] PDF: "the size of each page" or A4 sheets (long pages continue on the next sheet).
+- [x] The web page choice describes the kit (NSW, SharePoint, Simple) and offers the "link to NSW" option only for NSW.
+- [x] Converting shows "What each part became" (Accordion → …, header → page settings), places the copy to the right of everything, and no longer stacks "(SharePoint) (NSW)" in its name; the Convert section says why it is disabled on an empty page.

@@ -404,3 +404,7 @@ Overflow is decided by an explicit priority per item (not by position) and is st
 ## 073. Rows are made from the items, not from the Grid (review M4)
 
 People think "put these three cards in a row", not "set the grid to three columns and move each card". `arrangeInRow` (in `layout/ops.ts`, tested in `tests/ops.test.ts`) takes an item and the ones after it in its column and spreads them across columns, adding columns to the grid or section as needed. Containers, grids and columns stay in the document and in Layers; they are only left out of the selection path and Esc by default, behind a "Show layout details" setting, because they are NSW's structure, not something the person made.
+
+## 074. One hand-off dialog (review M5)
+
+Exports used to live in three places (File → Export, the page's right-click menu and the Properties panel). The Share button opens one dialog with every output and a sentence on what it is for; the right-click menu and Properties keep their shortcuts. A4 PDF slices the picture of the page into sheets (the PDF is still made of pictures, so text can't be selected: the web page export is the way to get selectable text).

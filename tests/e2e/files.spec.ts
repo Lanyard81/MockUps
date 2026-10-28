@@ -298,7 +298,7 @@ test.describe('export', () => {
     await addFromLibrary(page, 'button', 'Brand Dark');
     await addFromLibrary(page, 'accordion', 'Default');
     const dialog = await open(page);
-    await dialog.getByLabel('HTML page').check();
+    await dialog.getByLabel('Web page (HTML)').check();
     await dialog.getByLabel('Fully self-contained').check();
     const d = await Promise.all([
       page.waitForEvent('download'),
@@ -328,7 +328,7 @@ test.describe('export', () => {
   test('the small version links to NSW instead of carrying it', async ({ page }) => {
     await addFromLibrary(page, 'button', 'Brand Dark');
     const dialog = await open(page);
-    await dialog.getByLabel('HTML page').check();
+    await dialog.getByLabel('Web page (HTML)').check();
     await dialog.getByLabel('Link to NSW from the internet').check();
     const file = await download(page, () =>
       dialog.getByRole('button', { name: 'Export', exact: true }).click(),
@@ -346,7 +346,7 @@ test.describe('export', () => {
     await page.getByRole('menuitem', { name: /Desktop/ }).click();
     const dialog = await open(page);
     await dialog.getByLabel(/All pages/).check();
-    await dialog.getByLabel('HTML page').check();
+    await dialog.getByLabel('Web page (HTML)').check();
     const zip = await download(page, () =>
       dialog.getByRole('button', { name: 'Export', exact: true }).click(),
     );

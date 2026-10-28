@@ -187,15 +187,19 @@ function convert(src: ConversionSource, ctx: ConversionContext): ConvertedPage {
         }),
       ];
     }
-    ctx.mapped();
-    return rule(n, src);
+    const out = rule(n, src);
+    ctx.mapped(
+      src.nameOf(n),
+      out.map((p) => p.componentId),
+    );
+    return out;
   };
 
   items.push(top('masthead', 'dark'));
   items.push(
     top('header', 'default', { text: chrome?.siteTitle ? { title: chrome.siteTitle } : undefined }),
   );
-  ctx.mapped();
+  ctx.mapped('Site header, menu and footer', ['masthead', 'header']);
   if (chrome?.showNav && chrome.navLabels.length)
     items.push(
       top('main-nav', 'default', {

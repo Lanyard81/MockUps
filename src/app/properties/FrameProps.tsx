@@ -172,7 +172,7 @@ export function FrameProps({ frameId }: { frameId: string }) {
       {targets.length > 0 && (
         <Section
           title="Convert"
-          hint="Makes a converted copy next to this frame. Anything with no equivalent becomes a labelled placeholder. The original is never changed."
+          hint="Makes a converted copy as a new page. Anything with no equivalent becomes a labelled placeholder, and a summary says what each part became. The original is never changed."
         >
           <div className="prop-actions">
             {targets.map((id) => (
@@ -186,16 +186,21 @@ export function FrameProps({ frameId }: { frameId: string }) {
               </button>
             ))}
           </div>
+          {frame.root.length === 0 && (
+            <p className="prop-hint">
+              Add something to this page first: there is nothing to convert yet.
+            </p>
+          )}
         </Section>
       )}
       {!free && (
         <Section
-          title="Page spec"
-          hint="The page as compact JSON: paste it into a Claude chat to change it, then import the answer (File, Import page spec)."
+          title="Page description"
+          hint="The page as text: paste it into an AI chat to change it, then import the answer (File, Import a page description). Share and export has it too."
         >
           <div className="prop-actions">
             <button className="btn" onClick={() => void copyFrameSpec(frame.id)}>
-              Copy as page spec
+              Copy as page description
             </button>
             <button className="btn" onClick={() => downloadFrameSpec(frame.id)}>
               Download (.page.json)

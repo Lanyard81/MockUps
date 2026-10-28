@@ -234,13 +234,16 @@ function convert(src: ConversionSource, ctx: ConversionContext): ConvertedPage {
       ctx.unmapped(src.nameOf(n));
       return { parts: [placeholder(src.nameOf(n))], sections: [] };
     }
-    ctx.mapped();
     const out = rule(n, src);
+    ctx.mapped(
+      src.nameOf(n),
+      (out.parts ?? []).map((p) => p.componentId),
+    );
     return { parts: out.parts ?? [], sections: out.sections ?? [] };
   };
 
   const chrome = (n: DocNode) => {
-    ctx.mapped();
+    ctx.mapped(src.nameOf(n), []);
     if (n.componentId === 'header') settings.siteTitle = src.textOf(n, 'title');
     if (n.componentId === 'main-nav') {
       sawNav = true;

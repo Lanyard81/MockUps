@@ -1,3 +1,4 @@
+import { getComponent } from '../catalogue';
 import { getKit } from '../kits';
 import { useStore } from '../store/store';
 import { Modal } from './Modal';
@@ -20,7 +21,7 @@ export function ConversionSummary() {
       }
     >
       <p className="modal__text">
-        “{report.sourceName}” was copied to a new {getKit(report.toKit).shortLabel} frame,{' '}
+        “{report.sourceName}” was copied to a new {getKit(report.toKit).shortLabel} page,{' '}
         <strong>{report.newFrameName}</strong>. The original is unchanged, and Undo removes the
         copy.
       </p>
@@ -30,6 +31,22 @@ export function ConversionSummary() {
           ? `; ${placeholders} had no equivalent and became a placeholder.`
           : '. Everything had an equivalent.'}
       </p>
+      {report.mappings.length > 0 && (
+        <>
+          <h3 className="modal__subtitle">What each part became</h3>
+          <ul className="modal__list" data-testid="conversion-mappings">
+            {report.mappings.map((m) => (
+              <li key={`${m.from}-${m.to.join('+')}`}>
+                {m.from}
+                {m.count > 1 ? ` (${m.count})` : ''} →{' '}
+                {m.to.length
+                  ? [...new Set(m.to.map((id) => getComponent(id)?.name ?? id))].join(' + ')
+                  : 'page settings (header, menu or footer)'}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       {report.placeholders.length > 0 && (
         <>
           <h3 className="modal__subtitle">Not converted</h3>

@@ -27,3 +27,15 @@ describe('buildPdf', () => {
     });
   });
 });
+
+describe('buildPdf on a fixed sheet', () => {
+  it('sizes the page as the sheet and draws the picture at its width from the top', async () => {
+    const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xd9]);
+    const out = await text(
+      buildPdf([{ jpeg, width: 400, height: 500, sheet: { width: 794, height: 1123 } }]),
+    );
+    expect(out).toContain('/MediaBox [0 0 595.5 842.25]');
+    // The picture is scaled to 595.5pt wide, 744.38pt tall, and sits at the top (842.25 - 744.38).
+    expect(out).toContain('q 595.5 0 0 744.38 0 97.87 cm /Im0 Do Q');
+  });
+});
