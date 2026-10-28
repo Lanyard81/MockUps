@@ -245,8 +245,9 @@ function Tile({
         {src ? (
           <img src={src} alt="" draggable={false} />
         ) : (
-          <span className={`tile__skeleton${failed ? ' is-failed' : ''}`}>
-            {failed ? component.name : ''}
+          <span className={`tile__skeleton${failed ? ' is-failed' : ''}`} aria-hidden="true">
+            {/* Say what is coming while the picture is made, so the box never looks empty. */}
+            {component.name}
           </span>
         )}
       </span>

@@ -6,6 +6,7 @@ import { Frame } from './Frame';
 import { ZoomControls } from './ZoomControls';
 import { setCanvasHandlers, type ForwardedWheel } from './input';
 import { isMultiTouch, touchDown, touchMove, touchUp } from './touch';
+import { setCanvasPointer } from './pointer';
 
 const LINE_HEIGHT = 16;
 
@@ -139,6 +140,8 @@ export function Viewport() {
       aria-label="Canvas"
       className={`viewport${panning ? ' viewport--panning' : ''}${dragging ? (droppable ? ' viewport--drop' : ' viewport--nodrop') : ''}`}
       onPointerDown={onPointerDown}
+      onPointerMove={(e) => setCanvasPointer({ x: e.clientX, y: e.clientY })}
+      onPointerLeave={() => setCanvasPointer(null)}
       onAuxClick={(e) => e.preventDefault()}
       data-testid="viewport"
       data-fitted={fitted}

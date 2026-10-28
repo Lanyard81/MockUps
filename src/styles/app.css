@@ -571,7 +571,6 @@ select {
   gap: 4px;
   height: 22px;
   padding: 0 8px;
-  /* Inside the selection, so it never covers a neighbour that the user may want to click. */
   border-radius: 0 0 4px 0;
   background: var(--dd-accent-fill);
   color: var(--ed-on-accent);
@@ -2630,4 +2629,27 @@ summary.prop-section__title,
 }
 .toast-region {
   bottom: calc(var(--ed-space-4) + var(--ed-target) + var(--ed-space-2));
+}
+
+/* The selection's name tag sits above it (so it never hides the item); inside it at the top edge of a page. */
+.ov-select[data-tag='above'] .ov-chip {
+  top: auto;
+  bottom: 100%;
+  border-radius: 4px 4px 0 0;
+  transform-origin: 0 100%;
+}
+
+/* A page's label never runs past the page: the name shortens instead of overlapping its neighbour. */
+.frame__label {
+  max-width: calc(var(--fw, 400) * 1px / var(--inv-zoom, 1));
+  overflow: hidden;
+}
+.frame__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.frame__kit,
+.frame__size {
+  flex: none;
 }

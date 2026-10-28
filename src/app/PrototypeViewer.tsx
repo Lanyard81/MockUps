@@ -77,6 +77,17 @@ function Viewer({ frameId, depth }: { frameId: string; depth: number }) {
     const root = doc?.getElementById('root');
     if (!iframe || !doc || !root) return;
     root.innerHTML = html;
+    // Keys pressed inside the page never reach the window: Esc closes Play from there too.
+    doc.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          useStore.getState().closePrototype();
+        }
+      },
+      true,
+    );
     try {
       if (iframe.contentWindow) kit.shell.init(iframe.contentWindow);
     } catch (err) {

@@ -382,3 +382,13 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - Canvas grid thins out as you zoom out and disappears below 12%; one focus ring; the toast sits above the hint bar; accent text has its own 4.5:1 token.
 - Contrast is checked by axe in all four combinations (glass or flat, dark or light), with a page selected and the Layers tab open; this found and fixed three real contrast failures (selected page name, tour step, empty-page buttons).
 - Not done: pixel snapshot tests (they need committed baselines per platform); the contrast scan and style assertions stand in for them.
+
+### M11: Canvas and frame handling (done)
+
+- Dragging near the edge of the canvas scrolls it (after the pointer rests there for a moment; speed rises toward the edge), so a long page can be dropped below the fold.
+- A page you add (new page, template, copy) slides into view without changing the zoom (`revealView`).
+- Zoom shortcuts (Ctrl/⌘ + and −) zoom around the pointer, as the wheel does.
+- A page's label shortens with an ellipsis instead of running into its neighbour, at any zoom.
+- The selected item's name tag sits above it (inside it only at the top edge of a page).
+- The zoom menu no longer shows 75% beside 76%; the library tile shows the component's name while its picture is made, so no tile looks empty; Esc closes Present from inside the page too.
+- Not reproduced: blank thumbnails after edits (checked all 84 loaded tiles for blank pictures; none). The name-while-loading change removes the empty look.

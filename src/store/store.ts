@@ -36,7 +36,7 @@ import {
   type PageImportReport,
 } from '../pagespec';
 import { DEFAULT_REFERENCE } from '../lib/reference';
-import { clampZoom, fitView, unionRects, type View } from '../lib/geometry';
+import { clampZoom, fitView, revealView, unionRects, type View } from '../lib/geometry';
 import {
   applyInsertion,
   arrangeInRow,
@@ -528,6 +528,17 @@ function starterPage(doc: MockupDoc): Frame | undefined {
     : undefined;
 }
 
+/** Slide the view (keeping the zoom) so a newly added page is on screen. */
+const revealFrame = (s: Store, doc: MockupDoc, f: Frame): MockupDoc => ({
+  ...doc,
+  view: revealView(
+    doc.view,
+    { x: f.x, y: f.y - 28, width: f.width, height: (s.frameHeights[f.id] ?? 480) + 28 },
+    s.viewport.width,
+    s.viewport.height,
+  ),
+});
+
 const withKitVersion = (doc: MockupDoc, kitId: KitId): MockupDoc =>
   doc.kitVersions[kitId]
     ? doc
@@ -893,14 +904,16 @@ export const useStore = create<Store>((set, get) => ({
         y: Math.round(at?.y ?? s.doc.frames[0]?.y ?? 0),
         root: template.root,
       };
+      const next: MockupDoc = {
+        ...withKitVersion(s.doc, template.kitId),
+        ...(starter && s.doc.startFrameId === starter.id ? { startFrameId: undefined } : {}),
+        frames: [...kept, frame],
+        nodes: { ...s.doc.nodes, ...template.nodes },
+        images: { ...s.doc.images, ...template.images },
+      };
       return {
-        ...commit(s, {
-          ...withKitVersion(s.doc, template.kitId),
-          ...(starter && s.doc.startFrameId === starter.id ? { startFrameId: undefined } : {}),
-          frames: [...kept, frame],
-          nodes: { ...s.doc.nodes, ...template.nodes },
-          images: { ...s.doc.images, ...template.images },
-        }),
+        // Dropped at a chosen spot it is already where the person pointed; otherwise bring it into view.
+        ...commit(s, at || kept.length === 0 ? next : revealFrame(s, next, frame)),
         selectedFrameId: id,
         selectedNodeId: null,
         fitRequested: kept.length === 0,
@@ -1064,7 +1077,14 @@ export const useStore = create<Store>((set, get) => ({
         ...(layout === 'free' ? { layout: 'free' as const } : {}),
       };
       return {
-        ...commit(s, { ...withKitVersion(s.doc, kit), frames: [...s.doc.frames, frame] }),
+        ...commit(
+          s,
+          revealFrame(
+            s,
+            { ...withKitVersion(s.doc, kit), frames: [...s.doc.frames, frame] },
+            frame,
+          ),
+        ),
         selectedFrameId: frame.id,
       };
     }),
@@ -1083,11 +1103,18 @@ export const useStore = create<Store>((set, get) => ({
         root: cloned.roots,
       };
       return {
-        ...commit(s, {
-          ...s.doc,
-          frames: [...s.doc.frames, frame],
-          nodes: { ...s.doc.nodes, ...cloned.nodes },
-        }),
+        ...commit(
+          s,
+          revealFrame(
+            s,
+            {
+              ...s.doc,
+              frames: [...s.doc.frames, frame],
+              nodes: { ...s.doc.nodes, ...cloned.nodes },
+            },
+            frame,
+          ),
+        ),
         selectedFrameId: frame.id,
       };
     }),

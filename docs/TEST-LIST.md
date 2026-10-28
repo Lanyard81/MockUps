@@ -78,3 +78,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Small windows and touch (M9)** 63. Press Alt 1 and Alt 2 (or the two panel buttons): the side panels hide and show, and the canvas grows. Make the window narrow (under 900px, or zoom the browser to 200%): panels become drawers and the canvas fills the window. On a tablet: drag empty canvas to pan, pinch to zoom, press and hold an item for its menu.
 
 **Look (M10)** 64. Settings → Editor look → Flat: panels sit edge to edge with thin lines, no blur or colour wash. Switch Dark/Light in each look; menus never show the page through them. Zoom far out: the dots thin out and vanish. Every icon (close, expand arrows, eye, play) looks like the same family.
+
+**Canvas (M11)** 65. Zoom to 100%, add three desktop pages: each slides into view. Drag a library tile to the bottom edge of the canvas and hold: the canvas scrolls. Hover a spot and press Ctrl/⌘ + : it zooms around that spot. Zoom far out: page names shorten, never overlap. Present, click inside the page, press Esc: it closes.

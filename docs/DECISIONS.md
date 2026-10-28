@@ -432,3 +432,7 @@ A collapsed side panel is hidden with CSS, not unmounted, so the Library keeps i
 ## 080: Keep the glass, add a flat look (M10)
 
 The glass look stays the default; the flat look is an opt-in that changes tokens and chrome only (`data-look="flat"`), so every component works in both. Popups are now fully opaque in both (the glass `--dd-pop` was 94% opaque), which also lets them drop the backdrop blur. Literal colours and sub-12px text are banned outside the token files by `scripts/check-editor-tokens.mjs`.
+
+## 081: Viewing helpers are pure and tested (M11)
+
+`revealView`, `zoomChoices` and the drag edge-scroll constants live in `lib/geometry.ts` / `canvas/drag.ts`; the store only calls them. Revealing a new page changes the saved camera in the same history entry as the page, as adding a page already did.

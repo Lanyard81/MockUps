@@ -178,7 +178,14 @@ export const Frame = memo(function Frame({ frame, zoom }: Props) {
   return (
     <div
       className={`frame${selected ? ' frame--selected' : ''}`}
-      style={{ left: frame.x, top: frame.y, width: frame.width }}
+      style={
+        {
+          left: frame.x,
+          top: frame.y,
+          width: frame.width,
+          ['--fw' as string]: frame.width,
+        } as React.CSSProperties
+      }
       data-frame-id={frame.id}
       data-testid={`frame-${frame.name}`}
     >

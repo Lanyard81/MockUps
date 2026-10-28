@@ -61,7 +61,12 @@ export function FrameOverlay({ frameId, layoutKey }: Props) {
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       const idoc = getFrameElement(frameId)?.contentDocument;
-      place(selectRef.current, edit && idoc && selectedId ? nodeRect(idoc, selectedId) : null);
+      const rect = edit && idoc && selectedId ? nodeRect(idoc, selectedId) : null;
+      place(selectRef.current, rect);
+      // The name tag sits above the selection, or inside it when there is no room above.
+      if (selectRef.current)
+        selectRef.current.dataset.tag =
+          rect && rect.top * useStore.getState().doc.view.zoom < 28 ? 'inside' : 'above';
       const showHover = edit && !dragging && hoverId && hoverId !== selectedId;
       place(hoverRef.current, showHover && idoc ? nodeRect(idoc, hoverId) : null);
     });

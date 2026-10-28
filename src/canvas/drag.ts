@@ -45,6 +45,12 @@ const sameTarget = (a: DropTarget | null, b: DropTarget | null) =>
  * Nothing in the document changes while dragging. The drop target is recalculated at most once
  * per animation frame, and on release one store action makes the whole drag a single undo step.
  */
+/** How close to the canvas edge (px) the pointer must be to scroll it, and the fastest scroll (px per frame). */
+const EDGE_ZONE = 56;
+const EDGE_SPEED = 18;
+/** The pointer must stay in the edge zone this long (ms) before the canvas starts to scroll. */
+const EDGE_DWELL = 300;
+
 export function startDrag(
   payload: DragPayload,
   start: { clientX: number; clientY: number },
@@ -79,6 +85,32 @@ export function startDrag(
     const next = computeDropTarget(payload, s.doc, latest.x, latest.y);
     if (!sameTarget(s.dropTarget, next)) s.setDropTarget(next);
   };
+  // Holding the pointer near an edge of the canvas scrolls it, so a long page can be dropped below the fold.
+  let scrollRaf = 0;
+  let edgeSince = 0;
+  const autoScroll = () => {
+    scrollRaf = requestAnimationFrame(autoScroll);
+    const rect = document.getElementById('canvas')?.getBoundingClientRect();
+    if (!rect || payload.kind === 'template') return;
+    const { x, y } = latest;
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) return;
+    const push = (distance: number) =>
+      distance < EDGE_ZONE ? Math.round(EDGE_SPEED * (1 - Math.max(distance, 0) / EDGE_ZONE)) : 0;
+    const dx = push(x - rect.left) - push(rect.right - x);
+    const dy = push(y - rect.top) - push(rect.bottom - y);
+    if (!dx && !dy) {
+      edgeSince = 0;
+      return;
+    }
+    // Only a pointer that stays near the edge scrolls; passing by on the way to a drop spot does not.
+    edgeSince ||= performance.now();
+    if (performance.now() - edgeSince < EDGE_DWELL) return;
+    const view = useStore.getState().doc.view;
+    useStore.getState().setView({ ...view, x: view.x + dx, y: view.y + dy });
+    // What is under the pointer changed although the pointer did not move.
+    if (!raf) raf = requestAnimationFrame(update);
+  };
+  scrollRaf = requestAnimationFrame(autoScroll);
   const fromDoc = from?.contentDocument ?? null;
   const toScreen = (e: PointerEvent) => {
     // Events from inside the frame carry frame coordinates.
@@ -106,6 +138,7 @@ export function startDrag(
     }
     window.removeEventListener('blur', onCancel);
     cancelAnimationFrame(raf);
+    cancelAnimationFrame(scrollRaf);
     document.body.classList.remove('is-dragging');
     justDragged = true;
     setTimeout(() => (justDragged = false), 0);

@@ -1,14 +1,13 @@
 import { useStore } from '../store/store';
+import { zoomChoices } from '../lib/geometry';
 import { zoomStep } from './shortcuts';
 import { Icon } from '../app/Icon';
-
-const PRESETS = [10, 25, 50, 75, 100, 150, 200, 300, 400];
 
 /** Zoom out, level, zoom in and fit: a small cluster in the corner of the canvas, as in most design tools. */
 export function ZoomControls() {
   const zoom = useStore((s) => s.doc.view.zoom);
   const pct = Math.round(zoom * 100);
-  const options = PRESETS.includes(pct) ? PRESETS : [...PRESETS, pct].sort((a, b) => a - b);
+  const { options, shown } = zoomChoices(pct);
   const st = useStore.getState;
   return (
     <div className="zoom-controls" role="group" aria-label="Zoom">
@@ -22,7 +21,7 @@ export function ZoomControls() {
       </button>
       <select
         aria-label="Zoom level"
-        value={pct}
+        value={shown}
         onChange={(e) => {
           const s = st();
           const centre = { x: s.viewport.width / 2, y: s.viewport.height / 2 };

@@ -7,6 +7,7 @@ import { setImageFromFile } from '../app/imageUpload';
 import { addReferenceFromFile, isReferenceFile } from '../app/referenceUpload';
 import { startSettingEdit, startTextEdit } from './textEdit';
 import { handleKeyDown, handleKeyUp } from './shortcuts';
+import { setCanvasPointer } from './pointer';
 import {
   LONG_PRESS_MS,
   LONG_PRESS_SLOP,
@@ -74,9 +75,9 @@ export function attachFrameInput(doc: Document, iframe: HTMLIFrameElement | null
     touchDown(e.pointerId, p.x, p.y);
   });
   doc.addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'touch') return;
     const p = toScreen(e.clientX, e.clientY);
-    touchMove(e.pointerId, p.x, p.y);
+    setCanvasPointer(p);
+    if (e.pointerType === 'touch') touchMove(e.pointerId, p.x, p.y);
   });
   for (const type of ['pointerup', 'pointercancel'])
     doc.addEventListener(type, (e) => {

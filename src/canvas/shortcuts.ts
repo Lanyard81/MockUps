@@ -1,6 +1,7 @@
 import { useStore } from '../store/store';
 import { zoomAt, type View } from '../lib/geometry';
 import { startFirstTextEdit } from './textEdit';
+import { zoomCentre } from './pointer';
 
 const isTyping = (t: EventTarget | null): boolean => {
   const el = t as HTMLElement | null;
@@ -120,10 +121,10 @@ export function handleKeyDown(e: KeyboardEvent) {
     s.moveSelected(e.key === 'ArrowUp' ? -1 : 1);
   } else if (mod && (key === '=' || key === '+')) {
     e.preventDefault();
-    s.setView(zoomStep(s.doc.view, 1.25, s.viewport));
+    s.setView(zoomStep(s.doc.view, 1.25, s.viewport, zoomCentre(s.viewport)));
   } else if (mod && key === '-') {
     e.preventDefault();
-    s.setView(zoomStep(s.doc.view, 0.8, s.viewport));
+    s.setView(zoomStep(s.doc.view, 0.8, s.viewport, zoomCentre(s.viewport)));
   } else if (mod && key === '0') {
     e.preventDefault();
     s.zoomToFit();
@@ -150,7 +151,12 @@ export function handleKeyUp(e: KeyboardEvent) {
   }
 }
 
-/** Zoom about the centre of the viewport. */
-export function zoomStep(view: View, factor: number, vp: { width: number; height: number }): View {
-  return zoomAt(view, view.zoom * factor, vp.width / 2, vp.height / 2);
+/** Zoom about a point (the middle of the viewport unless one is given). */
+export function zoomStep(
+  view: View,
+  factor: number,
+  vp: { width: number; height: number },
+  about?: { x: number; y: number },
+): View {
+  return zoomAt(view, view.zoom * factor, about?.x ?? vp.width / 2, about?.y ?? vp.height / 2);
 }
