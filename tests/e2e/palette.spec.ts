@@ -71,3 +71,19 @@ test('jumps to a frame, finds templates and comments, and says when nothing matc
   await page.getByLabel('Search commands').fill('qqqqzzzz');
   await expect(page.getByText('Nothing matches')).toBeVisible();
 });
+
+test('the palette opens panels and jumps to a page’s own settings', async ({ page }) => {
+  await page.keyboard.press('Control+k');
+  await page.getByLabel('Search commands').fill('layers');
+  await expect(palette(page).getByRole('option').first()).toContainText('Show Layers');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('tab', { name: 'Layers' })).toHaveAttribute('aria-selected', 'true');
+
+  // A SharePoint page has a header and theme the palette can find.
+  await page.getByRole('button', { name: 'Add page' }).click();
+  await page.getByRole('button', { name: 'SharePoint' }).click();
+  await page.getByRole('menuitem', { name: /Desktop/ }).click();
+  await page.keyboard.press('Control+k');
+  await page.getByLabel('Search commands').fill('mega menu');
+  await expect(palette(page).getByRole('option').first()).toContainText('Page setting');
+});

@@ -35,6 +35,39 @@ export interface SearchResult {
   variants: CatalogueVariant[];
 }
 
+/** Plain words people use for things the catalogue names differently. */
+const SYNONYMS: Record<string, string[]> = {
+  expandable: ['accordion'],
+  expanding: ['accordion'],
+  collapsible: ['accordion'],
+  toggle: ['accordion', 'switch'],
+  rows: ['accordion', 'table', 'list'],
+  dropdown: ['select', 'menu'],
+  popup: ['dialog', 'modal'],
+  banner: ['hero', 'callout', 'notification'],
+  alert: ['callout', 'notification'],
+  tabs: ['tab'],
+  steps: ['progress', 'stepper'],
+  breadcrumbs: ['breadcrumb'],
+  footer: ['footer'],
+  nav: ['navigation', 'menu'],
+  picture: ['image', 'media'],
+  photo: ['image', 'media'],
+  form: ['input', 'field'],
+  textbox: ['input', 'text field'],
+  checkbox: ['checkbox', 'check'],
+  faq: ['accordion'],
+  tile: ['card'],
+};
+
+/** The ways a typed word can match: itself, a simple stem ("expandable" → "expand"), and any synonyms. */
+function alternatives(term: string): string[] {
+  const out = [term, ...(SYNONYMS[term] ?? [])];
+  const stem = term.replace(/(able|ible|ing|ed|es|s)$/, '');
+  if (stem.length >= 4 && stem !== term) out.push(stem);
+  return out;
+}
+
 /** Instant filter over names, keywords, categories and variant labels. Empty query lists everything. */
 export function searchCatalogue(
   query: string,
@@ -52,13 +85,14 @@ export function searchCatalogue(
     const head = [component.name, component.id, component.category, ...component.keywords]
       .join(' ')
       .toLowerCase();
-    if (terms.every((t) => head.includes(t))) {
+    const matches = (hay: string) =>
+      terms.every((t) => alternatives(t).some((a) => hay.includes(a)));
+    if (matches(head)) {
       results.push({ component, variants: component.variants });
       continue;
     }
     const matching = component.variants.filter((v) => {
-      const hay = `${head} ${v.label}`.toLowerCase();
-      return terms.every((t) => hay.includes(t));
+      return matches(`${head} ${v.label}`.toLowerCase());
     });
     if (matching.length > 0) results.push({ component, variants: matching });
   }

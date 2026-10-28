@@ -12,7 +12,7 @@ const article = (label: string) => (/^[aeiou]|^NSW/i.test(label) ? 'an' : 'a');
  */
 export function kitMismatchMessage(frameKitId: KitId): string {
   const kit = getKit(frameKitId);
-  return `This is ${article(kit.shortLabel)} ${kit.shortLabel} page — switch the library to ${kit.shortLabel}, or convert the page.`;
+  return `This is ${article(kit.shortLabel)} ${kit.shortLabel} page, so items from another kit can’t go on it. Add a page of that kit, or convert this one.`;
 }
 
 /** The kits of the components in these subtrees. Layout nodes (sections, columns) have none of their own. */

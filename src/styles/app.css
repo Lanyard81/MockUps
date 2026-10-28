@@ -2465,3 +2465,10 @@ body.is-free-gesture .frame__iframe {
   font-size: 12px;
   font-weight: 400;
 }
+
+.library__warn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}

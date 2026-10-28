@@ -155,7 +155,45 @@ export function buildPaletteItems(): PaletteItem[] {
       d === 'custom' ? undefined : `${DEVICES[d].width}px`,
       'new page frame screen',
     );
+  for (const p of [
+    ['library', 'Library', 'components add'],
+    ['layers', 'Layers', 'tree structure outline'],
+    ['templates', 'Templates', 'starter page'],
+    ['comments', 'Comments', 'notes pins review'],
+  ] as const)
+    act(
+      `show-${p[0]}`,
+      `Show ${p[1]}`,
+      () => useStore.getState().setLeftTab(p[0]),
+      undefined,
+      p[2],
+    );
   if (frame) {
+    // The page's own settings (theme, header, navigation…): select the page and jump to the control.
+    const jump = (label: string) => () => {
+      focusFrame(frame.id);
+      const go = (tries: number) => {
+        const el = document.querySelector<HTMLElement>(`[aria-label="${CSS.escape(label)}"]`);
+        const target = el?.matches('button,input,select,textarea')
+          ? el
+          : el?.querySelector<HTMLElement>('button,input,select,textarea');
+        if (target) {
+          target.scrollIntoView({ block: 'center' });
+          target.focus();
+        } else if (tries > 0) requestAnimationFrame(() => go(tries - 1));
+      };
+      requestAnimationFrame(() => go(10));
+    };
+    for (const def of [...kit.settings.frame, ...kit.settings.kit]) {
+      const options = 'options' in def ? def.options : [];
+      act(
+        `setting-${def.key}`,
+        `Page setting: ${def.label}`,
+        jump(def.label),
+        def.group,
+        `${def.group} ${def.hint ?? ''} settings ${options.map((o) => o.label).join(' ')}`,
+      );
+    }
     act(
       'layout-free',
       'Switch this page to Free layout',

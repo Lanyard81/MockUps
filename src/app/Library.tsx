@@ -80,6 +80,23 @@ export function Library() {
           {mismatch && target ? (
             <span className="library__warn" role="status">
               {kitMismatchMessage(target.kitId)}
+              <span className="library__warn-actions">
+                <button
+                  className="btn"
+                  onClick={() => {
+                    const st = useStore.getState();
+                    st.addFrame(kit.devices[0]!, kit.id, st.newFrameLayout);
+                  }}
+                >
+                  Add {kit.shortLabel} page
+                </button>
+                <button
+                  className="btn"
+                  onClick={() => useStore.getState().convertFrame(target.id, kit.id)}
+                >
+                  Convert this page to {kit.shortLabel}
+                </button>
+              </span>
             </span>
           ) : target ? (
             <>
@@ -206,7 +223,11 @@ function Tile({
       ref={ref}
       className="tile"
       disabled={!frameId}
-      title={`Add “${component.name} – ${variant.label}”`}
+      title={
+        frameId
+          ? `Add “${component.name} – ${variant.label}”`
+          : `“${component.name} – ${variant.label}” can’t go on the selected page: it is a different kit`
+      }
       onPointerDown={(e) =>
         beginPendingDrag(e, {
           kind: 'new-component',

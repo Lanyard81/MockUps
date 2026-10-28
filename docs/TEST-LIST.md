@@ -68,3 +68,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Hand-off (M5)** 59. Click Share: read what each choice is for, export a PDF on A4 sheets, a page description, and (on a SharePoint page) build notes. Right-click a page → Convert: the summary lists what each part became, and the copy sits clear of the original.
 
 **First run (M6)** 60. Open the app fresh: the empty page offers Choose a template, Try a sample and Import a page description. Pick a template: it replaces the empty page. Help → Replay the tour: tips sit beside what they describe and move on as you act. Press Present on an empty mockup: it says why not.
+
+**Library (M7)** 61. Select a SharePoint page, switch the Library to NSW: the notice offers "Add an NSW page" and "Convert this page". Search "expandable rows": Accordion appears. Ctrl+K "mega menu" jumps to the SharePoint navigation setting; Ctrl+K "layers" opens Layers.

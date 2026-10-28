@@ -349,3 +349,10 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - Help menu: Replay the tour, Keyboard shortcuts, Try a sample.
 - A template or import replaces an empty starter page instead of sitting beside it (one history entry).
 - Present on an all-empty mockup says why it can't; the viewer hints when pages have no links.
+
+### M7: Library that finds and guides (done)
+
+- The wrong-kit notice now has buttons: "Add a <kit> page" and "Convert this page to <kit>". Disabled tiles say why in their tooltip instead of "Add…".
+- Search understands plain words and simple stems ("expandable rows" finds Accordion; "toggle", "dropdown", "popup", "faq", "photo"…).
+- The command palette can open Library, Layers, Templates and Comments, and finds a page's own settings (theme, header, navigation and their options, e.g. "mega menu") and jumps to the control.
+- Not done in this pass: the category chips still filter rather than scroll (kept; tests and habits depend on them).

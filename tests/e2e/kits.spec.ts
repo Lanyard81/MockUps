@@ -79,7 +79,7 @@ test('browsing the other kit’s library is allowed, adding from it to the wrong
   await expect(
     page
       .getByText(
-        'This is a SharePoint page — switch the library to SharePoint, or convert the page.',
+        'This is a SharePoint page, so items from another kit can’t go on it. Add a page of that kit, or convert this one.',
       )
       .first(),
   ).toBeVisible();
@@ -104,6 +104,22 @@ test('the other way round: an NSW frame refuses a SharePoint web part', async ({
   await page.getByTestId('frame-Home').locator('.frame__name').click();
   await libraryKit(page).getByRole('button', { name: 'SharePoint' }).click();
   await expect(
-    page.getByText('This is an NSW page — switch the library to NSW, or convert the page.').first(),
+    page
+      .getByText(
+        'This is an NSW page, so items from another kit can’t go on it. Add a page of that kit, or convert this one.',
+      )
+      .first(),
   ).toBeVisible();
+});
+
+test('the wrong-kit notice offers a way forward: add a page of that kit or convert this one', async ({
+  page,
+}) => {
+  await addFrame(page, 'SharePoint');
+  await libraryKit(page).getByRole('button', { name: 'NSW' }).click();
+  await page.getByRole('button', { name: 'Convert this page to NSW' }).click();
+  await expect(page.getByRole('button', { name: 'Convert this page to NSW' })).toHaveCount(0);
+  await expect(
+    page.getByTestId('component-heading').getByRole('button', { name: 'Heading 1' }),
+  ).toBeEnabled();
 });

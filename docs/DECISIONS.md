@@ -412,3 +412,7 @@ Exports used to live in three places (File → Export, the page's right-click me
 ## 075: Starter page is replaced, not kept (M6)
 
 A mockup's only page, if still empty with no comments, is the "starter". Adding a template or importing a page description takes its place (same position, one undo step) so people don't end up with a stray empty page. Dropping a template at a chosen spot never replaces it.
+
+## 076: Search synonyms live in code, not the catalogue (M7)
+
+Plain-word synonyms ("expandable" → Accordion) are a small map in `src/catalogue/index.ts`, applied to every kit, so adding one needs no catalogue regeneration. Kit-specific keywords stay in each kit's overrides.

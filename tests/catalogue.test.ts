@@ -51,6 +51,8 @@ describe('catalogue', () => {
 
   it('searches names, keywords and variant labels', () => {
     expect(searchCatalogue('dropdown').map((r) => r.component.id)).toContain('select');
+    expect(searchCatalogue('expandable rows').map((r) => r.component.id)).toContain('accordion');
+    expect(searchCatalogue('toggle').map((r) => r.component.id)).toContain('accordion');
     expect(searchCatalogue('danger').map((r) => r.component.id)).toContain('button');
     expect(
       searchCatalogue('danger')[0]!.variants.every((v) => /danger/i.test(v.label) || true),

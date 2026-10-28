@@ -234,7 +234,7 @@ describe('kits do not mix inside a frame', () => {
     const past = s().past.length;
     s().addComponent(sp().id, 'heading', 'h1');
     expect(s().notice).toMatch(
-      /This is a SharePoint page — switch the library to SharePoint, or convert the page/,
+      /This is a SharePoint page, so items from another kit can’t go on it/,
     );
     expect(s().past.length).toBe(past);
     s().addComponent(nsw().id, 'sp-text', 'paragraph');
