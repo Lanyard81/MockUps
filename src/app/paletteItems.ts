@@ -3,7 +3,7 @@ import { KITS, getKit } from '../kits';
 import { fitView } from '../lib/geometry';
 import { commentsOf } from '../lib/comments';
 import type { RankItem } from '../lib/rank';
-import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
+import { loadSample, pickMockupFile, saveToFile, startNewMockup } from '../persistence/file';
 import { useSavedComponents } from '../store/savedComponents';
 import { useStore } from '../store/store';
 import { DEVICES } from '../store/types';
@@ -79,7 +79,7 @@ export function buildPaletteItems(): PaletteItem[] {
     '[',
     'move cursor focus step',
   );
-  act('new', 'New mockup', () => useStore.getState().newDoc());
+  act('new', 'New mockup', startNewMockup);
   act(
     'mockups',
     'My mockups…',

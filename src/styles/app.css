@@ -2324,3 +2324,13 @@ body.is-free-gesture .frame__iframe {
   align-self: center;
   padding: 4px;
 }
+
+.toast__action {
+  height: 28px;
+}
+
+/* The save status keeps its width, so the toolbar doesn't shift on every autosave. */
+.docname__status {
+  display: inline-block;
+  min-width: 9.5em;
+}

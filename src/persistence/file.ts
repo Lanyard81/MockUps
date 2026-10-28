@@ -39,7 +39,7 @@ export async function openMockupFile(file: File): Promise<boolean> {
       addedComponents ? `${addedComponents} component${addedComponents > 1 ? 's' : ''}` : '',
     ].filter(Boolean);
     s.setNotice(
-      `Opened “${doc.name}”${extras.length ? ` and added ${extras.join(' and ')}` : ''}.`,
+      `Opened “${doc.name}”${extras.length ? ` and added ${extras.join(' and ')}` : ''}. The mockup you had open is still in My mockups.`,
     );
     return true;
   } catch (err) {
@@ -70,4 +70,17 @@ export function loadSample(id: string): void {
   s.setNotice(
     `Opened the “${def.name}” sample. Switch to Preview to try it, or press Present to click through full screen.`,
   );
+}
+
+/** File > New mockup: asks first when the open one has anything in it, and says where it stays. */
+export function startNewMockup(): void {
+  const st = useStore.getState();
+  const hasContent = st.doc.frames.some((f) => f.root.length > 0) || st.doc.frames.length > 1;
+  if (!hasContent) return st.newDoc();
+  st.requestConfirm({
+    title: 'Start a new mockup?',
+    body: `“${st.doc.name}” stays saved in this browser. You can open it again from File → My mockups.`,
+    confirmLabel: 'Start new mockup',
+    onConfirm: () => useStore.getState().newDoc(),
+  });
 }

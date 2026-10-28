@@ -5,7 +5,7 @@ import { DEVICES } from '../store/types';
 import { copySelectionHtml } from '../export/copy';
 import { KITS, getKit } from '../kits';
 import { FRAME_SIZES } from '../lib/frameSizes';
-import { loadSample, pickMockupFile, saveToFile } from '../persistence/file';
+import { loadSample, pickMockupFile, saveToFile, startNewMockup } from '../persistence/file';
 import { DocName } from './DocName';
 import { applyTheme, readTheme, type Theme } from './theme';
 import { copyPageSpecInstructions } from '../export/pageSpec';
@@ -272,9 +272,6 @@ export function Toolbar() {
       label: 'Layout',
       node: (
         <div className="toolbar__layout" title="The layout new pages start with">
-          <span className="toolbar__layout-label" aria-hidden="true">
-            New pages
-          </span>
           <div className="segmented" role="group" aria-label="Layout for new pages">
             {(['flow', 'free'] as const).map((l) => (
               <button
@@ -328,7 +325,7 @@ export function Toolbar() {
           plain
           label="File"
           items={[
-            { label: 'New mockup', onSelect: () => s.getState().newDoc() },
+            { label: 'New mockup', onSelect: startNewMockup },
             { label: 'My mockups…', onSelect: () => s.getState().setDialog('mockups') },
             {
               label: 'Version history…',

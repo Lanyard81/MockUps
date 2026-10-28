@@ -7,6 +7,7 @@ import { useStore } from '../store/store';
  */
 export function Toast() {
   const notice = useStore((s) => s.notice);
+  const action = useStore((s) => s.noticeAction);
   const [held, setHeld] = useState(false);
   useEffect(() => {
     if (!notice || held) return;
@@ -24,6 +25,17 @@ export function Toast() {
           onBlur={() => setHeld(false)}
         >
           <span>{notice}</span>
+          {action && action.text === notice && (
+            <button
+              className="btn toast__action"
+              onClick={() => {
+                action.run();
+                useStore.getState().setNotice(null);
+              }}
+            >
+              {action.label}
+            </button>
+          )}
           <button
             className="toast__close"
             aria-label="Dismiss"

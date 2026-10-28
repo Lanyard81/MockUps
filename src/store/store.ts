@@ -53,6 +53,7 @@ import {
   type Insertion,
 } from '../layout/ops';
 import { selectionOrder } from '../layout/layers';
+import { nodeLabel } from '../layout/labels';
 import { cloneSubtrees, removeSubtrees } from '../layout/tree';
 import {
   DEVICES,
@@ -204,6 +205,12 @@ interface State {
   prototype: string[] | null;
   /** A short message for the user (errors from uploads and the like). */
   notice: string | null;
+  /** A button on the notice (for example Undo). Only shown while the notice still has the same text. */
+  noticeAction: { text: string; label: string; run: () => void } | null;
+  /** Another tab saved this mockup after it was opened here, so saving from here would overwrite it. UI-only. */
+  conflict: boolean;
+  /** When the mockup was last saved in this browser (ms), for the status tooltip. UI-only. */
+  savedAt: number | null;
   /** Copied subtree, shared between frames. */
   clipboard: Clipboard | null;
   /** Measured content heights per frame (UI only, not saved). */
@@ -232,7 +239,8 @@ interface Actions {
   setDrag: (drag: DragPayload | null) => void;
   setDropTarget: (target: DropTarget | null) => void;
   setEditing: (editing: State['editing']) => void;
-  setNotice: (notice: string | null) => void;
+  setNotice: (notice: string | null, action?: { label: string; run: () => void }) => void;
+  setConflict: (conflict: boolean) => void;
   openContextMenu: (menu: ContextMenuState | null) => void;
   setSaveState: (state: State['saveState']) => void;
   setStorageOk: (ok: boolean) => void;
@@ -592,6 +600,9 @@ export const useStore = create<Store>((set, get) => ({
   dropTarget: null,
   editing: null,
   notice: null,
+  noticeAction: null,
+  conflict: false,
+  savedAt: null,
   contextMenu: null,
   saveState: 'saved',
   storageOk: null,
@@ -655,9 +666,12 @@ export const useStore = create<Store>((set, get) => ({
   setDrag: (drag) => set({ drag, dropTarget: null, templateDrop: null, hover: null }),
   setDropTarget: (dropTarget) => set({ dropTarget }),
   setEditing: (editing) => set({ editing }),
-  setNotice: (notice) => set({ notice }),
+  setNotice: (notice, action) =>
+    set({ notice, noticeAction: notice && action ? { text: notice, ...action } : null }),
+  setConflict: (conflict) => set({ conflict }),
   openContextMenu: (contextMenu) => set({ contextMenu }),
-  setSaveState: (saveState) => set({ saveState }),
+  setSaveState: (saveState) =>
+    set((s) => ({ saveState, savedAt: saveState === 'saved' ? Date.now() : s.savedAt })),
   setStorageOk: (storageOk) => set({ storageOk }),
   setDialog: (dialog, frameId, nodeId) =>
     set({ dialog, dialogFrameId: frameId ?? null, dialogNodeId: nodeId ?? null }),
@@ -868,6 +882,7 @@ export const useStore = create<Store>((set, get) => ({
       fitWarnings: {},
       fitRequested: true,
       saveState: 'saved',
+      conflict: false,
     }),
   // A new mockup starts in the kit used for the last new frame.
   restoreDoc: (snapshot) =>
@@ -1019,6 +1034,12 @@ export const useStore = create<Store>((set, get) => ({
         }),
         selectedFrameId: s.selectedFrameId === id ? null : s.selectedFrameId,
         selectedNodeId: s.selectedFrameId === id ? null : s.selectedNodeId,
+        notice: `Deleted page “${src.name}”.`,
+        noticeAction: {
+          text: `Deleted page “${src.name}”.`,
+          label: 'Bring it back',
+          run: () => get().undo(),
+        },
       };
     }),
 
@@ -1245,9 +1266,12 @@ export const useStore = create<Store>((set, get) => ({
       // Deleting a column would break its grid, so it just empties the column.
       const doc = node.type === 'column' ? clearChildren(s.doc, nodeId) : removeNode(s.doc, nodeId);
       if (doc === s.doc) return s;
+      const text = `Deleted “${nodeLabel(node)}”.`;
       return {
         ...commit(s, doc),
         selectedNodeId: node.type === 'column' ? nodeId : (parent?.parentId ?? null),
+        notice: text,
+        noticeAction: { text, label: 'Bring it back', run: () => get().undo() },
       };
     }),
 

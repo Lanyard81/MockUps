@@ -1,8 +1,10 @@
 import { renderThumbnail } from '../export/png';
 import { useStore } from '../store/store';
 import { loadMockup, saveMockup, setMockupThumbnail } from './library';
+import { clearRecovery, writeRecovery } from './recovery';
+import { announceSave, listenForOtherSaves } from './tabs';
 
-const SAVE_DELAY = 700;
+const SAVE_DELAY = 400;
 const THUMB_DELAY = 2500;
 
 /**
@@ -17,11 +19,17 @@ export function startAutosave(): () => void {
 
   const save = async () => {
     saveTimer = undefined;
+    // Another tab saved this mockup since it was opened here: saving from here would overwrite it.
+    if (useStore.getState().conflict) return;
     const { doc } = useStore.getState();
     const ok = await saveMockup(doc);
     const s = useStore.getState();
-    s.setSaveState(ok ? 'saved' : 'error');
-    if (!ok) s.setStorageOk(false);
+    // A change made while this save was running has its own save queued: don't say "Saved" yet.
+    if (s.doc === doc || ok === false) s.setSaveState(ok ? 'saved' : 'error');
+    if (ok) {
+      clearRecovery();
+      announceSave(doc.id);
+    }
   };
 
   const refreshThumbnail = async () => {
@@ -37,6 +45,13 @@ export function startAutosave(): () => void {
     if (state.doc === last) return;
     const prev = last;
     last = state.doc;
+    // Switching to another mockup (opening a file, New mockup) while a save was waiting: save the one
+    // being left first, so its last changes aren't dropped.
+    if (prev.id !== state.doc.id && saveTimer) {
+      clearTimeout(saveTimer);
+      saveTimer = undefined;
+      void saveMockup(prev);
+    }
     state.setSaveState('saving');
     clearTimeout(saveTimer);
     saveTimer = setTimeout(save, SAVE_DELAY);
@@ -51,18 +66,30 @@ export function startAutosave(): () => void {
     }
   });
 
-  // Leaving the page: save now rather than waiting for the timer.
+  // Leaving the page (a reload, closing the tab, switching away): save now rather than waiting for the
+  // timer, and keep a synchronous copy in case the storage write doesn't finish in time.
   const flush = () => {
-    if (document.visibilityState === 'hidden' && saveTimer) {
-      clearTimeout(saveTimer);
-      void save();
-    }
+    if (!saveTimer || useStore.getState().conflict) return;
+    clearTimeout(saveTimer);
+    writeRecovery(useStore.getState().doc);
+    void save();
   };
-  document.addEventListener('visibilitychange', flush);
+  const flushIfHidden = () => document.visibilityState === 'hidden' && flush();
+  document.addEventListener('visibilitychange', flushIfHidden);
+  window.addEventListener('pagehide', flush);
+  window.addEventListener('beforeunload', flush);
+
+  // Another tab saved the same mockup.
+  const stopListening = listenForOtherSaves((docId) => {
+    if (docId === useStore.getState().doc.id) useStore.getState().setConflict(true);
+  });
 
   return () => {
     unsubscribe();
-    document.removeEventListener('visibilitychange', flush);
+    stopListening();
+    document.removeEventListener('visibilitychange', flushIfHidden);
+    window.removeEventListener('pagehide', flush);
+    window.removeEventListener('beforeunload', flush);
     clearTimeout(saveTimer);
     clearTimeout(thumbTimer);
   };

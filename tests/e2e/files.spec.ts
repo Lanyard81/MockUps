@@ -15,6 +15,13 @@ const fileMenu = async (page: Page, item: string | RegExp) => {
   await page.getByRole('button', { name: 'File' }).click();
   await page.getByRole('menuitem', { name: item }).click();
 };
+/** File > New mockup, answering the "Start a new mockup?" question when the open one has content. */
+const newMockup = async (page: Page) => {
+  await fileMenu(page, 'New mockup');
+  const ask = page.getByRole('dialog', { name: 'Start a new mockup?' });
+  if (await ask.isVisible({ timeout: 700 }).catch(() => false))
+    await ask.getByRole('button', { name: 'Start new mockup' }).click();
+};
 const download = async (page: Page, action: () => Promise<void>) => {
   const [d] = await Promise.all([page.waitForEvent('download'), action()]);
   return { name: d.suggestedFilename(), bytes: readFileSync(await d.path()) };
@@ -72,7 +79,7 @@ test.describe('files', () => {
     });
 
     // Start something else, then open the file.
-    await fileMenu(page, 'New mockup');
+    await newMockup(page);
     await expect(home(page).locator('.nsw-card')).toHaveCount(0);
     const [chooser] = await Promise.all([
       page.waitForEvent('filechooser'),
@@ -176,7 +183,7 @@ test.describe('my mockups', () => {
     await page.keyboard.press('Enter');
     await expect(status(page)).toHaveText('Saved');
 
-    await fileMenu(page, 'New mockup');
+    await newMockup(page);
     await addFromLibrary(page, 'button', 'Danger');
     await page.getByRole('button', { name: 'Untitled mockup' }).click();
     await page.getByLabel('Mockup name').fill('Second');
@@ -223,7 +230,7 @@ test.describe('my mockups', () => {
   test('New mockup starts empty and the old one stays saved', async ({ page }) => {
     await addFromLibrary(page, 'heading', 'Heading 1');
     await expect(status(page)).toHaveText('Saved');
-    await fileMenu(page, 'New mockup');
+    await newMockup(page);
     await expect(home(page).locator('h1')).toHaveCount(0);
     await fileMenu(page, /My mockups/);
     await expect(page.getByTestId('mockup-card')).toHaveCount(2);

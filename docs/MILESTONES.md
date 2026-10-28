@@ -310,3 +310,12 @@ Brief: `docs/SHAREPOINT-PROMPT.md`. Reference: `docs/SHAREPOINT-OOB.md`. The bri
 - [x] Skip links (canvas, Properties, library), landmarks (`aside`, `main`, an h1), and the page behind a dialog is inert while it is open.
 - [x] The toast is a permanent polite live region, stays 8 seconds and while hovered or focused.
 - [x] axe-core runs on 15 screens and dialogs: no critical or serious violations.
+
+### M2: Never lose work silently
+
+- [x] Leaving the page (reload, close, switch away) while a save is waiting saves now and writes a synchronous recovery copy; the next start restores it and says so. Saves wait 400 ms instead of 700.
+- [x] Two tabs on the same mockup: the tab that didn't save is told ("changed in another tab"), pauses saving, and offers "Load the other tab's version" or "Keep this version".
+- [x] File → New mockup asks first when the open one has content, and says it stays in My mockups. Opening a file or starting a new mockup saves the one being left first.
+- [x] Deleting a page or an item says so, with "Bring it back"; deleting a saved version asks first.
+- [x] The save status keeps its width (the top bar no longer shifts on autosave) and its tooltip says "Saved in this browser at 10:42". The storage banner now tells apart "this browser won't keep data" from "the last save failed", and clears when saving works again.
+- [x] The shareable viewer file leaves comments out unless "Include comments" is ticked (default off).

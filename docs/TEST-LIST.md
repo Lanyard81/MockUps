@@ -60,3 +60,5 @@ Open the Pages site or `dist-single/pagewright.html` (try the single file with W
 **Simple kit (K3)** 55. Add frame → choose Simple → Desktop. In the Library (Simple tab) add a few parts: hero, card with picture, form, header bar. Try Templates → Simple (landing page, dashboard). Change the accent colour (Properties on the frame, and in the kit colours), section background and spacing. Export a PNG and an HTML page; import a page spec with `"kit": "simple"`.
 
 **Keyboard (M1)** 56. Put the mouse away. Tab to "Skip to the library", press Enter. Use ← → on the tabs, open Layers, arrow down to an item, Enter to select it, F2 to rename, Alt+↓ to move it, Delete then Ctrl+Z. Press `]` to step through the page, Enter to edit text. Focus File and press ↓, then Esc. Focus a page name and press Enter, then F2.
+
+**Safety (M2)** 57. Edit something and reload straight away: it is still there. Open the same mockup in two tabs, edit in one, and see the other pause with a choice. File → New mockup asks first. Delete a page: "Bring it back" restores it. Delete a saved version: it asks.

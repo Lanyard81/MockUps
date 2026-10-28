@@ -29,7 +29,7 @@ function Inner() {
   const [scale, setScale] = useState<1 | 2>(2);
   const [mode, setMode] = useState<Exclude<HtmlMode, 'shared'>>('inline');
   const [pins, setPins] = useState(true);
-  const [withNotes, setWithNotes] = useState(true);
+  const [withNotes, setWithNotes] = useState(false);
   const [busy, setBusy] = useState(false);
   const st = useStore.getState;
   const close = () => st().setDialog(null);
@@ -208,7 +208,7 @@ function Inner() {
                 checked={withNotes}
                 onChange={(e) => setWithNotes(e.target.checked)}
               />
-              <span>Include comments</span>
+              <span>Include comments (anyone with the file can read them)</span>
             </label>
           )}
         </fieldset>

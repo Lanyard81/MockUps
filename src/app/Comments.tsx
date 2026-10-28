@@ -38,7 +38,8 @@ export function Comments() {
       </div>
       <p className="prop-hint">
         Click “Add a comment”, then click a spot on a page to pin a note there. Notes show while
-        editing only; they are not part of Preview or an HTML export.
+        editing only; they are not part of Preview or an HTML export. A shareable viewer file
+        includes them only if you tick “Include comments” when you export it.
       </p>
       {shown.length === 0 ? (
         <p className="library__none" data-testid="comments-empty">

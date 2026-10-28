@@ -32,6 +32,7 @@ test('export a viewer file, open it from disk: tabs, click-through, comments', a
   await page.getByRole('menuitem', { name: /Export/ }).click();
   const dialog = page.getByRole('dialog', { name: 'Export' });
   await dialog.getByLabel('Shareable viewer (one read-only file)').check();
+  await dialog.getByLabel(/Include comments/).check();
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     dialog.getByRole('button', { name: 'Export', exact: true }).click(),

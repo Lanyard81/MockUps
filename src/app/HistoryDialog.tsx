@@ -127,7 +127,14 @@ function Inner() {
                   </button>
                   <button
                     className="btn btn--danger"
-                    onClick={() => void deleteVersion(doc.id, v.id).then(refresh)}
+                    onClick={() =>
+                      st().requestConfirm({
+                        title: `Delete “${v.name}”?`,
+                        body: 'This saved copy will be removed from this browser. It can’t be brought back.',
+                        confirmLabel: 'Delete version',
+                        onConfirm: () => void deleteVersion(doc.id, v.id).then(refresh),
+                      })
+                    }
                   >
                     Delete
                   </button>

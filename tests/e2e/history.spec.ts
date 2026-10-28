@@ -77,5 +77,9 @@ test('delete removes a version', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Save version' }).click();
   await expect(dialog.getByTestId('history-list')).toBeVisible();
   await dialog.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: /Delete “/ })
+    .getByRole('button', { name: 'Delete version' })
+    .click();
   await expect(dialog.getByTestId('history-empty')).toBeVisible();
 });

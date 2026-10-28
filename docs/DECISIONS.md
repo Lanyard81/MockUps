@@ -392,3 +392,7 @@ The editor says **page** for what was a frame or screen (the saved document is s
 ## 070. axe-core as a dev dependency
 
 `axe-core` (MPL-2.0, test-only, not bundled) runs inside Playwright to check the editor for accessibility problems (colour contrast now, more rules in the keyboard milestone). It is the standard engine for this, and writing our own checks for ARIA and contrast would be larger and less trustworthy. The app's own accessibility checker (for mockup content) stays separate and dependency-free (decision 062).
+
+## 071. Recovery copy and multi-tab rules (review M2)
+
+A reload can happen before an asynchronous IndexedDB write finishes, so when the page is hidden or unloaded with a save waiting, a copy of the mockup (if under about 1.5 MB) is also written to local storage and restored on the next start if it is newer. For two tabs we chose "the tab that didn't save pauses and asks" over locking or merging: it never discards work without a choice and needs no server. The viewer file's "Include comments" now defaults to off (owner flag from the review: it matches what the Comments panel says).
